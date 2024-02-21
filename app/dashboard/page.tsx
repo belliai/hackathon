@@ -1,8 +1,6 @@
 import { cookies } from "next/headers"
 import Image from "next/image"
 
-import { UIWrapper } from "@/components/UIWrapper"
-
 export default function MailPage() {
   const layout = cookies().get("react-resizable-panels:layout")
   const collapsed = cookies().get("react-resizable-panels:collapsed")
@@ -29,13 +27,7 @@ export default function MailPage() {
         />
       </div>
       <div className="hidden flex-col md:flex">
-        <Mail
-          accounts={accounts}
-          mails={mails}
-          defaultLayout={defaultLayout}
-          defaultCollapsed={defaultCollapsed}
-          navCollapsedSize={4}
-        />
+
       </div>
     </>
   )
