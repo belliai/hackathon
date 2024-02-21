@@ -40,12 +40,12 @@ const navigation = [
 
 export default function SideBar() {
     return(
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-white/10">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-1 ring-white/10">
         <div className="flex h-16 shrink-0 items-center">
           <Image
             className="h-8 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-            alt="Kargo360"
+            alt="Your Company"
             height={32}
             width={32}
           />
