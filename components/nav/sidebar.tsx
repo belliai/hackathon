@@ -18,7 +18,12 @@ import {
 } from "@radix-ui/react-icons";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: Square2StackIcon, current: true },
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: Square2StackIcon,
+    current: true,
+  },
   {
     name: "Orders",
     href: "#",
@@ -73,10 +78,13 @@ const navigation = [
 export default function SideBar() {
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-1 ring-white/10">
-      <div className="flex h-16 shrink-0 justify-between items-center">
-        <span className="text-2xl font-bold font-mono text-white">
+      <div className="flex h-16 shrink-0 items-center justify-between">
+        <Link
+          href={"/dashboard"}
+          className="font-mono text-2xl font-bold text-white"
+        >
           Kargo360
-        </span>
+        </Link>
         <Link href="#" className="flex items-center gap-x-2">
           <AvatarIcon className="h-8 w-8" />
         </Link>
@@ -87,13 +95,13 @@ export default function SideBar() {
             <ul role="list" className="-mx-2 space-y-1">
               {navigation.map((item) => (
                 <li key={item.name}>
-                  <a
+                  <Link
                     href={item.href}
                     className={cn(
                       item.current
                         ? "bg-zinc-800 text-white"
-                        : "text-zinc-400 hover:text-white hover:bg-zinc-800",
-                      "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                        : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                     )}
                   >
                     <item.icon
@@ -101,7 +109,7 @@ export default function SideBar() {
                       aria-hidden="true"
                     />
                     {item.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
