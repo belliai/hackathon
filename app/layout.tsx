@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import UIWrapper from "@/app/components/UIWrapper";
+import UIWrapper from "@/components/ui/wrapper";
 
 export const metadata: Metadata = {
   title: "Create Next App",

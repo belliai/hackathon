@@ -10,7 +10,8 @@ import {
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import SideBar from "./SideBar";
+import SideBar from "@/components/nav/sidebar";
+
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
