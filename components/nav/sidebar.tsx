@@ -1,13 +1,10 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import {
   CalendarIcon,
   ChartPieIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
-  FolderIcon,
-  HomeIcon,
   Square2StackIcon,
   ServerStackIcon,
   SquaresPlusIcon,

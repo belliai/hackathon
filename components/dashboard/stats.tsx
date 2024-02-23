@@ -14,10 +14,10 @@ export default function Stats() {
         {vals.map((item) => (
           <Card
             key={item.name}
-            className="overflow-hidden rounded-lg bg-zinc-800 border-none shadow"
+            className="overflow-hidden rounded-lg bg-zinc-800 border-none"
           >
-            <CardHeader className=" items-start">
-              <CardTitle className="truncate text-zinc-400">
+            <CardHeader>
+              <CardTitle className="truncate text-zinc-400 leading-loose">
                 {item.name}
               </CardTitle>
             </CardHeader>
