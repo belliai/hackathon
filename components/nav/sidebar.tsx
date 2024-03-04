@@ -83,7 +83,7 @@ export default function SideBar() {
           href={"/dashboard"}
           className="font-mono text-2xl font-bold text-white"
         >
-          Kargo360
+          Belli{" "}
         </Link>
         <Link href="#" className="flex items-center gap-x-2">
           <AvatarIcon className="h-8 w-8" />
@@ -101,7 +101,7 @@ export default function SideBar() {
                       item.current
                         ? "bg-zinc-800 text-white"
                         : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
-                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
+                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                     )}
                   >
                     <item.icon
