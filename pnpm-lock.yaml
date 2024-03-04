@@ -11,6 +11,12 @@ dependencies:
   '@heroicons/react':
     specifier: ^2.1.1
     version: 2.1.1(react@18.2.0)
+  '@liveblocks/client':
+    specifier: ^1.10.1
+    version: 1.10.1
+  '@liveblocks/react':
+    specifier: ^1.10.1
+    version: 1.10.1(react@18.2.0)
   '@radix-ui/react-avatar':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
@@ -280,6 +286,28 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@liveblocks/client@1.10.1:
+    resolution: {integrity: sha512-qUKuvjbgBhc3SYoPG76Gt38Ln7KrVNfAgw+yue2mbeZH8GLQVP3J479k0+boCiomjiusZmgWPw3QZdxe2Y/s4w==}
+    dependencies:
+      '@liveblocks/core': 1.10.1
+    dev: false
+
+  /@liveblocks/core@1.10.1:
+    resolution: {integrity: sha512-XhGJzombNef6x82qS3QaWhAygD+TdJBgc5On5cJzNkv6tzqtnAFrn8Yqy9vMK34uDcKSoD+Mr05x8416IaIC4w==}
+    dev: false
+
+  /@liveblocks/react@1.10.1(react@18.2.0):
+    resolution: {integrity: sha512-Tt+FsHe/P0MbWd4fB6wF2r6eySfmz7XPgmwoo+KowxZIIgwLb2NjIE8gudu2xDP0tob+WAUd+Yx6d+yZ5hZPNw==}
+    peerDependencies:
+      react: ^16.14.0 || ^17 || ^18
+    dependencies:
+      '@liveblocks/client': 1.10.1
+      '@liveblocks/core': 1.10.1
+      nanoid: 3.3.7
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
 
   /@next/env@14.1.0:
     resolution: {integrity: sha512-Py8zIo+02ht82brwwhTg36iogzFqGLPXlRGKQw5s+qP/kMNc4MAyDeEwBKDijk6zTIbegEgu8Qy7C1LboslQAw==}
@@ -3751,6 +3779,14 @@ packages:
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.6.2
+    dev: false
+
+  /use-sync-external-store@1.2.0(react@18.2.0):
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /util-deprecate@1.0.2:

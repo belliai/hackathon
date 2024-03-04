@@ -101,7 +101,7 @@ export default function SideBar() {
                       item.current
                         ? "bg-zinc-800 text-white"
                         : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
-                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                     )}
                   >
                     <item.icon
