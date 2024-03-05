@@ -1,7 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["cdn.builder.io", "images.unsplash.com", "tailwindui.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.unsplash.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "tailwindui.com",
+        port: "",
+      },
+    ],
     dangerouslyAllowSVG: true,
   },
 };

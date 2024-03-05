@@ -1,6 +1,8 @@
 "use client";
 import { Fragment, useState } from "react";
 import { cn } from "@/lib/utils";
+import { CollaborativeApp } from "@/app/CollaborativeApp";
+import { Room } from "@/app/Room";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -12,7 +14,6 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import SideBar from "@/components/nav/sidebar";
 
-
 const userNavigation = [
   { name: "Your profile", href: "#" },
   { name: "Sign out", href: "#" },
@@ -23,6 +24,11 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <div className="sticky top-0 z-50 rounded-md bg-zinc-800 px-4 py-2 text-white shadow lg:pl-80">
+        <Room>
+          <CollaborativeApp />
+        </Room>
+      </div>
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -169,7 +175,7 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
                               href={item.href}
                               className={cn(
                                 active ? "bg-zinc-950" : "",
-                                "block px-3 py-1 text-sm leading-6 text-zinc-100"
+                                "block px-3 py-1 text-sm leading-6 text-zinc-100",
                               )}
                             >
                               {item.name}

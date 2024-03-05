@@ -9,20 +9,20 @@ const vals = [
 export default function Stats() {
   return (
     <>
-      <h3 className="text-base font-semibold leading-6">Current vals</h3>
+      <h3 className="text-base font-semibold leading-6">Current Stats</h3>
       <dl className="mt-5 grid grid-cols-2 gap-5 sm:grid-cols-4">
         {vals.map((item) => (
           <Card
             key={item.name}
-            className="overflow-hidden rounded-lg bg-zinc-800 border-none"
+            className="overflow-hidden rounded-lg border-none bg-zinc-800"
           >
             <CardHeader>
-              <CardTitle className="truncate text-zinc-400 leading-loose">
+              <CardTitle className="truncate leading-loose text-zinc-400">
                 {item.name}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-zinc-100 text-3xl font-semibold tracking-tight">
+              <p className="text-3xl font-semibold tracking-tight text-zinc-100">
                 {item.val}
               </p>
             </CardContent>

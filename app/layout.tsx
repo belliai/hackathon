@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+import { CollaborativeApp } from "@/app/CollaborativeApp";
+import { Room } from "@/app/Room";
 import { cn } from "@/lib/utils";
 import UIWrapper from "@/components/ui/wrapper";
 
@@ -19,14 +21,15 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        "antialiased scrollbar scroll-smooth h-full ",
+        "scrollbar h-full scroll-smooth antialiased ",
 
-        ` ${GeistSans.variable} ${GeistMono.variable}`
+        ` ${GeistSans.variable} ${GeistMono.variable}`,
       )}
     >
       <body className="  h-full bg-zinc-900 text-white">
         {/* <ProgressBar />
       <Nav /> */}
+
         <UIWrapper>{children}</UIWrapper>
       </body>
     </html>
