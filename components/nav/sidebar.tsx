@@ -2,32 +2,47 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import {
   CalendarIcon,
-  ChartPieIcon,
   Cog6ToothIcon,
-  DocumentDuplicateIcon,
-  Square2StackIcon,
+  GlobeAmericasIcon,
+  PresentationChartLineIcon,
   ServerStackIcon,
-  SquaresPlusIcon,
+  PencilSquareIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import {
+  WrenchScrewdriverIcon,
+  ChartBarIcon,
+  ChevronRightIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/solid";
 import {
   AvatarIcon,
   CubeIcon,
   LinkBreak2Icon,
   TargetIcon,
   FileIcon,
+  DividerHorizontalIcon,
 } from "@radix-ui/react-icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navigation = [
   {
     name: "Dashboard",
     href: "/dashboard",
-    icon: Square2StackIcon,
+    icon: CubeIcon,
     current: true,
   },
   {
     name: "Orders",
     href: "#",
-    icon: CubeIcon,
+    icon: GlobeAmericasIcon,
     current: false,
     children: [
       { name: "New Orders", href: "#", current: false },
@@ -56,38 +71,57 @@ const navigation = [
     ],
   },
   { name: "Scheduling", href: "#", icon: CalendarIcon, current: false },
-  { name: "Operation", href: "#", icon: SquaresPlusIcon, current: false },
+  { name: "Operation", href: "#", icon: WrenchScrewdriverIcon, current: false },
   {
     name: "Accounting",
     href: "#",
-    icon: DocumentDuplicateIcon,
+    icon: ChartBarIcon,
     current: false,
   },
   { name: "Track/Audit", href: "#", icon: TargetIcon, current: false },
-  { name: "Organize", href: "#", icon: ChartPieIcon, current: false },
-  { name: "Reports", href: "#", icon: FileIcon, current: false },
-  { name: "Manual", href: "#", icon: LinkBreak2Icon, current: false },
   {
-    name: "Rewards and Recognition",
+    name: "Reports",
     href: "#",
-    icon: ChartPieIcon,
+    icon: PresentationChartLineIcon,
     current: false,
   },
+  { name: "Manual", href: "#", icon: LinkBreak2Icon, current: false },
 ];
 
 export default function SideBar() {
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-1 ring-white/10">
       <div className="flex h-16 shrink-0 items-center justify-between">
-        <Link
-          href={"/dashboard"}
-          className="font-mono text-2xl font-bold text-white"
-        >
-          Belli{" "}
-        </Link>
-        <Link href="#" className="flex items-center gap-x-2">
-          <AvatarIcon className="h-8 w-8" />
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-x-2 cursor-pointer">
+              <AvatarIcon className="h-6 w-6" />
+              <span className="text-white">Belli</span>
+              <ChevronDownIcon
+                className="h-4 w-4 text-zinc-500"
+                aria-hidden="true"
+              />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <Link href="/profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/settings">Settings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/logout">Logout</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <div className="flex items-center gap-x-4">
+          <MagnifyingGlassIcon
+            className="h-5 w-5 text-white"
+            aria-hidden="true"
+          />
+          <PencilSquareIcon className="h-5 w-5 text-white" aria-hidden="true" />
+        </div>
       </div>
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -101,14 +135,20 @@ export default function SideBar() {
                       item.current
                         ? "bg-zinc-800 text-white"
                         : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
-                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
+                      "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                     )}
                   >
-                    <item.icon
-                      className="h-6 w-6 shrink-0"
+                    <div className="flex items-center gap-x-3">
+                      <item.icon
+                        className="h-6 w-6 shrink-0"
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </div>
+                    <ChevronRightIcon
+                      className="h-5 w-5 text-zinc-400"
                       aria-hidden="true"
                     />
-                    {item.name}
                   </Link>
                 </li>
               ))}
@@ -117,10 +157,19 @@ export default function SideBar() {
           <li className="mt-auto">
             <Link
               href="#"
-              className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              className="group -mx-2 flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-zinc-400 hover:bg-zinc-800 hover:text-white"
             >
-              <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
-              Settings
+              <div className="flex items-center gap-x-3">
+                <Cog6ToothIcon
+                  className="h-6 w-6 shrink-0"
+                  aria-hidden="true"
+                />
+                Settings
+              </div>
+              <ChevronRightIcon
+                className="h-5 w-5 text-zinc-400"
+                aria-hidden="true"
+              />
             </Link>
           </li>
         </ul>
