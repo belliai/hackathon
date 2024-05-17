@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import {
@@ -8,6 +10,7 @@ import {
   ServerStackIcon,
   PencilSquareIcon,
   MagnifyingGlassIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import {
   WrenchScrewdriverIcon,
@@ -31,6 +34,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import NewOrder from "@/components/new-order";
 
 const navigation = [
   {
@@ -89,6 +102,8 @@ const navigation = [
 ];
 
 export default function SideBar() {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-1 ring-white/10">
       <div className="flex h-16 shrink-0 items-center justify-between">
@@ -120,7 +135,20 @@ export default function SideBar() {
             className="h-5 w-5 text-white"
             aria-hidden="true"
           />
-          <PencilSquareIcon className="h-5 w-5 text-white" aria-hidden="true" />
+          <PencilSquareIcon
+            className="h-5 w-5 text-white cursor-pointer"
+            aria-hidden="true"
+            onClick={() => setDialogOpen(true)}
+          />
+       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+  <DialogTrigger asChild>
+    <button className="hidden">Open Dialog</button>
+  </DialogTrigger>
+  <DialogContent className="max-w-6xl bg-zinc-900">
+    <DialogTitle>New Orders</DialogTitle>
+    <NewOrder />
+  </DialogContent>
+</Dialog>
         </div>
       </div>
       <nav className="flex flex-1 flex-col">
