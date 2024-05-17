@@ -144,8 +144,8 @@ export default function SideBar() {
   <DialogTrigger asChild>
     <button className="hidden">Open Dialog</button>
   </DialogTrigger>
-  <DialogContent className="max-w-6xl bg-zinc-900">
-    <DialogTitle>New Orders</DialogTitle>
+  <DialogContent className="max-w-6xl bg-zinc-900 border-none">
+    <DialogTitle className="text-xl font-bold ml-2">New Orders</DialogTitle>
     <NewOrder />
   </DialogContent>
 </Dialog>

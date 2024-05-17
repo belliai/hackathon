@@ -202,3 +202,24 @@ export const orders: Order[] = [
 export async function getData() {
   return orders;
 }
+
+export const bookingDetails = {
+  bookingTypeOptions: ["Select", "Type 1", "Type 2"],
+  partnerPrefixOptions: ["Select", "Prefix 1", "Prefix 2"],
+  awbOptions: ["Select", "AWB1", "AWB2"],
+  partnerCodeOptions: ["Select", "Code 1", "Code 2"],
+};
+
+export const amountDue = {
+  bookingCode: "AAC0FE",
+  bookingID: "IP-4372-1501421737",
+  amountPaid: "$20.00",
+};
+
+export const subtotal = "$20.00";
+export const grandTotal = "$20.00";
+
+export const balanceDetails = {
+  customerName: "Elroy Carreen",
+  individualBalance: "$0.00",
+};
