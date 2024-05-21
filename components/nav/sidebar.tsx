@@ -47,7 +47,7 @@ import NewOrder from "@/components/new-order";
 
 const navigation = [
   {
-    name: "Dashboard Tito",
+    name: "Dashboard Tito +",
     href: "/dashboard",
     icon: CubeIcon,
     current: true,
