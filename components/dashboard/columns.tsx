@@ -52,7 +52,7 @@ export const columns: ColumnDef<Order>[] = [
   },
   {
     accessorKey: "org",
-    header: "Org",
+    header: "Organization",
   },
   {
     accessorKey: "des",
