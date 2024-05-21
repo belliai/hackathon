@@ -42,12 +42,18 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
 
 const navigation = [
   {
-    name: "Dashboard Tito +",
+    name: "Dashboard",
     href: "/dashboard",
     icon: CubeIcon,
     current: true,
@@ -84,7 +90,17 @@ const navigation = [
     ],
   },
   { name: "Scheduling", href: "#", icon: CalendarIcon, current: false },
-  { name: "Operation", href: "#", icon: WrenchScrewdriverIcon, current: false },
+  {
+    name: "Operation",
+    href: "#",
+    icon: WrenchScrewdriverIcon,
+    current: false,
+    children: [
+      { name: "Mother Bag", href: "/operation/mother-bag", current: false },
+      { name: "Truck Export", href: "#", current: false },
+      { name: "Track Mother Bag List", href: "#", current: false },
+    ],
+  },
   {
     name: "Accounting",
     href: "#",
@@ -159,31 +175,69 @@ export default function SideBar() {
             <ul role="list" className="-mx-2 space-y-1">
               {navigation.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      item.current
-                        ? "bg-zinc-800 text-white"
-                        : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
-                      "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
-                    )}
-                  >
-                    <div className="flex items-center gap-x-3">
-                      <item.icon
-                        className="h-6 w-6 shrink-0"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </div>
-                    <ChevronRightIcon
-                      className="h-5 w-5 text-zinc-400"
-                      aria-hidden="true"
-                    />
-                  </Link>
+                  {item.children ? (
+                    <Accordion type="single" collapsible>
+                      <AccordionItem value={item.name} className="border-none">
+                        <AccordionTrigger
+                          className={cn(
+                            item.current
+                              ? "bg-zinc-800 text-white"
+                              : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                            "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 hover:no-underline"
+                          )}
+                        >
+                          <div className="flex items-center gap-x-3">
+                            <item.icon
+                              className="h-6 w-6 shrink-0"
+                              aria-hidden="true"
+                            />
+                            {item.name}
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          {item.children.map(childMenu => (
+                            <Link
+                              key={childMenu.name}
+                              href={childMenu.href}
+                              className={cn(
+                                childMenu.current
+                                  ? "bg-zinc-800 text-white"
+                                  : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                                "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                              )}
+                            >
+                              <div className="flex items-center gap-x-3 pl-4">
+                                {childMenu.name}
+                              </div>
+                            </Link>
+                          ))}
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        item.current
+                          ? "bg-zinc-800 text-white"
+                          : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                        "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                      )}
+                    >
+                      <div className="flex items-center gap-x-3">
+                        <item.icon
+                          className="h-6 w-6 shrink-0"
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </div>
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
           </li>
+          
           <li className="mt-auto">
             <Link
               href="#"
