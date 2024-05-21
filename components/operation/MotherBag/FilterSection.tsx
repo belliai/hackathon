@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DownloadIcon, MagnifyingGlassIcon, PlusIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon, PlusIcon, ReloadIcon } from "@radix-ui/react-icons";
 import {
   Popover,
   PopoverContent,
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarDaysIcon } from "@heroicons/react/24/solid";
 import { Calendar } from "@/components/ui/calendar";
+import CreateDialog from "./CreateDialog";
 
 export default function FilterSection() {
   return (
@@ -19,12 +20,7 @@ export default function FilterSection() {
           </span>
           Refresh
         </Button>
-        <Button className="bg-button-primary">
-          <span className="mr-1 h-4 w-4">
-            <PlusIcon />
-          </span>
-          Create Mother Bag
-        </Button>
+        <CreateDialog />
       </div>
 
       <div className="flex gap-4">

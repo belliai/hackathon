@@ -1,4 +1,4 @@
-import type { Order } from "@/components/operation/MotherBag/columns";
+import type { Order, CreateDialog } from "@/components/operation/MotherBag/columns";
 
 export const DUMMY_DATA: Order[] = [
   {
@@ -113,6 +113,24 @@ export const DUMMY_DATA: Order[] = [
   }
 ];
 
+export const DUMMY_DATA_CREATE_DIALOG: CreateDialog[] = [
+  {
+    truck_no: 'DL1-24',
+    truck_date: '27-02-2024 13:30',
+    axb: '775-20037485',
+    comm_code: 'COMM-001',
+    comm_desc: '',
+    rem_pcs: '1',
+    rem_wt: '2',
+    acc_pcs: '1',
+    acc_wt: '2',
+  },
+];
+
 export async function getData() {
   return DUMMY_DATA;
+}
+
+export async function getDataCreateDialog() {
+  return DUMMY_DATA_CREATE_DIALOG;
 }
