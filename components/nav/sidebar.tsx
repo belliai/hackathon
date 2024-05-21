@@ -123,7 +123,7 @@ export default function SideBar() {
               <Link href="/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href="/settings">Setting</Link>
+              <Link href="/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href="/logout">Logout</Link>
