@@ -47,7 +47,7 @@ import NewOrder from "@/components/new-order";
 
 const navigation = [
   {
-    name: "Dashboard",
+    name: "Dashboard Tito",
     href: "/dashboard",
     icon: CubeIcon,
     current: true,
@@ -140,15 +140,17 @@ export default function SideBar() {
             aria-hidden="true"
             onClick={() => setDialogOpen(true)}
           />
-       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
-  <DialogTrigger asChild>
-    <button className="hidden">Open Dialog</button>
-  </DialogTrigger>
-  <DialogContent className="max-w-6xl bg-zinc-900 border-none">
-    <DialogTitle className="text-xl font-bold ml-2">New Orders</DialogTitle>
-    <NewOrder />
-  </DialogContent>
-</Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <button className="hidden">Open Dialog</button>
+            </DialogTrigger>
+            <DialogContent className="max-w-6xl bg-zinc-900 border-none">
+              <DialogTitle className="text-xl font-bold ml-2">
+                New Orders
+              </DialogTitle>
+              <NewOrder />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <nav className="flex flex-1 flex-col">
