@@ -21,7 +21,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        "scrollbar h-full scroll-smooth antialiased ",
+        "scrollbar h-full scroll-smooth antialiased dark",
 
         ` ${GeistSans.variable} ${GeistMono.variable}`,
       )}
