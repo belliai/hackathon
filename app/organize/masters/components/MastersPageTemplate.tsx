@@ -59,7 +59,7 @@ export default function MastersPageTemplate({
               <Form {...hookForm}>
                 <div
                   className={cn(
-                    "grid grid-cols-2 gap-4 gap-x-6 max-h-[75dvh] overflow-auto pr-2 py-2",
+                    "grid grid-cols-2 gap-4 gap-x-6 max-h-[75dvh] overflow-auto pr-2 py-2 items-end",
                     {
                       "grid-cols-1": formFields.length < 8,
                     }

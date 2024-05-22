@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead key={header.id} colSpan={header.colSpan} className="min-w-24">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
