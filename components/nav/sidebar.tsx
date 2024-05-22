@@ -108,7 +108,20 @@ const navigation = [
     icon: ChartBarIcon,
     current: false,
   },
-  { name: "Track/Audit", href: "#", icon: TargetIcon, current: false },
+  {
+    name: "Track/Audit",
+    href: "#",
+    icon: TargetIcon,
+    current: false,
+    children: [
+      { name: "Master Audit Log", href: "/track/master-audit-log", current: false },
+      { name: "Ratefilling Audit Log", href: "/track/ratefilling-audit-log", current: false },
+      { name: "Accounting Audit log", href: "/track/accounting-audit-log", current: false },
+      { name: "Master AWB", href: "/track/master-awb", current: false },
+      { name: "AWB Audit Log", href: "/track/awb-audit-log", current: false },
+      { name: "Pomail Audit Log", href: "/track/pomail-audit-log", current: false },
+    ],
+  },
   {
     name: "Organize",
     href: "#",

@@ -29,7 +29,6 @@ export default function RootLayout({
       <body className="  h-full bg-zinc-900 text-white">
         {/* <ProgressBar />
       <Nav /> */}
-
         <UIWrapper>{children}</UIWrapper>
       </body>
     </html>
