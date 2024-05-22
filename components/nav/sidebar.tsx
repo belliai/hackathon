@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/accordion";
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
+import { Boxes } from "lucide-react";
 
 const navigation = [
   {
@@ -108,6 +109,31 @@ const navigation = [
     current: false,
   },
   { name: "Track/Audit", href: "#", icon: TargetIcon, current: false },
+  {
+    name: "Organize",
+    href: "#",
+    icon: Boxes,
+    children: [
+      {
+        name: "Masters",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "Finance",
+            href: "#",
+            current: false,
+            submenus: [
+              {
+                name: "Cart",
+                href: "/organize/masters/finance/cart",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
   {
     name: "Reports",
     href: "#",
@@ -195,22 +221,105 @@ export default function SideBar() {
                           </div>
                         </AccordionTrigger>
                         <AccordionContent>
-                          {item.children.map(childMenu => (
-                            <Link
-                              key={childMenu.name}
-                              href={childMenu.href}
-                              className={cn(
-                                childMenu.current
-                                  ? "bg-zinc-800 text-white"
-                                  : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
-                                "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
-                              )}
-                            >
-                              <div className="flex items-center gap-x-3 pl-4">
-                                {childMenu.name}
-                              </div>
-                            </Link>
-                          ))}
+                          {item.children.map((childMenu: any) => {
+                            if (childMenu?.submenus) {
+                              return (
+                                <Accordion
+                                  type="single"
+                                  collapsible
+                                  key={childMenu.name}
+                                >
+                                  <AccordionItem
+                                    value={childMenu.name}
+                                    className="border-none"
+                                  >
+                                    <AccordionTrigger
+                                      className={cn(
+                                        childMenu.current
+                                          ? "bg-zinc-800 text-white"
+                                          : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                                        "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 hover:no-underline"
+                                      )}
+                                    >
+                                      <div className="flex items-center gap-x-3 pl-4">
+                                        {childMenu.name}
+                                      </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                      {childMenu.submenus.map(
+                                        (submenu: any) => (
+                                          <Link
+                                            key={submenu.name}
+                                            href={submenu.href}
+                                            className={cn(
+                                              submenu.current
+                                                ? "bg-zinc-800 text-white"
+                                                : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                                              "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                            )}
+                                          >
+                                            {submenu?.submenus ? (
+                                              <DropdownMenu>
+                                                <DropdownMenuTrigger
+                                                  asChild
+                                                  className="w-full"
+                                                >
+                                                  <div className="flex items-center justify-between gap-x-3 pl-8">
+                                                    {submenu.name}
+                                                    <ChevronRightIcon
+                                                      className="h-4 w-4 text-zinc-400"
+                                                      aria-hidden="true"
+                                                    />
+                                                  </div>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent side="right">
+                                                  {submenu.submenus.map(
+                                                    (subsubmenu: any) => (
+                                                      <DropdownMenuItem
+                                                        key={subsubmenu.name}
+                                                        className="cursor-pointer"
+                                                      >
+                                                        <Link
+                                                          href={subsubmenu.href}
+                                                        >
+                                                          {subsubmenu.name}
+                                                        </Link>
+                                                      </DropdownMenuItem>
+                                                    )
+                                                  )}
+                                                </DropdownMenuContent>
+                                              </DropdownMenu>
+                                            ) : (
+                                              <div className="flex items-center gap-x-3 pl-8">
+                                                {submenu.name}
+                                              </div>
+                                            )}
+                                          </Link>
+                                        )
+                                      )}
+                                    </AccordionContent>
+                                  </AccordionItem>
+                                </Accordion>
+                              );
+                            }
+
+                            return (
+                              <Link
+                                key={childMenu.name}
+                                href={childMenu.href}
+                                className={cn(
+                                  childMenu.current
+                                    ? "bg-zinc-800 text-white"
+                                    : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                                  "group flex justify-between items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                )}
+                              >
+                                <div className="flex items-center gap-x-3 pl-4">
+                                  {childMenu.name}
+                                </div>
+                              </Link>
+                            );
+                          })}
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
@@ -237,7 +346,7 @@ export default function SideBar() {
               ))}
             </ul>
           </li>
-          
+
           <li className="mt-auto">
             <Link
               href="#"
