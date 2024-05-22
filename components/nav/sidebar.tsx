@@ -144,6 +144,10 @@ const navigation = [
                 name: "HS Code",
                 href: "/organize/masters/finance/hs-code",
               },
+              {
+                name: "Priority",
+                href: "/organize/masters/finance/priority",
+              },
             ],
           },
         ],
