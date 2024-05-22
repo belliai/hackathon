@@ -139,7 +139,11 @@ const navigation = [
               {
                 name: "Freight Forwarder",
                 href: "/organize/masters/finance/freight-forwarder",
-              }
+              },
+              {
+                name: "HS Code",
+                href: "/organize/masters/finance/hs-code",
+              },
             ],
           },
         ],
@@ -284,7 +288,10 @@ export default function SideBar() {
                                                     />
                                                   </div>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent side="right" align="start">
+                                                <DropdownMenuContent
+                                                  side="right"
+                                                  align="start"
+                                                >
                                                   {submenu.submenus.map(
                                                     (subsubmenu: any) => (
                                                       <DropdownMenuItem

@@ -34,7 +34,7 @@ interface MastersPageTemplateProps {
 
 export default function MastersPageTemplate({
   heading,
-  buttonText,
+  buttonText = "Create " + heading,
   hookForm,
   filterHookForm,
   formFields,
