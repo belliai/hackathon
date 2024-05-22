@@ -25,6 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { Checkbox } from "../ui/checkbox";
 
 type SelectOption = {
   label: string;
@@ -74,6 +75,24 @@ export default function FormTextField({
       render={({ field }) => {
         function conditionalRender() {
           switch (type) {
+            case "checkbox":
+              return (
+                <div className="flex gap-4 items-center">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-zinc-400">
+                      {label} {required ? "*" : ""}
+                    </FormLabel>
+                    <FormDescription>{description}</FormDescription>
+                  </div>
+                </div>
+              );
+
             case "select":
               return (
                 <Select
@@ -129,7 +148,7 @@ export default function FormTextField({
         }
         return (
           <FormItem className="w-full space-y-2">
-            {label && (
+            {label && type !== "checkbox" && (
               <div className="flex items-center gap-1 text-zinc-50">
                 <FormLabel className="text-sm">
                   {label} {required ? "*" : ""}{" "}

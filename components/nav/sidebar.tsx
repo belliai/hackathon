@@ -208,6 +208,10 @@ const navigation = [
                 name: "State",
                 href: "/organize/masters/finance/state",
               },
+              {
+                name: "Vendor",
+                href: "/organize/masters/finance/vendor",
+              },
             ],
           },
         ],
