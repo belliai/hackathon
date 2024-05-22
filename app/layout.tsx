@@ -23,7 +23,7 @@ export default function RootLayout({
       className={cn(
         "scrollbar h-full scroll-smooth antialiased dark",
 
-        ` ${GeistSans.variable} ${GeistMono.variable}`,
+        ` ${GeistSans.className}`
       )}
     >
       <body className="  h-full bg-zinc-900 text-white">

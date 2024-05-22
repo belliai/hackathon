@@ -90,7 +90,30 @@ const navigation = [
       { name: "Maintain AWB", href: "#", current: false },
     ],
   },
-  { name: "Scheduling", href: "#", icon: CalendarIcon, current: false },
+  {
+    name: "Scheduling",
+    href: "/scheduling",
+    icon: CalendarIcon,
+    current: false,
+    children: [
+      {
+        name: "Active Flights",
+        href: "/scheduling/active-flights",
+        current: false,
+      },
+      {
+        name: "FLight Master",
+        href: "/scheduling/flight-master",
+        current: false,
+      },
+      { name: "New Flight", href: "/scheduling/new-flight", current: false },
+      {
+        name: "Cargo Loadplan",
+        href: "/scheduling/cargo-loadplan",
+        current: false,
+      },
+    ],
+  },
   {
     name: "Operation",
     href: "#",
@@ -204,7 +227,7 @@ export default function SideBar() {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-1 ring-white/10">
+    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-1 ring-white/10 no-scrollbar">
       <div className="flex h-16 shrink-0 items-center justify-between">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
