@@ -93,14 +93,12 @@ export default function MastersPageTemplate({
       />
       <div className="p-4 border rounded-md">
         <Form {...hookForm}>
-          <form className="flex gap-4 items-end">
+          <form className="flex flex-col md:flex-row gap-4 items-end w-full">
             {filterFormFields.map((field) => {
               return (
-                <FormTextField
-                  key={field.name}
-                  {...field}
-                  form={filterHookForm}
-                />
+                <div key={field.name} className="max-w-72">
+                  <FormTextField {...field} form={filterHookForm} />
+                </div>
               );
             })}
             <div className="flex gap-2">

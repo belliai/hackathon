@@ -61,7 +61,7 @@ export default function FormTextField({
   placeholder,
 }: FormTextFieldProps) {
   const fieldClassName = cn(
-    "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700",
+    "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700 w-full",
     {
       "pr-8": endIcon,
     }
@@ -128,7 +128,7 @@ export default function FormTextField({
           }
         }
         return (
-          <FormItem>
+          <FormItem className="w-full space-y-2">
             {label && (
               <div className="flex items-center gap-1 text-zinc-50">
                 <FormLabel className="text-sm">

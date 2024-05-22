@@ -131,7 +131,11 @@ const navigation = [
               {
                 name: "Country",
                 href: "/organize/masters/finance/country",
-              }
+              },
+              {
+                name: "Currency",
+                href: "/organize/masters/finance/currency",
+              },
             ],
           },
         ],
@@ -276,7 +280,7 @@ export default function SideBar() {
                                                     />
                                                   </div>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent side="right">
+                                                <DropdownMenuContent side="right" align="start">
                                                   {submenu.submenus.map(
                                                     (subsubmenu: any) => (
                                                       <DropdownMenuItem
