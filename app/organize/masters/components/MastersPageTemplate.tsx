@@ -55,7 +55,7 @@ export default function MastersPageTemplate({
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogTitle>Create Cart</DialogTitle>
+              <DialogTitle>{buttonText}</DialogTitle>
               <Form {...hookForm}>
                 <div
                   className={cn(

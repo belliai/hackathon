@@ -3,32 +3,36 @@
 import { ColumnDef } from "@tanstack/react-table";
 import MastersPageTemplate from "../../components/MastersPageTemplate";
 import { selectColumn } from "../../components/columnItem";
+import { Badge } from "@/components/ui/badge";
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { FormTextFieldProps } from "@/components/form/FormTextField";
+import { Search } from "lucide-react";
+import { useForm } from "react-hook-form";
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
 } from "../../components/dummySelectOptions";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { useForm } from "react-hook-form";
-import { Search } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
-export default function MasterRegionPage() {
+export default function MasterStatePage() {
   const columns: ColumnDef<any>[] = [
     {
       ...selectColumn,
     },
     {
-      accessorKey: "region_code",
-      header: "Region Code",
+      accessorKey: "state_code",
+      header: "State Code",
     },
     {
-      accessorKey: "region_name",
-      header: "Region Name",
+      accessorKey: "state_name",
+      header: "State Name",
     },
     {
       accessorKey: "country",
       header: "Country",
+    },
+    {
+      accessorKey: "state_type",
+      header: "State Type",
     },
     {
       accessorKey: "status",
@@ -56,20 +60,26 @@ export default function MasterRegionPage() {
 
   const formFields: Omit<FormTextFieldProps, "form">[] = [
     {
-      name: "region_code",
-      placeholder: "Region Code",
+      name: "state_code",
+      placeholder: "State Code",
       type: "text",
-      endIcon: <Search size={16} />,
+      endIcon: <Search />,
     },
     {
-      name: "region_name",
-      placeholder: "Region Name",
+      name: "state_name",
+      placeholder: "State Name",
       type: "text",
-      endIcon: <Search size={16} />,
+      endIcon: <Search />,
     },
     {
       name: "country",
       placeholder: "Country",
+      type: "select",
+      options: DUMMY_SELECT_OPTIONS_STATUS,
+    },
+    {
+      name: "state_type",
+      placeholder: "State Type",
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
@@ -83,36 +93,40 @@ export default function MasterRegionPage() {
 
   const data = [
     {
-      region_code: "R001",
-      region_name: "Region 1",
-      country: "ID",
+      id: 1,
+      state_code: "AP",
+      state_name: "Andhra Pradesh",
+      country: "India",
+      state_type: "ST",
       status: "Active",
-      created_at: "2021-09-01",
-      updated_at: "2021-09-01",
+      created_at: "2021-10-01",
+      updated_at: "2021-10-01",
     },
     {
-      region_code: "R002",
-      region_name: "Region 2",
-      country: "SG",
+      id: 2,
+      state_code: "TS",
+      state_name: "Telangana",
+      country: "India",
+      state_type: "ST",
       status: "Active",
-      created_at: "2021-09-01",
-      updated_at: "2021-09-01",
+      created_at: "2021-10-01",
+      updated_at: "2021-10-01",
     },
   ];
 
+  const stateForm = useForm();
   const filterForm = useForm();
-  const regionForm = useForm();
 
   return (
     <MastersPageTemplate
-      heading="Region Master"
-      buttonText="Create Region"
+      heading="State Master"
+      buttonText="Create State"
       columns={columns}
-      hookForm={regionForm}
       formFields={formFields}
-      filterHookForm={filterForm}
-      filterFormFields={formFields}
       data={data}
+      filterFormFields={formFields}
+      filterHookForm={filterForm}
+      hookForm={stateForm}
     />
   );
 }
