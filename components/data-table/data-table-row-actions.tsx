@@ -30,7 +30,16 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({
   row,
-  items,
+  items = [
+    {
+      label: "Edit",
+      value: "edit",
+    },
+    {
+      label: "View",
+      value: "view",
+    },
+  ],
 }: DataTableRowActionsProps<TData>) {
   return (
     <DropdownMenu>

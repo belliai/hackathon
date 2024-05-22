@@ -105,6 +105,7 @@ export default function FormTextField({
                     <div className="relative w-full">
                       <Input
                         {...field}
+                        type={type}
                         className={fieldClassName}
                         placeholder={placeholder}
                       />

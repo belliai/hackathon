@@ -1,27 +1,16 @@
 "use client";
 
-import { DataTable } from "@/components/data-table/data-table";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import FormTextField, {
-  FormTextFieldProps,
-} from "@/components/form/FormTextField";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
+import { FormTextFieldProps } from "@/components/form/FormTextField";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
+
 import { ColumnDef } from "@tanstack/react-table";
-import { Download, Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useForm } from "react-hook-form";
+import MastersPageTemplate from "../../components/MastersPageTemplate";
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
 
 const cartFormFields: Omit<FormTextFieldProps, "form">[] = [
   {
@@ -60,25 +49,8 @@ export default function CartPage() {
   const columns: ColumnDef<any>[] = [
     {
       id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="translate-y-[2px]"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="translate-y-[2px]"
-        />
-      ),
+      header: ({ table }) => <DataTableSelectHead table={table} />,
+      cell: ({ row }) => <DataTableSelectRow row={row} />,
       enableSorting: false,
       enableHiding: false,
     },
@@ -195,73 +167,15 @@ export default function CartPage() {
   const cartForm = useForm();
 
   return (
-    <PageContainer className="gap-6">
-      <PageHeader
-        title="Cart"
-        actions={
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
-                <Plus size={16} className="mr-2" />
-                Create Cart
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogTitle>Create Cart</DialogTitle>
-              <Form {...cartForm}>
-                <div className="flex flex-col gap-4">
-                  {cartFormFields.map((field) => {
-                    return (
-                      <FormTextField
-                        key={field.name}
-                        {...field}
-                        form={cartForm}
-                        endIcon={null}
-                      />
-                    );
-                  })}
-                </div>
-              </Form>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
-                    Create
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        }
-      />
-      <div className="p-4 border rounded-md">
-        <Form {...cartForm}>
-          <form className="flex gap-4">
-            {cartFormFields.map((field) => {
-              return (
-                <FormTextField key={field.name} {...field} form={cartForm} />
-              );
-            })}
-            <div className="flex gap-2">
-              <Button
-                size="icon"
-                className="bg-button-primary  text-white hover:bg-button-primary/80"
-              >
-                <Search size={16} />
-              </Button>
-              <Button
-                size="icon"
-                className="bg-button-secondary  text-white hover:bg-button-secondary/80"
-              >
-                <Download size={16} />
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
-      <DataTable columns={columns} data={data} hideToolbar />
-    </PageContainer>
+    <MastersPageTemplate
+      heading="Cart Master"
+      buttonText="Create Cart"
+      hookForm={cartForm}
+      formFields={cartFormFields}
+      columns={columns}
+      data={data}
+      filterFormFields={cartFormFields}
+      filterHookForm={cartForm}
+    />
   );
 }
