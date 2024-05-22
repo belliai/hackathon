@@ -96,7 +96,7 @@ export default function MastersPageTemplate({
           <form className="flex flex-col md:flex-row gap-4 items-end w-full">
             {filterFormFields.map((field) => {
               return (
-                <div key={field.name} className="max-w-72">
+                <div key={field.name} className="md:max-w-72 w-full">
                   <FormTextField {...field} form={filterHookForm} />
                 </div>
               );

@@ -136,6 +136,10 @@ const navigation = [
                 name: "Currency",
                 href: "/organize/masters/finance/currency",
               },
+              {
+                name: "Freight Forwarder",
+                href: "/organize/masters/finance/freight-forwarder",
+              }
             ],
           },
         ],
