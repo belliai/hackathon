@@ -161,6 +161,10 @@ const navigation = [
                 name: "Priority",
                 href: "/organize/masters/finance/priority",
               },
+              {
+                name: "Region",
+                href: "/organize/masters/finance/region",
+              },
             ],
           },
         ],
@@ -314,6 +318,7 @@ export default function SideBar() {
                                                       <DropdownMenuItem
                                                         key={subsubmenu.name}
                                                         className="cursor-pointer"
+                                                        asChild
                                                       >
                                                         <Link
                                                           href={subsubmenu.href}
