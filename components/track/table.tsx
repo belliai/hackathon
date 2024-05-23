@@ -53,9 +53,13 @@ export function DataTable<TData, TValue>({
       rowSelection,
       columnFilters,
     },
-    defaultColumn:{
-     
+    defaultColumn: {
+
+      size: 100, //starting column size
+      minSize: 60, //enforced during column resizing
+      maxSize: 300, //
     },
+
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -74,11 +78,12 @@ export function DataTable<TData, TValue>({
 
       <div className="rounded-md border">
         <Table
-          {...{
-            style: {
-              width: table.getCenterTotalSize()
-            }
-          }}
+   
+         {...{
+          style: {
+            width: table.getCenterTotalSize(),
+          },
+        }}
         >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -87,7 +92,7 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}
-                      style={{ width: `${header.column.columnDef.size}px` }}
+                      style={{ width: `${header.getSize()}` }}
                       className="truncate border-zinc-800 font-bold tracking-tight text-white"
                       colSpan={header.colSpan}>
                       {header.isPlaceholder
@@ -112,7 +117,7 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
-                      style={{ width: `${ cell.column.getSize()}px` }}
+                      style={{ width: `${cell.column.getSize()}` }}
                       key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,

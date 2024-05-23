@@ -26,41 +26,23 @@ export const columns: ColumnDef<any>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "userCode",
-        header: "User Code"
+        accessorKey: "awbNumber",
+        header: "AWB Number"
     },
     {
-        accessorKey: "masterKey",
-        header: "Master Key"
+        accessorKey: "status",
+        header: "Status"
     },
     {
-        accessorKey: "updatedBy",
-        header: "Updated By"
+        accessorKey: "entity",
+        header: "Entity"
     },
     {
-        accessorKey: "fieldName",
-        header: "Field Name"
+        accessorKey: "action",
+        header: "Action"
     },
     {
-        accessorKey: "oldValue",
-        header: "Old Value"
-    },
-    {
-        accessorKey: "newValue",
-        header: "New Value"
-    },
-    {
-        accessorKey: "description",
-        header: "Description",
-        size: 200
-    },
-    {
-        accessorKey: "updatedAt",
-        header: "Updated At",
-        size: 300
-    },
-
-]
-
-
-
+        accessorKey: "createdAt",
+        header: "Created At"
+    }
+];

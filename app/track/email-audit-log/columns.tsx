@@ -1,7 +1,6 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
 
@@ -26,39 +25,53 @@ export const columns: ColumnDef<any>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "userCode",
-        header: "User Code"
+        accessorKey: "awbFlight",
+        header: "AWB/Flight"
     },
     {
-        accessorKey: "masterKey",
-        header: "Master Key"
+        accessorKey: "origin",
+        header: "Origin"
     },
     {
-        accessorKey: "updatedBy",
-        header: "Updated By"
+        accessorKey: "destination",
+        header: "Destination"
     },
     {
-        accessorKey: "fieldName",
-        header: "Field Name"
+        accessorKey: "messageCategory",
+        header: "Message Category"
     },
     {
-        accessorKey: "oldValue",
-        header: "Old Value"
+        accessorKey: "message",
+        header: "Message"
     },
     {
-        accessorKey: "newValue",
-        header: "New Value"
+        accessorKey: "recipient",
+        header: "Recipient"
     },
     {
-        accessorKey: "description",
-        header: "Description",
-        size: 200
+        accessorKey: "communicationType",
+        header: "Communication Type"
     },
     {
-        accessorKey: "updatedAt",
-        header: "Updated At",
-        size: 300
+        accessorKey: "messageType",
+        header: "Message Type"
     },
+    {
+        accessorKey: "type",
+        header: "Type"
+    },
+    {
+        accessorKey: "processed",
+        header: "Processed"
+    },
+    {
+        accessorKey: "triggerDate",
+        header: "Trigger Date"
+    },
+    {
+        accessorKey: "content",
+        header: "Content"
+    }
 
 ]
 

@@ -1,7 +1,6 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
 
@@ -26,39 +25,37 @@ export const columns: ColumnDef<any>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "userCode",
-        header: "User Code"
+        accessorKey: "awbNo",
+        header: "AWB No."
     },
     {
-        accessorKey: "masterKey",
-        header: "Master Key"
+        accessorKey: "customerCode",
+        header: "Customer Code"
     },
     {
-        accessorKey: "updatedBy",
-        header: "Updated By"
+        accessorKey: "origin",
+        header: "Origin"
     },
     {
-        accessorKey: "fieldName",
-        header: "Field Name"
+        accessorKey: "destination",
+        header: "Destination"
     },
     {
-        accessorKey: "oldValue",
-        header: "Old Value"
+        accessorKey: "uploadedBy",
+        header: "Uploaded By"
     },
     {
-        accessorKey: "newValue",
-        header: "New Value"
-    },
-    {
-        accessorKey: "description",
-        header: "Description",
-        size: 200
+        accessorKey: "podUrl",
+        header: "Pod Url"
     },
     {
         accessorKey: "updatedAt",
-        header: "Updated At",
-        size: 300
+        header: "Updated At"
     },
+    {
+        accessorKey: "createdAt",
+        header: "Created At"
+    }
 
 ]
 
