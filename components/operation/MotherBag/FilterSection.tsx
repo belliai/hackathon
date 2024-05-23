@@ -12,16 +12,20 @@ import CreateDialog from "./CreateDialog";
 
 export default function FilterSection() {
   return (
-    <div className="flex flex-col mt-5 gap-4">
-      <div className="flex gap-4 justify-end">
-        <Button className="bg-zinc-800">
-          <span className="mr-1 h-4 w-4">
-            <ReloadIcon />
-          </span>
-          Refresh
-        </Button>
-        <CreateDialog />
+    <div className="flex flex-col mt-10 gap-4">
+      <div className="flex justify-between">
+        <h1 className="text-xl font-semibold">Mother Bag List</h1>
+        <div className="flex gap-4">
+          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+            <span className="mr-1 h-4 w-4">
+              <ReloadIcon />
+            </span>
+            Refresh
+          </Button>
+          <CreateDialog />
+        </div>
       </div>
+      
 
       <div className="flex gap-4">
         <Input className="border-zinc-500" placeholder="MB No From" rightIcon={<MagnifyingGlassIcon className="h-4 w-4 text-zinc-400" />} />
@@ -36,7 +40,7 @@ export default function FilterSection() {
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
-              className={`flex justify-between border-zinc-700 bg-zinc-800 pl-3 pr-3 w-1/4`}
+              className={`flex justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3 w-1/4`}
             >
               <span>From Date</span>
               <CalendarDaysIcon className="h-4 w-4 text-zinc-400" />
@@ -57,7 +61,7 @@ export default function FilterSection() {
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
-              className={`flex justify-between border-zinc-700 bg-zinc-800 pl-3 pr-3 w-1/4`}
+              className={`flex justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3 w-1/4`}
             >
               <span>To Date</span>
               <CalendarDaysIcon className="h-4 w-4 text-zinc-400" />
@@ -74,7 +78,7 @@ export default function FilterSection() {
           </PopoverContent>
         </Popover>
 
-        <Button className="bg-zinc-800">
+        <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
           <span className="mr-1 h-4 w-4">
             <MagnifyingGlassIcon />
           </span>

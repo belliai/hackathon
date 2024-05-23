@@ -21,7 +21,7 @@ const CreateDialog = async () => {
     <>
       <Dialog>
         <DialogTrigger>
-          <Button className="bg-button-primary">
+          <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
             <span className="mr-1 h-4 w-4">
               <PlusIcon />
             </span>
@@ -38,13 +38,13 @@ const CreateDialog = async () => {
                 <Input className="border-zinc-500" placeholder="Origin" rightIcon={<MagnifyingGlassIcon className="h-4 w-4 text-zinc-400" />} />
                 <Input className="border-zinc-500" placeholder="Destination" rightIcon={<MagnifyingGlassIcon className="h-4 w-4 text-zinc-400" />} />
                 <Input className="border-zinc-500" placeholder="AXB" rightIcon={<MagnifyingGlassIcon className="h-4 w-4 text-zinc-400" />} />
-                <Button className="bg-zinc-800">
+                <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
                   <span className="mr-1 h-4 w-4">
                     <MagnifyingGlassIcon />
                   </span>
                   Search
                 </Button>
-                <Button className="bg-zinc-800">
+                <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
                   <span className="mr-1 h-4 w-4">
                     <ReloadIcon />
                   </span>
@@ -64,7 +64,7 @@ const CreateDialog = async () => {
                 <div className="flex gap-4">
                   <Input className="border-zinc-500" placeholder="Origin" rightIcon={<MagnifyingGlassIcon className="h-4 w-4 text-zinc-400" />} />
                   <Input className="border-zinc-500" placeholder="Destination" rightIcon={<MagnifyingGlassIcon className="h-4 w-4 text-zinc-400" />} />
-                  <Button className="bg-button-primary">
+                  <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
                     Create MB
                   </Button>
                 </div>

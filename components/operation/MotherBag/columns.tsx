@@ -12,27 +12,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export type Order = {
-  mb_number: string; // mb number
-  piece: string; // piece per mb
-  axb: string; // axb number
-  origin: string; // origin
-  destination: string; // destination
-  weight: string; // weight
-  mwb: string;  // mwb number
-  created_at: string; // created at
-  updated_at: string; // updated at
+  mb_number?: string; // mb number
+  piece?: string; // piece per mb
+  axb?: string; // axb number
+  origin?: string; // origin
+  destination?: string; // destination
+  weight?: string; // weight
+  mwb?: string;  // mwb number
+  created_at?: string; // created at
+  updated_at?: string; // updated at
 };
 
 export type CreateDialog = {
-  truck_no: string;
-  truck_date: string;
-  axb: string;
-  comm_code: string;
-  comm_desc: string;
-  rem_pcs: string;
-  rem_wt: string;
-  acc_pcs: string;
-  acc_wt: string;
+  truck_no?: string;
+  truck_date?: string;
+  axb?: string;
+  comm_code?: string;
+  comm_desc?: string;
+  rem_pcs?: string;
+  rem_wt?: string;
+  acc_pcs?: string;
+  acc_wt?: string;
 };
 
 export const columns: ColumnDef<Order>[] = [
@@ -102,7 +102,7 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" className="bg-button-secondary">
+          <Button size="icon" className="bg-button-secondary hover:bg-button-secondary/80 text-white">
             <span className="h-4 w-4">
               <DotsHorizontalIcon />
             </span>
