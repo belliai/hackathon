@@ -11,7 +11,7 @@ export default function DataTableSelectRow({ row }: DataTableSelectRowProps) {
       checked={row.getIsSelected()}
       onCheckedChange={(value) => row.toggleSelected(!!value)}
       aria-label="Select row"
-      className="translate-y-[2px]"
+      className="translate-y-[2px] mx-1"
     />
   );
 }

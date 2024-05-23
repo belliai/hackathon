@@ -9,13 +9,8 @@ import DataTableFilterForm, {
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
 import { ColumnDef } from "@tanstack/react-table";
-import { Download, Search } from "lucide-react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 type ActiveFlightDataType = {
   flight_no: string;
@@ -66,7 +61,7 @@ const columns: ColumnDef<ActiveFlightDataType>[] = [
   },
   {
     accessorKey: "aircraft_type",
-    header: "AirCraft Type",
+    header: "Aircraft Type",
   },
   {
     accessorKey: "tail_no",

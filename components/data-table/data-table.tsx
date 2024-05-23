@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="min-w-24 whitespace-nowrap"
+                      className="min-w-10 whitespace-nowrap"
                     >
                       {header.isPlaceholder
                         ? null

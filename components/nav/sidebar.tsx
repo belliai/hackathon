@@ -102,7 +102,7 @@ const navigation = [
         current: false,
       },
       {
-        name: "FLight Master",
+        name: "Flight Master",
         href: "/scheduling/flight-master",
         current: false,
       },
@@ -122,7 +122,11 @@ const navigation = [
     children: [
       { name: "Mother Bag", href: "/operation/mother-bag", current: false },
       { name: "Truck Export", href: "/operation/truck-export", current: false },
-      { name: "Track Mother Bag List", href: "/operation/track-mother-bag-list", current: false },
+      {
+        name: "Track Mother Bag List",
+        href: "/operation/track-mother-bag-list",
+        current: false,
+      },
     ],
   },
   {
