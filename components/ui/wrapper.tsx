@@ -90,7 +90,7 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
         </div>
 
         <main className="lg:pl-72">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+          <div className="px-4 sm:px-6 lg:px-8 ">{children}</div>
         </main>
       </div>
     </>

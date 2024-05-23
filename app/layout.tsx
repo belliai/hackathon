@@ -26,7 +26,7 @@ export default function RootLayout({
         ` ${GeistSans.className}`
       )}
     >
-      <body className="  h-full bg-zinc-900 text-white">
+      <body className="  h-full bg-zinc-900 text-white custom-scrollbar">
         {/* <ProgressBar />
       <Nav /> */}
         <UIWrapper>{children}</UIWrapper>
