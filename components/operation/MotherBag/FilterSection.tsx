@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MagnifyingGlassIcon, PlusIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon, ReloadIcon } from "@radix-ui/react-icons";
 import {
   Popover,
   PopoverContent,

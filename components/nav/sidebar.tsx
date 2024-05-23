@@ -122,7 +122,7 @@ const navigation = [
     children: [
       { name: "Mother Bag", href: "/operation/mother-bag", current: false },
       { name: "Truck Export", href: "/operation/truck-export", current: false },
-      { name: "Track Mother Bag List", href: "#", current: false },
+      { name: "Track Mother Bag List", href: "/operation/track-mother-bag-list", current: false },
     ],
   },
   {
