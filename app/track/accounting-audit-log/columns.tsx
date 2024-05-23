@@ -24,12 +24,15 @@ export const columns: ColumnDef<any>[] = [
         ),
         enableSorting: false,
         enableHiding: false,
+        size: 50,
+        enableResizing: false, 
         
     },
     {
         accessorKey: "awbNo",
         header: "AWB No.",
-        size: 80,
+        size: 50,
+        enableResizing: false, 
     },
     {
         accessorKey: "awbPrefix",
@@ -38,24 +41,29 @@ export const columns: ColumnDef<any>[] = [
     },
     {
         accessorKey: "origin",
-        header: "Origin"
+        header: "Origin",
+        size:50
     },
     {
         accessorKey: "dest",
-        header: "Dest"
+        header: "Dest",
+        size:50
     },
     {
         accessorKey: "fltNo",
-        header: "Flt #"
+        header: "Flt #",
+        size:50
     },
     {
         accessorKey: "fltDate",
         header: "Flt Date",
-        size: 110
+        size: 150,
+        enableResizing: false, 
     },
     {
         accessorKey: "agent",
-        header: "Agent"
+        header: "Agent",
+        size:80
     },
     {
         accessorKey: "productType",
@@ -64,60 +72,73 @@ export const columns: ColumnDef<any>[] = [
     },
     {
         accessorKey: "rate",
-        header: "Rate"
+        header: "Rate",
+        size:50
     },
     {
         accessorKey: "status",
-        header: "Status"
+        header: "Status",
+        size:80
     },
     {
         accessorKey: "spotRate",
-        header: "Spot Rate"
+        header: "Spot Rate",
+        size:50
     },
     {
         accessorKey: "grossWt",
-        header: "Gross Wt"
+        header: "Gross Wt",
+        size:50
     },
     {
         accessorKey: "chgWt",
-        header: "Chg Wt"
+        header: "Chg Wt",
+        size:50
     },
     {
         accessorKey: "volWt",
-        header: "Vol. Wt."
+        header: "Vol. Wt.",
+        size:50
     },
     {
         accessorKey: "freight",
-        header: "Freight"
+        header: "Freight",
+        size:50
     },
     {
         accessorKey: "ocdc",
-        header: "OCDC"
+        header: "OCDC",
+        size:50
     },
     {
         accessorKey: "ocda",
-        header: "OCDA"
+        header: "OCDA",
+        size:50
     },
     {
         accessorKey: "serviceTax",
-        header: "Service Tax"
+        header: "Service Tax",
+        size:50
     },
     {
         accessorKey: "total",
-        header: "Total"
+        header: "Total",
+        size:80
     },
     {
         accessorKey: "iataFinalAmt",
-        header: "IATA FinalAmt"
+        header: "IATA FinalAmt", 
+        size:50
     },
     {
         accessorKey: "balanceAmount",
-        header: "Balance Amount"
+        header: "Balance Amount",
+     
     },
     {
         accessorKey: "date",
         header: "Date",
-        size: 110,
+        size: 150
        
     },
     {

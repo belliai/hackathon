@@ -1,7 +1,6 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
 
@@ -30,10 +29,6 @@ export const columns: ColumnDef<any>[] = [
         header: "User Code"
     },
     {
-        accessorKey: "masterKey",
-        header: "Master Key"
-    },
-    {
         accessorKey: "updatedBy",
         header: "Updated By"
     },
@@ -52,13 +47,13 @@ export const columns: ColumnDef<any>[] = [
     {
         accessorKey: "description",
         header: "Description",
-        size: 200
+        size: 400
     },
     {
         accessorKey: "updatedAt",
         header: "Updated At",
         size: 300
-    },
+    }
 
 ]
 

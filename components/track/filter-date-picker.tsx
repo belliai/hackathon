@@ -24,14 +24,14 @@ interface FilterDateProps {
 const FilterDatePicker = ({  value, name, onChange, className }: FilterDateProps) => {
 
     return (
-        <div className={cn("flex flex-col space-y-1",className)}>
+        <div className={cn("flex flex-col justify-end space-y-1",className)}>
             <Label className="text-xs opacity-50">{name}</Label>
             <Popover>
                 <PopoverTrigger asChild>
                     <Button
                         variant={"outline"}
                         className={cn(
-                            "pl-3 h-8 w-40 text-left font-normal bg-zinc-900 hover:bg-zinc-900 hover:text-white border-zinc-800 focus:ring-1  focus:ring-indigo-600 active:ring-indigo-600"
+                            "pl-3 h-8 min-w-40 text-left font-normal bg-zinc-900 hover:bg-zinc-900 hover:text-white border-zinc-800 focus:ring-1  focus:ring-indigo-600 active:ring-indigo-600"
                         )}
                     >
                         {value ? (

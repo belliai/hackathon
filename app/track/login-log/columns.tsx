@@ -1,7 +1,6 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
 
@@ -26,41 +25,56 @@ export const columns: ColumnDef<any>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "userCode",
-        header: "User Code"
+        accessorKey: "profilePic",
+        header: "Profile Pic"
     },
     {
-        accessorKey: "masterKey",
-        header: "Master Key"
+        accessorKey: "userEmail",
+        header: "User Email"
     },
     {
-        accessorKey: "updatedBy",
-        header: "Updated By"
+        accessorKey: "role",
+        header: "Role"
     },
     {
-        accessorKey: "fieldName",
-        header: "Field Name"
+        accessorKey: "station",
+        header: "Station"
     },
     {
-        accessorKey: "oldValue",
-        header: "Old Value"
+        accessorKey: "browser",
+        header: "Browser"
     },
     {
-        accessorKey: "newValue",
-        header: "New Value"
+        accessorKey: "os",
+        header: "OS"
     },
     {
-        accessorKey: "description",
-        header: "Description",
-        size: 200
+        accessorKey: "device",
+        header: "Device"
     },
     {
-        accessorKey: "updatedAt",
-        header: "Updated At",
-        size: 300
+        accessorKey: "activityTime",
+        header: "Activity Time"
     },
+    {
+        accessorKey: "ipAddress",
+        header: "IP Address"
+    },
+    {
+        accessorKey: "country",
+        header: "Country"
+    },
+    {
+        accessorKey: "city",
+        header: "City"
+    },
+    {
+        accessorKey: "region",
+        header: "Region"
+    }
+];
+    
 
-]
 
 
 

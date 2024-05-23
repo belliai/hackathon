@@ -18,8 +18,8 @@ const FilterSelect = (props: SelectProps) => {
         <div className={cn("",className)}>
             <Label className="text-xs opacity-50">{name}</Label>
             <Select  onValueChange={onChange} value={value}>
-                <SelectTrigger className="h-8 w-52 focus-visible:ring-1 focus-visible:ring-indigo-600 focus:ring-1 focus:ring-indigo-600 active:ring-indigo-600">
-                    <SelectValue  placeholder={`select a ` + name} >
+                <SelectTrigger className="h-8 min-w-40 focus-visible:ring-1 focus-visible:ring-indigo-600 focus:ring-1 focus:ring-indigo-600 active:ring-indigo-600">
+                    <SelectValue  placeholder={``} >
                         {options && options.find((item: any) => item.value === value)?.value}
                     </SelectValue>
                 </SelectTrigger>

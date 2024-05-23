@@ -51,11 +51,13 @@ export const columns: ColumnDef<any>[] = [
     },
     {
         accessorKey: "description",
-        header: "Description"
+        header: "Description",
+        size:300
     },
     {
         accessorKey: "updatedAt",
-        header: "Updated At"
+        header: "Updated At",
+        size:400
     }
 
 ]

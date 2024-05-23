@@ -163,6 +163,102 @@ const navigation = [
         href: "/track/pomail-audit-log",
         current: false,
       },
+      {
+        name: "Spicewall",
+        href: "/track/spicewall",
+        current: false,
+      },
+      {
+        name: "Master Capacity Log",
+        href: "/track/master-capacity-log",
+        current: false,
+      },
+      {
+        name: "Messaging",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "MVT Message",
+            href: "/track/messaging-mvt",
+            current: false,
+          },
+          {
+            name: "Messaging Log",
+            href: "/track/messaging-log",
+            current: false,
+          },
+        ]
+      },
+      {
+        name: "POD Upload Log",
+        href: "/track/pod-upload-log",
+        current: false,
+      },
+      {
+        name: "Email Audit Log",
+        href: "/track/email-audit-log",
+        current: false,
+      },
+      {
+        name: "User Audit Log",
+        href: "/track/user-audit-log",
+        current: false,
+      },
+      {
+        name: "Login Log",
+        href: "/track/login-log",
+        current: false,
+      },
+      {
+        name: "Master Upload Log",
+        href: "#",
+        submenus: [
+          {
+            name: "Pincode",
+            href: "/track/master-pin-code",
+            current: false,
+          },
+          {
+            name: "Customer/Employee",
+            href: "/track/master-customer",
+            current: false,
+          },
+          {
+            name: "Rateline",
+            href: "/track/master-rateline",
+            current: false,
+          },
+          {
+            name: "OCDC",
+            href: "/track/master-ocdc",
+            current: false,
+          },
+        ],
+        current: false,
+      },
+      {
+        name: "Flight Scheduling Log",
+        href: "#",
+        current: false,
+        submenus : [
+          {
+            name: "Flight",
+            href: "/track/flight",
+            current: false,
+          },
+          {
+            name: "Active Flight",
+            href: "/track/flight-active",
+            current: false,
+          },
+        ]
+      },
+      {
+        name: "Ekart Audit Log",
+        href: "/track/ekart-audit-log",
+        current: false,
+      },
     ],
   },
   {
