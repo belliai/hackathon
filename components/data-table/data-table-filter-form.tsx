@@ -57,6 +57,7 @@ export default function DataTableFilterForm<T extends FieldValues>(
                 case "select":
                   return (
                     <FormField
+                      key={filterField.key}
                       control={props.form.control}
                       name={filterField.key}
                       render={({ field }) => (
@@ -75,7 +76,10 @@ export default function DataTableFilterForm<T extends FieldValues>(
                             </FormControl>
                             <SelectContent>
                               {filterField.selectOptions?.map((option) => (
-                                <SelectItem value={option.value}>
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
                                   {option.label}
                                 </SelectItem>
                               ))}
@@ -89,6 +93,7 @@ export default function DataTableFilterForm<T extends FieldValues>(
                 case "date":
                   return (
                     <FormField
+                      key={filterField.key}
                       control={props.form.control}
                       name={filterField.key}
                       render={({ field }) => (
@@ -105,6 +110,7 @@ export default function DataTableFilterForm<T extends FieldValues>(
                 default:
                   return (
                     <FormField
+                      key={filterField.key}
                       control={props.form.control}
                       name={filterField.key}
                       render={({ field }) => (
