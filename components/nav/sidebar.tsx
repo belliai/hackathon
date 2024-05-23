@@ -124,7 +124,24 @@ const navigation = [
       { name: "Truck Export", href: "/operation/truck-export", current: false },
       { name: "Track Mother Bag List", href: "/operation/track-mother-bag-list", current: false },
       { name: "Stock Alocation", href: "/operation/stock-allocation", current: false },
-      { name: "Flight Planning", href: "/operation/truck-export", current: false },
+      { name: "Flight Planning", href: "/operation/flight-planning", current: false },
+      { 
+        name: "Export Manifest",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "Flight Manifest",
+            href: "/operation/export-manifest/flight-manifest",
+            current: false,
+          },
+          {
+            name: "Flight Epouch",
+            href: "/operation/export-manifest/flight-epouch",
+            current: false,
+          },
+        ]
+      },
     ],
   },
   {
