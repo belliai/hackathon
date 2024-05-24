@@ -2,6 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { actionColumn } from "@/app/organize/masters/components/columnItem";
+import { DataTableRowActions } from "../data-table/data-table-row-actions";
 
 export type Order = {
   axb: string; // airway bill
@@ -93,5 +95,10 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "delivery",
     header: "Delivery",
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <DataTableRowActions />,
   },
 ];

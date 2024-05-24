@@ -27,12 +27,14 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   hideToolbar?: boolean;
   hidePagination?: boolean;
+  className?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -40,6 +42,7 @@ export function DataTable<TData, TValue>({
   data,
   hideToolbar,
   hidePagination,
+  className,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -74,7 +77,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4 ">
       {!hideToolbar && <DataTableToolbar table={table} />}
-      <div className="rounded-md border ">
+      <div className={cn("rounded-md border ", className)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -84,7 +87,7 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="min-w-10 whitespace-nowrap"
+                      className={cn("min-w-10 whitespace-nowrap")}
                     >
                       {header.isPlaceholder
                         ? null
@@ -106,7 +109,10 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="whitespace-nowrap" key={cell.id}>
+                    <TableCell
+                      className={cn("whitespace-nowrap")}
+                      key={cell.id}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
