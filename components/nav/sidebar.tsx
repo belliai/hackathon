@@ -50,8 +50,9 @@ import {
 } from "@/components/ui/accordion";
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
-import { Boxes } from "lucide-react";
+import { Boxes, PlusSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 
 const navigation = [
   {
@@ -363,33 +364,37 @@ export default function SideBar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className="flex items-center gap-x-4">
-          <MagnifyingGlassIcon
-            className="h-5 w-5 text-white"
-            aria-hidden="true"
-          />
-          <PencilSquareIcon
-            className="h-5 w-5 text-white cursor-pointer"
-            aria-hidden="true"
-            onClick={() => setDialogOpen(true)}
-          />
-          <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <button className="hidden">Open Dialog</button>
-            </DialogTrigger>
-            <DialogContent className="max-w-6xl bg-zinc-900 border-none">
-              <DialogTitle className="text-xl font-bold ml-2">
-                New Orders
-              </DialogTitle>
-              <NewOrder />
-            </DialogContent>
-          </Dialog>
-        </div>
+        <Avatar className="w-[28px] h-[28px]">
+          <AvatarFallback className="w-[28px] h-[28px] text-xs items-center">
+            MG
+          </AvatarFallback>
+        </Avatar>
       </div>
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
+              <li>
+                <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <button className="hidden">Open Dialog</button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-6xl bg-zinc-900 border-none">
+                    <DialogTitle className="text-xl font-bold ml-2">
+                      New Orders
+                    </DialogTitle>
+                    <NewOrder />
+                  </DialogContent>
+                </Dialog>
+                <Button
+                  variant="ghost"
+                  onClick={() => setDialogOpen(true)}
+                  className="px-2 w-full py-5 justify-start mb-5"
+                >
+                  <PlusSquare className="mr-2 h-6 w-6" />
+                  New Order
+                </Button>
+              </li>
               {navigation.map((item) => (
                 <li key={item.name}>
                   {item.children ? (
