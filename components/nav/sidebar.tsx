@@ -143,13 +143,48 @@ const navigation = [
         current: false,
         submenus: [
           {
-            name: "Flight Manifest",
+            name: "Export Manifest",
             href: "/operation/export-manifest/export-manifest",
             current: false,
           },
           {
             name: "Flight Epouch",
             href: "/operation/export-manifest/flight-epouch",
+            current: false,
+          },
+        ],
+      },
+      {
+        name: "Arrival Manifest",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "Arrival Manifest",
+            href: "#",
+            current: false,
+          },
+          {
+            name: "Break ULD",
+            href: "#",
+            current: false,
+          },
+        ],
+      },
+      { name: "Delivery Cargo", href: "#", current: false },
+      {
+        name: "Transfer",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "CTM IN",
+            href: "#",
+            current: false,
+          },
+          {
+            name: "CTM OUT",
+            href: "#",
             current: false,
           },
         ],
