@@ -5,6 +5,7 @@ import "./globals.css";
 import { CollaborativeApp } from "@/app/CollaborativeApp";
 import { Room } from "@/app/Room";
 import { cn } from "@/lib/utils";
+import { GoogleTagManager } from "@next/third-parties/google";
 import UIWrapper from "@/components/ui/wrapper";
 
 export const metadata: Metadata = {
@@ -17,6 +18,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isProduction = process.env.NODE_ENV === "production";
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
   return (
     <html
       lang="en"
@@ -26,6 +29,7 @@ export default function RootLayout({
         ` ${GeistSans.className}`
       )}
     >
+      {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
       <body className="  h-full bg-zinc-900 text-white custom-scrollbar">
         {/* <ProgressBar />
       <Nav /> */}
