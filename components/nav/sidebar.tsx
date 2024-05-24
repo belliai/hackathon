@@ -270,7 +270,7 @@ const navigation = [
               },
               {
                 name: "Commodity Code",
-                href: "/organize/masters/operation/commodity-code",
+                href: "/organize/masters/operation/commodity",
                 current: false,
               },
               {
