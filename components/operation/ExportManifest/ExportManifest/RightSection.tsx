@@ -49,7 +49,14 @@ export default function RightSection() {
 
           <div className="flex flex-col gap-2">
             <div className="flex gap-1 items-center text-white">
-              <div className="text-sm">IGM No</div>
+              <div className="text-sm">Manifest No</div>
+            </div>
+            <Input className="border-zinc-500" />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-1 items-center text-white">
+              <div className="text-sm">Remarks</div>
             </div>
             <Input className="border-zinc-500" />
           </div>
