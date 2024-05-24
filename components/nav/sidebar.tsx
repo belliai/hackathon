@@ -85,7 +85,7 @@ const navigation = [
           { name: "Upload Cargo Acceptance Slip", href: "#", current: false },
         ],
       },
-      { name: "Download POD", href: "#", current: false },
+      { name: "Download POD23", href: "#", current: false },
       { name: "AWB Epouch", href: "#", current: false },
       { name: "Maintain AWB", href: "#", current: false },
     ],
