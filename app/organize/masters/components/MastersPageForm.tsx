@@ -1,7 +1,6 @@
 "use client";
 
 import FormTextField, { TFormTextField } from "@/components/form/FormTextField";
-import { SectionedFormFields } from "./MastersPageTemplate";
 import { Form } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";
@@ -17,14 +16,7 @@ export default function MastersPageForm({
 }: MastersPageFormProps) {
   return (
     <Form {...hookForm}>
-      <div
-        className={cn(
-          "grid grid-cols-2 gap-4 gap-x-6 pr-2 py-2 items-end",
-          {
-            "grid-cols-1": formFields && formFields?.length < 8,
-          }
-        )}
-      >
+      <div className={cn("grid sm:grid-cols-2 gap-4 gap-x-6 py-2 items-end")}>
         {formFields?.map((field) => {
           return (
             <FormTextField

@@ -69,7 +69,7 @@ export default function MastersPageFieldArrayForm({
         onClick={() => fieldArrayProps?.fieldArray.append({})}
         className="bg-button-primary hover:bg-button-primary/80 text-white mr-auto"
       >
-        <Plus className="mr-2" />
+        <Plus className="mr-2" size={16} />
         Add
       </Button>
     </div>

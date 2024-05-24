@@ -1,10 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/data-table/data-table";
-import FormTextField, {
-  FormTextFieldProps,
-  TFormTextField,
-} from "@/components/form/FormTextField";
+import FormTextField, { TFormTextField } from "@/components/form/FormTextField";
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -17,13 +14,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
-import { ColumnDef, Row } from "@tanstack/react-table";
-import { Download, Plus, Search, Trash } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Download, Plus, Search } from "lucide-react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import MastersPageForm from "./MastersPageForm";
 import { Separator } from "@/components/ui/separator";
 import MastersPageFieldArrayForm from "./MastersPageFieldArrayForm";
+import { cn } from "@/lib/utils";
 
 export type FieldArrayProps = {
   fieldArray: UseFieldArrayReturn<any>;
@@ -73,16 +70,16 @@ export default function MastersPageTemplate({
                 <span className="block md:hidden">Create</span>
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="w-full max-w-3xl">
               <DialogTitle>{buttonText}</DialogTitle>
-              <div className="max-h-[75dvh] overflow-auto">
+              <div className="max-h-[75dvh] overflow-auto pr-2">
                 {sectionedFormFields ? (
                   sectionedFormFields.map((section, index) => {
                     return (
                       <div className="pt-4" key={index}>
                         {/* For normal form fields  */}
                         {section.sectionName && (
-                          <div className="flex flex-col gap-2 py-2">
+                          <div className="flex flex-col gap-2 py-2 pb-4">
                             <h2 className="font-semibold text-white">
                               {section.sectionName}
                             </h2>
@@ -129,7 +126,12 @@ export default function MastersPageTemplate({
       />
       <div className="p-4 border rounded-md">
         <Form {...hookForm}>
-          <form className="flex flex-col md:flex-row flex-wrap gap-4 items-end w-full">
+          <form
+            className={cn("grid sm:grid-cols-2 gap-4 items-end w-full", {
+              "md:grid-cols-5": filterFormFields.length > 2,
+              "md:grid-cols-2": filterFormFields.length <= 2,
+            })}
+          >
             {filterFormFields.map((field) => {
               return (
                 <div key={field.name} className="md:max-w-72 w-full">

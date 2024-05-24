@@ -265,7 +265,7 @@ const navigation = [
               },
               {
                 name: "Airport/Warehouse",
-                href: "/organize/masters/operation/airport-warehouse",
+                href: "/organize/masters/operation/airport",
                 current: false,
               },
               {
