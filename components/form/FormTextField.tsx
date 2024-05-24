@@ -32,6 +32,8 @@ type SelectOption = {
   value: string;
 };
 
+export type FormTextField = Omit<FormTextFieldProps, "form">;
+
 export interface FormTextFieldProps {
   name: string;
   type: string;

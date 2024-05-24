@@ -122,10 +122,22 @@ const navigation = [
     children: [
       { name: "Mother Bag", href: "/operation/mother-bag", current: false },
       { name: "Truck Export", href: "/operation/truck-export", current: false },
-      { name: "Track Mother Bag List", href: "/operation/track-mother-bag-list", current: false },
-      { name: "Stock Alocation", href: "/operation/stock-allocation", current: false },
-      { name: "Flight Planning", href: "/operation/flight-planning", current: false },
-      { 
+      {
+        name: "Track Mother Bag List",
+        href: "/operation/track-mother-bag-list",
+        current: false,
+      },
+      {
+        name: "Stock Alocation",
+        href: "/operation/stock-allocation",
+        current: false,
+      },
+      {
+        name: "Flight Planning",
+        href: "/operation/flight-planning",
+        current: false,
+      },
+      {
         name: "Export Manifest",
         href: "#",
         current: false,
@@ -140,7 +152,7 @@ const navigation = [
             href: "/operation/export-manifest/flight-epouch",
             current: false,
           },
-        ]
+        ],
       },
     ],
   },
@@ -203,7 +215,7 @@ const navigation = [
             href: "/track/messaging-log",
             current: false,
           },
-        ]
+        ],
       },
       {
         name: "POD Upload Log",
@@ -256,7 +268,7 @@ const navigation = [
         name: "Flight Scheduling Log",
         href: "#",
         current: false,
-        submenus : [
+        submenus: [
           {
             name: "Flight",
             href: "/track/flight",
@@ -267,7 +279,7 @@ const navigation = [
             href: "/track/flight-active",
             current: false,
           },
-        ]
+        ],
       },
       {
         name: "Ekart Audit Log",
@@ -326,6 +338,10 @@ const navigation = [
               {
                 name: "Vendor",
                 href: "/organize/masters/finance/vendor",
+              },
+              {
+                name: "Zone",
+                href: "/organize/masters/finance/zone",
               },
             ],
           },
