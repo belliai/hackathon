@@ -14,7 +14,7 @@ export default function FilterSection() {
   return (
     <div className="flex flex-col mt-10 gap-4">
       <div className="flex justify-between">
-        <h1 className="text-xl font-semibold">Flight Planning</h1>
+        <h1 className="text-xl font-semibold">Export Manifest</h1>
         <div className="flex gap-4">
           <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
             <span className="mr-1 h-4 w-4">
@@ -63,21 +63,6 @@ export default function FilterSection() {
           </Button>
         </div>
 
-        <div className="flex gap-4 w-1/3 justify-end">
-          <div className="flex items-center space-x-2">
-            <label htmlFor="uld-cart">ULD</label>
-            <Switch id="uld-cart" className="data-[state=checked]:bg-zinc-800 data-[state=unchecked]:bg-zinc-800" />
-            <label htmlFor="uld-cart">Cart</label>
-          </div>
-
-          <div className="flex gap-2">
-            <Input className="border-zinc-500" placeholder="Cart/ULD" />
-            <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
-              Assign
-            </Button>
-          </div>
-        </div>
-        
       </div>
       
     </div>

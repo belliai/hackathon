@@ -144,7 +144,7 @@ const navigation = [
         submenus: [
           {
             name: "Flight Manifest",
-            href: "/operation/export-manifest/flight-manifest",
+            href: "/operation/export-manifest/export-manifest",
             current: false,
           },
           {
