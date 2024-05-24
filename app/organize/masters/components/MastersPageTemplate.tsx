@@ -3,6 +3,7 @@
 import { DataTable } from "@/components/data-table/data-table";
 import FormTextField, {
   FormTextFieldProps,
+  TFormTextField,
 } from "@/components/form/FormTextField";
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
@@ -20,14 +21,22 @@ import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Download, Plus, Search } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
+import MastersPageForm from "./MastersPageForm";
+import { Separator } from "@/components/ui/separator";
+
+export type SectionedFormFields = {
+  sectionName?: string;
+  fields: TFormTextField[];
+};
 
 interface MastersPageTemplateProps {
   heading: string;
   buttonText?: string;
   hookForm: UseFormReturn<any>;
   filterHookForm: UseFormReturn<any>;
-  formFields: Omit<FormTextFieldProps, "form">[];
-  filterFormFields: Omit<FormTextFieldProps, "form">[];
+  formFields?: TFormTextField[];
+  sectionedFormFields?: SectionedFormFields[];
+  filterFormFields: TFormTextField[];
   columns: ColumnDef<any>[];
   data: any[];
 }
@@ -38,6 +47,7 @@ export default function MastersPageTemplate({
   hookForm,
   filterHookForm,
   formFields,
+  sectionedFormFields,
   filterFormFields,
   columns,
   data,
@@ -56,27 +66,33 @@ export default function MastersPageTemplate({
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>{buttonText}</DialogTitle>
-              <Form {...hookForm}>
-                <div
-                  className={cn(
-                    "grid grid-cols-2 gap-4 gap-x-6 max-h-[75dvh] overflow-auto pr-2 py-2 items-end",
-                    {
-                      "grid-cols-1": formFields.length < 8,
-                    }
-                  )}
-                >
-                  {formFields.map((field) => {
+              <div className="max-h-[75dvh] overflow-auto">
+                {sectionedFormFields ? (
+                  sectionedFormFields.map((section, index) => {
                     return (
-                      <FormTextField
-                        key={field.name}
-                        {...field}
-                        form={hookForm}
-                        endIcon={null}
-                      />
+                      <div className="pt-4" key={index}>
+                        {section.sectionName && (
+                          <div className="flex flex-col gap-2 py-2">
+                            <h2 className="font-semibold text-white">
+                              {section.sectionName}
+                            </h2>
+                            <Separator />
+                          </div>
+                        )}
+                        <MastersPageForm
+                          hookForm={hookForm}
+                          formFields={section.fields}
+                        />
+                      </div>
                     );
-                  })}
-                </div>
-              </Form>
+                  })
+                ) : (
+                  <MastersPageForm
+                    hookForm={hookForm}
+                    formFields={formFields}
+                  />
+                )}
+              </div>
               <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>
@@ -93,7 +109,7 @@ export default function MastersPageTemplate({
       />
       <div className="p-4 border rounded-md">
         <Form {...hookForm}>
-          <form className="flex flex-col md:flex-row gap-4 items-end w-full">
+          <form className="flex flex-col md:flex-row flex-wrap gap-4 items-end w-full">
             {filterFormFields.map((field) => {
               return (
                 <div key={field.name} className="md:max-w-72 w-full">

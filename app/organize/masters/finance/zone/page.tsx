@@ -2,9 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { selectColumn } from "../../components/columnItem";
+import { actionColumn, selectColumn } from "../../components/columnItem";
 import StatusBadge from "../../components/StatusBadge";
-import { FormTextField } from "@/components/form/FormTextField";
+import { TFormTextField } from "@/components/form/FormTextField";
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
@@ -37,9 +37,10 @@ export default function MasterZonePage() {
         />
       ),
     },
+    actionColumn
   ];
 
-  const formFields: FormTextField[] = [
+  const formFields: TFormTextField[] = [
     {
       name: "zone_name",
       placeholder: "Zone Name",

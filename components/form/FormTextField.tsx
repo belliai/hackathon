@@ -32,7 +32,7 @@ type SelectOption = {
   value: string;
 };
 
-export type FormTextField = Omit<FormTextFieldProps, "form">;
+export type TFormTextField = Omit<FormTextFieldProps, "form">;
 
 export interface FormTextFieldProps {
   name: string;
@@ -64,6 +64,7 @@ export default function FormTextField({
   placeholder,
 }: FormTextFieldProps) {
   const fieldClassName = cn(
+    "min-w-[202px]",
     "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700 w-full",
     {
       "pr-8": endIcon,
@@ -102,9 +103,7 @@ export default function FormTextField({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger
-                      className={cn(fieldClassName, "min-w-[202px]")}
-                    >
+                    <SelectTrigger className={cn(fieldClassName)}>
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
                   </FormControl>
