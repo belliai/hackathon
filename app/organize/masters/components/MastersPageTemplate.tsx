@@ -18,15 +18,23 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
-import { Download, Plus, Search } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
+import { ColumnDef, Row } from "@tanstack/react-table";
+import { Download, Plus, Search, Trash } from "lucide-react";
+import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import MastersPageForm from "./MastersPageForm";
 import { Separator } from "@/components/ui/separator";
+import MastersPageFieldArrayForm from "./MastersPageFieldArrayForm";
+
+export type FieldArrayProps = {
+  fieldArray: UseFieldArrayReturn<any>;
+  fields: TFormTextField[];
+  columns?: ColumnDef<any>[];
+};
 
 export type SectionedFormFields = {
   sectionName?: string;
-  fields: TFormTextField[];
+  fields?: TFormTextField[];
+  fieldArray?: FieldArrayProps;
 };
 
 interface MastersPageTemplateProps {
@@ -61,7 +69,8 @@ export default function MastersPageTemplate({
             <DialogTrigger asChild>
               <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
                 <Plus size={16} className="mr-2" />
-                {buttonText}
+                <span className="hidden md:block">{buttonText}</span>
+                <span className="block md:hidden">Create</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -71,6 +80,7 @@ export default function MastersPageTemplate({
                   sectionedFormFields.map((section, index) => {
                     return (
                       <div className="pt-4" key={index}>
+                        {/* For normal form fields  */}
                         {section.sectionName && (
                           <div className="flex flex-col gap-2 py-2">
                             <h2 className="font-semibold text-white">
@@ -79,10 +89,20 @@ export default function MastersPageTemplate({
                             <Separator />
                           </div>
                         )}
-                        <MastersPageForm
-                          hookForm={hookForm}
-                          formFields={section.fields}
-                        />
+                        {section.fields && (
+                          <MastersPageForm
+                            hookForm={hookForm}
+                            formFields={section.fields}
+                          />
+                        )}
+
+                        {/* For many to one relationnships */}
+                        {section.fieldArray && (
+                          <MastersPageFieldArrayForm
+                            fieldArrayProps={section.fieldArray}
+                            hookForm={hookForm}
+                          />
+                        )}
                       </div>
                     );
                   })
