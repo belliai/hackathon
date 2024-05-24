@@ -51,6 +51,7 @@ import {
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
 import { Boxes } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const navigation = [
   {
@@ -337,7 +338,12 @@ export default function SideBar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex items-center gap-x-2 cursor-pointer">
-              <AvatarIcon className="h-6 w-6" />
+              <Avatar className="rounded-md w-6 h-6">
+                <AvatarImage src="/jeff.webp" />
+                <AvatarFallback className="rounded-md w-6 h-6">
+                  B
+                </AvatarFallback>
+              </Avatar>
               <span className="text-white">Belli</span>
               <ChevronDownIcon
                 className="h-4 w-4 text-zinc-500"
