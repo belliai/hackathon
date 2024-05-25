@@ -67,6 +67,9 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => (
+      <span className="text-white font-semibold"> {row.original.status}</span>
+    ),
   },
   {
     accessorKey: "mode",
