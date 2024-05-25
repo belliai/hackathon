@@ -163,7 +163,7 @@ const navigation = [
         submenus: [
           {
             name: "Arrival Manifest",
-            href: "#",
+            href: "/operation/arrival-manifest/arrival-manifest",
             current: false,
           },
           {
