@@ -15,7 +15,7 @@ export default async function Dashboard() {
           columns={columns}
           data={data}
           hideToolbar
-          className="border-none [&_th]:text-white [&_th]:py-3 [&_th]:px-3 [&_td]:px-3 [&_td]:text-zinc-400 [&_td]:py-3"
+          className="border-none [&_th]:text-white [&_th]:py-3 [&_th]:px-3 [&_td]:px-3 [&_td]:text-zinc-400"
         />
       </div>
     </div>
