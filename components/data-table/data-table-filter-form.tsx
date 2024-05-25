@@ -135,14 +135,16 @@ export default function DataTableFilterForm<T extends FieldValues>(
             })}
           </div>
           <div className="inline-flex gap-3 mt-7">
-            <Button
-              size="icon"
-              type="button"
-              className="bg-button-primary  text-white hover:bg-button-primary/80 size-9"
-              onClick={toggleExpand}
-            >
-              <SlidersHorizontal size={16} />
-            </Button>
+            {props.formFilters.length > 4 && (
+              <Button
+                size="icon"
+                type="button"
+                className="bg-button-primary  text-white hover:bg-button-primary/80 size-9"
+                onClick={toggleExpand}
+              >
+                <SlidersHorizontal size={16} />
+              </Button>
+            )}
             <Button
               size="icon"
               type="button"
