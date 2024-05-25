@@ -145,7 +145,7 @@ const navigation = [
           },
         ],
       },
-      { name: "Delivery Cargo", href: "#", current: false },
+      { name: "Delivery Cargo", href: "/operation/delivery-cargo", current: false },
       {
         name: "Transfer",
         href: "#",
