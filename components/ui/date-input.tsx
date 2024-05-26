@@ -7,9 +7,15 @@ import { ControllerRenderProps } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-utils";
 
-type DateInputProps = ControllerRenderProps;
+type DateInputProps = ControllerRenderProps & {
+  className?: HTMLDivElement["className"];
+};
 
-export default function DateInput({ value, onChange }: DateInputProps) {
+export default function DateInput({
+  value,
+  onChange,
+  className,
+}: DateInputProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -18,7 +24,8 @@ export default function DateInput({ value, onChange }: DateInputProps) {
             variant={"outline"}
             className={cn(
               "w-full pl-3 text-left font-normal",
-              !value && "text-muted-foreground"
+              !value && "text-muted-foreground",
+              className
             )}
           >
             {value ? formatDate(String(value)) : <span>Pick a date</span>}

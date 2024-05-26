@@ -6,13 +6,8 @@ import {
   PresentationChartLineIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
-import {
-  WrenchScrewdriverIcon,
-} from "@heroicons/react/24/solid";
-import {
-  CubeIcon,
-  LinkBreak2Icon,
-} from "@radix-ui/react-icons";
+import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
+import { CubeIcon, LinkBreak2Icon } from "@radix-ui/react-icons";
 import {
   Dialog,
   DialogTrigger,
@@ -25,6 +20,7 @@ import { Boxes, PlusSquare } from "lucide-react";
 import { Button } from "../ui/button";
 import UserDropdown from "./UserDropdown";
 import SidebarItem from "./SidebarItem";
+import NewOrderModal from "../dashboard/new-order-modal";
 
 const navigation = [
   {
@@ -145,7 +141,11 @@ const navigation = [
           },
         ],
       },
-      { name: "Delivery Cargo", href: "/operation/delivery-cargo", current: false },
+      {
+        name: "Delivery Cargo",
+        href: "/operation/delivery-cargo",
+        current: false,
+      },
       {
         name: "Transfer",
         href: "#",
@@ -314,25 +314,16 @@ export default function SideBar() {
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <ul role="list" className="-mx-2">
             <li>
-              <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <button className="hidden">Open Dialog</button>
-                </DialogTrigger>
-                <DialogContent className="max-w-6xl bg-zinc-900 border-none">
-                  <DialogTitle className="text-xl font-bold ml-2">
-                    New Orders
-                  </DialogTitle>
-                  <NewOrder />
-                </DialogContent>
-              </Dialog>
-              <Button
-                variant="ghost"
-                onClick={() => setDialogOpen(true)}
-                className="px-2 w-full py-5 justify-start mb-5 text-lg text-zinc-400"
-              >
-                <PlusSquare className="mr-2.5 h-6 w-6" />
-                New Order
-              </Button>
+              <NewOrderModal>
+                <Button
+                  variant="ghost"
+                  onClick={() => setDialogOpen(true)}
+                  className="px-2 w-full py-5 justify-start mb-5 text-lg text-zinc-400"
+                >
+                  <PlusSquare className="mr-2.5 h-6 w-6" />
+                  New Order
+                </Button>
+              </NewOrderModal>
             </li>
             <ul className="flex flex-col gap-1">
               {navigation.map((item) => (

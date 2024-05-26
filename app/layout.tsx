@@ -6,6 +6,9 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { GoogleTagManager } from "@next/third-parties/google";
 import UIWrapper from "@/components/ui/wrapper";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toast } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -37,7 +40,10 @@ export default function RootLayout({
       <body className="  h-full bg-zinc-900 text-white custom-scrollbar">
         {/* <ProgressBar />
       <Nav /> */}
-        <UIWrapper>{children}</UIWrapper>
+        <TooltipProvider>
+          <UIWrapper>{children}</UIWrapper>
+          <Toaster />
+        </TooltipProvider>
       </body>
     </html>
   );
