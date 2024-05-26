@@ -26,8 +26,9 @@ import {
 } from "@components/ui/table";
 
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar";
 import { cn } from "@/lib/utils";
+import { ButtonProps } from "../ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,6 +36,8 @@ interface DataTableProps<TData, TValue> {
   hideToolbar?: boolean;
   hidePagination?: boolean;
   className?: string;
+  extraToolbarButtons?: DataTableToolbarProps<TData>["extraButtons"];
+  toolbarButtonVariant?: ButtonProps["variant"];
 }
 
 export function DataTable<TData, TValue>({
@@ -43,6 +46,8 @@ export function DataTable<TData, TValue>({
   hideToolbar,
   hidePagination,
   className,
+  extraToolbarButtons,
+  toolbarButtonVariant,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -76,7 +81,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4 ">
-      {!hideToolbar && <DataTableToolbar table={table} />}
+      {!hideToolbar && (
+        <DataTableToolbar
+          table={table}
+          extraButtons={extraToolbarButtons}
+          buttonVariant={toolbarButtonVariant}
+        />
+      )}
       <div className={cn("rounded-md border ", className)}>
         <Table>
           <TableHeader>

@@ -15,27 +15,22 @@ const vals = [
 
 export default function Stats() {
   return (
-    <>
-      <dl className="mt-5 grid grid-cols-2 gap-5 sm:grid-cols-4">
-        {vals.map((item) => (
-          <Card
-            key={item.name}
-            className="overflow-hidden rounded-lg border-[1px] bg-transparent border-zinc-700"
-          >
-            <CardContent>
-              <p className="text-3xl font-semibold tracking-tight text-zinc-100 mt-5">
-                {item.val}
-              </p>
-            </CardContent>
-            <Separator className="pl-2 pr-2 bg-zinc-700" />
-            <CardFooter>
-              <CardTitle className="truncate leading-loose text-zinc-400">
-                {item.name}
-              </CardTitle>
-            </CardFooter>
-          </Card>
-        ))}
-      </dl>
-    </>
+    <dl className="grid grid-cols-2 gap-5 sm:grid-cols-4">
+      {vals.map((item) => (
+        <Card key={item.name} className=" rounded-md bg-card/30">
+          <CardHeader className="py-3 px-6">
+            <CardTitle className="text-3xl font-extrabold">
+              {item.val}
+            </CardTitle>
+          </CardHeader>
+          <Separator />
+          <CardFooter className="py-3 px-6">
+            <CardTitle className="truncate leading-none text-muted-foreground text-sm font-medium">
+              {item.name}
+            </CardTitle>
+          </CardFooter>
+        </Card>
+      ))}
+    </dl>
   );
 }

@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { actionColumn } from "@/app/organize/masters/components/columnItem";
 import { DataTableRowActions } from "../data-table/data-table-row-actions";
+import DataTableSelectHead from "../data-table/DataTableSelectHead";
+import DataTableSelectRow from "../data-table/DataTableSelectRow";
 
 export type Order = {
   axb: string; // airway bill
@@ -26,25 +28,8 @@ export type Order = {
 export const columns: ColumnDef<Order>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        className="border-white"
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        className="border-zinc-500"
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
+    header: ({ table }) => <DataTableSelectHead table={table} />,
+    cell: ({ row }) => <DataTableSelectRow row={row} />,
     enableSorting: false,
     enableHiding: false,
   },
@@ -68,7 +53,7 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <span className="text-white font-semibold"> {row.original.status}</span>
+      <span className=" font-semibold"> {row.original.status}</span>
     ),
   },
   {
