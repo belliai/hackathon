@@ -32,10 +32,10 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-row items-center gap-3">
         <Input
           placeholder="Filter"
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
+          // value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          // onChange={(event) =>
+          //   table.getColumn("title")?.setFilterValue(event.target.value)
+          // }
           className="w-[150px] h-8 lg:w-[250px]"
         />
         {props.extraButtons?.map((button, index) => (

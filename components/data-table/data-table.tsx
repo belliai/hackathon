@@ -38,6 +38,7 @@ interface DataTableProps<TData, TValue> {
   className?: string;
   extraToolbarButtons?: DataTableToolbarProps<TData>["extraButtons"];
   toolbarButtonVariant?: ButtonProps["variant"];
+  onRowClick?: (data: TData) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -48,6 +49,7 @@ export function DataTable<TData, TValue>({
   className,
   extraToolbarButtons,
   toolbarButtonVariant,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -117,6 +119,10 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  onClick={
+                    onRowClick ? () => onRowClick(row.original) : undefined
+                  }
+                  className={cn(onRowClick && "cursor-pointer")}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (

@@ -25,7 +25,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/vertical-tabs";
 import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import OrderSummaryCard from "./order-summary-card";
 import BalanceCard from "./balance-card";
@@ -38,13 +38,24 @@ import ProcessRatesForm from "./forms/process-rates-form";
 import { toast } from "@/components/ui/use-toast";
 import DimensionsCard from "./dimensions-card";
 
-type NewOrderModalProps = PropsWithChildren & {};
+type NewOrderModalProps = PropsWithChildren & {
+  onOpenChange?: (open: boolean) => void;
+  open?: boolean;
+};
 
 export default function NewOrderModal(props: NewOrderModalProps) {
   const { children } = props;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(props.open ?? false);
   const [isFullScreen, setFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setOpen(props.open ?? false);
+  }, [props.open]);
+
+  useEffect(() => {
+    props.onOpenChange && props.onOpenChange(open);
+  }, [open]);
 
   const form = useForm({
     defaultValues: {

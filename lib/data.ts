@@ -157,7 +157,7 @@ export const orders: Order[] = [
   },
 ];
 
-export async function getData() {
+export function getData() {
   return orders;
 }
 
