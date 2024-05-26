@@ -7,7 +7,7 @@ export default async function BreakUld() {
   return (
     <div>
       <FilterSection />
-      <div className="flex gap-5 py-10">
+      <div className="flex gap-5 py-5">
         <div className="w-full">
           <Tabs defaultValue="uld-details" className="w-full">
             <TabsList>

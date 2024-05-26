@@ -25,25 +25,28 @@ export default async function FlightEpouch() {
   const data = await getData();
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <FilterSection />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="mt-5">
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white w-fit">
-              Bulk Action
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          {BULK_ACTION_LIST.map((bulk) => (
-            <DropdownMenuItem key={bulk.id}>
-              {bulk.label}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <div className="py-5">
-        <DataTable columns={columns} data={data} />
+      <div className="flex flex-col gap-4 rounded-lg border-[1px] border-zinc-700 p-5">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="bg-zinc-800 hover:bg-zinc-700 text-white w-fit">
+                Bulk Action
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {BULK_ACTION_LIST.map((bulk) => (
+              <DropdownMenuItem key={bulk.id}>
+                {bulk.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <div className="">
+          <DataTable columns={columns} data={data} />
+        </div>
       </div>
+      
     </div>
   );
 }

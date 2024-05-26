@@ -34,7 +34,8 @@ const HOLDER_TYPE_LIST = [
 
 export default function HistoryFilterSection() {
   return (
-    <div className="flex flex-col mt-5 gap-4">
+    <div className="flex flex-col gap-4 rounded-lg border-[1px] border-zinc-700 p-5 mt-4">
+      <div className="text-white text-base font-semibold">Filter</div>
       <div className="flex gap-4">
         <div className="w-3/12">
           <Select>

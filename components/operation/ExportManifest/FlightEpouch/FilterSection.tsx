@@ -26,7 +26,8 @@ export default function FilterSection() {
         </div>
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex flex-col gap-4 rounded-lg border-[1px] border-zinc-700 p-5">
+        <div className="text-white text-base font-semibold">Filter</div>
         <div className="flex gap-4 w-2/3">
           <div className="w-2/12">
             <Input className="border-zinc-500" placeholder="Flight" rightIcon={<MagnifyingGlassIcon className="h-4 w-4 text-zinc-400" />} />

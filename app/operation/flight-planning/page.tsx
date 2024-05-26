@@ -10,7 +10,7 @@ export default async function FlightPlanning() {
   return (
     <div>
       <FilterSection />
-      <div className="flex gap-5 py-10">
+      <div className="flex gap-5 py-5">
         <div className="w-3/4">
           <Tabs defaultValue="unassined-section" className="w-full">
             <TabsList>

@@ -36,21 +36,21 @@ export default async function StockAlocation() {
           <TabsTrigger value="stocks-allocation">Stocks Allocation</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
-        <TabsContent value="stocks-list">
+        <TabsContent value="stocks-list" className="flex flex-col gap-4">
           <FilterSection />
-          <div className=" py-10">
+          <div className="rounded-lg border-[1px] border-zinc-700 p-5">
             <DataTable columns={stockListColumn} data={stockListData} />
           </div>
         </TabsContent>
-        <TabsContent value="stocks-allocation">
+        <TabsContent value="stocks-allocation" className="flex flex-col gap-4 mt-0">
           <FilterSection />
-          <div className=" py-10">
+          <div className="rounded-lg border-[1px] border-zinc-700 p-5">
             <DataTable columns={stockAllocationColumn} data={stockListData} />
           </div>
         </TabsContent>
-        <TabsContent value="history">
+        <TabsContent value="history" className="flex flex-col gap-4 mt-0">
           <HistoryFilterSection />
-          <div className=" py-10">
+          <div className="rounded-lg border-[1px] border-zinc-700 p-5">
             <DataTable columns={historyColumn} data={stockListData} />
           </div>
         </TabsContent>

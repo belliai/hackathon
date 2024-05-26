@@ -158,7 +158,7 @@ const navigation = [
           },
           {
             name: "CTM OUT",
-            href: "#",
+            href: "/operation/transfer/ctm-out",
             current: false,
           },
         ],
