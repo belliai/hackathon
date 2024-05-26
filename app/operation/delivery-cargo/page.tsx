@@ -32,15 +32,15 @@ import { Calendar } from "@/components/ui/calendar";
 
 export default async function DeliveryCargo() {
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <FilterSection />
-      <div className=" py-10">
+      <div className=" py-10 rounded-lg border-[1px] border-zinc-700 p-5">
         <DataTable columns={columns} data={[]} />
       </div>
       <Card
         className="overflow-hidden rounded-lg border-[1px] bg-transparent border-zinc-700 text-zinc-400"
       >
-        <CardContent className="p-3 flex flex-col gap-4 py-4">
+        <CardContent className="p-5 flex flex-col gap-4">
           <div className="text-base font-bold text-white">AWB Detail Bulk</div>
 
           <div className="flex gap-4">

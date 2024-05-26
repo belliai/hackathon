@@ -30,7 +30,7 @@ export default async function UnplannedSection() {
     <div className="flex flex-col mt-5 gap-4">
       <SummarySection />
       
-      <Tabs defaultValue="ULD" className="w-full">
+      <Tabs defaultValue="ULD" className="w-full rounded-lg border-[1px] border-zinc-700 p-5">
         <div className="flex justify-between">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

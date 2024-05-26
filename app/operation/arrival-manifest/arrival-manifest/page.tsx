@@ -8,7 +8,7 @@ export default async function ArrivalManifest() {
   return (
     <div>
       <FilterSection />
-      <div className="flex gap-5 py-10">
+      <div className="flex gap-5 py-5">
         <div className="w-3/4">
           <Tabs defaultValue="awb-details" className="w-full">
             <TabsList>

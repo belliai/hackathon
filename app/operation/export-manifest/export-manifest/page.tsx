@@ -8,7 +8,7 @@ export default async function ExportManifest() {
   return (
     <div>
       <FilterSection />
-      <div className="flex gap-5 py-10">
+      <div className="flex gap-5 py-5">
         <div className="w-3/4">
           <Tabs defaultValue="unplanned" className="w-full">
             <TabsList>

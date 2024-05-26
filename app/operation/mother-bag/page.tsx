@@ -7,9 +7,9 @@ export default async function MotherBag() {
   const data = await getData();
 
   return (
-    <div>
+    <div className="flex flex-col gap-5">
       <FilterSection />
-      <div className=" py-10">
+      <div className="rounded-lg border-[1px] border-zinc-700 p-5">
         <DataTable columns={columns} data={data} />
       </div>
     </div>

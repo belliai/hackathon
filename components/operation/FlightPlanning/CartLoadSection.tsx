@@ -27,7 +27,7 @@ const BULK_ACTION_LIST = [
 export default async function CartLoadSection() {
   const data = await getData('cart');
   return (
-    <div className="flex flex-col mt-5 gap-4">
+    <div className="flex flex-col mt-5 gap-4 rounded-lg border-[1px] border-zinc-700 p-5">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="bg-zinc-800 hover:bg-zinc-700 text-white w-fit">
