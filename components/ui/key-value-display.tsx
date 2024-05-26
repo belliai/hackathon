@@ -10,9 +10,9 @@ export default function KeyValueDisplay({
       {Object.entries(entries).map(([key, value]) => (
         <li
           key={key}
-          className="w-full inline-flex items-center justify-between text-xs text-muted-foreground"
+          className="w-full inline-flex items-center justify-between text-sm text-muted-foreground"
         >
-          <p className="font-medium text-foreground">{key}</p>
+          <p className="font-normal text-foreground">{key}</p>
           <p className="font-light">{value}</p>
         </li>
       ))}

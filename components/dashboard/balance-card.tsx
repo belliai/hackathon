@@ -12,15 +12,14 @@ export default function BalanceCard() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
-        <CardTitle>Balance</CardTitle>
-        <CardDescription>$0.00</CardDescription>
+        <CardTitle>Amount</CardTitle>
+        <CardDescription>$100.00</CardDescription>
       </CardHeader>
       <Separator />
-      <CardContent className="p-4">
-        <h5 className="text-foreground font-semibold text-xs">Elroy Careen</h5>
+      <CardContent className="p-4 pt-3">
         <KeyValueDisplay
           entries={{
-            "Individual Balance": "$ 20.0",
+            Balance: "$ 20.0",
           }}
         />
       </CardContent>

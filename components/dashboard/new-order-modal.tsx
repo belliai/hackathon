@@ -36,6 +36,7 @@ import ConsignmentDetailsForm from "./forms/consignment-details.form";
 import ShipperDetailsForm from "./forms/shipper-details-form";
 import ProcessRatesForm from "./forms/process-rates-form";
 import { toast } from "@/components/ui/use-toast";
+import DimensionsCard from "./dimensions-card";
 
 type NewOrderModalProps = PropsWithChildren & {};
 
@@ -90,7 +91,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         hideCloseButton
-        className={isFullScreen ? "w-screen h-screen max-w-none" : "max-w-5xl"}
+        className={isFullScreen ? "w-screen h-screen max-w-none" : "max-w-6xl"}
         onInteractOutside={(e) => e.preventDefault()}
       >
         <Form {...form}>
@@ -103,6 +104,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                   variant={"ghost"}
                   size={"icon"}
                   className="w-6 h-6"
+                  type="button"
                 >
                   <ArrowsPointingOutIcon className="w-4 h-4" />
                 </Button>
@@ -111,6 +113,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                   variant={"ghost"}
                   size={"icon"}
                   className="w-6 h-6"
+                  type="button"
                 >
                   <XMarkIcon className="w-5 h-5" />
                 </Button>
@@ -161,9 +164,10 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                     <ProcessRatesForm />
                   </TabsContent>
                 </div>
-                <div className="gap-4 max-w-[280px] flex flex-col items-stretch justify-between">
+                <div className="gap-4 max-w-[300px] flex flex-col items-stretch justify-between">
                   <div className="space-y-4">
                     <OrderSummaryCard />
+                    <DimensionsCard />
                     <BalanceCard />
                   </div>
                   <div className="space-y-4">

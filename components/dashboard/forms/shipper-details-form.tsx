@@ -43,7 +43,11 @@ export default function ShipperDetailsForm() {
   }, [fields]);
 
   return (
-    <Tabs value={tabValue} onValueChange={setTabValue}>
+    <Tabs
+      value={tabValue}
+      onValueChange={setTabValue}
+      className="flex flex-col"
+    >
       <TabsList className="flex flex-row justify-start items-center p-0 bg-transparent transition-all">
         {fields.map((field, index) => {
           const isFirst = index === 0;
@@ -72,7 +76,7 @@ export default function ShipperDetailsForm() {
           <PlusIcon className="w-4 h-4" />
         </Button>
       </TabsList>
-      <Card className="p-4 rounded-tl-none ">
+      <Card className="p-4 rounded-tl-none flex-grow ">
         {fields.map((field, index) => {
           return (
             <TabsContent
