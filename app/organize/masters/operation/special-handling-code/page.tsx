@@ -5,23 +5,30 @@ import MastersPageTemplate from "../../components/MastersPageTemplate";
 import { actionColumn, selectColumn } from "../../components/columnItem";
 import StatusBadge from "../../components/StatusBadge";
 import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions";
-import { Search } from "lucide-react";
+import {
+  DUMMY_SELECT_OPTIONS,
+  DUMMY_SELECT_OPTIONS_STATUS,
+} from "../../components/dummySelectOptions";
 import { useForm } from "react-hook-form";
+import { Search } from "lucide-react";
 
-export default function MasterProductType() {
+export default function MassterSpecialHandlingCodePage() {
   const columns: ColumnDef<any>[] = [
     selectColumn,
     {
-      accessorKey: "productType",
-      header: "Product Type",
+      accessorKey: "specialHandlingCode",
+      header: "Special Handling Code",
     },
     {
-      accessorKey: "productDescription",
-      header: "Product Description",
+      accessorKey: "description",
+      header: "Description",
     },
     {
-      accessorKey: "status",
+      accessorKey: "isnotoc",
+      header: "ISNOTOC",
+    },
+    {
+      accessorKey: "Status",
       header: "Status",
       cell: ({ row }) => (
         <StatusBadge
@@ -43,39 +50,41 @@ export default function MasterProductType() {
 
   const data = [
     {
-      productType: "Electronics",
-      productDescription:
-        "Consumer electronics including smartphones, tablets, and accessories",
+      specialHandlingCode: "PER",
+      description: "Perishable goods",
+      isnotoc: "No",
       status: "Active",
       createdAt: "2023-01-15",
       updatedAt: "2023-12-01",
     },
     {
-      productType: "Apparel",
-      productDescription: "Clothing, footwear, and fashion accessories",
+      specialHandlingCode: "AVI",
+      description: "Live animals",
+      isnotoc: "Yes",
       status: "Inactive",
       createdAt: "2023-02-20",
       updatedAt: "2023-11-25",
     },
     {
-      productType: "Pharmaceuticals",
-      productDescription: "Medicines, health supplements, and medical devices",
+      specialHandlingCode: "DGR",
+      description: "Dangerous goods",
+      isnotoc: "No",
       status: "Active",
       createdAt: "2023-03-05",
       updatedAt: "2023-10-30",
     },
     {
-      productType: "Furniture",
-      productDescription:
-        "Home and office furniture including desks, chairs, and cabinets",
+      specialHandlingCode: "VAL",
+      description: "Valuable cargo",
+      isnotoc: "Yes",
       status: "Inactive",
       createdAt: "2023-04-10",
       updatedAt: "2023-09-15",
     },
     {
-      productType: "Food and Beverages",
-      productDescription:
-        "Perishable and non-perishable food items and beverages",
+      specialHandlingCode: "HEA",
+      description: "Human remains",
+      isnotoc: "No",
       status: "Active",
       createdAt: "2023-05-25",
       updatedAt: "2023-08-20",
@@ -84,16 +93,22 @@ export default function MasterProductType() {
 
   const filterFormFields: TFormTextField[] = [
     {
-      name: "productType",
-      placeholder: "Product Type",
+      name: "specialHandlingCode",
+      placeholder: "Special Handling Code",
       type: "text",
       endIcon: <Search />,
     },
     {
-      name: "productDescription",
-      placeholder: "Product Description",
+      name: "description",
+      placeholder: "Description",
       type: "text",
       endIcon: <Search />,
+    },
+    {
+      name: "isnotoc",
+      placeholder: "ISNOTOC",
+      type: "select",
+      options: DUMMY_SELECT_OPTIONS,
     },
     {
       name: "status",
@@ -104,17 +119,18 @@ export default function MasterProductType() {
   ];
 
   const filterForm = useForm();
-  const productTypeForm = useForm();
+  const hookForm = useForm();
 
   return (
     <MastersPageTemplate
-      heading="Product Type Master"
+      heading="Special Handling Code Master"
+      buttonText="Create"
       columns={columns}
       data={data}
       filterFormFields={filterFormFields}
-      formFields={filterFormFields}
       filterHookForm={filterForm}
-      hookForm={productTypeForm}
+      formFields={filterFormFields}
+      hookForm={hookForm}
     />
   );
 }
