@@ -64,7 +64,7 @@ export default function MasterCutoffTimePage() {
         return (
           <StatusBadge
             statusText="Active"
-            severity={row.original.statusƒ === "Active" ? "default" : "error"}
+            severity={row.original.status === "Active" ? "default" : "error"}
           />
         );
       },

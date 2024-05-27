@@ -44,6 +44,8 @@ interface MastersPageTemplateProps {
   filterFormFields: TFormTextField[];
   columns: ColumnDef<any>[];
   data: any[];
+  pageActions: React.ReactNode;
+  canCreate?: boolean;
 }
 
 export default function MastersPageTemplate({
@@ -56,72 +58,79 @@ export default function MastersPageTemplate({
   filterFormFields,
   columns,
   data,
+  pageActions,
+  canCreate = true,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
       <PageHeader
         title={heading}
         actions={
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
-                <Plus size={16} className="mr-2" />
-                <span className="hidden md:block">{buttonText}</span>
-                <span className="block md:hidden">Create</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="w-full max-w-3xl">
-              <DialogTitle>{buttonText}</DialogTitle>
-              <div className="max-h-[75dvh] overflow-auto pr-2">
-                {sectionedFormFields ? (
-                  sectionedFormFields.map((section, index) => {
-                    return (
-                      <div className="pt-4" key={index}>
-                        {/* For normal form fields  */}
-                        {section.sectionName && (
-                          <div className="flex flex-col gap-2 py-2 pb-4">
-                            <h2 className="font-semibold text-white">
-                              {section.sectionName}
-                            </h2>
-                            <Separator />
-                          </div>
-                        )}
-                        {section.fields && (
-                          <MastersPageForm
-                            hookForm={hookForm}
-                            formFields={section.fields}
-                          />
-                        )}
-
-                        {/* For many to one relationnships */}
-                        {section.fieldArray && (
-                          <MastersPageFieldArrayForm
-                            fieldArrayProps={section.fieldArray}
-                            hookForm={hookForm}
-                          />
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <MastersPageForm
-                    hookForm={hookForm}
-                    formFields={formFields}
-                  />
-                )}
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <DialogClose asChild>
+          <>
+            {pageActions}
+            {canCreate && (
+              <Dialog>
+                <DialogTrigger asChild>
                   <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
-                    Create
+                    <Plus size={16} className="mr-2" />
+                    <span className="hidden md:block">{buttonText}</span>
+                    <span className="block md:hidden">Create</span>
                   </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                </DialogTrigger>
+                <DialogContent className="w-full max-w-3xl">
+                  <DialogTitle>{buttonText}</DialogTitle>
+                  <div className="max-h-[75dvh] overflow-auto pr-2">
+                    {sectionedFormFields ? (
+                      sectionedFormFields.map((section, index) => {
+                        return (
+                          <div className="pt-4" key={index}>
+                            {/* For normal form fields  */}
+                            {section.sectionName && (
+                              <div className="flex flex-col gap-2 py-2 pb-4">
+                                <h2 className="font-semibold text-white">
+                                  {section.sectionName}
+                                </h2>
+                                <Separator />
+                              </div>
+                            )}
+                            {section.fields && (
+                              <MastersPageForm
+                                hookForm={hookForm}
+                                formFields={section.fields}
+                              />
+                            )}
+
+                            {/* For many to one relationnships */}
+                            {section.fieldArray && (
+                              <MastersPageFieldArrayForm
+                                fieldArrayProps={section.fieldArray}
+                                hookForm={hookForm}
+                              />
+                            )}
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <MastersPageForm
+                        hookForm={hookForm}
+                        formFields={formFields}
+                      />
+                    )}
+                  </div>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+                        Create
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+          </>
         }
       />
       <div className="p-4 border rounded-md">
