@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
-import { Boxes, PlusSquare } from "lucide-react";
+import { Boxes, PlusSquare, TargetIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import UserDropdown from "./UserDropdown";
 import SidebarItem from "./SidebarItem";
@@ -162,6 +162,132 @@ const navigation = [
             current: false,
           },
         ],
+      },
+    ],
+  },
+  {
+    name: "Track/Audit",
+    href: "#",
+    icon: TargetIcon,
+    current: false,
+    children: [
+      {
+        name: "Master Audit Log",
+        href: "/track/master-audit-log",
+        current: false,
+      },
+      {
+        name: "Ratefilling Audit Log",
+        href: "/track/ratefilling-audit-log",
+        current: false,
+      },
+      {
+        name: "Accounting Audit log",
+        href: "/track/accounting-audit-log",
+        current: false,
+      },
+      { name: "Master AWB", href: "/track/master-awb", current: false },
+      { name: "AWB Audit Log", href: "/track/awb-audit-log", current: false },
+      {
+        name: "Pomail Audit Log",
+        href: "/track/pomail-audit-log",
+        current: false,
+      },
+      {
+        name: "Spicewall",
+        href: "/track/spicewall",
+        current: false,
+      },
+      {
+        name: "Master Capacity Log",
+        href: "/track/master-capacity-log",
+        current: false,
+      },
+      {
+        name: "Messaging",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "MVT Message",
+            href: "/track/messaging-mvt",
+            current: false,
+          },
+          {
+            name: "Messaging Log",
+            href: "/track/messaging-log",
+            current: false,
+          },
+        ]
+      },
+      {
+        name: "POD Upload Log",
+        href: "/track/pod-upload-log",
+        current: false,
+      },
+      {
+        name: "Email Audit Log",
+        href: "/track/email-audit-log",
+        current: false,
+      },
+      {
+        name: "User Audit Log",
+        href: "/track/user-audit-log",
+        current: false,
+      },
+      {
+        name: "Login Log",
+        href: "/track/login-log",
+        current: false,
+      },
+      {
+        name: "Master Upload Log",
+        href: "#",
+        submenus: [
+          {
+            name: "Pincode",
+            href: "/track/master-pin-code",
+            current: false,
+          },
+          {
+            name: "Customer/Employee",
+            href: "/track/customer-log",
+            current: false,
+          },
+          {
+            name: "Rateline",
+            href: "/track/rateline-log",
+            current: false,
+          },
+          {
+            name: "OCDC",
+            href: "/track/ocdc-log",
+            current: false,
+          },
+        ],
+        current: false,
+      },
+      {
+        name: "Flight Scheduling Log",
+        href: "#",
+        current: false,
+        submenus : [
+          {
+            name: "Flight",
+            href: "/track/flight-audit-log",
+            current: false,
+          },
+          {
+            name: "Active Flight",
+            href: "/track/flight-active-audit-log",
+            current: false,
+          },
+        ]
+      },
+      {
+        name: "Ekart Audit Log",
+        href: "/track/ekart-audit-log",
+        current: false,
       },
     ],
   },
