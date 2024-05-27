@@ -44,7 +44,7 @@ interface MastersPageTemplateProps {
   filterFormFields: TFormTextField[];
   columns: ColumnDef<any>[];
   data: any[];
-  pageActions: React.ReactNode;
+  pageActions?: React.ReactNode;
   canCreate?: boolean;
 }
 
