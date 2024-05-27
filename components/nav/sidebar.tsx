@@ -409,8 +409,8 @@ const navigation = [
                 current: false,
               },
               {
-                name: "CuttOff Time Master",
-                href: "/organize/masters/operation/cutoff-time-master",
+                name: "CuttOff Time",
+                href: "/organize/masters/operation/cutoff-time",
                 current: false,
               },
             ],
