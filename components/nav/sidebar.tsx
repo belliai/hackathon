@@ -424,6 +424,40 @@ const navigation = [
     href: "#",
     icon: PresentationChartLineIcon,
     current: false,
+    children: [
+      {
+        name: "Finance",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "Cancel Invoice Report",
+            href: "/reports/finance/cancel-invoice",
+            current: false,
+          },
+          {
+            name: "Consignee Reconciliation Report",
+            href: "/reports/finance/consignee-reconciliation",
+            current: false,
+          },
+          {
+            name: "DO Invoice Report",
+            href: "/reports/finance/do-invoice",
+            current: false,
+          },
+          {
+            name: "PO Mail Summary",
+            href: "/reports/finance/po-mail-summary",
+            current: false,
+          },
+          {
+            name: "Un-Invoiced Agent AWB's Report",
+            href: "/reports/finance/uninvoiced-agent-awb",
+            current: false,
+          },
+        ],
+      },
+    ],
   },
   { name: "Manual", href: "#", icon: LinkBreak2Icon, current: false },
 ];
