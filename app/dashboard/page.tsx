@@ -21,7 +21,7 @@ export default function Dashboard() {
     setModalOpen(true);
   };
 
-  const onOpenChange = useCallback((open) => {
+  const onOpenChange = useCallback((open: boolean) => {
     setModalOpen(open);
   }, []);
 
