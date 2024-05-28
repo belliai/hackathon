@@ -8,7 +8,7 @@ import { getData } from "@/lib/data";
 import PageContainer from "@/components/layout/PageContainer";
 import { DownloadIcon, FilterIcon, RefreshCcwIcon } from "lucide-react";
 import NewOrderModal from "@/components/dashboard/new-order-modal";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useBookingContext } from "@/components/dashboard/BookingContext";
 
 export default function Dashboard() {
@@ -20,6 +20,10 @@ export default function Dashboard() {
     setSelectedBooking(data);
     setModalOpen(true);
   };
+
+  const onOpenChange = useCallback((open) => {
+    setModalOpen(open);
+  }, []);
 
   return (
     <PageContainer className="py-8 gap-6">
@@ -46,10 +50,7 @@ export default function Dashboard() {
           className="border-none [&_th]:text-foreground [&_th]:py-2 [&_th]:px-3 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground"
         />
       </div>
-      <NewOrderModal
-        open={modalOpen}
-        onOpenChange={(open) => setModalOpen(open)}
-      />
+      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} />
     </PageContainer>
   );
 }

@@ -23,10 +23,7 @@ import { RotateCcwIcon, SearchIcon } from "lucide-react";
 import { useFormContext, UseFormReturn } from "react-hook-form";
 import { Order } from "@/components/dashboard/columns";
 
-const CreateBookingForm = React.forwardRef<
-  HTMLDivElement,
-  CreateBookingFormProps
->((_, ref) => {
+const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext<UseFormReturn>();
   const awb = Array.from({ length: 20 }, (_, i) => {
     const awbNumber = 7752000270 + i;

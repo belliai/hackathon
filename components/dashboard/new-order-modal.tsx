@@ -47,7 +47,7 @@ type NewOrderModalProps = PropsWithChildren & {
 };
 
 export default function NewOrderModal(props: NewOrderModalProps) {
-  const { children } = props;
+  const { children, onOpenChange } = props;
   const { selectedBooking } = useBookingContext();
   const [open, setOpen] = useState(props.open ?? false);
   const [isFullScreen, setFullScreen] = useState(false);
@@ -58,8 +58,8 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   }, [props.open]);
 
   useEffect(() => {
-    props.onOpenChange && props.onOpenChange(open);
-  }, [open]);
+    onOpenChange && onOpenChange(open);
+  }, [open, onOpenChange]);
 
   const defaultValues: Order = useMemo(
     () => ({
