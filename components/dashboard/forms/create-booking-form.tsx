@@ -20,18 +20,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RotateCcwIcon, SearchIcon } from "lucide-react";
-import { useFormContext, UseFormReturn } from "react-hook-form";
-import { Order } from "@/components/dashboard/columns";
+import { useFormContext } from "react-hook-form";
 
-const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
-  const form = useFormContext<UseFormReturn>();
-  const awb = Array.from({ length: 20 }, (_, i) => {
-    const awbNumber = 7752000270 + i;
+type FormValues = {
+  bookingType: string;
+  partnerPrefix: string;
+  axb: string;
+  partnerCode: string;
+  isPhysical: boolean;
+  bookdate: string;
+  execdate: string;
+  fflightassign: string;
+  delivery: string;
+};
+
+const generateAWBNumbers = (start: number, length: number) => {
+  return Array.from({ length }, (_, i) => {
+    const awbNumber = start + i;
     const formattedAwb = `${awbNumber.toString().slice(0, 3)}-${awbNumber
       .toString()
       .slice(3)}`;
     return formattedAwb;
   });
+};
+
+const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
+  const form = useFormContext<FormValues>();
+  const awb = generateAWBNumbers(7752000270, 20);
+
   return (
     <Card className="p-4 space-y-2" ref={ref}>
       <FormField
