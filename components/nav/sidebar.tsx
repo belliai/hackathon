@@ -457,6 +457,53 @@ const navigation = [
           },
         ],
       },
+      {
+        name: "Operation",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "E-Pouch Report",
+            href: "/reports/operation/epouch-report",
+            current: false,
+          },
+          {
+            name: "Flight Performance Report",
+            href: "/reports/operation/flight-performance-report",
+            current: false,
+          },
+          {
+            name: "Offload",
+            href: "/reports/operation/offload",
+            current: false,
+          },
+          {
+            name: "Tonnage",
+            href: "/reports/operation/tonnage",
+            current: false,
+          },
+          {
+            name: "Unbilled AWB Report",
+            href: "/reports/operation/unbilled-awb-report",
+            current: false,
+          },
+          {
+            name: "DO Report",
+            href: "/reports/operation/do-report",
+            current: false,
+          },
+          {
+            name: "MAWB Report",
+            href: "/reports/operation/mawb-report",
+            current: false,
+          },
+        ],
+      },
+      {
+        name: "User Performance",
+        href: "/reports/user-performance",
+        current: false,
+      },
     ],
   },
   { name: "Manual", href: "#", icon: LinkBreak2Icon, current: false },
