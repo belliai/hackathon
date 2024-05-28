@@ -1,8 +1,10 @@
 "use client";
 
+import React, { ForwardedRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   FormControl,
   FormField,
@@ -18,12 +20,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RotateCcwIcon, SearchIcon } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, UseFormReturn } from "react-hook-form";
+import { Order } from "@/components/dashboard/columns";
 
-export default function CreateBookingForm() {
-  const form = useFormContext();
+const CreateBookingForm = React.forwardRef<
+  HTMLDivElement,
+  CreateBookingFormProps
+>((_, ref) => {
+  const form = useFormContext<UseFormReturn>();
+  const awb = Array.from({ length: 20 }, (_, i) => {
+    const awbNumber = 7752000270 + i;
+    const formattedAwb = `${awbNumber.toString().slice(0, 3)}-${awbNumber
+      .toString()
+      .slice(3)}`;
+    return formattedAwb;
+  });
   return (
-    <Card className="p-4 space-y-2">
+    <Card className="p-4 space-y-2" ref={ref}>
       <FormField
         control={form.control}
         name="bookingType"
@@ -72,7 +85,7 @@ export default function CreateBookingForm() {
       />
       <FormField
         control={form.control}
-        name="awb"
+        name="axb"
         render={({ field }) => (
           <FormItem>
             <FormLabel info="hellow world!, this is info">AWB#</FormLabel>
@@ -83,9 +96,11 @@ export default function CreateBookingForm() {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="value-1">Value Type 1</SelectItem>
-                <SelectItem value="value-2">Value Type 2</SelectItem>
-                <SelectItem value="value-3">Value Type 3</SelectItem>
+                {awb.map((item) => (
+                  <SelectItem key={item} value={item.toString()}>
+                    {item}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage />
@@ -144,6 +159,86 @@ export default function CreateBookingForm() {
           </Button>
         </div>
       </div>
+      <FormField
+        control={form.control}
+        name="bookdate"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel info="Book Date" htmlFor="bookdate">
+              Book Date
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id="bookdate"
+                className="border-2 border-foreground/30"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="execdate"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel info="Exec Date" htmlFor="execdate">
+              Exec Date
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id="execdate"
+                className="border-2 border-foreground/30"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="fflightassign"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel info="First Flight Assign" htmlFor="fflightassign">
+              First Flight Assign
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id="fflightassign"
+                className="border-2 border-foreground/30"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="delivery"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel info="Delivery" htmlFor="delivery">
+              Delivery
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id="delivery"
+                className="border-2 border-foreground/30"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </Card>
   );
-}
+});
+
+CreateBookingForm.displayName = "CreateBookingForm";
+
+export default CreateBookingForm;

@@ -9,12 +9,15 @@ import PageContainer from "@/components/layout/PageContainer";
 import { DownloadIcon, FilterIcon, RefreshCcwIcon } from "lucide-react";
 import NewOrderModal from "@/components/dashboard/new-order-modal";
 import { useState } from "react";
+import { useBookingContext } from "@/components/dashboard/BookingContext";
+
 export default function Dashboard() {
   const data = getData();
-
+  const { setSelectedBooking } = useBookingContext();
   const [modalOpen, setModalOpen] = useState(false);
 
   const openModal = (data: Order) => {
+    setSelectedBooking(data);
     setModalOpen(true);
   };
 

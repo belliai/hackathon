@@ -11,8 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { ListIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import React from "react";
 
-export default function ProcessRatesForm() {
+const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext();
   return (
     <Card className="p-4">
@@ -97,10 +98,10 @@ export default function ProcessRatesForm() {
         />
         <FormField
           control={form.control}
-          name="gs"
+          name="grosswt"
           render={({ field }) => (
             <FormItem>
-              <FormLabel info="hello this is info here">GS Wt.KG</FormLabel>
+              <FormLabel info="Gross Weight in Kg">GS Wt.KG</FormLabel>
               <FormControl>
                 <Input {...field} className="border-2 border-foreground/30" />
               </FormControl>
@@ -141,7 +142,37 @@ export default function ProcessRatesForm() {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="mode"
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <FormLabel info="Mode">Mode</FormLabel>
+              <FormControl>
+                <Input {...field} className="border-2 border-foreground/30" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="total"
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <FormLabel info="Total">Total</FormLabel>
+              <FormControl>
+                <Input {...field} className="border-2 border-foreground/30" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
     </Card>
   );
-}
+});
+
+ProcessRatesForm.displayName = "ProcessRatesForm";
+
+export default ProcessRatesForm;

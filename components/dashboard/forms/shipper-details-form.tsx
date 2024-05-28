@@ -24,8 +24,9 @@ import { cn } from "@/lib/utils";
 import { PlusIcon, PlusSquareIcon, SearchIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import React from "react";
 
-export default function ShipperDetailsForm() {
+const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext();
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
@@ -37,6 +38,12 @@ export default function ShipperDetailsForm() {
   const appendField = () => {
     append({});
   };
+
+  const selectOptions = [
+    { value: "AXB Booked & Confirmed", label: "AXB Booked & Confirmed" },
+    { value: "Shipped", label: "Shipped" },
+    { value: "Delivered", label: "Delivered" },
+  ];
 
   useEffect(() => {
     setTabValue(fields[fields.length - 1]?.id ?? "");
@@ -132,7 +139,7 @@ export default function ShipperDetailsForm() {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.destination`}
+                name={`des`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Destination *</FormLabel>
@@ -249,7 +256,7 @@ export default function ShipperDetailsForm() {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.awbStatus`}
+                name={`status`}
                 render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormLabel>AWB Status</FormLabel>
@@ -263,9 +270,11 @@ export default function ShipperDetailsForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="status-1">Status Type 1</SelectItem>
-                        <SelectItem value="status-2">Status Type 2</SelectItem>
-                        <SelectItem value="status-3">Status Type 3</SelectItem>
+                        {selectOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -297,4 +306,8 @@ export default function ShipperDetailsForm() {
       </Card>
     </Tabs>
   );
-}
+});
+
+ShipperDetailsForm.displayName = "ShipperDetailsForm";
+
+export default ShipperDetailsForm;

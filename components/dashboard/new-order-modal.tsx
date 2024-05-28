@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -37,6 +38,8 @@ import ShipperDetailsForm from "./forms/shipper-details-form";
 import ProcessRatesForm from "./forms/process-rates-form";
 import { toast } from "@/components/ui/use-toast";
 import DimensionsCard from "./dimensions-card";
+import { useBookingContext } from "@/components/dashboard/BookingContext";
+import { Order } from "@/components/dashboard/columns";
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange?: (open: boolean) => void;
@@ -45,6 +48,7 @@ type NewOrderModalProps = PropsWithChildren & {
 
 export default function NewOrderModal(props: NewOrderModalProps) {
   const { children } = props;
+  const { selectedBooking } = useBookingContext();
   const [open, setOpen] = useState(props.open ?? false);
   const [isFullScreen, setFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,11 +61,35 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     props.onOpenChange && props.onOpenChange(open);
   }, [open]);
 
-  const form = useForm({
-    defaultValues: {
+  const defaultValues: Order = useMemo(
+    () => ({
+      axb: "",
+      org: "",
+      des: "",
+      cusc: "",
+      status: "",
+      mode: "",
+      grosswt: 0,
+      total: 0,
+      bookdate: "",
+      execdate: "",
+      fflightassign: "",
+      delivery: "",
       shipperDetails: [{}],
-    },
+      ...selectedBooking,
+    }),
+    [selectedBooking]
+  );
+
+  const form = useForm<Order>({
+    defaultValues,
   });
+
+  useEffect(() => {
+    if (selectedBooking) {
+      form.reset(defaultValues);
+    }
+  }, [selectedBooking, defaultValues, form]);
 
   const toggleFullScreen = () => {
     setFullScreen((prev) => !prev);

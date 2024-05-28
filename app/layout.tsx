@@ -9,6 +9,7 @@ import UIWrapper from "@/components/ui/wrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toast } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
+import { BookingProvider } from "@/components/dashboard/BookingContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -41,8 +42,10 @@ export default function RootLayout({
         {/* <ProgressBar />
       <Nav /> */}
         <TooltipProvider>
-          <UIWrapper>{children}</UIWrapper>
-          <Toaster />
+          <BookingProvider>
+            <UIWrapper>{children}</UIWrapper>
+            <Toaster />
+          </BookingProvider>
         </TooltipProvider>
       </body>
     </html>
