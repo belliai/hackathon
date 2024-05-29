@@ -442,6 +442,23 @@ const navigation = [
           },
         ],
       },
+      {
+        name: "User",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "Login",
+            href: "/organize/user",
+            current: false,
+          },
+          {
+            name: "Role Master",
+            href: "/organize/user/role",
+            current: false,
+          },
+        ],
+      },
     ],
   },
   {
