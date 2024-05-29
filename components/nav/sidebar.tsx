@@ -41,9 +41,9 @@ const navigation = [
         icon: CubeIcon,
         href: "#",
         current: false,
-        children: [
-          { name: "D2D", href: "#", current: false },
-          { name: "A2A", href: "#", current: false },
+        submenus: [
+          { name: "D2D", href: "/orders/view/d2d", current: false },
+          { name: "A2A", href: "/orders/view/a2a", current: false },
         ],
       },
       {
@@ -62,7 +62,7 @@ const navigation = [
   },
   {
     name: "Scheduling",
-    href: "/scheduling",
+    href: "#",
     icon: CalendarIcon,
     current: false,
     children: [
