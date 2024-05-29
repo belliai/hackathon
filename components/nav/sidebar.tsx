@@ -427,7 +427,7 @@ const navigation = [
               },
               {
                 name: "ULD Category",
-                href: "/organize/masters/uld/uld-category",
+                href: "/organize/masters/uld/category",
                 current: false,
               },
               {
