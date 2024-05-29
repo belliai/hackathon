@@ -103,7 +103,11 @@ export default function FormTextField({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className={cn(fieldClassName)}>
+                    <SelectTrigger
+                      className={cn(fieldClassName, {
+                        "text-zinc-400": !field.value,
+                      })}
+                    >
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
                   </FormControl>

@@ -26,9 +26,13 @@ export default function MastersPageFieldArrayForm({
           cell: ({ row }: { row: Row<any> }) => {
             return (
               <FormTextField
-                key={"fieldArray." + row.index + "." + field.name}
+                key={`${fieldArrayProps.fieldArrayName ?? "fieldArray"}.${
+                  row.index
+                }.${field.name}`}
                 {...field}
-                name={`fieldArray.${row.index}.${field.name}`}
+                name={`${fieldArrayProps.fieldArrayName ?? "fieldArray"}.${
+                  row.index
+                }.${field.name}`}
                 form={hookForm}
               />
             );
@@ -62,7 +66,7 @@ export default function MastersPageFieldArrayForm({
           columns={columns}
           hidePagination
           hideToolbar
-          data={hookForm.watch("fieldArray")}
+          data={hookForm.watch(fieldArrayProps.fieldArrayName ?? "fieldArray")}
         />
       </Form>
       <Button

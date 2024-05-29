@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 export type FieldArrayProps = {
   fieldArray: UseFieldArrayReturn<any>;
   fields: TFormTextField[];
-  columns?: ColumnDef<any>[];
+  fieldArrayName?: string;
 };
 
 export type SectionedFormFields = {
@@ -46,6 +46,7 @@ interface MastersPageTemplateProps {
   data: any[];
   pageActions?: React.ReactNode;
   canCreate?: boolean;
+  customDialogContent?: React.ReactNode;
 }
 
 export default function MastersPageTemplate({
@@ -60,6 +61,7 @@ export default function MastersPageTemplate({
   data,
   pageActions,
   canCreate = true,
+  customDialogContent,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -116,6 +118,7 @@ export default function MastersPageTemplate({
                         formFields={formFields}
                       />
                     )}
+                    {customDialogContent && customDialogContent}
                   </div>
                   <DialogFooter>
                     <DialogClose asChild>
