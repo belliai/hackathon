@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
-import { Boxes, Currency, PlusSquare, TargetIcon } from "lucide-react";
+import { Boxes, Currency, PlusSquare, ReceiptText, TargetIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import UserDropdown from "./UserDropdown";
 import SidebarItem from "./SidebarItem";
@@ -169,6 +169,32 @@ const navigation = [
       },
     ],
   },
+  {
+    name: "Accounting",
+    href: "#",
+    icon: ReceiptText,
+    current: false,
+    children: [
+      {
+        name: "Agent",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "Agent Invoice",
+            href: "/accounting/agent/invoice",
+            current: false,
+          },
+          {
+            name: "Invoice Collection",
+            href: "/accounting/agent/invoice-collection",
+            current: false,
+          },
+        ],
+      },
+    ]
+  }
+  ,
   {
     name: "Track/Audit",
     href: "#",
