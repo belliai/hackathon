@@ -37,7 +37,7 @@ export type SectionedFormFields = {
 interface MastersPageTemplateProps {
   heading: string;
   buttonText?: string;
-  hookForm: UseFormReturn<any>;
+  hookForm?: UseFormReturn<any>;
   filterHookForm: UseFormReturn<any>;
   formFields?: TFormTextField[];
   sectionedFormFields?: SectionedFormFields[];
@@ -68,7 +68,7 @@ export default function MastersPageTemplate({
         actions={
           <>
             {pageActions}
-            {canCreate && (
+            {canCreate && hookForm && (
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
@@ -134,7 +134,7 @@ export default function MastersPageTemplate({
         }
       />
       <div className="p-4 border rounded-md">
-        <Form {...hookForm}>
+        <Form {...filterHookForm}>
           <form
             className={cn("grid sm:grid-cols-2 gap-4 items-end w-full", {
               "md:grid-cols-5": filterFormFields.length > 2,

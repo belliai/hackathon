@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
-import { Boxes, PlusSquare, TargetIcon } from "lucide-react";
+import { Boxes, Currency, PlusSquare, TargetIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import UserDropdown from "./UserDropdown";
 import SidebarItem from "./SidebarItem";
@@ -415,6 +415,27 @@ const navigation = [
               },
             ],
           },
+          {
+            name: "ULD",
+            href: "#",
+            current: false,
+            submenus: [
+              {
+                name: "ULD",
+                href: "/organize/masters/uld/uld",
+                current: false,
+              },
+              {
+                name: "ULD Category",
+                href: "/organize/masters/uld/uld-category",
+                current: false,
+              },
+              {
+                name: "ULC",
+                href: "/organize/masters/uld/ulc",
+              }
+            ]
+          }
         ],
       },
     ],

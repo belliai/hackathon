@@ -44,8 +44,8 @@ export default function MasterVehiclePage() {
       header: "Status",
       cell: ({ row }) => (
         <StatusBadge
-          statusText={row.original.status === "FREE" ? "default" : "error"}
-          severity="default"
+          statusText={row.original.status}
+          severity={row.original.status === "FREE" ? "default" : "error"}
         />
       ),
     },
