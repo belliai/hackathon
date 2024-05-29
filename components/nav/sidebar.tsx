@@ -51,8 +51,12 @@ const navigation = [
         href: "#",
         icon: ServerStackIcon,
         current: false,
-        children: [
-          { name: "Upload Cargo Acceptance Slip", href: "#", current: false },
+        submenus: [
+          {
+            name: "Upload Cargo Acceptance Slip",
+            href: "/orders/cargo-acceptance-slip",
+            current: false,
+          },
         ],
       },
       { name: "Download POD", href: "#", current: false },
@@ -218,7 +222,7 @@ const navigation = [
             href: "/track/messaging-log",
             current: false,
           },
-        ]
+        ],
       },
       {
         name: "POD Upload Log",
@@ -271,7 +275,7 @@ const navigation = [
         name: "Flight Scheduling Log",
         href: "#",
         current: false,
-        submenus : [
+        submenus: [
           {
             name: "Flight",
             href: "/track/flight-audit-log",
@@ -282,7 +286,7 @@ const navigation = [
             href: "/track/flight-active-audit-log",
             current: false,
           },
-        ]
+        ],
       },
       {
         name: "Ekart Audit Log",
@@ -433,9 +437,9 @@ const navigation = [
               {
                 name: "ULC",
                 href: "/organize/masters/uld/ulc",
-              }
-            ]
-          }
+              },
+            ],
+          },
         ],
       },
     ],
