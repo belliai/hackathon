@@ -4,7 +4,7 @@
 import FilterDatePicker from "@components/track/filter-date-picker"
 import { useEffect, useRef, useState } from "react"
 import FilterSelect from "@components/track/filter-select"
-import { ArrowLeft, Download, RefreshCw, Search, SlidersHorizontal } from "lucide-react"
+import { ArrowLeft, Download, Menu, RefreshCw, Search, SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import FilterDebouncedInput from "@/components/track/filter-input"
 import { cn } from "@/lib/utils"
@@ -17,6 +17,7 @@ import { z } from "zod"
 import { UseFormReturn } from "react-hook-form"
 import { airwaybillFields, chargesFields, generalFields, remarksFields } from "./fields"
 import Link from "next/link"
+import { Alert } from "@/components/track/alert"
 
 type ContentProps = {
     title: string,
@@ -181,12 +182,27 @@ const Contents = (props: ContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="flex space-x-2 p-4 items-end">
-                        <FormFields
-                            ref={remarkFormRef}
-                            fields={remarksFields}
-                            defaultValues={{ invoiceNo: "" }}
-                            schema={schema}
-                        />
+                        <div className="flex space-x-2 items-end">
+                            <FormFields
+                                ref={remarkFormRef}
+                                fields={remarksFields}
+                                defaultValues={{ invoiceNo: "" }}
+                                schema={schema}
+                            />
+                            <Alert title={"History"}
+                                trigger={<Button variant="link">
+                                    <Menu size={14} />
+                                </Button>}
+                            >
+                                <div className="rounded-lg shadow-lg w-full">
+                                    <pre className="text-sm leading-relaxed text-white bg-zinc-800 p-2 rounded-lg overflow-auto">
+                                        <code >
+                                          
+                                        </code>
+                                    </pre>
+                                </div>
+                            </Alert>
+                        </div>
 
                         <Button variant="button-primary" onClick={async () => {
                             const valid = await formRef.current?.trigger()
@@ -206,10 +222,10 @@ const Contents = (props: ContentProps) => {
 
                 </CardContent>
             </Card>
-            <Link  href="/accounting/agent/charge-correction">
-            <Button variant="outline">
-               <ArrowLeft size={14}/>&nbsp;Back
-            </Button>
+            <Link href="/accounting/agent/charge-correction">
+                <Button variant="outline">
+                    <ArrowLeft size={14} />&nbsp;Back
+                </Button>
             </Link>
 
         </div>
