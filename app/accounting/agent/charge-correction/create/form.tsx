@@ -121,7 +121,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
 
     )
 });
-
+FormFields.displayName = 'FormFields';
 
 export default FormFields
 
