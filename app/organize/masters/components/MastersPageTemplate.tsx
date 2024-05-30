@@ -21,6 +21,7 @@ import MastersPageForm from "./MastersPageForm";
 import { Separator } from "@/components/ui/separator";
 import MastersPageFieldArrayForm from "./MastersPageFieldArrayForm";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export type FieldArrayProps = {
   fieldArray: UseFieldArrayReturn<any>;
@@ -32,6 +33,7 @@ export type SectionedFormFields = {
   sectionName?: string;
   fields?: TFormTextField[];
   fieldArray?: FieldArrayProps;
+  hookForm?: UseFormReturn<any>;
 };
 
 interface MastersPageTemplateProps {
@@ -47,6 +49,35 @@ interface MastersPageTemplateProps {
   pageActions?: React.ReactNode;
   canCreate?: boolean;
   customDialogContent?: React.ReactNode;
+  sectionsType?: "normal" | "tabs";
+}
+
+function SectionedForm({
+  sectionName,
+  fields,
+  hookForm,
+  fieldArray,
+}: SectionedFormFields) {
+  return (
+    <div key={fields?.[0].name}>
+      {/* For normal form fields  */}
+      {sectionName && (
+        <div className="flex flex-col gap-2 py-2 pb-4">
+          <h2 className="font-semibold text-white">{sectionName}</h2>
+          <Separator />
+        </div>
+      )}
+      {fields && <MastersPageForm hookForm={hookForm!} formFields={fields} />}
+
+      {/* For many to one relationnships */}
+      {fieldArray && (
+        <MastersPageFieldArrayForm
+          fieldArrayProps={fieldArray}
+          hookForm={hookForm!}
+        />
+      )}
+    </div>
+  );
 }
 
 export default function MastersPageTemplate({
@@ -62,6 +93,7 @@ export default function MastersPageTemplate({
   pageActions,
   canCreate = true,
   customDialogContent,
+  sectionsType,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -81,37 +113,59 @@ export default function MastersPageTemplate({
                 </DialogTrigger>
                 <DialogContent className="w-full max-w-3xl">
                   <DialogTitle>{buttonText}</DialogTitle>
-                  <div className="max-h-[75dvh] overflow-auto pr-2">
+                  <div
+                    className={cn("max-h-[75dvh]  overflow-auto pr-2", {
+                      "h-[75dvh]": sectionsType === "tabs",
+                    })}
+                  >
                     {sectionedFormFields ? (
-                      sectionedFormFields.map((section, index) => {
-                        return (
-                          <div className="pt-4" key={index}>
-                            {/* For normal form fields  */}
-                            {section.sectionName && (
-                              <div className="flex flex-col gap-2 py-2 pb-4">
-                                <h2 className="font-semibold text-white">
+                      sectionsType === "tabs" ? (
+                        <Tabs
+                          defaultValue={sectionedFormFields[0].sectionName}
+                          className="mt-4"
+                        >
+                          <TabsList className="w-auto">
+                            {sectionedFormFields.map((section, index) => {
+                              return (
+                                <TabsTrigger
+                                  key={section.sectionName}
+                                  value={section.sectionName!}
+                                >
                                   {section.sectionName}
-                                </h2>
-                                <Separator />
-                              </div>
-                            )}
-                            {section.fields && (
-                              <MastersPageForm
-                                hookForm={hookForm}
-                                formFields={section.fields}
+                                </TabsTrigger>
+                              );
+                            })}
+                          </TabsList>
+                          {sectionedFormFields.map((section, index) => {
+                            return (
+                              <TabsContent
+                                key={section.sectionName}
+                                value={section.sectionName!}
+                              >
+                                <SectionedForm
+                                  fieldArray={section.fieldArray}
+                                  fields={section.fields}
+                                  hookForm={section.hookForm ?? hookForm}
+                                  sectionName={section.sectionName}
+                                />
+                              </TabsContent>
+                            );
+                          })}
+                        </Tabs>
+                      ) : (
+                        sectionedFormFields.map((section, index) => {
+                          return (
+                            <div key={index} className="mt-4">
+                              <SectionedForm
+                                fieldArray={section.fieldArray}
+                                fields={section.fields}
+                                hookForm={section.hookForm ?? hookForm}
+                                sectionName={section.sectionName}
                               />
-                            )}
-
-                            {/* For many to one relationnships */}
-                            {section.fieldArray && (
-                              <MastersPageFieldArrayForm
-                                fieldArrayProps={section.fieldArray}
-                                hookForm={hookForm}
-                              />
-                            )}
-                          </div>
-                        );
-                      })
+                            </div>
+                          );
+                        })
+                      )
                     ) : (
                       <MastersPageForm
                         hookForm={hookForm}

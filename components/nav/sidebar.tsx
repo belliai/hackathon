@@ -505,6 +505,38 @@ const navigation = [
         href: "/organize/customer",
         current: false,
       },
+      {
+        name: "Consignee",
+        href: "/organize/consignee",
+        current: false,
+      },
+      {
+        name: "Ratefilling",
+        href: "#",
+        current: false,
+        submenus: [
+          {
+            name: "Supplier GSTIN",
+            href: "/organize/ratefilling/supplier-gstin",
+            current: false,
+          },
+          {
+            name: "Rate Line",
+            href: "/organize/ratefilling/rate-line",
+            current: false,
+          },
+          {
+            name: "Other Charges",
+            href: "/organize/ratefilling/other-charges",
+            current: false,
+          },
+          {
+            name: "Exchange Rates",
+            href: "/organize/ratefilling/exchange-rates",
+            current: false,
+          },
+        ],
+      },
     ],
   },
   {
