@@ -76,13 +76,13 @@ export default function MasterMovementHistory() {
     },
     {
       name: "fromDate",
-      label: "From Date",
+      placeholder: "From Date",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "toDate",
-      label: "To Date",
+      placeholder: "To Date",
       type: "date",
       hideTooltip: true,
     },

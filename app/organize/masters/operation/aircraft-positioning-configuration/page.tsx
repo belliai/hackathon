@@ -22,13 +22,13 @@ export default function MasterAircraftPositioningConfigurationPage() {
     },
     {
       name: "fromDate",
-      label: "From Date",
+      placeholder: "From Date",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "toDate",
-      label: "To Date",
+      placeholder: "To Date",
       type: "date",
       hideTooltip: true,
     },
@@ -99,13 +99,13 @@ export default function MasterAircraftPositioningConfigurationPage() {
     },
     {
       name: "fromDate",
-      label: "From Date",
+      placeholder: "From Date",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "toDate",
-      label: "To Date",
+      placeholder: "To Date",
       type: "date",
       hideTooltip: true,
     },

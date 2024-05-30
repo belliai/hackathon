@@ -16,7 +16,13 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import NewOrder from "@/components/new-order";
-import { Boxes, Currency, PlusSquare, ReceiptText, TargetIcon } from "lucide-react";
+import {
+  Boxes,
+  Currency,
+  PlusSquare,
+  ReceiptText,
+  TargetIcon,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import UserDropdown from "./UserDropdown";
 import SidebarItem from "./SidebarItem";
@@ -192,9 +198,8 @@ const navigation = [
           },
         ],
       },
-    ]
-  }
-  ,
+    ],
+  },
   {
     name: "Track/Audit",
     href: "#",
@@ -452,7 +457,7 @@ const navigation = [
             submenus: [
               {
                 name: "ULD",
-                href: "/organize/masters/uld/uld",
+                href: "/organize/masters/uld",
                 current: false,
               },
               {
@@ -484,6 +489,11 @@ const navigation = [
             current: false,
           },
         ],
+      },
+      {
+        name: "Customer",
+        href: "/organize/customer",
+        current: false,
       },
     ],
   },

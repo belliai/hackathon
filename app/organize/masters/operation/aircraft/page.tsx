@@ -271,14 +271,12 @@ export default function MasterAircraftPage() {
       name: "fromDate",
       placeholder: "From Date",
       type: "date",
-      label: "From Date",
       hideTooltip: true,
     },
     {
       name: "toDate",
       placeholder: "To Date",
       type: "date",
-      label: "To Date",
       hideTooltip: true,
     },
   ];

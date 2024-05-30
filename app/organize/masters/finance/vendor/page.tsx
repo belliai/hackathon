@@ -185,7 +185,6 @@ const vendorFormFields: Omit<FormTextFieldProps, "form">[] = [
         placeholder: "Valid From",
         type: "date",
         required: true,
-        label: "Valid From",
         hideTooltip: true,
     },
     {
@@ -193,7 +192,6 @@ const vendorFormFields: Omit<FormTextFieldProps, "form">[] = [
         placeholder: "Valid To",
         type: "date",
         required: true,
-        label: "Valid To",
         hideTooltip: true,
     },
     {

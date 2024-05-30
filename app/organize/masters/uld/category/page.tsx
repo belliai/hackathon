@@ -34,13 +34,13 @@ export default function MasterULDCategoryPage() {
     {
       name: "fromDate",
       type: "date",
-      label: "From Date",
+      placeholder: "From Date",
       hideTooltip: true,
     },
     {
       name: "toDate",
       type: "date",
-      label: "To Date",
+      placeholder: "To Date",
       hideTooltip: true,
     },
   ];

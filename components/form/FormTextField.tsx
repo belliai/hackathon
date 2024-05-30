@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "../ui/input";
-import { Info } from "lucide-react";
+import { CalendarIcon, Info } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -26,6 +26,9 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { Checkbox } from "../ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "../ui/calendar";
 
 type SelectOption = {
   label: string;
@@ -64,7 +67,6 @@ export default function FormTextField({
   placeholder,
 }: FormTextFieldProps) {
   const fieldClassName = cn(
-    "min-w-[202px]",
     "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700 w-full",
     {
       "pr-8": endIcon,
@@ -78,6 +80,40 @@ export default function FormTextField({
       render={({ field }) => {
         function conditionalRender() {
           switch (type) {
+            case "date":
+              return (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(fieldClassName,
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>{placeholder ?? "Pick a date"}</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              );
+
             case "checkbox":
               return (
                 <div className="flex gap-4 items-center">
@@ -87,7 +123,7 @@ export default function FormTextField({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <div className="space-y-1 leading-none">
+                  <div className="space-y-0 leading-none">
                     <FormLabel className="text-zinc-400">
                       {label} {required ? "*" : ""}
                     </FormLabel>

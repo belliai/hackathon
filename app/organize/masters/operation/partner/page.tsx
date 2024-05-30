@@ -108,13 +108,13 @@ export default function MasterPartnerPage() {
     },
     {
       name: "validFrom",
-      label: "Valid From",
+      placeholder: "Valid From",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "validTo",
-      label: "Valid To",
+      placeholder: "Valid To",
       type: "date",
       hideTooltip: true,
     },

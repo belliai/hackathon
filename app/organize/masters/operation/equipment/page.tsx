@@ -102,15 +102,13 @@ export default function MasterEquipmentPage() {
     },
     {
       name: "fromDate",
-      placeholder: "Choose From Date",
-      label: "From",
+      placeholder: "From Date",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "toDate",
-      placeholder: "Choose To Date",
-      label: "To",
+      placeholder: "To Date",
       type: "date",
       hideTooltip: true,
     },

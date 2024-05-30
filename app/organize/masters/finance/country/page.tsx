@@ -94,14 +94,12 @@ export default function CountryPage() {
     },
     {
       name: "period_start",
-      label: "Period Start",
       hideTooltip: true,
       type: "date",
       placeholder: "Period Start",
     },
     {
       name: "period_end",
-      label: "Period End",
       hideTooltip: true,
       type: "date",
       placeholder: "Period End",
@@ -189,14 +187,12 @@ export default function CountryPage() {
       name: "period_start",
       type: "date",
       placeholder: "Period Start",
-      label: "Period Start",
       hideTooltip: true,
     },
     {
       name: "period_end",
       type: "date",
       placeholder: "Period End",
-      label: "Period End",
       hideTooltip: true,
     },
     {

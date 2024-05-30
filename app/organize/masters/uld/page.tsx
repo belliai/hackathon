@@ -134,7 +134,7 @@ export default function MasterUldPage() {
     },
     {
       name: "updatedOn",
-      label: "Updated On",
+      placeholder: "Updated On",
       type: "date",
       hideTooltip: true,
     },

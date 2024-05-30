@@ -85,13 +85,13 @@ export default function MasterUsrPage() {
     },
     {
       name: "fromDate",
-      label: "From Date",
+      placeholder: "From Date",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "toDate",
-      label: "To Date",
+      placeholder: "To Date",
       type: "date",
       hideTooltip: true,
     },
@@ -120,7 +120,7 @@ export default function MasterUsrPage() {
   const formFields: TFormTextField[] = [
     {
       name: "transferDate",
-      label: "Transfer Date",
+      placeholder: "Transfer Date",
       type: "date",
       hideTooltip: true,
     },
@@ -136,7 +136,7 @@ export default function MasterUsrPage() {
     },
     {
       name: "actualTransferDate",
-      label: "Actual Transfer Date",
+      placeholder: "Actual Transfer Date",
       type: "date",
       hideTooltip: true,
     },
@@ -147,7 +147,7 @@ export default function MasterUsrPage() {
     },
     {
       name: "actualReceiveDate",
-      label: "Actual Receive Date",
+      placeholder: "Actual Receive Date",
       type: "date",
       hideTooltip: true,
     },
@@ -292,11 +292,13 @@ export default function MasterUsrPage() {
               {
                 name: "returnedAt",
                 type: "date",
+                placeholder: "Returned At",
                 hideTooltip: true,
               },
               {
                 name: "returnedOn",
                 type: "date",
+                placeholder: "Returned On",
                 hideTooltip: true,
               },
               {

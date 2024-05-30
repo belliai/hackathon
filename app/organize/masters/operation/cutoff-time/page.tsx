@@ -181,13 +181,13 @@ export default function MasterCutoffTimePage() {
     },
     {
       name: "validFrom",
-      label: "Valid From",
+      placeholder: "Valid From",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "validTo",
-      label: "Valid To",
+      placeholder: "Valid To",
       type: "date",
       hideTooltip: true,
     },
@@ -287,13 +287,13 @@ export default function MasterCutoffTimePage() {
     },
     {
       name: "validFrom",
-      label: "Valid From",
+      placeholder: "Valid From",
       type: "date",
       hideTooltip: true,
     },
     {
       name: "validTo",
-      label: "Valid To",
+      placeholder: "Valid To",
       type: "date",
       hideTooltip: true,
     },
