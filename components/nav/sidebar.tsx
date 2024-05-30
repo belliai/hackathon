@@ -66,7 +66,7 @@ const navigation = [
         ],
       },
       { name: "Download POD", href: "#", current: false },
-      { name: "AWB Epouch", href: "#", current: false },
+      { name: "AWB Epouch", href: "/orders/awb-epouch", current: false },
       { name: "Maintain AWB", href: "#", current: false },
     ],
   },
