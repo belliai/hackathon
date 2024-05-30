@@ -196,6 +196,16 @@ const navigation = [
             href: "/accounting/agent/invoice-collection",
             current: false,
           },
+          {
+            name: "Debit Credit Memo",
+            href: "/accounting/agent/debit-credit-memo",
+            current: false,
+          },
+          {
+            name: "CCA",
+            href: "/accounting/agent/charge-correction",
+            current: false,
+          },
         ],
       },
     ],

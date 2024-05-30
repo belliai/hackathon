@@ -361,15 +361,24 @@ const Contents = (props: ContentProps) => {
                     />
 
                     <div className="flex items-end">
-                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                        Pay
-                    </Button>
+                        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                            Pay
+                        </Button>
                     </div>
-                
+
 
                 </CardContent>
 
             </Card>
+            <div className="flex space-x-2">
+                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                    Export
+                </Button>
+
+                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                    Print PDF
+                </Button>
+            </div>
 
         </div>
     )
