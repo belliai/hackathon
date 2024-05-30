@@ -141,7 +141,7 @@ export default function MastersPageTemplate({
           <form
             className={cn("grid sm:grid-cols-2 gap-4 items-end w-full", {
               "md:grid-cols-5": filterFormFields.length > 2,
-              "md:grid-cols-2": filterFormFields.length <= 2,
+              "flex flex-col md:flex-row": filterFormFields.length <= 2,
             })}
           >
             {filterFormFields.map((field) => {
