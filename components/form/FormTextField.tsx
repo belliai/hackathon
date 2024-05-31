@@ -29,6 +29,7 @@ import { Checkbox } from "../ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 type SelectOption = {
   label: string;
@@ -87,7 +88,8 @@ export default function FormTextField({
                     <FormControl>
                       <Button
                         variant={"outline"}
-                        className={cn(fieldClassName,
+                        className={cn(
+                          fieldClassName,
                           !field.value && "text-muted-foreground"
                         )}
                       >
@@ -114,9 +116,36 @@ export default function FormTextField({
                 </Popover>
               );
 
+            case "radio":
+              return (
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex my-2"
+                  >
+                    {options?.map((option) => {
+                      return (
+                        <FormItem
+                          className="flex items-center space-x-3 space-y-0"
+                          key={option.value}
+                        >
+                          <FormControl>
+                            <RadioGroupItem value={option.value} />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            {option.label}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+              );
+
             case "checkbox":
               return (
-                <div className="flex gap-4 items-center">
+                <div className="flex gap-4 items-center my-2">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
