@@ -8,8 +8,44 @@ export interface PropsField {
     leftIcon?: React.ReactNode
     rightIcon?: React.ReactNode
     options? : Array<{ label: string; value: string }>;
-
 }
+
+export const currentFields: Array<PropsField> = [
+    {
+        fieldId: "freight",
+        label: "Freight",
+        type: "inputText"
+  
+    },
+    {
+        fieldId: "OCDC",
+        label: "OCDC",
+        type: "inputText"
+    },
+    {
+        fieldId: "OCDA",
+        label: "OCDA",
+        type: "inputText"
+    },
+    {
+        fieldId: "GSTINNo",
+        label: "GSTIN No.",
+        type: "inputText"
+    },
+    {
+        fieldId: "serviceTax",
+        label: "Service Tax",
+        type: "inputText"
+    },
+    {
+        fieldId: "total",
+        label: "Total",
+        type: "inputText"
+    },
+
+
+]
+
 
 export const generalFields: Array<PropsField> = [
     {
@@ -167,7 +203,12 @@ export const remarksFields: Array<PropsField> = [
     {
         fieldId: "reason",
         label: "Reason for correction",
-        type: "inputText",
+        type: "inputSelect",
+        options : [
+            { value: "missing", label : "Missing Agreement"},
+            { value: "weight", label : "Weight Amendment"},
+            { value: "destination_change", label : "Destination Change"}
+        ]
     },
     {
         fieldId: "remark",

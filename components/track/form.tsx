@@ -6,13 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { forwardRef, useImperativeHandle } from "react";
-import { PropsField } from "./fields";
+import { PropsField } from "../../app/accounting/agent/debit-credit-memo/create/fields";
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
 
 
 
@@ -43,8 +44,9 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                 <div className="grid grid-cols-4 gap-2">
-                    {fields.map((item) => {
-                        const { type, fieldId, label, description } = item;
+                    {fields && fields.map((item: PropsField) => {
+                        const { type, fieldId, label, description, options } = item;
+
                         return (
                             <FormField
                                 key={fieldId}
@@ -56,14 +58,11 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                             <React.Fragment>
                                                 <FormLabel>{label}</FormLabel>
                                                 <FormControl>
-
                                                     <Input
-                                                        
                                                         className="h-8 min-w-40 border border-zinc-800"
                                                         placeholder=""
                                                         {...field}
                                                     />
-
                                                 </FormControl>
                                                 <FormMessage />
                                             </React.Fragment>
@@ -105,7 +104,67 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                                 </Popover>
                                                 {description && <FormDescription>
                                                     {description}
-                                                </FormDescription> }
+                                                </FormDescription>}
+                                                <FormMessage />
+                                            </React.Fragment>
+                                        )}
+
+                                        {type === "inputSelect" && options && (
+                                            <React.Fragment>
+                                                <FormLabel>{label}</FormLabel>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button
+                                                                variant="outline"
+                                                                role="combobox"
+                                                                className={cn(
+                                                                    "justify-between",
+                                                                    !field.value && "text-muted-foreground"
+                                                                )}
+                                                            >
+                                                                {field.value
+                                                                    ? options.find(
+                                                                        (language) => language.value === field.value
+                                                                    )?.label
+                                                                    : "Select " + label}
+                                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-[200px] p-0">
+                                                        <Command>
+                                                            <CommandInput placeholder="Search .." />
+                                                            <CommandEmpty>Not found.</CommandEmpty>
+                                                            <CommandList>
+
+                                                                {options && options.map((option) => (
+                                                                    <CommandItem
+                                                                        value={option.label}
+                                                                        key={option.value}
+                                                                        onSelect={() => {
+                                                                            form.setValue(fieldId as Path<z.infer<T>>, option.value as z.infer<T>[typeof fieldId])
+                                                                        }}
+                                                                    >
+                                                                        <Check
+                                                                            className={cn(
+                                                                                "mr-2 h-4 w-4",
+                                                                                option.value === field.value
+                                                                                    ? "opacity-100"
+                                                                                    : "opacity-0"
+                                                                            )}
+                                                                        />
+                                                                        {option.label}
+                                                                    </CommandItem>
+                                                                ))}
+
+                                                            </CommandList>
+                                                        </Command>
+                                                    </PopoverContent>
+                                                </Popover>
+                                                {description && <FormDescription>
+                                                    {description}
+                                                </FormDescription>}
                                                 <FormMessage />
                                             </React.Fragment>
                                         )}
