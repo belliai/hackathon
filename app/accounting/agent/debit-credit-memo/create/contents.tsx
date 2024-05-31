@@ -10,11 +10,12 @@ import FilterDebouncedInput from "@/components/track/filter-input"
 import { cn } from "@/lib/utils"
 import React from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { FormField } from "@/components/ui/form"
 import FormFields from "@components/track/form"
 import { invoiceSchema } from "./schema"
 import { z } from "zod"
 import { UseFormReturn } from "react-hook-form"
-import { airwaybillFields, chargesFields, generalFields, remarksFields } from "./fields"
+import {  currentFields, remarksFields } from "./fields"
 import Link from "next/link"
 import { Alert } from "@/components/track/alert"
 
@@ -24,23 +25,22 @@ type ContentProps = {
 }
 
 type FilterProps = {
-    date: string
-    payMode: string,
-    prefix: string,
-    awbNo: string,
+    invoiceNo: string
+    agentCode: string,
+    DCMType: string,
+    includeGST: string,
 
 
 }
 const initFilter: FilterProps = {
-    date: "",
-    payMode: "",
-    prefix: "",
-    awbNo: "",
+    invoiceNo: "",
+    agentCode: "",
+    DCMType: "",
+    includeGST: "",
 }
 
 const schema = invoiceSchema.pick({ invoiceNo: true })
-const awbSchema = invoiceSchema.pick({ invoiceNo: true })
-const originalSchema = invoiceSchema.pick({ invoiceNo: true })
+const currentSchema = invoiceSchema.pick({ invoiceNo: true })
 const revisedSchema = invoiceSchema.pick({ invoiceNo: true })
 const remarkSchema = invoiceSchema.pick({ invoiceNo: true })
 
@@ -51,8 +51,7 @@ const Contents = (props: ContentProps) => {
     const [filter, setFilter] = useState<FilterProps>(initFilter)
 
     const formRef = useRef<UseFormReturn<z.infer<typeof schema>> | null>(null);
-    const awbFormRef = useRef<UseFormReturn<z.infer<typeof awbSchema>> | null>(null);
-    const oriFormRef = useRef<UseFormReturn<z.infer<typeof originalSchema>> | null>(null);
+    const currentFormRef = useRef<UseFormReturn<z.infer<typeof currentSchema>> | null>(null);
     const revFormRef = useRef<UseFormReturn<z.infer<typeof revisedSchema>> | null>(null);
     const remarkFormRef = useRef<UseFormReturn<z.infer<typeof remarkSchema>> | null>(null);
 
@@ -81,32 +80,38 @@ const Contents = (props: ContentProps) => {
             <Card>
                 <CardContent className="grid grid-cols-5 gap-2">
                     <FilterDebouncedInput
-                        onChange={(val: any) => onSelectFilter("prefix", val)}
-                        title="Prefix"
-                        value={filter.prefix}
+                        onChange={(val: any) => onSelectFilter("invoiceNo", val)}
+                        title="Invoice No"
+                        value={filter.invoiceNo}
                     />
                     <FilterDebouncedInput
-                        onChange={(val: any) => onSelectFilter("awbNo", val)}
-                        title="AWB No."
-                        value={filter.awbNo}
+                        onChange={(val: any) => onSelectFilter("agentCode", val)}
+                        title="Agent Code"
+                        value={filter.agentCode}
                     />
                     <FilterSelect
                         options={[
-                            { key: "agent", value: "Agent" },
-                            { key: "walkin", value: "Walkin" },
-                            { key: "destination", value: "Destination" }
+                            { key: "credit", value: "Credit" },
+                            { key: "debit", value: "Debit" },
+                            { key: "revised_note", value: "Revised Note" }
                         ]}
-                        onChange={(val: any) => onSelectFilter("payMode", val)}
-                        name="Paymode"
-                        value={filter.payMode}
+                        onChange={(val: any) => onSelectFilter("DCMType", val)}
+                        name="DCM Type"
+                        value={filter.DCMType}
+                    />
+                    <FilterSelect
+                        options={[
+                            { key: "credit", value: "Credit" },
+                            { key: "debit", value: "Debit" },
+                            { key: "revised_note", value: "Revised Note" }
+                        ]}
+                        onChange={(val: any) => onSelectFilter("includeGST", val)}
+                        name="Include GST"
+                        value={filter.includeGST}
                     />
 
-                    <FilterDatePicker
-                        onChange={(val: any) => onSelectFilter("date", val)}
-                        value={filter.date}
-                        name="Date"
-                    />
 
+               
                     <div className="flex space-x-2 items-end">
                         <Button variant="outline" className="h-8 w-8 p-1  bg-indigo-600 hover:bg-indigo-700">
                             <Search size={18} />
@@ -118,26 +123,16 @@ const Contents = (props: ContentProps) => {
                 </CardContent>
             </Card>
 
-            <Card>
 
-                <CardContent>
-                    <FormFields
-                        ref={formRef}
-                        fields={generalFields}
-                        defaultValues={{ invoiceNo: "" }}
-                        schema={schema}
-                    />
-                </CardContent>
-            </Card>
 
             <Card>
                 <CardHeader className="bg-zinc-500 p-2">
-                    <p className="text-sm">Air Waybill weight and / or charges have been corrected / added as follows :</p>
+                    <p className="text-sm">Current</p>
                 </CardHeader>
                 <CardContent>
                     <FormFields
-                        ref={awbFormRef}
-                        fields={airwaybillFields}
+                        ref={currentFormRef}
+                        fields={currentFields}
                         defaultValues={{ invoiceNo: "" }}
                         schema={schema}
                     />
@@ -146,33 +141,18 @@ const Contents = (props: ContentProps) => {
 
             <Card>
                 <CardHeader className="bg-zinc-500 p-2">
-                    <p className="text-sm">Original / Incorrect Charges
-                    </p>
-                </CardHeader>
-                <CardContent>
-                    <FormFields
-                        ref={oriFormRef}
-                        fields={chargesFields}
-                        defaultValues={{ invoiceNo: "" }}
-                        schema={schema}
-                    />
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader className="bg-zinc-500 p-2">
-                    <p className="text-sm">Revised / Correct Charges
-                    </p>
+                    <p className="text-sm">Revised</p>
                 </CardHeader>
                 <CardContent>
                     <FormFields
                         ref={revFormRef}
-                        fields={chargesFields}
+                        fields={currentFields}
                         defaultValues={{ invoiceNo: "" }}
                         schema={schema}
                     />
                 </CardContent>
             </Card>
+
 
             <Card>
                 <CardHeader className="bg-zinc-500 p-2">
@@ -212,11 +192,9 @@ const Contents = (props: ContentProps) => {
                             }
 
                         }}>
-                            Submit
+                            Generate DCM
                         </Button>
-                        <Button variant="button-primary">
-                            Calculate
-                        </Button>
+
                     </div>
 
                 </CardContent>
