@@ -555,6 +555,11 @@ const navigation = [
             href: "/organize/ratefilling/atf-price",
             current: false,
           },
+          {
+            name: "Additional FSC",
+            href: "/organize/ratefilling/additional-fsc",
+            current: false,
+          }
         ],
       },
     ],
