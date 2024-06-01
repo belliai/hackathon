@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { ColumnDef } from "@tanstack/react-table";
-import { Download, Plus, Search } from "lucide-react";
+import { Download, Plus, RefreshCcw, Search } from "lucide-react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import MastersPageForm from "./MastersPageForm";
 import { Separator } from "@/components/ui/separator";
@@ -212,6 +212,13 @@ export default function MastersPageTemplate({
                 className="bg-button-primary  text-white hover:bg-button-primary/80"
               >
                 <Search size={16} />
+              </Button>
+              <Button
+                size="icon"
+                type="button"
+                className="bg-button-primary  text-white hover:bg-button-primary/80"
+              >
+                <RefreshCcw size={16} />
               </Button>
               <Button
                 size="icon"
