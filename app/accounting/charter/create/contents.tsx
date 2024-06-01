@@ -86,9 +86,9 @@ const Contents = (props: ContentProps) => {
                 <CardContent>
                     {routes.map((route, id) => {
                         return (
-                            <div className="flex space-x-2 justify-between items-end xs:flex-col">
+                            <div      key={id} className="flex space-x-2 justify-between items-end xs:flex-col">
                                 <FormFields
-                                    key={id}
+                                
                                     cols={5}
                                     ref={formRef}
                                     fields={route}
