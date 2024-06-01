@@ -8,9 +8,9 @@ export default async function Page() {
   const Actions = () => {
     return (
       <div>
-        <Link href="/accounting/agent/charge-correction/create">
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-            Create Charges Correction Advise
+        <Link href="/accounting/charter/create">
+          <Button variant="button-primary">
+            Create Charter
           </Button>
         </Link>
 
@@ -19,7 +19,7 @@ export default async function Page() {
   }
 
   const props = {
-    title: "Charge Correction Advise",
+    title: "Charter",
     actions: <Actions />
   }
 

@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { forwardRef, useImperativeHandle } from "react";
-import { PropsField } from "../../app/accounting/agent/debit-credit-memo/create/fields";
+
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,8 @@ import { format } from "date-fns";
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+import { Checkbox } from "../ui/checkbox";
+import { PropsField } from "./types";
 
 
 
@@ -21,11 +23,13 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 interface PropsFormData<T extends ZodSchema<any>> {
     schema: T;
     defaultValues: z.infer<T>;
-    fields: Array<PropsField>
+    fields: Array<PropsField>;
+    actions?: React.ReactNode
+    cols?: number
 }
 
 const FormFields = forwardRef(<T extends ZodSchema<any>>(
-    { schema, defaultValues, fields }: PropsFormData<T>,
+    { schema, defaultValues, fields, actions, cols }: PropsFormData<T>,
     ref: React.Ref<UseFormReturn<z.infer<T>> | null>
 ) => {
     const form = useForm<z.infer<T>>({
@@ -43,7 +47,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
 
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                <div className="grid grid-cols-4 gap-2">
+                <div className={cn("grid  gap-2", cols ? "grid-cols-" + cols : "grid-cols-4")}>
                     {fields && fields.map((item: PropsField) => {
                         const { type, fieldId, label, description, options } = item;
 
@@ -69,7 +73,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                         )}
 
                                         {type === "inputDate" && (
-                                            <React.Fragment>
+                                            <div className="flex flex-col h-full justify-end space-y-1">
                                                 <FormLabel>{label}</FormLabel>
                                                 <Popover>
                                                     <PopoverTrigger asChild>
@@ -106,7 +110,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                                     {description}
                                                 </FormDescription>}
                                                 <FormMessage />
-                                            </React.Fragment>
+                                            </div>
                                         )}
 
                                         {type === "inputSelect" && options && (
@@ -119,7 +123,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                                                 variant="outline"
                                                                 role="combobox"
                                                                 className={cn(
-                                                                    "justify-between",
+                                                                    "justify-between w-[200px]",
                                                                     !field.value && "text-muted-foreground"
                                                                 )}
                                                             >
@@ -127,7 +131,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                                                     ? options.find(
                                                                         (language) => language.value === field.value
                                                                     )?.label
-                                                                    : "Select " + label}
+                                                                    : "Select ..."}
                                                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                             </Button>
                                                         </FormControl>
@@ -137,7 +141,6 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                                             <CommandInput placeholder="Search .." />
                                                             <CommandEmpty>Not found.</CommandEmpty>
                                                             <CommandList>
-
                                                                 {options && options.map((option) => (
                                                                     <CommandItem
                                                                         value={option.label}
@@ -168,11 +171,35 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                                 <FormMessage />
                                             </React.Fragment>
                                         )}
+
+                                        {type === "inputCheck" &&
+
+                                            <div className="flex space-x-2 items-end h-full">
+                                                <FormControl>
+                                                    <Checkbox
+                                                        className="h-5 w-5"
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                    />
+                                                </FormControl>
+                                                <div className="space-y-1 leading-none">
+                                                    <FormLabel>
+                                                        {label}
+                                                    </FormLabel>
+                                                    {description && <FormDescription>
+                                                        {description}
+                                                    </FormDescription>}
+                                                </div>
+                                            </div>
+
+                                        }
                                     </FormItem>
                                 )}
                             />
                         );
                     })}
+
+                    {actions}
                 </div>
             </form>
 

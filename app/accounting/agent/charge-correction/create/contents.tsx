@@ -187,20 +187,24 @@ const Contents = (props: ContentProps) => {
                                 fields={remarksFields}
                                 defaultValues={{ invoiceNo: "" }}
                                 schema={schema}
+
+                                actions={
+                                    <Alert title={"History"}
+                                        trigger={<Button variant="link">
+                                            <Menu size={14} />
+                                        </Button>}
+                                    >
+                                        <div className="rounded-lg shadow-lg w-full">
+                                            <pre className="text-sm leading-relaxed text-white bg-zinc-800 p-2 rounded-lg overflow-auto">
+                                                <code >
+
+                                                </code>
+                                            </pre>
+                                        </div>
+                                    </Alert>
+                                }
                             />
-                            <Alert title={"History"}
-                                trigger={<Button variant="link">
-                                    <Menu size={14} />
-                                </Button>}
-                            >
-                                <div className="rounded-lg shadow-lg w-full">
-                                    <pre className="text-sm leading-relaxed text-white bg-zinc-800 p-2 rounded-lg overflow-auto">
-                                        <code >
-                                          
-                                        </code>
-                                    </pre>
-                                </div>
-                            </Alert>
+
                         </div>
 
                         <Button variant="button-primary" onClick={async () => {

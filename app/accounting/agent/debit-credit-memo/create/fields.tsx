@@ -1,14 +1,6 @@
+import { PropsField } from "@/components/track/types"
 import React from "react"
 
-export interface PropsField {
-    fieldId: string
-    type: "inputText" | "inputDate" | "inputSelect"
-    label: string
-    description?: string
-    leftIcon?: React.ReactNode
-    rightIcon?: React.ReactNode
-    options? : Array<{ label: string; value: string }>;
-}
 
 export const currentFields: Array<PropsField> = [
     {

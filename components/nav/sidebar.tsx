@@ -208,6 +208,11 @@ const navigation = [
           },
         ],
       },
+      {
+        name: "Charter",
+        href: "/accounting/charter",
+        current: false
+      }
     ],
   },
   {

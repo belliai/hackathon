@@ -2,26 +2,28 @@
 import { Button } from "@/components/ui/button";
 import Contents from "./contents";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
 export default async function Page() {
 
+
   const Actions = () => {
     return (
-      <div>
-        <Link href="/accounting/agent/charge-correction/create">
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-            Create Charges Correction Advise
+      <div className="flex space-x-2 items-center"> 
+          <p className="text-xs w-full text-right">Reference no</p>
+          <Input  />
+          <Button variant="button-secondary">
+            Clear
           </Button>
-        </Link>
 
       </div>
     )
   }
-
   const props = {
-    title: "Charge Correction Advise",
+    title: "Create Charter",
     actions: <Actions />
   }
+
 
   return (
     <Contents  {...props} />
