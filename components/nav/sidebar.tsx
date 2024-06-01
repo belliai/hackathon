@@ -535,6 +535,11 @@ const navigation = [
             href: "/organize/ratefilling/exchange-rates",
             current: false,
           },
+          {
+            name: "Pro-Rate Factor",
+            href: "/organize/ratefilling/prorate-factor",
+            current: false,
+          },
         ],
       },
     ],
