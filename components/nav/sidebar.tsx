@@ -211,8 +211,8 @@ const navigation = [
       {
         name: "Charter",
         href: "/accounting/charter",
-        current: false
-      }
+        current: false,
+      },
     ],
   },
   {
@@ -548,6 +548,11 @@ const navigation = [
           {
             name: "Taxline",
             href: "/organize/ratefilling/taxline",
+            current: false,
+          },
+          {
+            name: "ATF Price",
+            href: "/organize/ratefilling/atf-price",
             current: false,
           },
         ],
