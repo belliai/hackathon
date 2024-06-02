@@ -3,6 +3,7 @@
 import {
   CalendarIcon,
   GlobeAmericasIcon,
+  HandThumbUpIcon,
   PresentationChartLineIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
@@ -662,6 +663,24 @@ const navigation = [
     ],
   },
   { name: "Manual", href: "#", icon: LinkBreak2Icon, current: false },
+  {
+    name: "Rewards",
+    href: "#",
+    icon: HandThumbUpIcon,
+    current: false,
+    children: [
+      {
+        name: "Appreciation",
+        href: "/rewards/appreciation",
+        current: false,
+      },
+      {
+        name: "Appreciation Report",
+        href: "/rewards/appreciation-report",
+        current: false,
+      },
+    ],
+  },
 ];
 
 export default function SideBar() {
