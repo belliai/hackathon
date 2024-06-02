@@ -107,7 +107,11 @@ const navigation = [
         current: false,
         submenus: [
           { name: "Mother Bag", href: "/operation/mother-bag", current: false },
-          { name: "Truck Export", href: "/operation/truck-export", current: false },
+          {
+            name: "Truck Export",
+            href: "/operation/truck-export",
+            current: false,
+          },
           {
             name: "Track Mother Bag List",
             href: "/operation/track-mother-bag-list",
@@ -576,6 +580,11 @@ const navigation = [
           {
             name: "Spot Rate",
             href: "/organize/ratefilling/spot-rate",
+            current: false,
+          },
+          {
+            name: "Capacity Allocation  ",
+            href: "/organize/ratefilling/capacity-allocation",
             current: false,
           },
         ],
