@@ -587,6 +587,11 @@ const navigation = [
             href: "/organize/ratefilling/capacity-allocation",
             current: false,
           },
+          {
+            name: "SAC Master",
+            href: "/organize/ratefilling/sac",
+            current: false,
+          },
         ],
       },
     ],
