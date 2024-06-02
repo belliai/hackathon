@@ -59,10 +59,10 @@ function SectionedForm({
   fieldArray,
 }: SectionedFormFields) {
   return (
-    <div key={fields?.[0].name}>
+    <div key={fields?.[0].name} className="flex flex-col gap-4">
       {/* For normal form fields  */}
       {sectionName && (
-        <div className="flex flex-col gap-2 py-2 pb-4">
+        <div className="flex flex-col gap-2 pt-2">
           <h2 className="font-semibold text-white">{sectionName}</h2>
           <Separator />
         </div>

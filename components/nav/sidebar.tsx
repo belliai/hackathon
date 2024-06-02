@@ -565,6 +565,11 @@ const navigation = [
             href: "/organize/ratefilling/ocdc",
             current: false,
           },
+          {
+            name: "Spot Rate",
+            href: "/organize/ratefilling/spot-rate",
+            current: false,
+          },
         ],
       },
     ],
