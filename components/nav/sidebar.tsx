@@ -8,7 +8,7 @@ import {
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
-import { CubeIcon, LinkBreak2Icon } from "@radix-ui/react-icons";
+import { CubeIcon, LinkBreak2Icon, UploadIcon } from "@radix-ui/react-icons";
 import {
   Dialog,
   DialogTrigger,
@@ -101,12 +101,19 @@ const navigation = [
     icon: WrenchScrewdriverIcon,
     current: false,
     children: [
-      { name: "Mother Bag", href: "/operation/mother-bag", current: false },
-      { name: "Truck Export", href: "/operation/truck-export", current: false },
       {
-        name: "Track Mother Bag List",
-        href: "/operation/track-mother-bag-list",
+        name: "D2D",
+        href: "#",
         current: false,
+        submenus: [
+          { name: "Mother Bag", href: "/operation/mother-bag", current: false },
+          { name: "Truck Export", href: "/operation/truck-export", current: false },
+          {
+            name: "Track Mother Bag List",
+            href: "/operation/track-mother-bag-list",
+            current: false,
+          },
+        ],
       },
       {
         name: "Stock Alocation",
@@ -662,7 +669,19 @@ const navigation = [
       },
     ],
   },
-  { name: "Manual", href: "#", icon: LinkBreak2Icon, current: false },
+  {
+    name: "Manual",
+    href: "#",
+    icon: UploadIcon,
+    current: false,
+    children: [
+      {
+        name: "Upload Manual",
+        href: "/manual/upload-manual",
+        current: false,
+      },
+    ],
+  },
   {
     name: "Rewards",
     href: "#",
