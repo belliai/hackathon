@@ -597,6 +597,11 @@ const navigation = [
             href: "/organize/ratefilling/cost-code",
             current: false,
           },
+          {
+            name: "Cost Line",
+            href: "/organize/ratefilling/cost-line",
+            current: false,
+          },
         ],
       },
     ],
