@@ -607,8 +607,13 @@ const navigation = [
       {
         name: "Master Upload",
         href: "/organize/master-upload",
-        current: false
-      }
+        current: false,
+      },
+      {
+        name: "Message Configuration",
+        href: "/organize/message-configuration",
+        current: false,
+      },
     ],
   },
   {
