@@ -614,6 +614,23 @@ const navigation = [
         href: "/organize/message-configuration",
         current: false,
       },
+      {
+        name: "DB-changes",
+        href: "/organize/db-changes",
+        current: false,
+        submenus: [
+          {
+            name: "DB Changes",
+            href: "/organize/db-changes",
+            current: false,
+          },
+          {
+            name: "Upload Serviceable Postal Code",
+            href: "/organize/db-changes/upload-serviceable-postal-code",
+            current: false,
+          },
+        ],
+      },
     ],
   },
   {
