@@ -604,6 +604,11 @@ const navigation = [
           },
         ],
       },
+      {
+        name: "Master Upload",
+        href: "/organize/master-upload",
+        current: false
+      }
     ],
   },
   {
