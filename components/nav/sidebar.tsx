@@ -631,6 +631,11 @@ const navigation = [
           },
         ],
       },
+      {
+        name: "FTP",
+        href: "/organize/ftp",
+        current: false,
+      },
     ],
   },
   {
