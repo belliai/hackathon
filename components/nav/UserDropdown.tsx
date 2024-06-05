@@ -1,4 +1,5 @@
 "use client";
+import React, { SetStateAction, Dispatch } from 'react';
 
 import {
   DropdownMenu,
@@ -13,9 +14,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChevronDownIcon, User } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { useRouter } from "next/navigation";
-import React from "react";
 
-export default function UserDropdown() {
+interface UserDropdownProps {
+  doChangeNavigation: Dispatch<SetStateAction<number>>;
+}
+
+export default function UserDropdown({ doChangeNavigation = () => {} }:UserDropdownProps) {
   const router = useRouter();
 
   const ITEMS = [
@@ -27,8 +31,9 @@ export default function UserDropdown() {
       separator: true,
     },
     {
-      route: "/settings",
+      route: "/organize/masters/finance/cart",
       label: "Settings",
+      changeNavigation: true,
     },
     {
       shortcut: "⇧⌘Q",
@@ -57,8 +62,11 @@ export default function UserDropdown() {
           return (
             <React.Fragment key={index}>
               <DropdownMenuItem
-                className="px-3.5 py-2 min-w-40 rounded-lg"
-                onClick={() => router.push(item.route)}
+                className="px-3.5 py-2 min-w-40 rounded-lg cursor-pointer"
+                onClick={() => {
+                  if (item.changeNavigation) doChangeNavigation(2);
+                  router.push(item.route);
+                }}
               >
                 {/* {item.icon} */}
                 <span className="mr-4">{item.label}</span>
