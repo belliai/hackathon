@@ -38,7 +38,7 @@ export default function RootLayout({
       )}
     >
       {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
-      <body className="  h-full bg-zinc-900 text-white custom-scrollbar">
+      <body className="  h-full text-white custom-scrollbar bg-background">
         {/* <ProgressBar />
       <Nav /> */}
         <TooltipProvider>

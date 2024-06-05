@@ -26,10 +26,11 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import UserDropdown from "./UserDropdown";
-import SidebarItem from "./SidebarItem";
+import SidebarItem, { TSidebarItem } from "./SidebarItem";
 import NewOrderModal from "../dashboard/new-order-modal";
+import SidebarMenu from "./SidebarMenu";
 
-const navigation = [
+const navigation: TSidebarItem[] = [
   {
     name: "Dashboard",
     href: "/dashboard",
@@ -53,7 +54,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
           { name: "Capacity Usage", href: "#", current: false },
@@ -64,7 +65,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
         ],
@@ -74,7 +75,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
         ],
@@ -84,7 +85,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
           { name: "Approval", href: "#", current: false },
@@ -115,7 +116,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Fight Master", href: "#", current: false },
           { name: "Active Flights", href: "#", current: false },
           { name: "New Flight", href: "#", current: false },
@@ -123,7 +124,7 @@ const navigation = [
             name: "Route Control",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -155,7 +156,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
           { name: "Templates", href: "#", current: false },
@@ -163,13 +164,13 @@ const navigation = [
             name: "Dangerous Goods",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "DGR Approval", href: "#", current: false },
               {
                 name: "MSDS",
                 href: "#",
                 current: false,
-                submenus: [
+                children: [
                   { name: "List", href: "#", current: false },
                   { name: "New", href: "#", current: false },
                 ],
@@ -203,7 +204,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Cargo Acceptance", href: "#", current: false },
           { name: "Cargo Screening", href: "#", current: false },
         ],
@@ -213,14 +214,14 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [{ name: "Flight Planning", href: "#", current: false }],
+        children: [{ name: "Flight Planning", href: "#", current: false }],
       },
       {
         name: "Export",
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Export Manifest", href: "#", current: false },
           { name: "ePouch Flight", href: "#", current: false },
           { name: "Export Summary", href: "#", current: false },
@@ -233,7 +234,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Arrive", href: "#", current: false },
           { name: "Break ULD", href: "#", current: false },
           { name: "Import Summary", href: "#", current: false },
@@ -245,14 +246,14 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [{ name: "Deliver Cargo", href: "#", current: false }],
+        children: [{ name: "Deliver Cargo", href: "#", current: false }],
       },
       {
         name: "Transfer",
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "CTM Out", href: "#", current: false },
           { name: "CTM In", href: "#", current: false },
@@ -263,7 +264,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
         ],
@@ -305,7 +306,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "UCM In", href: "#", current: false },
           { name: "UCM Out", href: "#", current: false },
           { name: "ULD Stock Management", href: "#", current: false },
@@ -325,14 +326,14 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [{ name: "Track AWB", href: "#", current: false }],
+        children: [{ name: "Track AWB", href: "#", current: false }],
       },
       {
         name: "Messaging",
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Monitor Messaging", href: "#", current: false },
           { name: "ASM/SSM Monitoring", href: "#", current: false },
         ],
@@ -342,7 +343,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "AWB Audit Log", href: "#", current: false },
           { name: "Billing Audit Trail", href: "#", current: false },
           { name: "ULD Audit Trail", href: "#", current: false },
@@ -373,13 +374,13 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Invoice", href: "#", current: false },
           {
             name: "Collection",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "Collection", href: "#", current: false },
               { name: "List Card Transactions", href: "#", current: false },
               { name: "Upload AWB collection File", href: "#", current: false },
@@ -394,7 +395,7 @@ const navigation = [
             name: "Credit Note",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -403,7 +404,7 @@ const navigation = [
             name: "Debit Note",
             href: "#",
             current: false,
-            submenus: [{ name: "List", href: "#", current: false }],
+            children: [{ name: "List", href: "#", current: false }],
           },
         ],
       },
@@ -412,12 +413,12 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Receivables",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "Receivables", href: "#", current: false },
               { name: "Create Billing Memo", href: "#", current: false },
               { name: "Create Credit Memo", href: "#", current: false },
@@ -430,7 +431,7 @@ const navigation = [
             name: "Adhoc SPA",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "Adhoc SPA New", href: "#", current: false },
               { name: "Adhoc SPA List", href: "#", current: false },
             ],
@@ -442,7 +443,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Cost Audit Log", href: "#", current: false },
           { name: "AWB Cost & Revenue", href: "#", current: false },
         ],
@@ -452,7 +453,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "New", href: "#", current: false },
           { name: "List", href: "#", current: false },
           { name: "Track", href: "#", current: false },
@@ -463,7 +464,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [{ name: "World ACD Interface", href: "#", current: false }],
+        children: [{ name: "World ACD Interface", href: "#", current: false }],
       },
       {
         name: "Agent Credit Report",
@@ -484,7 +485,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Daily Sales", href: "#", current: false },
           { name: "Agent Perfomance", href: "#", current: false },
           { name: "Daily Collections", href: "#", current: false },
@@ -544,12 +545,12 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "User/Login",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -559,7 +560,7 @@ const navigation = [
             name: "Role Master",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -571,7 +572,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Country", href: "#", current: false },
           { name: "Region", href: "#", current: false },
           { name: "Currency", href: "#", current: false },
@@ -580,7 +581,7 @@ const navigation = [
             name: "Airline Route",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -595,7 +596,7 @@ const navigation = [
             name: "Aircraft",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "Aircraft", href: "#", current: false },
               { name: "Equipment", href: "#", current: false },
             ],
@@ -604,7 +605,7 @@ const navigation = [
             name: "ULD",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
               { name: "ULD Category", href: "#", current: false },
@@ -615,7 +616,7 @@ const navigation = [
             name: "Priority",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
               { name: "Priority Master", href: "#", current: false },
@@ -625,7 +626,7 @@ const navigation = [
             name: "Commodity",
             href: "#",
             current: false,
-            submenus: [{ name: "Commodity Master", href: "#", current: false }],
+            children: [{ name: "Commodity Master", href: "#", current: false }],
           },
           { name: "Special Handling Code", href: "#", current: false },
           { name: "CutOff Time", href: "#", current: false },
@@ -641,7 +642,7 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "Capacity Master", href: "#", current: false },
           { name: "Flight Pax Information", href: "#", current: false },
         ],
@@ -651,12 +652,12 @@ const navigation = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Rate Card",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -665,7 +666,7 @@ const navigation = [
             name: "Rate Line",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -674,7 +675,7 @@ const navigation = [
             name: "Cost Line",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -684,7 +685,7 @@ const navigation = [
             name: "Other Charges",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -693,7 +694,7 @@ const navigation = [
             name: "Spot Rates",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
               { name: "Approval", href: "#", current: false },
@@ -703,7 +704,7 @@ const navigation = [
             name: "Tax Line",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -712,7 +713,7 @@ const navigation = [
             name: "Config Line",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -721,7 +722,7 @@ const navigation = [
             name: "Deals",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "New Deal", href: "#", current: false },
               { name: "Apply Deal", href: "#", current: false },
               { name: "List Deal", href: "#", current: false },
@@ -733,7 +734,7 @@ const navigation = [
             name: "Vol. Exemption",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "List", href: "#", current: false },
               { name: "New", href: "#", current: false },
             ],
@@ -742,7 +743,7 @@ const navigation = [
             name: "PLI",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "New PLI", href: "#", current: false },
               { name: "Apply PLI", href: "#", current: false },
               { name: "List PLI", href: "#", current: false },
@@ -756,7 +757,7 @@ const navigation = [
         name: "Partner",
         href: "#",
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
         ],
@@ -765,7 +766,7 @@ const navigation = [
         name: "Agent",
         href: "#",
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
           { name: "Agent MGP", href: "#", current: false },
@@ -775,13 +776,13 @@ const navigation = [
         name: "Shipper Consignee",
         href: "#",
         current: false,
-        submenus: [{ name: "Shipper Consignee", href: "#", current: false }],
+        children: [{ name: "Shipper Consignee", href: "#", current: false }],
       },
       {
         name: "Vendor Master",
         href: "#",
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
         ],
@@ -790,7 +791,7 @@ const navigation = [
         name: "Message Config",
         href: "#",
         current: false,
-        submenus: [
+        children: [
           { name: "List", href: "#", current: false },
           { name: "New", href: "#", current: false },
         ],
@@ -799,13 +800,13 @@ const navigation = [
         name: "Upload Master",
         href: "#",
         current: false,
-        submenus: [{ name: "Upload Master", href: "#", current: false }],
+        children: [{ name: "Upload Master", href: "#", current: false }],
       },
       {
         name: "Notification",
         href: "#",
         current: false,
-        submenus: [{ name: "Notification", href: "#", current: false }],
+        children: [{ name: "Notification", href: "#", current: false }],
       },
     ],
   },
@@ -820,14 +821,14 @@ const navigation = [
         href: "#",
         icon: GlobeAmericasIcon,
         current: false,
-        submenus: [
+        children: [
           { name: "New Orders", href: "#", current: false },
           {
             name: "View Orders",
             icon: CubeIcon,
             href: "#",
             current: false,
-            submenus: [
+            children: [
               { name: "D2D", href: "/orders/view/d2d", current: false },
               { name: "A2A", href: "/orders/view/a2a", current: false },
             ],
@@ -837,7 +838,7 @@ const navigation = [
             href: "#",
             icon: ServerStackIcon,
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Upload Cargo Acceptance Slip",
                 href: "/orders/cargo-acceptance-slip",
@@ -859,7 +860,7 @@ const navigation = [
         href: "#",
         icon: CalendarIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Active Flights",
             href: "/scheduling/active-flights",
@@ -887,12 +888,12 @@ const navigation = [
         href: "#",
         icon: WrenchScrewdriverIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "D2D",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Mother Bag",
                 href: "/operation/mother-bag",
@@ -924,7 +925,7 @@ const navigation = [
             name: "Export Manifest",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Export Manifest",
                 href: "/operation/export-manifest/export-manifest",
@@ -941,7 +942,7 @@ const navigation = [
             name: "Arrival Manifest",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Arrival Manifest",
                 href: "/operation/arrival-manifest/arrival-manifest",
@@ -963,7 +964,7 @@ const navigation = [
             name: "Transfer",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "CTM IN",
                 href: "/operation/transfer/ctm-in",
@@ -983,12 +984,12 @@ const navigation = [
         href: "#",
         icon: ReceiptText,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Agent",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Agent Invoice",
                 href: "/accounting/agent/invoice",
@@ -1023,7 +1024,7 @@ const navigation = [
         href: "#",
         icon: TargetIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Master Audit Log",
             href: "/track/master-audit-log",
@@ -1064,7 +1065,7 @@ const navigation = [
             name: "Messaging",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "MVT Message",
                 href: "/track/messaging-mvt",
@@ -1100,7 +1101,7 @@ const navigation = [
           {
             name: "Master Upload Log",
             href: "#",
-            submenus: [
+            children: [
               {
                 name: "Pincode",
                 href: "/track/master-pin-code",
@@ -1128,7 +1129,7 @@ const navigation = [
             name: "Flight Scheduling Log",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Flight",
                 href: "/track/flight-audit-log",
@@ -1152,17 +1153,17 @@ const navigation = [
         name: "Organize",
         href: "#",
         icon: Boxes,
-        submenus: [
+        children: [
           {
             name: "Masters",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Finance",
                 href: "#",
                 current: false,
-                submenus: [
+                children: [
                   {
                     name: "Cart",
                     href: "/organize/masters/finance/cart",
@@ -1209,7 +1210,7 @@ const navigation = [
                 name: "Operation",
                 href: "#",
                 current: false,
-                submenus: [
+                children: [
                   {
                     name: "Aircraft",
                     href: "/organize/masters/operation/aircraft",
@@ -1276,7 +1277,7 @@ const navigation = [
                 name: "ULD",
                 href: "#",
                 current: false,
-                submenus: [
+                children: [
                   {
                     name: "ULD",
                     href: "/organize/masters/uld",
@@ -1288,8 +1289,8 @@ const navigation = [
                     current: false,
                   },
                   {
-                    name: "ULC",
-                    href: "/organize/masters/uld/ulc",
+                    name: "UCR",
+                    href: "/organize/masters/uld/ucr",
                   },
                 ],
               },
@@ -1299,7 +1300,7 @@ const navigation = [
             name: "User",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Login",
                 href: "/organize/user",
@@ -1326,7 +1327,7 @@ const navigation = [
             name: "Ratefilling",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Supplier GSTIN",
                 href: "/organize/ratefilling/supplier-gstin",
@@ -1413,7 +1414,7 @@ const navigation = [
             name: "DB-changes",
             href: "/organize/db-changes",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "DB Changes",
                 href: "/organize/db-changes",
@@ -1438,12 +1439,12 @@ const navigation = [
         href: "#",
         icon: PresentationChartLineIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Finance",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "Cancel Invoice Report",
                 href: "/reports/finance/cancel-invoice",
@@ -1475,7 +1476,7 @@ const navigation = [
             name: "Operation",
             href: "#",
             current: false,
-            submenus: [
+            children: [
               {
                 name: "E-Pouch Report",
                 href: "/reports/operation/epouch-report",
@@ -1525,7 +1526,7 @@ const navigation = [
         href: "#",
         icon: UploadIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Upload Manual",
             href: "/manual/upload-manual",
@@ -1538,7 +1539,7 @@ const navigation = [
         href: "#",
         icon: HandThumbUpIcon,
         current: false,
-        submenus: [
+        children: [
           {
             name: "Appreciation",
             href: "/rewards/appreciation",
@@ -1559,7 +1560,7 @@ export default function SideBar() {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-900 px-6 pb-4 ring-1 ring-white/10 no-scrollbar">
+    <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 ring-border ring-1 no-scrollbar bg-black-background">
       <div className="flex h-16 shrink-0 items-center justify-between">
         <UserDropdown />
       </div>
@@ -1579,9 +1580,7 @@ export default function SideBar() {
               </NewOrderModal>
             </li>
             <ul className="flex flex-col gap-1">
-              {navigation.map((item) => (
-                <SidebarItem key={item.name} item={item} />
-              ))}
+              <SidebarMenu items={navigation} />
             </ul>
           </ul>
         </ul>
