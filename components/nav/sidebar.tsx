@@ -1560,7 +1560,7 @@ export default function SideBar() {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 ring-border ring-1 no-scrollbar bg-black-background">
+    <div className="flex grow flex-col gap-y-5 overflow-y-auto px-5 pb-4 ring-border ring-1 no-scrollbar bg-black-background">
       <div className="flex h-16 shrink-0 items-center justify-between">
         <UserDropdown />
       </div>
@@ -1572,9 +1572,9 @@ export default function SideBar() {
                 <Button
                   variant="ghost"
                   onClick={() => setDialogOpen(true)}
-                  className="px-2 w-full py-5 justify-start mb-5 text-lg text-zinc-400"
+                  className="px-2 w-full py-5 justify-start mb-5 text-[13px] text-[#E2E3E5]"
                 >
-                  <PlusSquare className="mr-2.5 h-6 w-6" />
+                  <PlusSquare className="mr-2.5 h-[18px] w-[18px] text-[#949496]" />
                   New Order
                 </Button>
               </NewOrderModal>
