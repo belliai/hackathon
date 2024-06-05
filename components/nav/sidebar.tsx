@@ -326,7 +326,7 @@ const navigation: TSidebarItem[] = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        children: [{ name: "Track AWB", href: "#", current: false }],
+        children: [{ name: "Track AWB", href: "/track/track-awb", current: false }],
       },
       {
         name: "Messaging",
