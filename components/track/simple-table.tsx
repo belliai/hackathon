@@ -26,8 +26,8 @@ export function SimpleTable(props: PropsTable) {
         <Table className="w-80">
             <TableHeader>
                 <TableRow className="bg-zinc-700">
-                    {headers.map((header: PropHeader) => {
-                        return <TableHead className="w-20 " >{header.title}</TableHead>
+                    {headers.map((header: PropHeader, id) => {
+                        return <TableHead key={id}  className="w-20 " >{header.title}</TableHead>
                     })}
                 </TableRow>
             </TableHeader>
@@ -35,8 +35,8 @@ export function SimpleTable(props: PropsTable) {
                 {data.map((item, id) => {
                     return (
                         <TableRow key={id}>
-                            {headers.map(header => {
-                                return <TableCell className="font-medium">{item[header.id]}</TableCell>
+                            {headers.map((header,id) => {
+                                return <TableCell key={id} className="font-medium">{item[header.id]}</TableCell>
                             })}
                         </TableRow>
                     )}
