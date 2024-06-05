@@ -27,15 +27,6 @@ export default function UserDropdown() {
       separator: true,
     },
     {
-      route: "/profile",
-      label: "Preferences",
-    },
-    {
-      route: "/profile",
-      label: "Organization Preferences",
-      separator: true
-    },
-    {
       route: "/settings",
       label: "Settings",
     },
