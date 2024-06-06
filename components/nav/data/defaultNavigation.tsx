@@ -185,7 +185,7 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Cargo Acceptance", href: "#", current: false },
+          { name: "Cargo Acceptance", href: "/operation/accept/cargo-acceptance", current: false },
           { name: "Cargo Screening", href: "#", current: false },
         ],
       },
