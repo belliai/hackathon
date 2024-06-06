@@ -77,3 +77,19 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+#chat-button {
+  left: 10px !important;
+  bottom: 10px !important;
+}
+
+#chat-button button {
+  margin: 0 !important;
+  height: 24px !important;
+  max-width: 24px !important;
+}
+
+#chat-button svg {
+  width: 16px !important;
+  height: 16px !important;
+}
