@@ -83,13 +83,6 @@ input[type="number"] {
   bottom: 10px !important;
 }
 
-#chat-button button {
-  margin: 0 !important;
-  height: 24px !important;
-  max-width: 24px !important;
-}
-
-#chat-button svg {
-  width: 16px !important;
-  height: 16px !important;
+#chat-window {
+  bottom: 24px !important;
 }
