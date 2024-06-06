@@ -194,7 +194,7 @@ export const defaultNavigation: TSidebarItem[] = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        children: [{ name: "Flight Planning", href: "#", current: false }],
+        children: [{ name: "Flight Planning", href: "/operation/plan-flight/flight-planning", current: false }],
       },
       {
         name: "Export",
