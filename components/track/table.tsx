@@ -30,11 +30,13 @@ import { DataTablePagination } from "./table-pagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onClickRow?: (row: any) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onClickRow
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -78,12 +80,12 @@ export function DataTable<TData, TValue>({
 
       <div className="rounded-md border">
         <Table
-   
-         {...{
-          style: {
-            width: table.getCenterTotalSize(),
-          },
-        }}
+
+          {...{
+            style: {
+              width: table.getCenterTotalSize(),
+            },
+          }}
         >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -111,8 +113,17 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  onClick={()=> { 
+                      
+                    if(onClickRow) { 
+                      table.toggleAllPageRowsSelected(false)
+                      onClickRow(row.original) 
+                      row.toggleSelected(!row.getIsSelected())
+                    }
+
+                   }}
                   key={row.id}
-                  className="border-zinc-800 transition-colors duration-150 ease-in-out hover:bg-zinc-800"
+                  className="border-zinc-800 transition-colors duration-150 ease-in-out hover:bg-zinc-800 hover:cursor-pointer"
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (

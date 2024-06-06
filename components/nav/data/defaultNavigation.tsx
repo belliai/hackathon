@@ -316,7 +316,7 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Monitor Messaging", href: "#", current: false },
+          { name: "Monitor Messaging", href: "/track/message-monitoring", current: false },
           { name: "ASM/SSM Monitoring", href: "#", current: false },
         ],
       },
