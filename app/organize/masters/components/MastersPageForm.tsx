@@ -16,7 +16,11 @@ export default function MastersPageForm({
 }: MastersPageFormProps) {
   return (
     <Form {...hookForm}>
-      <div className={cn("grid sm:grid-cols-2 gap-4 gap-x-6 py-2 items-end")}>
+      <div
+        className={cn("grid sm:grid-cols-2 gap-4 gap-x-6 py-2 items-end", {
+          "sm:grid-cols-1 max-w-xl": formFields && formFields?.length < 5,
+        })}
+      >
         {formFields?.map((field) => {
           return (
             <FormTextField
@@ -24,6 +28,7 @@ export default function MastersPageForm({
               {...field}
               form={hookForm}
               endIcon={null}
+              hideTooltip={true}
             />
           );
         })}
