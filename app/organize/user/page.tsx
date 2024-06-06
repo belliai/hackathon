@@ -238,7 +238,7 @@ export default function UserPage() {
       data={data}
       filterFormFields={filterFormFields}
       filterHookForm={filterForm}
-      formFields={formFieldsL}
+      formFields={formFields}
       hookForm={form}
     />
   );
