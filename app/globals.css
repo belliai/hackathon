@@ -84,6 +84,5 @@ input[type="number"] {
 }
 
 #chat-window {
-  top: 0px !important;
   bottom: 24px !important;
 }
