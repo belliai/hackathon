@@ -736,6 +736,12 @@ export const defaultNavigation: TSidebarItem[] = [
         ],
       },
       {
+        name: "Booking Modal",
+        icon: CubeIcon,
+        href: "/configuration/booking-modal",
+        current: false,
+      },
+      {
         name: "Partner",
         href: "#",
         current: false,
