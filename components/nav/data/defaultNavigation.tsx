@@ -537,13 +537,21 @@ export const defaultNavigation: TSidebarItem[] = [
               { name: "New", href: "/configuration/users/new", current: false },
             ],
           },
-          { name: "Change Password", href: "/configuration/users/change-password", current: false },
+          {
+            name: "Change Password",
+            href: "/configuration/users/change-password",
+            current: false,
+          },
           {
             name: "Role Master",
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
+              {
+                name: "List",
+                href: "/configuration/users/roles",
+                current: false,
+              },
               { name: "New", href: "#", current: false },
             ],
           },
