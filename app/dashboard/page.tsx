@@ -50,7 +50,7 @@ export default function Dashboard() {
           className="border-none [&_th]:text-foreground [&_th]:py-2 [&_th]:px-3 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground"
         />
       </div>
-      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} />
+      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode="edit" />
     </PageContainer>
   );
 }
