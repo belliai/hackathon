@@ -22,6 +22,8 @@ import { Separator } from "@/components/ui/separator";
 import MastersPageFieldArrayForm from "./MastersPageFieldArrayForm";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SectionedForm from "./SectionedForm";
+import CreateFormTemplate from "./CreateFormTemplate";
 
 export type FieldArrayProps = {
   fieldArray: UseFieldArrayReturn<any>;
@@ -50,34 +52,7 @@ interface MastersPageTemplateProps {
   canCreate?: boolean;
   customDialogContent?: React.ReactNode;
   sectionsType?: "normal" | "tabs";
-}
-
-function SectionedForm({
-  sectionName,
-  fields,
-  hookForm,
-  fieldArray,
-}: SectionedFormFields) {
-  return (
-    <div key={fields?.[0].name} className="flex flex-col gap-4">
-      {/* For normal form fields  */}
-      {sectionName && (
-        <div className="flex flex-col gap-2 pt-2">
-          <h2 className="font-semibold text-white">{sectionName}</h2>
-          <Separator />
-        </div>
-      )}
-      {fields && <MastersPageForm hookForm={hookForm!} formFields={fields} />}
-
-      {/* For many to one relationnships */}
-      {fieldArray && (
-        <MastersPageFieldArrayForm
-          fieldArrayProps={fieldArray}
-          hookForm={hookForm!}
-        />
-      )}
-    </div>
-  );
+  customFilterButtons?: React.ReactNode;
 }
 
 export default function MastersPageTemplate({
@@ -94,6 +69,7 @@ export default function MastersPageTemplate({
   canCreate = true,
   customDialogContent,
   sectionsType,
+  customFilterButtons,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -113,67 +89,13 @@ export default function MastersPageTemplate({
                 </DialogTrigger>
                 <DialogContent className="w-full max-w-3xl">
                   <DialogTitle>{buttonText}</DialogTitle>
-                  <div
-                    className={cn("max-h-[75dvh]  overflow-auto pr-2", {
-                      "h-[75dvh]": sectionsType === "tabs",
-                    })}
-                  >
-                    {sectionedFormFields ? (
-                      sectionsType === "tabs" ? (
-                        <Tabs
-                          defaultValue={sectionedFormFields[0].sectionName}
-                          className="mt-4"
-                        >
-                          <TabsList className="w-auto">
-                            {sectionedFormFields.map((section, index) => {
-                              return (
-                                <TabsTrigger
-                                  key={section.sectionName}
-                                  value={section.sectionName!}
-                                >
-                                  {section.sectionName}
-                                </TabsTrigger>
-                              );
-                            })}
-                          </TabsList>
-                          {sectionedFormFields.map((section, index) => {
-                            return (
-                              <TabsContent
-                                key={section.sectionName}
-                                value={section.sectionName!}
-                              >
-                                <SectionedForm
-                                  fieldArray={section.fieldArray}
-                                  fields={section.fields}
-                                  hookForm={section.hookForm ?? hookForm}
-                                  sectionName={section.sectionName}
-                                />
-                              </TabsContent>
-                            );
-                          })}
-                        </Tabs>
-                      ) : (
-                        sectionedFormFields.map((section, index) => {
-                          return (
-                            <div key={index} className="mt-4">
-                              <SectionedForm
-                                fieldArray={section.fieldArray}
-                                fields={section.fields}
-                                hookForm={section.hookForm ?? hookForm}
-                                sectionName={section.sectionName}
-                              />
-                            </div>
-                          );
-                        })
-                      )
-                    ) : (
-                      <MastersPageForm
-                        hookForm={hookForm}
-                        formFields={formFields}
-                      />
-                    )}
-                    {customDialogContent && customDialogContent}
-                  </div>
+                  <CreateFormTemplate
+                    hookForm={hookForm}
+                    formFields={formFields}
+                    sectionedFormFields={sectionedFormFields}
+                    customDialogContent={customDialogContent}
+                    sectionsType={sectionsType}
+                  />
                   <DialogFooter>
                     <DialogClose asChild>
                       <Button variant="outline">Cancel</Button>
@@ -205,29 +127,33 @@ export default function MastersPageTemplate({
                 </div>
               );
             })}
-            <div className="flex gap-2">
-              <Button
-                size="icon"
-                type="button"
-                className="bg-button-primary  text-white hover:bg-button-primary/80"
-              >
-                <Search size={16} />
-              </Button>
-              <Button
-                size="icon"
-                type="button"
-                className="bg-button-primary  text-white hover:bg-button-primary/80"
-              >
-                <RefreshCcw size={16} />
-              </Button>
-              <Button
-                size="icon"
-                type="button"
-                className="bg-button-secondary  text-white hover:bg-button-secondary/80"
-              >
-                <Download size={16} />
-              </Button>
-            </div>
+            {customFilterButtons ? (
+              customFilterButtons
+            ) : (
+              <div className="flex gap-2">
+                <Button
+                  size="icon"
+                  type="button"
+                  className="bg-button-primary  text-white hover:bg-button-primary/80"
+                >
+                  <Search size={16} />
+                </Button>
+                <Button
+                  size="icon"
+                  type="button"
+                  className="bg-button-primary  text-white hover:bg-button-primary/80"
+                >
+                  <RefreshCcw size={16} />
+                </Button>
+                <Button
+                  size="icon"
+                  type="button"
+                  className="bg-button-secondary  text-white hover:bg-button-secondary/80"
+                >
+                  <Download size={16} />
+                </Button>
+              </div>
+            )}
           </form>
         </Form>
       </div>

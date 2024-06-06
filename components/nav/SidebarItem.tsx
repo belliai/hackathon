@@ -128,7 +128,7 @@ export default function SidebarItem({ item, active }: SidebarItemProps) {
                         {submenu?.children ? (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild className="w-full">
-                              <div className="flex items-center justify-between gap-x-3">
+                              <div className="flex items-center justify-between gap-x-3 text-[13px]">
                                 {submenu.name}
                                 <ChevronRight
                                   className="h-4 w-4 "
@@ -136,7 +136,7 @@ export default function SidebarItem({ item, active }: SidebarItemProps) {
                                 />
                               </div>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent side="right" align="start">
+                            <DropdownMenuContent side="right" align="start" >
                               {submenu.children.map((subsubmenu) => {
                                 if (subsubmenu?.children) {
                                   return (
@@ -151,7 +151,7 @@ export default function SidebarItem({ item, active }: SidebarItemProps) {
                                               return (
                                                 <DropdownMenuItem
                                                   key={subsubsubmenu.name}
-                                                  className="cursor-pointer"
+                                                  className="cursor-pointer text-[13px] leading-normal h-7 py-1"
                                                   asChild
                                                 >
                                                   <Link
@@ -172,7 +172,7 @@ export default function SidebarItem({ item, active }: SidebarItemProps) {
                                 return (
                                   <DropdownMenuItem
                                     key={subsubmenu.name}
-                                    className="cursor-pointer"
+                                    className="cursor-pointer text-[13px] leading-normal h-7 py-1"
                                     asChild
                                   >
                                     <Link href={subsubmenu.href}>

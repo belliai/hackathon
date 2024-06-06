@@ -1,15 +1,17 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../masters/components/MastersPageTemplate";
-import StatusBadge from "../masters/components/StatusBadge";
 import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions";
 import { TFormTextField } from "@/components/form/FormTextField";
 import { useForm } from "react-hook-form";
-import { selectColumn } from "../masters/components/columnItem";
+import { selectColumn } from "@/app/organize/masters/components/columnItem";
+import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
-export default function UserPage() {
+export default function ConfigurationUsersPage() {
   const columns: ColumnDef<any>[] = [
     selectColumn,
     {
@@ -62,20 +64,14 @@ export default function UserPage() {
 
   const filterFormFields = [
     {
-      name: "loginId",
-      placeholder: "Login ID",
+      name: "userId",
+      placeholder: "User ID",
       type: "text",
       endIcon: <Search />,
     },
     {
-      name: "userName",
-      placeholder: "User Name",
-      type: "text",
-      endIcon: <Search />,
-    },
-    {
-      name: "emailId",
-      placeholder: "Email ID",
+      name: "agentCode",
+      placeholder: "Agent Code",
       type: "text",
       endIcon: <Search />,
     },
@@ -86,23 +82,24 @@ export default function UserPage() {
       options: DUMMY_SELECT_OPTIONS,
     },
     {
-      name: "baseStation",
-      placeholder: "Base Station",
-      type: "text",
-    },
-    {
-      name: "agentCode",
-      placeholder: "Agent Code",
-      type: "text",
+      name: "station",
+      placeholder: "Station",
+      type: "select",
+      options: DUMMY_SELECT_OPTIONS,
     },
     {
       name: "status",
       placeholder: "Status",
       type: "text",
     },
+    {
+      name: "companyName",
+      placeholder: "Company Name",
+      type: "text",
+    },
   ];
 
-  const formFields: TFormTextField[] = [
+  const formFieldsL: TFormTextField[] = [
     {
       name: "loginId",
       placeholder: "Login ID",
@@ -171,10 +168,9 @@ export default function UserPage() {
     {
       name: "remark",
       placeholder: "Remark",
-      
+
       type: "text",
     },
-    
   ];
 
   const data = [
@@ -229,17 +225,50 @@ export default function UserPage() {
   ];
 
   const filterForm = useForm();
-  const form = useForm();
 
   return (
     <MastersPageTemplate
-      heading="User"
+      heading="User Listing"
       columns={columns}
       data={data}
       filterFormFields={filterFormFields}
+      customFilterButtons={
+        <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-2">
+          <Button
+            className="bg-button-primary hover:bg-button-primary/80 text-white"
+            type="button"
+          >
+            List
+          </Button>
+          <Button
+            className="bg-button-primary hover:bg-button-primary/80 text-white"
+            type="button"
+          >
+            Clear
+          </Button>
+          <Button
+            className="bg-button-primary hover:bg-button-primary/80 text-white"
+            type="button"
+          >
+            Export
+          </Button>
+          <Button
+            className="bg-button-primary hover:bg-button-primary/80 text-white"
+            type="button"
+          >
+            Delete
+          </Button>
+        </div>
+      }
       filterHookForm={filterForm}
-      formFields={formFieldsL}
-      hookForm={form}
+      pageActions={
+        <Button
+          className="bg-button-primary hover:bg-button-primary/80 text-white"
+          asChild
+        >
+          <Link href="/configuration/users/new">Create User</Link>
+        </Button>
+      }
     />
   );
 }

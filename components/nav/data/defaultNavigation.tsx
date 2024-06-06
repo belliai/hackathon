@@ -7,11 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
 import { CubeIcon, UploadIcon } from "@radix-ui/react-icons";
-import {
-  Boxes,
-  ReceiptText,
-  TargetIcon,
-} from "lucide-react";
+import { Boxes, ReceiptText, TargetIcon } from "lucide-react";
 import { TSidebarItem } from "@/components/nav/SidebarItem";
 
 export const defaultNavigation: TSidebarItem[] = [
@@ -310,7 +306,9 @@ export const defaultNavigation: TSidebarItem[] = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        children: [{ name: "Track AWB", href: "/track/track-awb", current: false }],
+        children: [
+          { name: "Track AWB", href: "/track/track-awb", current: false },
+        ],
       },
       {
         name: "Messaging",
@@ -532,11 +530,11 @@ export const defaultNavigation: TSidebarItem[] = [
         children: [
           {
             name: "User/Login",
-            href: "#",
+            href: "/configuration/users",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/configuration/users", current: false },
+              { name: "New", href: "/configuration/users/new", current: false },
             ],
           },
           { name: "Change Password", href: "#", current: false },
