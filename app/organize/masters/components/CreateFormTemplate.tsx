@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SectionedForm from "./SectionedForm";
 import MastersPageForm from "./MastersPageForm";
 
-interface CreateFormTemplateProps {
+export interface CreateFormTemplateProps {
   hookForm: UseFormReturn<any>;
   formFields?: TFormTextField[];
   sectionedFormFields?: SectionedFormFields[];
