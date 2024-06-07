@@ -591,14 +591,26 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/configuration/masters/region",
             current: false,
           },
-          { name: "Currency", href: "/configuration/masters/currency", current: false },
-          { name: "Zone Master", href: "/configuration/masters/zone", current: false },
+          {
+            name: "Currency",
+            href: "/configuration/masters/currency",
+            current: false,
+          },
+          {
+            name: "Zone Master",
+            href: "/configuration/masters/zone",
+            current: false,
+          },
           {
             name: "Airline Route",
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
+              {
+                name: "List",
+                href: "/configuration/masters/airline-route",
+                current: false,
+              },
               { name: "New", href: "#", current: false },
             ],
           },
