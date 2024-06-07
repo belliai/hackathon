@@ -16,6 +16,27 @@ export const defaultNavigation: TSidebarItem[] = [
     href: "/dashboard",
     icon: CubeIcon,
     current: false,
+    children: [
+      {
+        name: "A2A", 
+        href:"/dashboard/a2a",
+        icon: CubeIcon,
+        current: false,
+      },
+      {
+        name: "D2D", 
+        href:"/dashboard/d2d",
+        icon: CubeIcon,
+        current: false,
+      },
+      {
+        name: "Warehouse Performance Matrix", 
+        href:"/dashboard/warehouse-performance-matrix",
+        icon: CubeIcon,
+        current: false,
+      },
+
+    ]
   },
   {
     name: "Sales",
