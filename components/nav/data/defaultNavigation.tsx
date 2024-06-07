@@ -328,7 +328,7 @@ export const defaultNavigation: TSidebarItem[] = [
         children: [
           {
             name: "Monitor Messaging",
-            href: "/track/message-monitoring",
+            href: "/track/messaging/monitor-messaging",
             current: false,
           },
           { name: "ASM/SSM Monitoring", href: "#", current: false },
@@ -342,21 +342,21 @@ export const defaultNavigation: TSidebarItem[] = [
         children: [
           {
             name: "AWB Audit Log",
-            href: "/track/operation-audit-log",
+            href: "/track/audit-trail/awb-audit-log",
             current: false,
           },
           {
             name: "Billing Audit Trail",
-            href: "/track/billing-audit-trail",
+            href: "/track/audit-trail/billing-audit-trail",
             current: false,
           },
           { name: "ULD Audit Trail", href: "#", current: false },
           { name: "Page Lock History", href: "#", current: false },
           { name: "Report Log", href: "#", current: false },
-          { name: "User Login Log", href: "#", current: false },
-          { name: "Master Audit Log", href: "#", current: false },
+          { name: "User Login Log", href: "/track/audit-trail/user-login-log", current: false },
+          { name: "Master Audit Log", href: "/track/audit-trail/master-audit-log", current: false },
           { name: "Master Upload Log", href: "#", current: false },
-          { name: "Flight Audit Log", href: "#", current: false },
+          { name: "Flight Audit Log", href: "/audit-trail/flight-audit-log", current: false },
         ],
       },
     ],
