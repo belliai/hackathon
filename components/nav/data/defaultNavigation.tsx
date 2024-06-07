@@ -659,7 +659,7 @@ export const defaultNavigation: TSidebarItem[] = [
             current: false,
             children: [
               { name: "List", href: "/configuration/masters/uld", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "New", href: "/configuration/masters/uld/new", current: false },
               { name: "ULD Category", href: "#", current: false },
             ],
           },
