@@ -228,64 +228,76 @@ export default function AirportPositionConfiguration() {
           name: "aircraftType",
           label: "Aircraft Type *",
           type: "text",
+          orientation: "horizontal"
         },
         {
           name: "equipmentNo",
           label: "Equipment No.",
           type: "text",
+          orientation: "horizontal"
         },
         {
           name: "fromDate",
           label: "From Date",
           type: "date",
           hideTooltip: true,
+          orientation: "horizontal"
         },
         {
           name: "toDate",
           label: "To Date",
           type: "date",
           hideTooltip: true,
+          orientation: "horizontal"
         },
         {
           name: "patternName",
           label: "Pattern Name *",
           type: "text",
+          orientation: "horizontal"
         },
         {
           name: "flightNo",
           label: "Flight No.",
           type: "text",
+          orientation: "horizontal"
         },
         {
           name: "overLoad",
           label: "Over Load%",
           type: "text",
+          orientation: "horizontal"
         },
         {
           name: "bulkWeight",
           label: "Bulk Weight",
           type: "text",
+          orientation: "horizontal"
         },
         {
           name: "bulkVolume",
           label: "Bulk Volume",
           type: "text",
+          orientation: "horizontal"
         },
         {
           name: "uom",
           label: "UOM",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
+          orientation: "horizontal"
         },
         {
           name: "isActive",
           label: "isActive",
           type: "checkbox",
+          orientation: "horizontal"
         },
         {
           name: "isDefault",
           label: "isDefault",
           type: "checkbox",
+          orientation: "horizontal"
         },
       ],
     },
