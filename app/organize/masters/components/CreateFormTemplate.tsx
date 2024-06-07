@@ -64,6 +64,7 @@ export default function CreateFormTemplate({
                     fields={section.fields}
                     hookForm={section.hookForm ?? hookForm}
                     sectionName={section.sectionName}
+                    showRemoveButton={section.showRemoveButton}
                   />
                 </TabsContent>
               );
@@ -78,6 +79,7 @@ export default function CreateFormTemplate({
                   fields={section.fields}
                   hookForm={section.hookForm ?? hookForm}
                   sectionName={section.sectionName}
+                  showRemoveButton={section.showRemoveButton}
                 />
               </div>
             );

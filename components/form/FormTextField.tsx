@@ -51,6 +51,8 @@ export interface FormTextFieldProps {
   toolTipContent?: string;
   hideTooltip?: boolean;
   placeholder?: string;
+  disabled?: boolean;
+  orientation?: "horizontal" | "vertical";
 }
 
 export default function FormTextField({
@@ -63,9 +65,11 @@ export default function FormTextField({
   options,
   endIcon,
   hasList,
-  toolTipContent = "This is a tooltip",
+  toolTipContent,
   hideTooltip,
   placeholder,
+  disabled,
+  orientation = "vertical",
 }: FormTextFieldProps) {
   const fieldClassName = cn(
     "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700 w-full",
@@ -88,6 +92,7 @@ export default function FormTextField({
                     <FormControl>
                       <Button
                         variant={"outline"}
+                        disabled={disabled}
                         className={cn(
                           fieldClassName,
                           !field.value && "text-muted-foreground"
@@ -123,6 +128,7 @@ export default function FormTextField({
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     className="flex my-2"
+                    disabled={disabled}
                   >
                     {options?.map((option) => {
                       return (
@@ -149,6 +155,7 @@ export default function FormTextField({
                   <FormControl>
                     <Checkbox
                       checked={field.value}
+                      disabled={disabled}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
@@ -172,6 +179,7 @@ export default function FormTextField({
                       className={cn(fieldClassName, {
                         "text-zinc-400": !field.value,
                       })}
+                      disabled={disabled}
                     >
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
@@ -194,6 +202,7 @@ export default function FormTextField({
                     <div className="relative w-full">
                       <Input
                         {...field}
+                        disabled={disabled}
                         type={type}
                         className={cn(fieldClassName, "file:text-white")}
                         placeholder={placeholder}
@@ -217,9 +226,17 @@ export default function FormTextField({
           }
         }
         return (
-          <FormItem className="w-full space-y-2">
+          <FormItem
+            className={cn("w-full space-y-2 flex flex-col", {
+              "md:flex-row": orientation === "horizontal",
+            })}
+          >
             {label && type !== "checkbox" && (
-              <div className="flex items-center gap-1 text-zinc-50">
+              <div
+                className={cn("flex items-center gap-1 text-zinc-50", {
+                  "max-w-48 w-full": orientation === "horizontal",
+                })}
+              >
                 <FormLabel className="text-sm" htmlFor={name}>
                   {label} {required ? "*" : ""}{" "}
                 </FormLabel>
@@ -241,9 +258,11 @@ export default function FormTextField({
                 )}
               </div>
             )}
-            {conditionalRender()}
-            {description && <FormDescription>{description}</FormDescription>}
-            <FormMessage />
+            <div className="flex flex-col w-full">
+              {conditionalRender()}
+              {description && <FormDescription>{description}</FormDescription>}
+              <FormMessage />
+            </div>
           </FormItem>
         );
       }}

@@ -618,7 +618,11 @@ export const defaultNavigation: TSidebarItem[] = [
               },
             ],
           },
-          { name: "Airport", href: "#", current: false },
+          {
+            name: "Airport",
+            href: "/configuration/masters/airport",
+            current: false,
+          },
           {
             name: "Aircraft Position Configuration",
             href: "#",
