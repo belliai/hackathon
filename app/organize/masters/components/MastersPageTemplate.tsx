@@ -53,6 +53,7 @@ interface MastersPageTemplateProps {
   customDialogContent?: React.ReactNode;
   sectionsType?: "normal" | "tabs";
   customFilterButtons?: React.ReactNode;
+  customComponent?: React.ReactNode;
 }
 
 export default function MastersPageTemplate({
@@ -70,6 +71,7 @@ export default function MastersPageTemplate({
   customDialogContent,
   sectionsType,
   customFilterButtons,
+  customComponent,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -157,6 +159,7 @@ export default function MastersPageTemplate({
           </form>
         </Form>
       </div>
+      {customComponent}
       <DataTable columns={columns} data={data} hideToolbar />
     </PageContainer>
   );

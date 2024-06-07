@@ -185,7 +185,11 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Cargo Acceptance", href: "/operation/accept/cargo-acceptance", current: false },
+          {
+            name: "Cargo Acceptance",
+            href: "/operation/accept/cargo-acceptance",
+            current: false,
+          },
           { name: "Cargo Screening", href: "#", current: false },
         ],
       },
@@ -194,7 +198,13 @@ export const defaultNavigation: TSidebarItem[] = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        children: [{ name: "Flight Planning", href: "/operation/plan-flight/flight-planning", current: false }],
+        children: [
+          {
+            name: "Flight Planning",
+            href: "/operation/plan-flight/flight-planning",
+            current: false,
+          },
+        ],
       },
       {
         name: "Export",
@@ -316,7 +326,11 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Monitor Messaging", href: "/track/message-monitoring", current: false },
+          {
+            name: "Monitor Messaging",
+            href: "/track/message-monitoring",
+            current: false,
+          },
           { name: "ASM/SSM Monitoring", href: "#", current: false },
         ],
       },
@@ -552,7 +566,12 @@ export const defaultNavigation: TSidebarItem[] = [
                 href: "/configuration/users/roles",
                 current: false,
               },
-              { name: "New", href: "/configuration/users/roles/new", current: false },            ],
+              {
+                name: "New",
+                href: "/configuration/users/roles/new",
+                current: false,
+              },
+            ],
           },
         ],
       },
@@ -562,7 +581,11 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Country", href: "#", current: false },
+          {
+            name: "Country",
+            href: "/configuration/masters/country",
+            current: false,
+          },
           { name: "Region", href: "#", current: false },
           { name: "Currency", href: "#", current: false },
           { name: "Zone Master", href: "#", current: false },
