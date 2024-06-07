@@ -591,7 +591,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/configuration/masters/region",
             current: false,
           },
-          { name: "Currency", href: "#", current: false },
+          { name: "Currency", href: "/configuration/masters/currency", current: false },
           { name: "Zone Master", href: "#", current: false },
           {
             name: "Airline Route",
