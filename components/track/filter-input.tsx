@@ -14,7 +14,7 @@ const FilterDebouncedInput = ({
     ...props
     
 }: {
-    title: string,
+    title?: string,
     value: string | number
     onChange: (value: string | number) => void
     debounce?: number
