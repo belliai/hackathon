@@ -66,8 +66,6 @@ export default function MastersPageFieldArrayForm({
     ].filter(Boolean) as ColumnDef<any>[];
   }, [showRemoveButton]);
 
-  console.log("showRemoveButton", showRemoveButton);
-
   return (
     <div className="flex flex-col gap-4">
       <Form {...hookForm}>
