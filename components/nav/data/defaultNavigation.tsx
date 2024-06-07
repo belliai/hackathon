@@ -340,8 +340,8 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "AWB Audit Log", href: "#", current: false },
-          { name: "Billing Audit Trail", href: "#", current: false },
+          { name: "AWB Audit Log", href: "/track/operation-audit-log", current: false },
+          { name: "Billing Audit Trail", href: "/track/billing-audit-trail", current: false },
           { name: "ULD Audit Trail", href: "#", current: false },
           { name: "Page Lock History", href: "#", current: false },
           { name: "Report Log", href: "#", current: false },
