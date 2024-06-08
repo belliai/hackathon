@@ -20,6 +20,7 @@ import { info } from "console";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useDebounceValue } from "usehooks-ts";
+import { DataTableSortOptions } from "./data-table-sort-options";
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -79,11 +80,13 @@ export function DataTableToolbar<TData>({
           </TooltipContent>
         </Tooltip>
         <Tooltip delayDuration={100}>
-          <TooltipTrigger asChild>
-            <Button size={"icon"} variant={"outline"} className={" h-8 w-8"}>
-              <ArrowUpDownIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
+          <DataTableSortOptions table={table}>
+            <TooltipTrigger asChild>
+              <Button size={"icon"} variant={"outline"} className={" h-8 w-8"}>
+                <ArrowUpDownIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+          </DataTableSortOptions>
           <TooltipContent
             side="top"
             className="bg-background border text-foreground"
