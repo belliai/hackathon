@@ -694,7 +694,7 @@ export const defaultNavigation: TSidebarItem[] = [
             current: false,
             children: [
               { name: "List", href: "/configuration/masters/priority", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "New", href: "/configuration/masters/priority/new", current: false },
               { name: "Priority Master", href: "#", current: false },
             ],
           },
