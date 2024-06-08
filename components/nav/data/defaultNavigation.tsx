@@ -742,7 +742,11 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/configuration/masters/irregularity-codes",
             current: false,
           },
-          { name: "Exchange Rate", href: "#", current: false },
+          {
+            name: "Exchange Rate",
+            href: "/configuration/masters/exchange-rate",
+            current: false,
+          },
           { name: "Other Charges", href: "#", current: false },
           { name: "Entity Master", href: "#", current: false },
         ],
