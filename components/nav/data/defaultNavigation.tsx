@@ -381,7 +381,7 @@ export const defaultNavigation: TSidebarItem[] = [
     children: [
       {
         name: "AWB Rate Audit",
-        href: "#",
+        href: "/accounting/awb-rate-audit",
         icon: CubeIcon,
         current: false,
       },
