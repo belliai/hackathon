@@ -687,7 +687,7 @@ export const defaultNavigation: TSidebarItem[] = [
               },
             ],
           },
-          { name: "Cart", href: "#", current: false },
+          { name: "Cart", href: "/configuration/masters/cart", current: false },
           {
             name: "Priority",
             href: "#",
