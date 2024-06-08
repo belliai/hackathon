@@ -1,22 +1,43 @@
 "use client";
 
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
-
-import { Button, ButtonProps } from "@components/ui/button";
+import { Column, Table } from "@tanstack/react-table";
+import { Button } from "@components/ui/button";
+import { HTMLAttributes, ReactNode, useState } from "react";
+import { Popover, PopoverContent } from "../ui/popover";
+import { PopoverTrigger } from "@radix-ui/react-popover";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@components/ui/dropdown-menu";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
+import { EyeIcon, EyeOffIcon, GripVerticalIcon } from "lucide-react";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  UseSortableArguments,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
-  buttonVariant?: ButtonProps["variant"];
+  children: ReactNode;
   buttonClassName?: HTMLDivElement["className"];
 }
 
@@ -24,40 +45,379 @@ export function DataTableViewOptions<TData>({
   table,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          size={"sm"}
-          variant={props.buttonVariant ?? "outline"}
-          className={cn("hidden lg:flex", props.buttonClassName)}
-        >
-          <MixerHorizontalIcon className="mr-2 h-4 w-4" />
-          View
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {table
-          .getAllColumns()
-          .filter(
-            (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide()
-          )
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                {column.columnDef.header?.toString() ?? column.id}
-              </DropdownMenuCheckboxItem>
-            );
-          })}
-      </DropdownMenuContent>
-    </DropdownMenu>
+  const columns = table
+    .getAllColumns()
+    .filter((col) => Boolean(col.accessorFn));
+
+  const activeColumns = columns.filter(
+    (column) => column.getIsVisible() === true
   );
+  const hiddenColumns = columns.filter(
+    (column) => column.getIsVisible() === false
+  );
+
+  const [sections, setSections] = useState<{
+    [key: string]: Column<TData, unknown>[];
+  }>({
+    active: activeColumns,
+    hidden: hiddenColumns,
+  });
+
+  const [activeColumnId, setActiveColumndId] = useState<null | string>(null);
+
+  const sensors = useSensors(
+    useSensor(ExtendedPointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    setActiveColumndId(active.id as string);
+  };
+
+  const onHideColumn = (col: Column<TData, unknown>) => {
+    console.log(col);
+
+    setSections((sections) => {
+      const activeIndex = sections.active.findIndex(
+        (column) => column.id === col.id
+      );
+
+      if (activeIndex === -1) {
+        return sections;
+      }
+
+      const newActive = sections.active.filter(
+        (column) => column.id !== col.id
+      );
+      const newHidden = [...sections.hidden, col];
+
+      col.toggleVisibility(false);
+
+      return {
+        ...sections,
+        active: newActive,
+        hidden: newHidden,
+      };
+    });
+  };
+
+  const onShowColumn = (col: Column<TData, unknown>) => {
+    setSections((sections) => {
+      const hiddenIndex = sections.hidden.findIndex(
+        (column) => column.id === col.id
+      );
+
+      if (hiddenIndex === -1) {
+        return sections;
+      }
+
+      const newHidden = sections.hidden.filter(
+        (column) => column.id !== col.id
+      );
+      const newActive = [...sections.active, col];
+
+      // Update the column visibility in the table
+      col.toggleVisibility(true);
+
+      return {
+        ...sections,
+        active: newActive,
+        hidden: newHidden,
+      };
+    });
+  };
+
+  const onHideAllColumn = () => {
+    setSections((sections) => {
+      return {
+        active: [],
+        hidden: [...sections["active"], ...sections["hidden"]],
+      };
+    });
+    table.toggleAllColumnsVisible(false);
+  };
+
+  const onShowAllColumn = () => {
+    setSections((sections) => {
+      return {
+        active: [...sections["active"], ...sections["hidden"]],
+        hidden: [],
+      };
+    });
+    table.toggleAllColumnsVisible(true);
+  };
+
+  const handleDragOver = ({ active, over }: DragOverEvent) => {
+    const activeContainer = findSectionContainer(sections, active.id as string);
+    const overContainer = findSectionContainer(sections, over?.id as string);
+
+    if (
+      !activeContainer ||
+      !overContainer ||
+      activeContainer === overContainer
+    ) {
+      return;
+    }
+
+    setSections((section) => {
+      const activeItems = section[activeContainer];
+      const overItems = section[overContainer];
+
+      const activeIndex = activeItems.findIndex(
+        (item) => item.id === active.id
+      );
+      const overIndex = overItems.findIndex((item) => item.id !== over?.id);
+
+      return {
+        ...section,
+        [activeContainer]: [
+          ...section[activeContainer].filter((item) => item.id !== active.id),
+        ],
+        [overContainer]: [
+          ...section[overContainer].slice(0, overIndex),
+          sections[activeContainer][activeIndex],
+          ...section[overContainer].slice(
+            overIndex,
+            section[overContainer].length
+          ),
+        ],
+      };
+    });
+  };
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    const activeContainer = findSectionContainer(sections, active.id as string);
+    const overContainer = findSectionContainer(sections, over?.id as string);
+
+    if (
+      !activeContainer ||
+      !overContainer ||
+      activeContainer !== overContainer
+    ) {
+      return;
+    }
+
+    const activeIndex = sections[activeContainer].findIndex(
+      (col) => col.id === active.id
+    );
+    const overIndex = sections[overContainer].findIndex(
+      (col) => col.id === over?.id
+    );
+
+    console.log({ activeContainer, overContainer });
+
+    table
+      .getColumn(active.id as string)
+      ?.toggleVisibility(overContainer === "hidden" ? false : true);
+
+    if (activeIndex !== overIndex) {
+      setSections((section) => {
+        const newOrder = arrayMove(
+          section[overContainer],
+          activeIndex,
+          overIndex
+        );
+        table.setColumnOrder(newOrder.map((col) => col.id));
+        return {
+          ...section,
+          [overContainer]: newOrder,
+        };
+      });
+    }
+
+    setActiveColumndId(null);
+  };
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>{props.children}</PopoverTrigger>
+      <PopoverContent align="end" className="w-[250px] p-0 ">
+        <Command>
+          <CommandInput placeholder="Search for a column" />
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            <CommandList className="custom-scrollbar">
+              <CommandEmpty>No column found.</CommandEmpty>
+              <SortableContext
+                id={"active"}
+                items={sections.active}
+                strategy={verticalListSortingStrategy}
+              >
+                <CommandGroup>
+                  <div className="h-fit px-2 py-2 flex flex-row items-center justify-between">
+                    <span className="text-xs text-muted-foreground font-medium">
+                      Active Columns
+                    </span>
+                    <Button
+                      onClick={onHideAllColumn}
+                      variant={"link"}
+                      className="hover:no-underline text-xs h-fit px-0 py-0 text-button-primary  transition-colors"
+                    >
+                      Hide All
+                    </Button>
+                  </div>
+                  {sections.active.map((column) => (
+                    <Draggable key={column.id} args={{ id: column.id }}>
+                      <CommandItem
+                        key={column.id}
+                        value={String(column.columnDef.header)}
+                        className={cn(
+                          "flex flex-row items-center justify-between",
+                          !column.getCanHide() && "hidden"
+                        )}
+                      >
+                        <div className="flex flex-row items-center gap-2">
+                          <GripVerticalIcon className="size-4 text-muted-foreground" />
+                          {String(column.columnDef.header)}
+                        </div>
+                        <button
+                          data-no-dnd="true"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onHideColumn(column);
+                          }}
+                        >
+                          <EyeIcon className="z-50 size-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer" />
+                        </button>
+                      </CommandItem>
+                    </Draggable>
+                  ))}
+                </CommandGroup>
+              </SortableContext>
+              <SortableContext
+                id={"hidden"}
+                items={sections.hidden}
+                strategy={verticalListSortingStrategy}
+              >
+                <CommandGroup>
+                  <div className="h-fit px-2 py-2 flex flex-row items-center justify-between">
+                    <span className="text-xs text-muted-foreground font-medium">
+                      Hidden Columns
+                    </span>
+                    <Button
+                      onClick={onShowAllColumn}
+                      variant={"link"}
+                      className="hover:no-underline text-xs h-fit px-0 py-0 text-button-primary  transition-colors"
+                    >
+                      Show All
+                    </Button>
+                  </div>
+                  {sections.hidden.map((column) => (
+                    <Draggable key={column.id} args={{ id: column.id }}>
+                      <CommandItem
+                        key={column.id}
+                        value={String(column.columnDef.header)}
+                        className="flex flex-row items-center justify-between"
+                      >
+                        <div className="flex flex-row items-center gap-2">
+                          <GripVerticalIcon className="size-4 text-muted-foreground" />
+                          {String(column.columnDef.header)}
+                        </div>
+                        <button
+                          data-no-dnd="true"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onShowColumn(column);
+                          }}
+                        >
+                          <EyeOffIcon className="z-50 size-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer" />
+                        </button>
+                      </CommandItem>
+                    </Draggable>
+                  ))}
+                  {sections.hidden.length === 0 && <div className="h-2"></div>}
+                </CommandGroup>
+              </SortableContext>
+            </CommandList>
+          </DndContext>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function Draggable({
+  children,
+  args,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { args: UseSortableArguments }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable(args);
+
+  const style = {
+    transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
+    transition,
+    opacity: isDragging ? 0.7 : 1,
+    zIndex: isDragging ? 30 : undefined,
+  };
+
+  return (
+    <div
+      draggable
+      ref={setNodeRef}
+      style={style}
+      {...props}
+      className={cn(
+        "w-full h-full hover:cursor-grab active:cursor-grabbing",
+        props.className
+      )}
+      {...listeners}
+      {...attributes}
+    >
+      {children}
+    </div>
+  );
+}
+
+function findSectionContainer<TData>(
+  sections: { [key: string]: Column<TData, unknown>[] },
+  id: string
+) {
+  if (id in sections) {
+    return id;
+  }
+
+  const container = Object.keys(sections).find((key) =>
+    sections[key].find((item) => item.id === id)
+  );
+  return container;
+}
+
+export class ExtendedPointerSensor extends PointerSensor {
+  static activators = [
+    {
+      eventName: "onPointerDown" as const,
+      handler: ({ nativeEvent: event }: { nativeEvent: PointerEvent }) => {
+        return shouldHandleEvent(event.target as HTMLElement);
+      },
+    },
+  ];
+}
+
+function shouldHandleEvent(element: HTMLElement | null) {
+  let cur = element;
+
+  while (cur) {
+    if (cur.dataset && cur.dataset.noDnd) {
+      return false;
+    }
+    cur = cur.parentElement;
+  }
+
+  return true;
 }
