@@ -732,8 +732,16 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/configuration/masters/cutoff",
             current: false,
           },
-          { name: "Product Type", href: "/configuration/masters/product-type", current: false },
-          { name: "Irregularity Code", href: "#", current: false },
+          {
+            name: "Product Type",
+            href: "/configuration/masters/product-type",
+            current: false,
+          },
+          {
+            name: "Irregularity Code",
+            href: "/configuration/masters/irregularity-codes",
+            current: false,
+          },
           { name: "Exchange Rate", href: "#", current: false },
           { name: "Other Charges", href: "#", current: false },
           { name: "Entity Master", href: "#", current: false },
