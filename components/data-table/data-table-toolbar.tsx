@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { info } from "console";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { useDebounceValue } from "usehooks-ts";
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -34,7 +37,17 @@ export function DataTableToolbar<TData>({
   table,
   ...props
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState<string>();
+  const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500);
+
+  const toggleSearchOpen = () => {
+    setSearchOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    table.setGlobalFilter(debouncedSearch);
+  }, [debouncedSearch]);
 
   return (
     <div className="flex items-center justify-between">
@@ -51,10 +64,10 @@ export function DataTableToolbar<TData>({
           </Button>
         ))}
       </div>
-      <div className="inline-flex gap-1 text-muted-foreground">
+      <div className="inline-flex gap-2 text-muted-foreground">
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>
-            <Button size={"icon"} variant={"ghost"} className={" h-8 w-8"}>
+            <Button size={"icon"} variant={"outline"} className={" h-8 w-8"}>
               <ListFilterIcon className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
@@ -67,7 +80,7 @@ export function DataTableToolbar<TData>({
         </Tooltip>
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>
-            <Button size={"icon"} variant={"ghost"} className={" h-8 w-8"}>
+            <Button size={"icon"} variant={"outline"} className={" h-8 w-8"}>
               <ArrowUpDownIcon className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
@@ -78,23 +91,43 @@ export function DataTableToolbar<TData>({
             <p>Sort</p>
           </TooltipContent>
         </Tooltip>
-        <Tooltip delayDuration={100}>
-          <TooltipTrigger asChild>
-            <Button size={"icon"} variant={"ghost"} className={" h-8 w-8"}>
-              <SearchIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent
-            side="top"
-            className="bg-background border text-foreground"
-          >
-            <p>Search</p>
-          </TooltipContent>
-        </Tooltip>
+        <div className="inline-flex items-center">
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={toggleSearchOpen}
+                size={"icon"}
+                variant={"outline"}
+                className={" h-8 w-8"}
+              >
+                <SearchIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              className="bg-background border text-foreground"
+            >
+              <p>Search</p>
+            </TooltipContent>
+            <div
+              className={cn(
+                "w-0 transition-all opacity-0  ",
+                searchOpen && "w-[150px] opacity-100 ml-1"
+              )}
+            >
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className={"h-8 min-w-0 text-xs"}
+                placeholder="Type to search..."
+              />
+            </div>
+          </Tooltip>
+        </div>
         <Tooltip delayDuration={100}>
           <DataTableViewOptions table={table}>
             <TooltipTrigger asChild>
-              <Button size={"icon"} variant={"ghost"} className={" h-8 w-8"}>
+              <Button size={"icon"} variant={"outline"} className={" h-8 w-8"}>
                 <EyeIcon className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
