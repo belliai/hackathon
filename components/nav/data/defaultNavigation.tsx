@@ -212,7 +212,7 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Export Manifest", href: "#", current: false },
+          { name: "Export Manifest", href: "/operation/export/export-manifest", current: false },
           { name: "ePouch Flight", href: "#", current: false },
           { name: "Export Summary", href: "#", current: false },
           { name: "Export Inventory", href: "#", current: false },
