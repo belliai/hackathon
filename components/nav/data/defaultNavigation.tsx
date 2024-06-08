@@ -225,7 +225,7 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Arrive", href: "#", current: false },
+          { name: "Arrive", href: "/operation/import/arrive", current: false },
           { name: "Break ULD", href: "#", current: false },
           { name: "Import Summary", href: "#", current: false },
           { name: "Import Inventory", href: "#", current: false },

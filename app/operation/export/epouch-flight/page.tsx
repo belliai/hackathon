@@ -1,5 +1,5 @@
 import FilterSection from "@/components/operation/Export/EpouchFlight/FilterSection";
-import { DataTable } from "@/components/dashboard/dashtable";
+import { DataTable } from "@components/data-table/data-table";
 import { columns } from "@/components/operation/Export/EpouchFlight/columns";
 import { getData } from "@/lib/operation/Export/EpouchFlight/data";
 import {
@@ -51,7 +51,7 @@ export default async function EpouchFlight() {
           </DropdownMenuContent>
         </DropdownMenu>
         <div className="">
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
       
