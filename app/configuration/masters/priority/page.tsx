@@ -6,60 +6,106 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { useForm } from "react-hook-form";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/organize/masters/components/dummySelectOptions";
+import {
+  DUMMY_SELECT_OPTIONS,
+  DUMMY_SELECT_OPTIONS_STATUS,
+} from "@/app/organize/masters/components/dummySelectOptions";
 import {
   actionColumn,
   selectColumn,
 } from "@/app/organize/masters/components/columnItem";
 import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
 import StatusBadge from "@/app/organize/masters/components/StatusBadge";
-import { Button } from "@/components/ui/button";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { Separator } from "@/components/ui/separator";
+import FilterActions from "@/components/page-template/FilterActions";
 
 export default function MasterPriorityPage() {
   const formFields: Omit<FormTextFieldProps, "form">[] = [
     {
       name: "priority",
-      label: "Priority",
+      label: "Priority ID",
       type: "text",
     },
     {
-      name: "location",
-      label: "Location",
+      name: "priorityName",
+      label: "Priority Name",
       type: "text",
     },
     {
-      name: "shipment",
-      label: "Shipment",
+      name: "priorityColor",
+      label: "Priority Color",
+      type: "select",
+      options: DUMMY_SELECT_OPTIONS,
+    },
+    {
+      name: "remarks",
+      label: "Remarks",
       type: "text",
     },
     {
       name: "active",
       label: "Active",
       type: "checkbox",
-      options: DUMMY_SELECT_OPTIONS_STATUS,
+    },
+  ];
+
+  const columns: ColumnDef<any>[] = [
+    selectColumn,
+    {
+      accessorKey: "priorityId",
+      header: "Priority ID",
+    },
+    {
+      accessorKey: "priorityName",
+      header: "Priority Name",
+    },
+    {
+      accessorKey: "priorityColor",
+      header: "Priority Color",
+    },
+    {
+      accessorKey: "remarks",
+      header: "Remarks",
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => (
+        <StatusBadge
+          statusText={row.original.status}
+          severity={row.original.status === "Active" ? "default" : "error"}
+        />
+      ),
+    },
+    actionColumn,
+  ];
+
+  const data = [
+    {
+      priorityId: "1",
+      priorityName: "Priority 1",
+      priorityColor: "Red",
+      remarks: "Remarks",
+      status: "Active",
+    },
+    {
+      priorityId: "2",
+      priorityName: "Priority 2",
+      priorityColor: "Green",
+      remarks: "Remarks",
+      status: "Active",
     },
   ];
 
   const filterForm = useForm();
 
   return (
-    <CreateFormPageTemplate
-      heading="List Priority Configuration"
-      formFields={formFields}
-      hookForm={filterForm}
-      customDialogContent={
-        <div className="flex flex-col gap-4 w-full max-w-96">
-          <FilterActions />
-          <Separator />
-          <div className="flex gap-2 w-full">
-            <Button variant="button-primary">Save</Button>
-            <Button variant="button-primary">Details</Button>
-          </div>
-        </div>
-      }
+    <MastersPageTemplate
+      heading="Priority Master"
+      filterHookForm={filterForm}
+      filterFormFields={formFields}
+      columns={columns}
+      data={data}
+      customFilterButtons={<FilterActions />}
     />
   );
 }
