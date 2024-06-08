@@ -714,7 +714,13 @@ export const defaultNavigation: TSidebarItem[] = [
             name: "Commodity",
             href: "#",
             current: false,
-            children: [{ name: "Commodity Master", href: "#", current: false }],
+            children: [
+              {
+                name: "Commodity Master",
+                href: "/configuration/masters/commodity",
+                current: false,
+              },
+            ],
           },
           { name: "Special Handling Code", href: "#", current: false },
           { name: "CutOff Time", href: "#", current: false },
