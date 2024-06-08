@@ -32,6 +32,7 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => <DataTableSelectRow row={row} />,
     enableSorting: false,
     enableHiding: false,
+    enablePinning: true,
   },
   {
     accessorKey: "axb",
@@ -88,5 +89,6 @@ export const columns: ColumnDef<Order>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => <DataTableRowActions />,
+    enablePinning: true,
   },
 ];

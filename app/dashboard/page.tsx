@@ -30,20 +30,10 @@ export default function Dashboard() {
       <Stats />
       <div>
         <DataTable
-          extraToolbarButtons={[
-            {
-              label: "Filter",
-              icon: FilterIcon,
-            },
-            {
-              label: "Refresh",
-              icon: RefreshCcwIcon,
-            },
-            {
-              label: "Download",
-              icon: DownloadIcon,
-            },
-          ]}
+          initialPinning={{
+            left: ["select"],
+            right: ["actions"],
+          }}
           columns={columns}
           onRowClick={openModal}
           data={data}

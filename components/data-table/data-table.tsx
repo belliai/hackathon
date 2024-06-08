@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  ColumnPinningState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -39,6 +40,7 @@ interface DataTableProps<TData, TValue> {
   extraToolbarButtons?: DataTableToolbarProps<TData>["extraButtons"];
   toolbarButtonVariant?: ButtonProps["variant"];
   onRowClick?: (data: TData) => void;
+  initialPinning?: ColumnPinningState;
 }
 
 export function DataTable<TData, TValue>({
@@ -49,6 +51,7 @@ export function DataTable<TData, TValue>({
   className,
   extraToolbarButtons,
   toolbarButtonVariant,
+  initialPinning,
   onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
@@ -58,6 +61,9 @@ export function DataTable<TData, TValue>({
     []
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnPinning, setColumnPinnig] = React.useState<ColumnPinningState>(
+    initialPinning ?? { left: [], right: [] }
+  );
 
   const table = useReactTable({
     data,
@@ -67,6 +73,7 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      columnPinning,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
