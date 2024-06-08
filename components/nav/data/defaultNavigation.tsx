@@ -722,7 +722,7 @@ export const defaultNavigation: TSidebarItem[] = [
               },
             ],
           },
-          { name: "Special Handling Code", href: "#", current: false },
+          { name: "Special Handling Code", href: "/configuration/masters/special-handling-code", current: false },
           { name: "CutOff Time", href: "#", current: false },
           { name: "Product Type", href: "#", current: false },
           { name: "Irregularity Code", href: "#", current: false },
