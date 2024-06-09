@@ -7,5 +7,7 @@ export interface PropsField {
     leftIcon?: React.ReactNode
     rightIcon?: React.ReactNode
     options? : Array<{ label: string; value: string }>;
+    children?: Array<PropsField>,
+    className? : string 
 
 }

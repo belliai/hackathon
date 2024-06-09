@@ -391,7 +391,7 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Invoice", href: "#", current: false },
+          { name: "Invoice", href: "/accounting/agent/invoice-listing", current: false },
           {
             name: "Collection",
             href: "#",

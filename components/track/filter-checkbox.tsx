@@ -13,7 +13,7 @@ export function FilterCheckbox(props: any) {
       />
       <label
         htmlFor="terms"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="text-xs opacity-50 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-30"
       >
        {name}
       </label>
