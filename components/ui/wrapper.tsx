@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState } from "react";
+import { Fragment, Suspense, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CollaborativeApp } from "@/app/CollaborativeApp";
 import { Room } from "@/app/Room";
@@ -23,7 +23,7 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <>
+    <Suspense>
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -93,6 +93,6 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
           <div className="px-4 sm:px-6 lg:px-8 ">{children}</div>
         </main>
       </div>
-    </>
+    </Suspense>
   );
 }
