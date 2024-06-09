@@ -2,13 +2,13 @@
 
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Boxes, PlusSquare } from "lucide-react";
 import { Button } from "../ui/button";
 import UserDropdown from "./UserDropdown";
 import NewOrderModal from "../dashboard/new-order-modal";
 import SidebarMenu from "./SidebarMenu";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
@@ -19,9 +19,18 @@ const SIDEBAR_TYPE = {
 };
 
 export default function SideBar() {
+  const searchParams = useSearchParams()
+  const settings = searchParams.get("settings");
+
   const router = useRouter();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [sidebarType, setNavigationType] = useState(SIDEBAR_TYPE.DEFAULT);
+
+  useEffect(() => {
+      if (settings === 'true') {
+        setNavigationType(SIDEBAR_TYPE.SETTING);
+      }
+  }, [settings]);
 
   const currentNavigation =
     sidebarType === SIDEBAR_TYPE.SETTING
