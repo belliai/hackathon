@@ -1,282 +1,394 @@
 import { TSidebarItem } from "@/components/nav/SidebarItem";
+import { CubeIcon } from "@radix-ui/react-icons";
+
 
 export const settingNavigation: TSidebarItem[] = [
   {
-    name: "Masters",
+    name: "Configuration",
     href: "#",
+    icon: CubeIcon,
     current: false,
     children: [
       {
-        name: "Finance",
+        name: "Users",
         href: "#",
+        icon: CubeIcon,
         current: false,
         children: [
           {
-            name: "Cart",
-            href: "/organize/masters/finance/cart",
+            name: "User/Login",
+            href: "/configuration/users",
+            current: false,
+            children: [
+              { name: "List", href: "/configuration/users", current: false },
+              { name: "New", href: "/configuration/users/new", current: false },
+            ],
           },
           {
-            name: "Country",
-            href: "/organize/masters/finance/country",
+            name: "Change Password",
+            href: "/configuration/users/change-password",
+            current: false,
           },
           {
-            name: "Currency",
-            href: "/organize/masters/finance/currency",
-          },
-          {
-            name: "Freight Forwarder",
-            href: "/organize/masters/finance/freight-forwarder",
-          },
-          {
-            name: "HS Code",
-            href: "/organize/masters/finance/hs-code",
-          },
-          {
-            name: "Priority",
-            href: "/organize/masters/finance/priority",
-          },
-          {
-            name: "Region",
-            href: "/organize/masters/finance/region",
-          },
-          {
-            name: "State",
-            href: "/organize/masters/finance/state",
-          },
-          {
-            name: "Vendor",
-            href: "/organize/masters/finance/vendor",
-          },
-          {
-            name: "Zone",
-            href: "/organize/masters/finance/zone",
+            name: "Role Master",
+            href: "#",
+            current: false,
+            children: [
+              {
+                name: "List",
+                href: "/configuration/users/roles",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/users/roles/new",
+                current: false,
+              },
+            ],
           },
         ],
       },
       {
-        name: "Operation",
+        name: "Masters",
         href: "#",
+        icon: CubeIcon,
         current: false,
         children: [
           {
+            name: "Country",
+            href: "/configuration/masters/country",
+            current: false,
+          },
+          {
+            name: "Region",
+            href: "/configuration/masters/region",
+            current: false,
+          },
+          {
+            name: "Currency",
+            href: "/configuration/masters/currency",
+            current: false,
+          },
+          {
+            name: "Zone Master",
+            href: "/configuration/masters/zone",
+            current: false,
+          },
+          {
+            name: "Airline Route",
+            href: "#",
+            current: false,
+            children: [
+              {
+                name: "List",
+                href: "/configuration/masters/airline-route",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/masters/airline-route/new",
+                current: false,
+              },
+            ],
+          },
+          {
+            name: "Airport",
+            href: "/configuration/masters/airport",
+            current: false,
+          },
+          {
+            name: "Aircraft Position Configuration",
+            href: "/configuration/masters/aircraft-position-configuration",
+            current: false,
+          },
+          {
             name: "Aircraft",
-            href: "/organize/masters/operation/aircraft",
+            href: "#",
+            current: false,
+            children: [
+              {
+                name: "Aircraft",
+                href: "/configuration/masters/aircraft",
+                current: false,
+              },
+              {
+                name: "Equipment",
+                href: "/configuration/masters/aircraft/equipment",
+                current: false,
+              },
+            ],
+          },
+          {
+            name: "ULD",
+            href: "#",
+            current: false,
+            children: [
+              {
+                name: "List",
+                href: "/configuration/masters/uld",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/masters/uld/new",
+                current: false,
+              },
+              {
+                name: "ULD Category",
+                href: "/configuration/masters/uld/category",
+                current: false,
+              },
+            ],
+          },
+          { name: "Cart", href: "/configuration/masters/cart", current: false },
+          {
+            name: "Priority",
+            href: "#",
+            current: false,
+            children: [
+              {
+                name: "List",
+                href: "/configuration/masters/priority/list",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/masters/priority/new",
+                current: false,
+              },
+              {
+                name: "Priority Master",
+                href: "/configuration/masters/priority",
+                current: false,
+              },
+            ],
+          },
+          {
+            name: "Commodity",
+            href: "#",
+            current: false,
+            children: [
+              {
+                name: "Commodity Master",
+                href: "/configuration/masters/commodity",
+                current: false,
+              },
+            ],
+          },
+          {
+            name: "Special Handling Code",
+            href: "/configuration/masters/special-handling-code",
             current: false,
           },
           {
-            name: "Aircraft Positioning Configuration",
-            href: "/organize/masters/operation/aircraft-positioning-configuration",
-            current: false,
-          },
-          {
-            name: "Airport/Warehouse",
-            href: "/organize/masters/operation/airport",
-            current: false,
-          },
-          {
-            name: "Commodity Code",
-            href: "/organize/masters/operation/commodity",
-            current: false,
-          },
-          {
-            name: "Equipment",
-            href: "/organize/masters/operation/equipment",
-            current: false,
-          },
-          {
-            name: "Partner",
-            href: "/organize/masters/operation/partner",
-            current: false,
-          },
-          {
-            name: "Pincode",
-            href: "/organize/masters/operation/pincode",
+            name: "CutOff Time",
+            href: "/configuration/masters/cutoff",
             current: false,
           },
           {
             name: "Product Type",
-            href: "/organize/masters/operation/product-type",
+            href: "/configuration/masters/product-type",
             current: false,
           },
           {
-            name: "Special Handling Code",
-            href: "/organize/masters/operation/special-handling-code",
+            name: "Irregularity Code",
+            href: "/configuration/masters/irregularity-codes",
             current: false,
           },
           {
-            name: "Val Box",
-            href: "/organize/masters/operation/val-box",
+            name: "Exchange Rate",
+            href: "/configuration/masters/exchange-rate",
             current: false,
           },
           {
-            name: "Vehicle",
-            href: "/organize/masters/operation/vehicle",
+            name: "Other Charges",
+            href: "/configuration/masters/other-charges",
             current: false,
           },
           {
-            name: "CuttOff Time",
-            href: "/organize/masters/operation/cutoff-time",
+            name: "Entity Master",
+            href: "/configuration/masters/entity",
             current: false,
           },
         ],
       },
       {
-        name: "ULD",
+        name: "Capacity",
         href: "#",
+        icon: CubeIcon,
+        current: false,
+        children: [
+          { name: "Capacity Master", href: "/configuration/capacity/master", current: false },
+          { name: "Flight Pax Information", href: "#", current: false },
+        ],
+      },
+      {
+        name: "Rates",
+        href: "#",
+        icon: CubeIcon,
         current: false,
         children: [
           {
-            name: "ULD",
-            href: "/organize/masters/uld",
+            name: "Rate Card",
+            href: "#",
             current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+            ],
           },
           {
-            name: "ULD Category",
-            href: "/organize/masters/uld/category",
+            name: "Rate Line",
+            href: "#",
             current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+            ],
           },
           {
-            name: "UCR",
-            href: "/organize/masters/uld/ucr",
+            name: "Cost Line",
+            href: "#",
+            current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+            ],
           },
+          { name: "Rate Parameter Priority", href: "#", current: false },
+          {
+            name: "Other Charges",
+            href: "#",
+            current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+            ],
+          },
+          {
+            name: "Spot Rates",
+            href: "#",
+            current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+              { name: "Approval", href: "#", current: false },
+            ],
+          },
+          {
+            name: "Tax Line",
+            href: "#",
+            current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+            ],
+          },
+          {
+            name: "Config Line",
+            href: "#",
+            current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+            ],
+          },
+          {
+            name: "Deals",
+            href: "#",
+            current: false,
+            children: [
+              { name: "New Deal", href: "#", current: false },
+              { name: "Apply Deal", href: "#", current: false },
+              { name: "List Deal", href: "#", current: false },
+              { name: "Deal Audit", href: "#", current: false },
+            ],
+          },
+          { name: "Airline Proration", href: "#", current: false },
+          {
+            name: "Vol. Exemption",
+            href: "#",
+            current: false,
+            children: [
+              { name: "List", href: "#", current: false },
+              { name: "New", href: "#", current: false },
+            ],
+          },
+          {
+            name: "PLI",
+            href: "#",
+            current: false,
+            children: [
+              { name: "New PLI", href: "#", current: false },
+              { name: "Apply PLI", href: "#", current: false },
+              { name: "List PLI", href: "#", current: false },
+              { name: "PLI Audit", href: "#", current: false },
+            ],
+          },
+          { name: "MSR Rate", href: "#", current: false },
         ],
       },
-    ],
-  },
-  {
-    name: "User",
-    href: "#",
-    current: false,
-    children: [
       {
-        name: "Login",
-        href: "/organize/user",
+        name: "Booking Modal",
+        icon: CubeIcon,
+        href: "/configuration/booking-modal",
         current: false,
       },
       {
-        name: "Role Master",
-        href: "/organize/user/role",
+        name: "Partner",
+        href: "#",
         current: false,
-      },
-    ],
-  },
-  {
-    name: "Customer",
-    href: "/organize/customer",
-    current: false,
-  },
-  {
-    name: "Consignee",
-    href: "/organize/consignee",
-    current: false,
-  },
-  {
-    name: "Ratefilling",
-    href: "#",
-    current: false,
-    children: [
-      {
-        name: "Supplier GSTIN",
-        href: "/organize/ratefilling/supplier-gstin",
-        current: false,
+        children: [
+          { name: "List", href: "#", current: false },
+          { name: "New", href: "#", current: false },
+        ],
       },
       {
-        name: "Rate Line",
-        href: "/organize/ratefilling/rate-line",
+        name: "Agent",
+        href: "#",
         current: false,
+        children: [
+          { name: "List", href: "#", current: false },
+          { name: "New", href: "#", current: false },
+          { name: "Agent MGP", href: "#", current: false },
+        ],
       },
       {
-        name: "Other Charges",
-        href: "/organize/ratefilling/other-charges",
+        name: "Shipper Consignee",
+        href: "#",
         current: false,
+        children: [{ name: "Shipper Consignee", href: "#", current: false }],
       },
       {
-        name: "Exchange Rates",
-        href: "/organize/ratefilling/exchange-rates",
+        name: "Vendor Master",
+        href: "#",
         current: false,
+        children: [
+          { name: "List", href: "#", current: false },
+          { name: "New", href: "#", current: false },
+        ],
       },
       {
-        name: "Pro-Rate Factor",
-        href: "/organize/ratefilling/prorate-factor",
+        name: "Message Config",
+        href: "#",
         current: false,
+        children: [
+          { name: "List", href: "#", current: false },
+          { name: "New", href: "#", current: false },
+        ],
       },
       {
-        name: "Taxline",
-        href: "/organize/ratefilling/taxline",
+        name: "Upload Master",
+        href: "#",
         current: false,
+        children: [{ name: "Upload Master", href: "#", current: false }],
       },
       {
-        name: "ATF Price",
-        href: "/organize/ratefilling/atf-price",
+        name: "Notification",
+        href: "#",
         current: false,
-      },
-      {
-        name: "Additional FSC",
-        href: "/organize/ratefilling/additional-fsc",
-        current: false,
-      },
-      {
-        name: "OCDC",
-        href: "/organize/ratefilling/ocdc",
-        current: false,
-      },
-      {
-        name: "Spot Rate",
-        href: "/organize/ratefilling/spot-rate",
-        current: false,
-      },
-      {
-        name: "Capacity Allocation  ",
-        href: "/organize/ratefilling/capacity-allocation",
-        current: false,
-      },
-      {
-        name: "SAC Master",
-        href: "/organize/ratefilling/sac",
-        current: false,
-      },
-      {
-        name: "Cost Code",
-        href: "/organize/ratefilling/cost-code",
-        current: false,
-      },
-      {
-        name: "Cost Line",
-        href: "/organize/ratefilling/cost-line",
-        current: false,
+        children: [{ name: "Notification", href: "#", current: false }],
       },
     ],
-  },
-  {
-    name: "Master Upload",
-    href: "/organize/master-upload",
-    current: false,
-  },
-  {
-    name: "Message Configuration",
-    href: "/organize/message-configuration",
-    current: false,
-  },
-  {
-    name: "DB-changes",
-    href: "/organize/db-changes",
-    current: false,
-    children: [
-      {
-        name: "DB Changes",
-        href: "/organize/db-changes",
-        current: false,
-      },
-      {
-        name: "Upload Serviceable Postal Code",
-        href: "/organize/db-changes/upload-serviceable-postal-code",
-        current: false,
-      },
-    ],
-  },
-  {
-    name: "FTP",
-    href: "/organize/ftp",
-    current: false,
   },
 ];
