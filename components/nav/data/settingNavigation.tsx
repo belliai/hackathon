@@ -219,7 +219,7 @@ export const settingNavigation: TSidebarItem[] = [
         current: false,
         children: [
           { name: "Capacity Master", href: "/configuration/capacity/master", current: false },
-          { name: "Flight Pax Information", href: "#", current: false },
+          { name: "Flight Pax Information", href: "/configuration/capacity/pax", current: false },
         ],
       },
       {
