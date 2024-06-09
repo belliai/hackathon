@@ -16,6 +16,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
 import { Checkbox } from "../ui/checkbox";
 import { PropsField } from "./types";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 
 
@@ -54,7 +55,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                 render={({ field }) => (
                     <FormItem key={fieldId}>
                         {type === "inputText" && (
-                            <div className={"flex flex-col h-full justify-end space-y-1"}>
+                            <div className={"flex flex-col h-full w-full justify-end space-y-1"}>
                                 <FormLabel>{label}</FormLabel>
                                 <FormControl>
                                     <Input
@@ -174,7 +175,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                             <div className="flex space-x-2 items-end h-full">
                                 <FormControl>
                                     <Checkbox
-                                        className={cn("h-5 w-5",className)}
+                                        className={cn("h-5 w-5", className)}
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
                                     />
@@ -190,6 +191,31 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                             </div>
 
                         }
+
+                        {type === "inputRadio" && <div className="flex flex-col space-y-2  h-full">
+                            <FormLabel>
+                                {label}
+                            </FormLabel>
+                            <FormControl>
+                                <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex space-x-1  h-full"
+                                >
+                                    {options && options.map((option, id) =>
+                                        <FormItem key={id} className="flex items-center space-x-3 space-y-0">
+                                            <FormControl>
+                                                <RadioGroupItem value={option.value} />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                                {option.label}
+                                            </FormLabel>
+                                        </FormItem>
+                                    )}
+                                </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                        </div>}
                     </FormItem>
 
                 )}
@@ -204,16 +230,16 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                 <div className={cn("grid  gap-2", cols ? "grid-cols-" + cols : "grid-cols-4")}>
-                    {fields && fields.map((item: PropsField,id) => {
+                    {fields && fields.map((item: PropsField, id) => {
                         const { children, fieldId } = item;
                         if (children) {
-                            return <div className="flex space-x-1" key={fieldId+id} >
+                            return <div className="flex space-x-1 w-full" key={fieldId + id} >
                                 {children.map((item: PropsField, id) => {
-                                    return <RenderInput key={item.fieldId+id} {...item} />
+                                    return <RenderInput key={item.fieldId + id} {...item} />
                                 })}
                             </div>
                         } else
-                            return <RenderInput key={fieldId+id} {...item} />
+                            return <RenderInput key={fieldId + id} {...item} />
                     })}
 
                     {actions}

@@ -1,7 +1,7 @@
 
 export interface PropsField {
     fieldId: string
-    type?: "inputText" | "inputDate" | "inputSelect" | "inputCheck"
+    type?: "inputText" | "inputDate" | "inputSelect" | "inputCheck" | "inputRadio"
     label?: string
     description?: string
     leftIcon?: React.ReactNode
