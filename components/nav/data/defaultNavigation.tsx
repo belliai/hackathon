@@ -236,7 +236,7 @@ export const defaultNavigation: TSidebarItem[] = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        children: [{ name: "Deliver Cargo", href: "#", current: false }],
+        children: [{ name: "Deliver Cargo", href: "/operation/delivery/delivery-cargo", current: false }],
       },
       {
         name: "Transfer",
