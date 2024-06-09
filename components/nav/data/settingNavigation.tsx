@@ -200,8 +200,16 @@ export const settingNavigation: TSidebarItem[] = [
             href: "/configuration/masters/exchange-rate",
             current: false,
           },
-          { name: "Other Charges", href: "/configuration/masters/other-charges", current: false },
-          { name: "Entity Master", href: "#", current: false },
+          {
+            name: "Other Charges",
+            href: "/configuration/masters/other-charges",
+            current: false,
+          },
+          {
+            name: "Entity Master",
+            href: "/configuration/masters/entity",
+            current: false,
+          },
         ],
       },
       {
