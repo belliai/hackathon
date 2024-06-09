@@ -76,7 +76,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "h-8  pl-3 w-fit text-left font-normal",
+                                                    "h-8  pl-3 text-left font-normal",
                                                     !field.value && "text-muted-foreground",
                                                     className
                                                 )}
@@ -84,7 +84,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                                                 {field.value ? (
                                                     format(field.value, "PPP")
                                                 ) : (
-                                                    <span>Pick a date</span>
+                                                    <span >Pick a date</span>
                                                 )}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
@@ -206,11 +206,9 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
                 <div className={cn("grid  gap-2", cols ? "grid-cols-" + cols : "grid-cols-4")}>
                     {fields && fields.map((item: PropsField,id) => {
                         const { children, fieldId } = item;
-
                         if (children) {
                             return <div className="flex space-x-1" key={fieldId+id} >
                                 {children.map((item: PropsField, id) => {
-
                                     return <RenderInput key={item.fieldId+id} {...item} />
                                 })}
                             </div>

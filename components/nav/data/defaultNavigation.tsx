@@ -412,7 +412,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
+              { name: "List", href: "/accounting/agent/credit-note/list", current: false },
               { name: "New", href: "#", current: false },
             ],
           },

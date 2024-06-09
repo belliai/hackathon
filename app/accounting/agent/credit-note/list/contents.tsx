@@ -2,7 +2,7 @@
 
 import { DataTable } from "@components/track/table"
 import { columns } from "./columns"
-import { dummyData, locations, invoiceTypeList, invoiceStatusList, originList, countryList, billTypeList } from "./dummy-data"
+import { dummyData } from "./dummy-data"
 import FilterDatePicker from "@components/track/filter-date-picker"
 import { useEffect, useRef, useState } from "react"
 import FilterSelect from "@components/track/filter-select"
@@ -109,21 +109,15 @@ const Contents = (props: ContentProps) => {
                                 <Button onClick={resetFilter} variant="button-primary" className="h-8 w-8 p-1 ">
                                     <RefreshCw size={18} />
                                 </Button>
-                                <Button onClick={resetFilter} variant="button-primary" className="h-8 p-1 ">
-                                    Collection Letter
-                                </Button>
                             </div>
                         }
                     />
                 </CardContent>
             </Card>
-
             <DataTable
                 columns={columns}
                 data={data}
             />
-
-
         </div>
     )
 }
