@@ -56,6 +56,13 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <span className=" font-semibold"> {row.original.status}</span>
     ),
+    meta: {
+      filterSelectOptions: [
+        { value: "AXB Booked & Confirmed", label: "AXB Booked & Confirmed" },
+        { value: "Shipped", label: "Shipped" },
+        { value: "Delivered", label: "Delivered" },
+      ],
+    },
   },
   {
     accessorKey: "mode",

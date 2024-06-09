@@ -29,39 +29,6 @@ export function DataTableSortOptions<TData>({
       (col) => Boolean(col.accessorFn) && col.getIsVisible() && col.getCanSort()
     );
 
-  const onToggleSort = (col: ColumnDef<TData>) => {
-    table.setSorting((prev) => {
-      const newState = [...prev];
-      const currentColStateIndex = prev.findIndex(
-        (colSort) => colSort.id === col.id
-      );
-      const currentColState = currentColStateIndex
-        ? newState[currentColStateIndex]
-        : null;
-      const isDesc = currentColState?.desc;
-
-      switch (isDesc) {
-        case undefined:
-          newState.push({
-            id: col.id!,
-            desc: true,
-          });
-          break;
-        case true:
-          newState.push({
-            id: col.id!,
-            desc: false,
-          });
-          break;
-        case false:
-          newState.splice(currentColStateIndex);
-          break;
-      }
-
-      return newState;
-    });
-  };
-
   return (
     <Popover>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>

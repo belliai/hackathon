@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useDebounceValue } from "usehooks-ts";
 import { DataTableSortOptions } from "./data-table-sort-options";
+import { DataTableFilterOptions } from "./data-table-filter-options";
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -67,11 +68,13 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="inline-flex gap-2 text-muted-foreground">
         <Tooltip delayDuration={100}>
-          <TooltipTrigger asChild>
-            <Button size={"icon"} variant={"outline"} className={" h-8 w-8"}>
-              <ListFilterIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
+          <DataTableFilterOptions table={table}>
+            <TooltipTrigger asChild>
+              <Button size={"icon"} variant={"outline"} className={" h-8 w-8"}>
+                <ListFilterIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+          </DataTableFilterOptions>
           <TooltipContent
             side="top"
             className="bg-background border text-foreground"
