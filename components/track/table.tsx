@@ -20,6 +20,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -113,15 +114,15 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  onClick={()=> { 
-                      
-                    if(onClickRow) { 
+                  onClick={() => {
+
+                    if (onClickRow) {
                       table.toggleAllPageRowsSelected(false)
-                      onClickRow(row.original) 
+                      onClickRow(row.original)
                       row.toggleSelected(!row.getIsSelected())
                     }
 
-                   }}
+                  }}
                   key={row.id}
                   className="border-zinc-800 transition-colors duration-150 ease-in-out hover:bg-zinc-800 hover:cursor-pointer"
                   data-state={row.getIsSelected() && "selected"}
@@ -149,6 +150,15 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
+          <TableFooter>
+            {table.getFooterGroups().map(footerGroup => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map(header => (
+                  <td key={header.id}>{flexRender(header.column.columnDef.footer, header.getContext())}</td>
+                ))}
+              </tr>
+            ))}
+          </TableFooter>
         </Table>
       </div>
       <DataTablePagination table={table} />

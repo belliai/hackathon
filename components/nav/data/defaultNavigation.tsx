@@ -397,7 +397,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "Collection", href: "#", current: false },
+              { name: "Collection", href: "/accounting/agent/collection/invoice-collection", current: false },
               { name: "List Card Transactions", href: "#", current: false },
               { name: "Upload AWB collection File", href: "#", current: false },
               {

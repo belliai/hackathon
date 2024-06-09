@@ -205,16 +205,17 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                 <div className={cn("grid  gap-2", cols ? "grid-cols-" + cols : "grid-cols-4")}>
                     {fields && fields.map((item: PropsField,id) => {
-                        const { children } = item;
+                        const { children, fieldId } = item;
 
                         if (children) {
-                            return <div className="flex space-x-1" key={id} >
+                            return <div className="flex space-x-1" key={fieldId+id} >
                                 {children.map((item: PropsField, id) => {
-                                    return <RenderInput key={id} {...item} />
+
+                                    return <RenderInput key={item.fieldId+id} {...item} />
                                 })}
                             </div>
                         } else
-                            return <RenderInput {...item} />
+                            return <RenderInput key={fieldId+id} {...item} />
                     })}
 
                     {actions}
