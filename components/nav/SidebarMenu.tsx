@@ -31,6 +31,16 @@ export default function SidebarMenu({ items }: SidebarMenuProps) {
 
   const activeItem = findActiveItem(items, pathname);
 
+  if (items.length === 0) {
+    return (
+      <div className="py-8 px-8">
+        <p className="text-center text-zinc-500 text-xs">
+          No navigation items found. Please check your configuration.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <Accordion
       type="single"

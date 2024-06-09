@@ -23,6 +23,18 @@ export default function SideBar() {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [sidebarType, setNavigationType] = useState(SIDEBAR_TYPE.DEFAULT);
 
+  const currentNavigation =
+    sidebarType === SIDEBAR_TYPE.SETTING
+      ? settingNavigation
+      : defaultNavigation;
+
+  const currentNavigationItems =
+    sidebarType === SIDEBAR_TYPE.SETTING
+      ? settingNavigation[0].children ?? []
+      : defaultNavigation;
+      
+  const firstCurrentNavigationItem = currentNavigation[0];
+
   return (
     <div className="flex grow flex-col overflow-y-auto px-5 pb-4 ring-border ring-1 no-scrollbar bg-black-background">
       <div className="flex h-16 shrink-0 items-center justify-between">
@@ -65,22 +77,16 @@ export default function SideBar() {
             {sidebarType === SIDEBAR_TYPE.SETTING && (
               <li className="flex items-center gap-x-[7px] text-zinc-500 mb-2">
                 <span className="flex items-center justify-center p-0.5 rounded-sm transition-colors duration-200">
-                  <Boxes
+                  <firstCurrentNavigationItem.icon
                     className="h-[18px] w-[18px] shrink-0"
                     aria-hidden="true"
                   />
                 </span>
-                Organize
+                {firstCurrentNavigationItem.name}
               </li>
             )}
             <ul className="flex flex-col gap-1">
-              <SidebarMenu
-                items={
-                  sidebarType === SIDEBAR_TYPE.SETTING
-                    ? settingNavigation
-                    : defaultNavigation
-                }
-              />
+              <SidebarMenu items={currentNavigationItems} />
             </ul>
             {sidebarType === SIDEBAR_TYPE.SETTING && (
               <>
