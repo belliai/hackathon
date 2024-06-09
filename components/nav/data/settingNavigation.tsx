@@ -218,7 +218,7 @@ export const settingNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Capacity Master", href: "#", current: false },
+          { name: "Capacity Master", href: "/configuration/capacity/master", current: false },
           { name: "Flight Pax Information", href: "#", current: false },
         ],
       },
