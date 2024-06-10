@@ -266,8 +266,8 @@ export const defaultNavigation: TSidebarItem[] = [
         current: false,
         children: [
           { name: "List", href: "#", current: false },
-          { name: "CTM Out", href: "#", current: false },
-          { name: "CTM In", href: "#", current: false },
+          { name: "CTM Out", href: "/operation/transfer/ctm-out", current: false },
+          { name: "CTM In", href: "/operation/transfer/ctm-in", current: false },
         ],
       },
       {
