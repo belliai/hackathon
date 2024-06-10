@@ -2,34 +2,38 @@
 
 import { DataTable } from "@components/track/table"
 import { columns } from "./columns"
-import { dummyData} from "./dummy-data"
-import {  useRef, useState } from "react"
+import { dummyData } from "./dummy-data"
+import { useRef, useState } from "react"
 import {  RefreshCw, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import React from "react"
 import FormFields from "@/components/track/form"
 import { UseFormReturn } from "react-hook-form"
 import { invoiceSchema } from "@/schemas/invoice"
-import { z } from "zod"
 import { Card, CardContent } from "@/components/ui/card"
+import { z } from "zod"
 import { filterFields } from "./fields"
 
 type ContentProps = {
-    title: string
+    title: string,
+    actions?: React.ReactNode
 }
 
 
 const Contents = (props: ContentProps) => {
-    const { title } = props
+    const { title, actions } = props
     const [data, setData] = useState<Array<any>>(dummyData)
 
     const filterFormRef = useRef<UseFormReturn<z.infer<typeof invoiceSchema>> | null>(null);
 
     return (
         <div className="flex-col space-y-4">
-            <h1 className="text-xl font-semibold">{title}</h1>
+            <div className="flex w-full justify-between">
+                <h1 className="text-xl font-semibold">{title}</h1>
+                {actions}
+            </div>
             <Card>
-                <CardContent>
+                <CardContent className="p-4">
                     <FormFields
                         ref={filterFormRef}
                         fields={filterFields}
