@@ -387,7 +387,7 @@ export const defaultNavigation: TSidebarItem[] = [
           { name: "Master Upload Log", href: "#", current: false },
           {
             name: "Flight Audit Log",
-            href: "/audit-trail/flight-audit-log",
+            href: "/track/audit-trail/flight-audit-log",
             current: false,
           },
         ],
@@ -441,7 +441,7 @@ export const defaultNavigation: TSidebarItem[] = [
             name: "Debit Note",
             href: "#",
             current: false,
-            children: [{ name: "List", href: "#", current: false }],
+            children: [{ name: "List", href: "/accounting/agent/debit-note/list", current: false }],
           },
         ],
       },
