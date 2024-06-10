@@ -27,14 +27,6 @@ export type Order = {
 
 export const columns: ColumnDef<Order>[] = [
   {
-    id: "select",
-    header: ({ table }) => <DataTableSelectHead table={table} />,
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
-    enableSorting: false,
-    enableHiding: false,
-    enablePinning: true,
-  },
-  {
     accessorKey: "axb",
     header: "AXB",
   },

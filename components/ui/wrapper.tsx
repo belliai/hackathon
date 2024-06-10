@@ -13,6 +13,12 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import SideBar from "@/components/nav/sidebar";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "./resizable";
+import BreadCrumbSection from "../nav/breadcrumb-section";
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -83,15 +89,23 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
             </div>
           </Dialog>
         </Transition.Root>
-
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel
+            defaultSize={20}
+            minSize={12}
+            className="hidden sm:grid overflow-y-auto custom-scrollbar min-h-[100dvh] h-1"
+          >
+            <SideBar />
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={80} minSize={33}>
+            <main className="overflow-y-auto custom-scrollbar min-h-[100dvh] h-1">
+              <BreadCrumbSection />
+              <div className="px-4 py-4 mt-10 ">{children}</div>
+            </main>
+          </ResizablePanel>
+        </ResizablePanelGroup>
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-          <SideBar />
-        </div>
-
-        <main className="lg:pl-72">
-          <div className="px-4 sm:px-6 lg:px-8 ">{children}</div>
-        </main>
       </div>
     </Suspense>
   );
