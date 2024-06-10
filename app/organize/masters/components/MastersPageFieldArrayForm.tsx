@@ -73,7 +73,9 @@ export default function MastersPageFieldArrayForm({
           columns={columns}
           hidePagination
           hideToolbar
-          data={hookForm.watch(fieldArrayProps.fieldArrayName ?? "fieldArray")}
+          data={
+            hookForm.watch(fieldArrayProps.fieldArrayName ?? "fieldArray") ?? []
+          }
         />
       </Form>
       <Button
