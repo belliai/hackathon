@@ -242,8 +242,8 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/configuration/rates/rate-line", current: false },
+              { name: "New", href: "/configuration/rates/rate-line/new", current: false },
             ],
           },
           {
