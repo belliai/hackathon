@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { SimpleTable } from "@/components/track/simple-table"
+import { columns } from "./columns"
 
 type ContentProps = {
     title: string
@@ -52,21 +53,21 @@ const Contents = (props: ContentProps) => {
     }
 
     const onSelect = (key: string) => {
-        const selectedData = data.find((item: any) => item.id === key)
+        const selectedData = data.find((item: any) => item.axbNo === key)
         setSelectedData(selectedData);
 
-        const updatedData = data.map((item:any) => {
-            if(item.id=== key)
-                return {...item, active: true}
-            else{
-                return {...item, active: false}
+        const updatedData = data.map((item: any) => {
+            if (item.axbNo === key)
+                return { ...item, active: true }
+            else {
+                return { ...item, active: false }
             }
         });
         setData(updatedData);
     }
 
     useEffect(() => {
-    }, [filter,data])
+    }, [filter, data])
 
     return (
         <div className="flex-col space-y-4">
@@ -109,39 +110,22 @@ const Contents = (props: ContentProps) => {
 
                     </div>
                     <p className="text-sm mt-2 opacity-50">Note: To Track multiple AWB Numbers, you can enter up to 10AWB Numbers separated by comma</p>
-
-
                 </div>
+                <DataTable
+                    onClickRow={(data) => setSelectedData(data)}
+                    columns={columns}
+                    data={data}
+                />
                 <div className="flex w-full space-x-4">
-                    <div>
-                        <ScrollArea className="">
-                            <div className="flex flex-col h-full w-[200px] space-y-2">
-                                {data.map((item: any, id: string) => {
-                                    return (
-                                        <Card key={id} className={cn("hover:bg-zinc-800 cursor-pointer",item.active ? "bg-zinc-800" : "")} onClick={() => onSelect(item.id)}>
-                                            <CardContent className="p-4">
-                                                <h2 className="text-white text-md">{item.id}</h2>
-                                                <p className="text-sm">Booked at {item.origin}</p>
-                                            </CardContent>
-                                        </Card>
-                                    )
-                                })}
-                            </div>
-                            <ScrollBar orientation="horizontal" />
-                            <ScrollBar orientation="vertical" />
-
-                        </ScrollArea>
-                    </div>
-
                     <div className="flex w-full h-fit">
-                        {selectedData.id &&
+                        {selectedData.axbNo &&
                             <Card className="w-full">
                                 <CardContent className="flex pt-4 justify-between">
                                     <div className="w-2/3 space-x-4 space-y-4">
                                         <div className="flex">
                                             <h2>AWB:</h2>
                                             <div>
-                                                <p className="text-lg font-bold">{selectedData.id} <span className="text-sm">({selectedData.origin}-{selectedData.destination})</span></p>
+                                                <p className="text-lg font-bold">{selectedData.axbNo} <span className="text-sm">({selectedData.origin}-{selectedData.destination})</span></p>
                                                 <p className="text-sm">20 P/ 20.00 Kgs</p>
                                             </div>
                                         </div>
@@ -159,7 +143,7 @@ const Contents = (props: ContentProps) => {
 
                                             data={
                                                 [
-                                                    { status: "Booked", station: "DMK", destination: "KUL", pcs: "20", weight: "20 Kgs", flight: "FD311", event: "2024-06-24" }
+                                                    { status: selectedData.status, station: selectedData.origin, destination: selectedData.destination, pcs: "20", weight: "20 Kgs", flight: selectedData.flightCode, event: "2024-06-24" }
                                                 ]
                                             }
 

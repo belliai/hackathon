@@ -10,6 +10,8 @@ export default function SectionedForm({
   fields,
   hookForm,
   fieldArray,
+  additionalColumns,
+  showRemoveButton,
 }: SectionedFormFields) {
   return (
     <div key={fields?.[0].name} className="flex flex-col gap-4">
@@ -27,6 +29,8 @@ export default function SectionedForm({
         <MastersPageFieldArrayForm
           fieldArrayProps={fieldArray}
           hookForm={hookForm!}
+          additionalColumns={additionalColumns}
+          showRemoveButton={showRemoveButton}
         />
       )}
     </div>

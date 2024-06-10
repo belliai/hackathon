@@ -17,12 +17,7 @@ import { Form } from "@/components/ui/form";
 import { ColumnDef } from "@tanstack/react-table";
 import { Download, Plus, RefreshCcw, Search } from "lucide-react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
-import MastersPageForm from "./MastersPageForm";
-import { Separator } from "@/components/ui/separator";
-import MastersPageFieldArrayForm from "./MastersPageFieldArrayForm";
 import { cn } from "@/lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SectionedForm from "./SectionedForm";
 import CreateFormTemplate from "./CreateFormTemplate";
 
 export type FieldArrayProps = {
@@ -36,6 +31,8 @@ export type SectionedFormFields = {
   fields?: TFormTextField[];
   fieldArray?: FieldArrayProps;
   hookForm?: UseFormReturn<any>;
+  showRemoveButton?: boolean;
+  additionalColumns?: ColumnDef<any>[];
 };
 
 interface MastersPageTemplateProps {
@@ -53,6 +50,8 @@ interface MastersPageTemplateProps {
   customDialogContent?: React.ReactNode;
   sectionsType?: "normal" | "tabs";
   customFilterButtons?: React.ReactNode;
+  customComponent?: React.ReactNode;
+  bottomCustomComponent?: React.ReactNode;
 }
 
 export default function MastersPageTemplate({
@@ -70,6 +69,8 @@ export default function MastersPageTemplate({
   customDialogContent,
   sectionsType,
   customFilterButtons,
+  customComponent,
+  bottomCustomComponent,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -157,7 +158,9 @@ export default function MastersPageTemplate({
           </form>
         </Form>
       </div>
+      {customComponent}
       <DataTable columns={columns} data={data} hideToolbar />
+      {bottomCustomComponent}
     </PageContainer>
   );
 }

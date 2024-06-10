@@ -8,8 +8,6 @@ export default function PageContainer({
   className?: string;
 }) {
   return (
-    <div className={cn("py-10 flex flex-col w-full", className)}>
-      {children}
-    </div>
+    <div className={cn("flex flex-col w-full", className)}>{children}</div>
   );
 }

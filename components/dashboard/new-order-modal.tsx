@@ -40,14 +40,16 @@ import { toast } from "@/components/ui/use-toast";
 import DimensionsCard from "./dimensions-card";
 import { useBookingContext } from "@/components/dashboard/BookingContext";
 import { Order } from "@/components/dashboard/columns";
+import ActivityLog from "./activity-log";
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
+  mode?: "edit" | "create";
 };
 
 export default function NewOrderModal(props: NewOrderModalProps) {
-  const { children, onOpenChange } = props;
+  const { children, onOpenChange, mode = "create" } = props;
   const { selectedBooking } = useBookingContext();
   const [open, setOpen] = useState(props.open ?? false);
   const [isFullScreen, setFullScreen] = useState(false);
@@ -136,7 +138,9 @@ export default function NewOrderModal(props: NewOrderModalProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader className="flex flex-row justify-between items-center space-y-0">
-              <DialogTitle>New Orders</DialogTitle>
+              <DialogTitle>
+                {mode === "create" ? "New Orders" : "Edit Order"}
+              </DialogTitle>
               <div className="flex flex-row items-center justify-end text-muted-foreground gap-2">
                 <Button
                   onClick={toggleFullScreen}
@@ -158,14 +162,14 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 </Button>
               </div>
             </DialogHeader>
-            <Tabs defaultValue="create-booking">
+            <Tabs defaultValue="booking-details">
               <div className="w-full flex flex-row items-stretch gap-4 py-4">
                 <div className="min-w-[220px]">
                   <Card className="h-full">
                     <TabsList className="p-0 py-2  ">
-                      <TabsTrigger value="create-booking">
+                      <TabsTrigger value="booking-details">
                         <SquarePenIcon className="w-4 h-4" />
-                        Create Booking
+                        Booking Details
                       </TabsTrigger>
                       <TabsTrigger value="consignment-details">
                         <PlaneIcon className="w-4 h-4" />
@@ -182,7 +186,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                     </TabsList>
                     <Separator />
                     <TabsList className="p-0 py-2 ">
-                      <TabsTrigger disabled value="activity-log">
+                      <TabsTrigger value="activity-log">
                         <HistoryIcon className="w-4 h-4" />
                         Activity Log
                       </TabsTrigger>
@@ -190,7 +194,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                   </Card>
                 </div>
                 <div className="flex-1 grid">
-                  <TabsContent value="create-booking" asChild>
+                  <TabsContent value="booking-details" asChild>
                     <CreateBookingForm />
                   </TabsContent>
                   <TabsContent value="consignment-details" asChild>
@@ -201,6 +205,9 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                   </TabsContent>
                   <TabsContent value="process-rates" asChild>
                     <ProcessRatesForm />
+                  </TabsContent>
+                  <TabsContent value="activity-log" asChild>
+                    <ActivityLog />
                   </TabsContent>
                 </div>
                 <div className="gap-4 max-w-[300px] flex flex-col items-stretch justify-between">

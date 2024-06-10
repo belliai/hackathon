@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SectionedForm from "./SectionedForm";
 import MastersPageForm from "./MastersPageForm";
 
-interface CreateFormTemplateProps {
+export interface CreateFormTemplateProps {
   hookForm: UseFormReturn<any>;
   formFields?: TFormTextField[];
   sectionedFormFields?: SectionedFormFields[];
@@ -64,6 +64,7 @@ export default function CreateFormTemplate({
                     fields={section.fields}
                     hookForm={section.hookForm ?? hookForm}
                     sectionName={section.sectionName}
+                    showRemoveButton={section.showRemoveButton}
                   />
                 </TabsContent>
               );
@@ -78,6 +79,7 @@ export default function CreateFormTemplate({
                   fields={section.fields}
                   hookForm={section.hookForm ?? hookForm}
                   sectionName={section.sectionName}
+                  showRemoveButton={section.showRemoveButton}
                 />
               </div>
             );

@@ -206,7 +206,11 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Cargo Acceptance", href: "#", current: false },
+          {
+            name: "Cargo Acceptance",
+            href: "/operation/accept/cargo-acceptance",
+            current: false,
+          },
           { name: "Cargo Screening", href: "#", current: false },
         ],
       },
@@ -215,7 +219,13 @@ export const defaultNavigation: TSidebarItem[] = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        children: [{ name: "Flight Planning", href: "#", current: false }],
+        children: [
+          {
+            name: "Flight Planning",
+            href: "/operation/plan-flight/flight-planning",
+            current: false,
+          },
+        ],
       },
       {
         name: "Export",
@@ -223,8 +233,8 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Export Manifest", href: "#", current: false },
-          { name: "ePouch Flight", href: "#", current: false },
+          { name: "Export Manifest", href: "/operation/export/export-manifest", current: false },
+          { name: "ePouch Flight", href: "/operation/export/epouch-flight", current: false },
           { name: "Export Summary", href: "#", current: false },
           { name: "Export Inventory", href: "#", current: false },
           { name: "NOTOC Details", href: "#", current: false },
@@ -236,8 +246,8 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Arrive", href: "#", current: false },
-          { name: "Break ULD", href: "#", current: false },
+          { name: "Arrive", href: "/operation/import/arrive", current: false },
+          { name: "Break ULD", href: "/operation/import/break-uld", current: false },
           { name: "Import Summary", href: "#", current: false },
           { name: "Import Inventory", href: "#", current: false },
         ],
@@ -247,7 +257,7 @@ export const defaultNavigation: TSidebarItem[] = [
         href: "#",
         icon: CubeIcon,
         current: false,
-        children: [{ name: "Deliver Cargo", href: "#", current: false }],
+        children: [{ name: "Deliver Cargo", href: "/operation/delivery/delivery-cargo", current: false }],
       },
       {
         name: "Transfer",
@@ -337,7 +347,11 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Monitor Messaging", href: "#", current: false },
+          {
+            name: "Monitor Messaging",
+            href: "/track/messaging/monitor-messaging",
+            current: false,
+          },
           { name: "ASM/SSM Monitoring", href: "#", current: false },
         ],
       },
@@ -347,15 +361,35 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "AWB Audit Log", href: "#", current: false },
-          { name: "Billing Audit Trail", href: "#", current: false },
+          {
+            name: "AWB Audit Log",
+            href: "/track/audit-trail/awb-audit-log",
+            current: false,
+          },
+          {
+            name: "Billing Audit Trail",
+            href: "/track/audit-trail/billing-audit-trail",
+            current: false,
+          },
           { name: "ULD Audit Trail", href: "#", current: false },
           { name: "Page Lock History", href: "#", current: false },
           { name: "Report Log", href: "#", current: false },
-          { name: "User Login Log", href: "#", current: false },
-          { name: "Master Audit Log", href: "#", current: false },
+          {
+            name: "User Login Log",
+            href: "/track/audit-trail/user-login-log",
+            current: false,
+          },
+          {
+            name: "Master Audit Log",
+            href: "/track/audit-trail/master-audit-log",
+            current: false,
+          },
           { name: "Master Upload Log", href: "#", current: false },
-          { name: "Flight Audit Log", href: "#", current: false },
+          {
+            name: "Flight Audit Log",
+            href: "/audit-trail/flight-audit-log",
+            current: false,
+          },
         ],
       },
     ],
@@ -368,7 +402,7 @@ export const defaultNavigation: TSidebarItem[] = [
     children: [
       {
         name: "AWB Rate Audit",
-        href: "#",
+        href: "/accounting/awb-rate-audit",
         icon: CubeIcon,
         current: false,
       },
@@ -378,13 +412,13 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Invoice", href: "#", current: false },
+          { name: "Invoice", href: "/accounting/agent/invoice-listing", current: false },
           {
             name: "Collection",
             href: "#",
             current: false,
             children: [
-              { name: "Collection", href: "#", current: false },
+              { name: "Collection", href: "/accounting/agent/collection/invoice-collection", current: false },
               { name: "List Card Transactions", href: "#", current: false },
               { name: "Upload AWB collection File", href: "#", current: false },
               {
@@ -399,8 +433,8 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/accounting/agent/credit-note/list", current: false },
+              { name: "New", href: "/accounting/agent/credit-note/new", current: false },
             ],
           },
           {
@@ -539,279 +573,9 @@ export const defaultNavigation: TSidebarItem[] = [
   },
   {
     name: "Configuration",
-    href: "#",
+    href: "?settings=true",
     icon: CubeIcon,
     current: false,
-    children: [
-      {
-        name: "Users",
-        href: "#",
-        icon: CubeIcon,
-        current: false,
-        children: [
-          {
-            name: "User/Login",
-            href: "/configuration/users",
-            current: false,
-            children: [
-              { name: "List", href: "/configuration/users", current: false },
-              { name: "New", href: "/configuration/users/new", current: false },
-            ],
-          },
-          { name: "Change Password", href: "#", current: false },
-          {
-            name: "Role Master",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-        ],
-      },
-      {
-        name: "Masters",
-        href: "#",
-        icon: CubeIcon,
-        current: false,
-        children: [
-          { name: "Country", href: "#", current: false },
-          { name: "Region", href: "#", current: false },
-          { name: "Currency", href: "#", current: false },
-          { name: "Zone Master", href: "#", current: false },
-          {
-            name: "Airline Route",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          { name: "Airport", href: "#", current: false },
-          {
-            name: "Aircraft Position Configuration",
-            href: "#",
-            current: false,
-          },
-          {
-            name: "Aircraft",
-            href: "#",
-            current: false,
-            children: [
-              { name: "Aircraft", href: "#", current: false },
-              { name: "Equipment", href: "#", current: false },
-            ],
-          },
-          {
-            name: "ULD",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-              { name: "ULD Category", href: "#", current: false },
-            ],
-          },
-          { name: "Cart", href: "#", current: false },
-          {
-            name: "Priority",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-              { name: "Priority Master", href: "#", current: false },
-            ],
-          },
-          {
-            name: "Commodity",
-            href: "#",
-            current: false,
-            children: [{ name: "Commodity Master", href: "#", current: false }],
-          },
-          { name: "Special Handling Code", href: "#", current: false },
-          { name: "CutOff Time", href: "#", current: false },
-          { name: "Product Type", href: "#", current: false },
-          { name: "Irregularity Code", href: "#", current: false },
-          { name: "Exchange Rate", href: "#", current: false },
-          { name: "Other Charges", href: "#", current: false },
-          { name: "Entity Master", href: "#", current: false },
-        ],
-      },
-      {
-        name: "Capacity",
-        href: "#",
-        icon: CubeIcon,
-        current: false,
-        children: [
-          { name: "Capacity Master", href: "#", current: false },
-          { name: "Flight Pax Information", href: "#", current: false },
-        ],
-      },
-      {
-        name: "Rates",
-        href: "#",
-        icon: CubeIcon,
-        current: false,
-        children: [
-          {
-            name: "Rate Card",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          {
-            name: "Rate Line",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          {
-            name: "Cost Line",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          { name: "Rate Parameter Priority", href: "#", current: false },
-          {
-            name: "Other Charges",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          {
-            name: "Spot Rates",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-              { name: "Approval", href: "#", current: false },
-            ],
-          },
-          {
-            name: "Tax Line",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          {
-            name: "Config Line",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          {
-            name: "Deals",
-            href: "#",
-            current: false,
-            children: [
-              { name: "New Deal", href: "#", current: false },
-              { name: "Apply Deal", href: "#", current: false },
-              { name: "List Deal", href: "#", current: false },
-              { name: "Deal Audit", href: "#", current: false },
-            ],
-          },
-          { name: "Airline Proration", href: "#", current: false },
-          {
-            name: "Vol. Exemption",
-            href: "#",
-            current: false,
-            children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-            ],
-          },
-          {
-            name: "PLI",
-            href: "#",
-            current: false,
-            children: [
-              { name: "New PLI", href: "#", current: false },
-              { name: "Apply PLI", href: "#", current: false },
-              { name: "List PLI", href: "#", current: false },
-              { name: "PLI Audit", href: "#", current: false },
-            ],
-          },
-          { name: "MSR Rate", href: "#", current: false },
-        ],
-      },
-      {
-        name: "Partner",
-        href: "#",
-        current: false,
-        children: [
-          { name: "List", href: "#", current: false },
-          { name: "New", href: "#", current: false },
-        ],
-      },
-      {
-        name: "Agent",
-        href: "#",
-        current: false,
-        children: [
-          { name: "List", href: "#", current: false },
-          { name: "New", href: "#", current: false },
-          { name: "Agent MGP", href: "#", current: false },
-        ],
-      },
-      {
-        name: "Shipper Consignee",
-        href: "#",
-        current: false,
-        children: [{ name: "Shipper Consignee", href: "#", current: false }],
-      },
-      {
-        name: "Vendor Master",
-        href: "#",
-        current: false,
-        children: [
-          { name: "List", href: "#", current: false },
-          { name: "New", href: "#", current: false },
-        ],
-      },
-      {
-        name: "Message Config",
-        href: "#",
-        current: false,
-        children: [
-          { name: "List", href: "#", current: false },
-          { name: "New", href: "#", current: false },
-        ],
-      },
-      {
-        name: "Upload Master",
-        href: "#",
-        current: false,
-        children: [{ name: "Upload Master", href: "#", current: false }],
-      },
-      {
-        name: "Notification",
-        href: "#",
-        current: false,
-        children: [{ name: "Notification", href: "#", current: false }],
-      },
-    ],
   },
   {
     name: "K360",

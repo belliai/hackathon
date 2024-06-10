@@ -11,11 +11,15 @@ import { useMemo } from "react";
 interface MastersPageFieldArrayFormProps {
   hookForm: UseFormReturn<any>;
   fieldArrayProps: FieldArrayProps;
+  showRemoveButton?: boolean;
+  additionalColumns?: ColumnDef<any>[];
 }
 
 export default function MastersPageFieldArrayForm({
   hookForm,
   fieldArrayProps,
+  showRemoveButton = true,
+  additionalColumns = [],
 }: MastersPageFieldArrayFormProps) {
   const columns = useMemo<ColumnDef<any>[]>(() => {
     return [
@@ -34,30 +38,33 @@ export default function MastersPageFieldArrayForm({
                   row.index
                 }.${field.name}`}
                 form={hookForm}
+                disabled={field.disabled}
               />
             );
           },
         };
       }),
-      {
-        id: "remove",
-        header: "Remove",
-        cell: ({ row }) => {
-          return (
-            <Button
-              size="icon"
-              variant="destructive"
-              onClick={() => {
-                fieldArrayProps?.fieldArray.remove(row.index);
-              }}
-            >
-              <Trash size={16} />
-            </Button>
-          );
-        },
-      },
-    ];
-  }, []);
+      showRemoveButton
+        ? ({
+            id: "remove",
+            header: "Remove",
+            cell: ({ row }) => {
+              return (
+                <Button
+                  size="icon"
+                  variant="destructive"
+                  onClick={() => {
+                    fieldArrayProps?.fieldArray.remove(row.index);
+                  }}
+                >
+                  <Trash size={16} />
+                </Button>
+              );
+            },
+          } as ColumnDef<any>)
+        : undefined,
+    ].filter(Boolean) as ColumnDef<any>[];
+  }, [showRemoveButton]);
 
   return (
     <div className="flex flex-col gap-4">

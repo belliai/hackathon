@@ -115,9 +115,18 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
               <FormLabel info="hellow world!, this is info">
                 Payment Mode
               </FormLabel>
-              <FormControl>
-                <Input {...field} className="border-2 border-foreground/30" />
-              </FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="booking-1">Credit</SelectItem>
+                  <SelectItem value="booking-2">Deposit</SelectItem>
+                  <SelectItem value="booking-3">Cash</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

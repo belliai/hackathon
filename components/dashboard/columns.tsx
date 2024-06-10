@@ -27,13 +27,6 @@ export type Order = {
 
 export const columns: ColumnDef<Order>[] = [
   {
-    id: "select",
-    header: ({ table }) => <DataTableSelectHead table={table} />,
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "axb",
     header: "AXB",
   },
@@ -55,6 +48,13 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <span className=" font-semibold"> {row.original.status}</span>
     ),
+    meta: {
+      filterSelectOptions: [
+        { value: "AXB Booked & Confirmed", label: "AXB Booked & Confirmed" },
+        { value: "Shipped", label: "Shipped" },
+        { value: "Delivered", label: "Delivered" },
+      ],
+    },
   },
   {
     accessorKey: "mode",
@@ -88,5 +88,6 @@ export const columns: ColumnDef<Order>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => <DataTableRowActions />,
+    enablePinning: true,
   },
 ];

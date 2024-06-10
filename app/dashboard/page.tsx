@@ -26,31 +26,18 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <PageContainer className="py-8 gap-6">
-      <Stats />
-      <div>
-        <DataTable
-          extraToolbarButtons={[
-            {
-              label: "Filter",
-              icon: FilterIcon,
-            },
-            {
-              label: "Refresh",
-              icon: RefreshCcwIcon,
-            },
-            {
-              label: "Download",
-              icon: DownloadIcon,
-            },
-          ]}
-          columns={columns}
-          onRowClick={openModal}
-          data={data}
-          className="border-none [&_th]:text-foreground [&_th]:py-2 [&_th]:px-3 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground"
-        />
-      </div>
-      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} />
-    </PageContainer>
+    <div>
+      <DataTable
+        initialPinning={{
+          left: [],
+          right: ["actions"],
+        }}
+        columns={columns}
+        onRowClick={openModal}
+        data={data}
+        className="border-none [&_th]:text-foreground [&_th]:py-2 [&_th]:px-3 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground"
+      />
+      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode="edit" />
+    </div>
   );
 }

@@ -10,6 +10,7 @@ import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySel
 import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import FilterActions from "@/components/page-template/FilterActions";
 
 export default function ConfigurationUsersPage() {
   const columns: ColumnDef<any>[] = [
@@ -232,34 +233,7 @@ export default function ConfigurationUsersPage() {
       columns={columns}
       data={data}
       filterFormFields={filterFormFields}
-      customFilterButtons={
-        <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-2">
-          <Button
-            className="bg-button-primary hover:bg-button-primary/80 text-white"
-            type="button"
-          >
-            List
-          </Button>
-          <Button
-            className="bg-button-primary hover:bg-button-primary/80 text-white"
-            type="button"
-          >
-            Clear
-          </Button>
-          <Button
-            className="bg-button-primary hover:bg-button-primary/80 text-white"
-            type="button"
-          >
-            Export
-          </Button>
-          <Button
-            className="bg-button-primary hover:bg-button-primary/80 text-white"
-            type="button"
-          >
-            Delete
-          </Button>
-        </div>
-      }
+      customFilterButtons={<FilterActions />}
       filterHookForm={filterForm}
       pageActions={
         <Button
