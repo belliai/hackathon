@@ -1,7 +1,6 @@
 import { TSidebarItem } from "@/components/nav/SidebarItem";
 import { CubeIcon } from "@radix-ui/react-icons";
 
-
 export const settingNavigation: TSidebarItem[] = [
   {
     name: "Configuration",
@@ -218,8 +217,16 @@ export const settingNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Capacity Master", href: "/configuration/capacity/master", current: false },
-          { name: "Flight Pax Information", href: "/configuration/capacity/pax", current: false },
+          {
+            name: "Capacity Master",
+            href: "/configuration/capacity/master",
+            current: false,
+          },
+          {
+            name: "Flight Pax Information",
+            href: "/configuration/capacity/pax",
+            current: false,
+          },
         ],
       },
       {
@@ -233,8 +240,16 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "/configuration/rates/rate-card", current: false },
-              { name: "New", href: "/configuration/rates/rate-card/new", current: false },
+              {
+                name: "List",
+                href: "/configuration/rates/rate-card",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/rates/rate-card/new",
+                current: false,
+              },
             ],
           },
           {
@@ -242,8 +257,16 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "/configuration/rates/rate-line", current: false },
-              { name: "New", href: "/configuration/rates/rate-line/new", current: false },
+              {
+                name: "List",
+                href: "/configuration/rates/rate-line",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/rates/rate-line/new",
+                current: false,
+              },
             ],
           },
           {
@@ -251,8 +274,16 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              {
+                name: "List",
+                href: "/configuration/rates/cost-line",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/rates/cost-line/new",
+                current: false,
+              },
             ],
           },
           { name: "Rate Parameter Priority", href: "#", current: false },
