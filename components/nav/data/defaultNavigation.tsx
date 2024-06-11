@@ -524,7 +524,7 @@ export const defaultNavigation: TSidebarItem[] = [
         current: false,
         children: [
           { name: "Daily Sales", href: "#", current: false },
-          { name: "Agent Perfomance", href: "#", current: false },
+          { name: "Agent Perfomance", href: "/reports/standard/agent-performance", current: false },
           { name: "Daily Collections", href: "#", current: false },
           { name: "AWB Detail Report", href: "#", current: false },
           { name: "Delieveries", href: "#", current: false },
