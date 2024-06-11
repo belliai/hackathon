@@ -211,7 +211,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/operation/accept/cargo-acceptance",
             current: false,
           },
-          { name: "Cargo Screening", href: "#", current: false },
+          { name: "Cargo Screening", href: "/operation/accept/cargo-screening", current: false },
         ],
       },
       {
