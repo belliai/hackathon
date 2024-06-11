@@ -12,31 +12,10 @@ import { TSidebarItem } from "@/components/nav/SidebarItem";
 
 export const defaultNavigation: TSidebarItem[] = [
   {
-    name: "Dashboard",
+    name: "Home",
     href: "/dashboard",
     icon: CubeIcon,
     current: false,
-    children: [
-      {
-        name: "A2A", 
-        href:"/dashboard/a2a",
-        icon: CubeIcon,
-        current: false,
-      },
-      {
-        name: "D2D", 
-        href:"/dashboard/d2d",
-        icon: CubeIcon,
-        current: false,
-      },
-      {
-        name: "Warehouse Performance Matrix", 
-        href:"/dashboard/warehouse-performance-matrix",
-        icon: CubeIcon,
-        current: false,
-      },
-
-    ]
   },
   {
     name: "Sales",
@@ -583,6 +562,33 @@ export const defaultNavigation: TSidebarItem[] = [
     icon: GlobeAmericasIcon,
     current: false,
     children: [
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        icon: CubeIcon,
+        current: false,
+        children: [
+          {
+            name: "A2A", 
+            href:"/dashboard/a2a",
+            icon: CubeIcon,
+            current: false,
+          },
+          {
+            name: "D2D", 
+            href:"/dashboard/d2d",
+            icon: CubeIcon,
+            current: false,
+          },
+          {
+            name: "Warehouse Performance Matrix", 
+            href:"/dashboard/warehouse-performance-matrix",
+            icon: CubeIcon,
+            current: false,
+          },
+    
+        ]
+      },
       {
         name: "Orders",
         href: "#",
