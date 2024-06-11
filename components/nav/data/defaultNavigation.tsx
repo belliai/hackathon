@@ -190,7 +190,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/operation/accept/cargo-acceptance",
             current: false,
           },
-          { name: "Cargo Screening", href: "#", current: false },
+          { name: "Cargo Screening", href: "/operation/accept/cargo-screening", current: false },
         ],
       },
       {
@@ -245,8 +245,8 @@ export const defaultNavigation: TSidebarItem[] = [
         current: false,
         children: [
           { name: "List", href: "#", current: false },
-          { name: "CTM Out", href: "#", current: false },
-          { name: "CTM In", href: "#", current: false },
+          { name: "CTM Out", href: "/operation/transfer/ctm-out", current: false },
+          { name: "CTM In", href: "/operation/transfer/ctm-in", current: false },
         ],
       },
       {
@@ -366,7 +366,7 @@ export const defaultNavigation: TSidebarItem[] = [
           { name: "Master Upload Log", href: "#", current: false },
           {
             name: "Flight Audit Log",
-            href: "/audit-trail/flight-audit-log",
+            href: "/track/audit-trail/flight-audit-log",
             current: false,
           },
         ],
@@ -420,7 +420,7 @@ export const defaultNavigation: TSidebarItem[] = [
             name: "Debit Note",
             href: "#",
             current: false,
-            children: [{ name: "List", href: "#", current: false }],
+            children: [{ name: "List", href: "/accounting/agent/debit-note/list", current: false }],
           },
         ],
       },
@@ -503,7 +503,7 @@ export const defaultNavigation: TSidebarItem[] = [
         current: false,
         children: [
           { name: "Daily Sales", href: "#", current: false },
-          { name: "Agent Perfomance", href: "#", current: false },
+          { name: "Agent Perfomance", href: "/reports/standard/agent-performance", current: false },
           { name: "Daily Collections", href: "#", current: false },
           { name: "AWB Detail Report", href: "#", current: false },
           { name: "Delieveries", href: "#", current: false },

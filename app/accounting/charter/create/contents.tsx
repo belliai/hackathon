@@ -1,13 +1,12 @@
 "use client"
 
-
-import { useEffect, useRef, useState } from "react"
-import { ArrowLeft, Delete, Search, SearchCheck, Trash } from "lucide-react"
+import {  useRef, useState } from "react"
+import { ArrowLeft, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import React from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import FormFields from "@components/track/form"
-import { invoiceSchema } from "./schema"
+import { invoiceSchema } from "@/schemas/invoice"
 import { z } from "zod"
 import { UseFormReturn } from "react-hook-form"
 import { charterFields, freightDetailFields, routesFields } from "./fields"
@@ -18,46 +17,14 @@ type ContentProps = {
     actions?: React.ReactNode
 }
 
-type FilterProps = {
-    date: string
-    payMode: string,
-    prefix: string,
-    awbNo: string,
-}
-const initFilter: FilterProps = {
-    date: "",
-    payMode: "",
-    prefix: "",
-    awbNo: "",
-}
-
 const schema = invoiceSchema
-
 
 const Contents = (props: ContentProps) => {
     const { title, actions } = props
-    const [allFilter, setAllfilter] = useState<boolean>(false)
-    const [filter, setFilter] = useState<FilterProps>(initFilter)
     const [routes, setRoutes] = useState<Array<any>>([routesFields])
 
     const formRef = useRef<UseFormReturn<z.infer<typeof schema>> | null>(null);
     const freightFormRef = useRef<UseFormReturn<z.infer<typeof schema>> | null>(null);
-
-
-
-    const resetFilter = () => {
-        setFilter(initFilter)
-    }
-
-    const onSelectFilter = (key: string, val: any) => {
-        setFilter((prev: any) => ({
-            ...prev,
-            [key]: val
-        }))
-    }
-
-    useEffect(() => {
-    }, [filter])
 
     return (
         <div className="flex flex-col space-y-4">
@@ -65,7 +32,6 @@ const Contents = (props: ContentProps) => {
                 <h1 className="text-xl font-semibold">{title}</h1>
                 {actions}
             </div>
-
             <Card>
                 <CardHeader className="bg-zinc-500 p-2">
                     <p className="text-sm">Charter Details</p>
@@ -86,15 +52,13 @@ const Contents = (props: ContentProps) => {
                 <CardContent>
                     {routes.map((route, id) => {
                         return (
-                            <div      key={id} className="flex space-x-2 justify-between items-end xs:flex-col">
+                            <div     key={id} className="flex space-x-2 justify-between items-end xs:flex-col">
                                 <FormFields
-                                
                                     cols={5}
                                     ref={formRef}
                                     fields={route}
                                     defaultValues={{ invoiceNo: "" }}
                                     schema={schema}
-
                                 />
                                 <div className="flex space-x-2">
                                     <Button variant="destructive" onClick={() => {
