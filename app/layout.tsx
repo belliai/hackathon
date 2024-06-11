@@ -1,3 +1,5 @@
+
+
 import type { Metadata } from "next";
 import "./globals.css";
 import { CollaborativeApp } from "@/app/CollaborativeApp";
@@ -10,6 +12,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toast } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { BookingProvider } from "@/components/dashboard/BookingContext";
+import QueryProvider from "@/components/query-provider";
+
 
 export const metadata: Metadata = {
   title: "Belli",
@@ -20,6 +24,8 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+
 
 export default function RootLayout({
   children,
@@ -41,12 +47,14 @@ export default function RootLayout({
       <body className="  h-full text-white overflow-y-hidden bg-background">
         {/* <ProgressBar />
       <Nav /> */}
+        <QueryProvider>
         <TooltipProvider>
           <BookingProvider>
             <UIWrapper>{children}</UIWrapper>
             <Toaster />
           </BookingProvider>
         </TooltipProvider>
+        </QueryProvider>
       </body>
     </html>
   );
