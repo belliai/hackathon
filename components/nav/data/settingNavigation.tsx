@@ -307,7 +307,7 @@ export const settingNavigation: TSidebarItem[] = [
             children: [
               { name: "List", href: "/configuration/rates/spot-rates", current: false },
               { name: "New", href: "/configuration/rates/spot-rates/new", current: false },
-              { name: "Approval", href: "#", current: false },
+              { name: "Approval", href: "/configuration/rates/spot-rates/approval", current: false },
             ],
           },
           {
