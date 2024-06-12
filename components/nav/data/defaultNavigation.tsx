@@ -250,12 +250,12 @@ export const defaultNavigation: TSidebarItem[] = [
         ],
       },
       {
-        name: "Disrepancy",
+        name: "Discrepancy",
         href: "#",
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "List", href: "#", current: false },
+          { name: "List", href: "/operation/discrepancy/list", current: false },
           { name: "New", href: "#", current: false },
         ],
       },
