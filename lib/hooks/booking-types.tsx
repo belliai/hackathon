@@ -2,49 +2,49 @@ import axios from 'axios';
 import { setHeaders } from '../utils/network';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const route = "payment-modes"
+const route = "booking-types"
 
 const config = {
     headers: setHeaders(),
     baseURL: process.env.NEXT_PUBLIC_API_URL
 };
 
-export const fetchPaymentModes = async () => {
+export const fetchBookingTypes = async () => {
     const { data } = await axios.get(`/${route}`, config);
     return data;
 };
 
-export const updatePaymentMode = async (prop : { id: string, name: string}) => {
+export const updateBookingType = async (prop : { id: string, name: string}) => {
     const updateData = { name : prop.name };
     const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config);
     return data;
 };
 
-export const addPaymentMode = async (prop : {  name: string}) => {
+export const addBookingType = async (prop : {  name: string}) => {
     const newData = { name : prop.name };
     const { data } = await axios.post(`/${route}`, newData, config);
     return data;
 };
 
-export const removePaymentMode = async (prop : {  id: string}) => {
+export const removeBookingType = async (prop : {  id: string}) => {
     const resp = await axios.delete(`/${route}/${prop.id}`,  config);
     return resp
 
 };
 
-export const usePaymentModes = () => {
+export const useBookingTypes = () => {
     return useQuery(
         {
             queryKey: [route],
-            queryFn: fetchPaymentModes
+            queryFn: fetchBookingTypes
         });
 };
 
-export const useUpdatePaymentMode = () => {
+export const useUpdateBookingType = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn:   updatePaymentMode,
+            mutationFn:   updateBookingType,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
@@ -54,11 +54,11 @@ export const useUpdatePaymentMode = () => {
     return mutation;
 };
 
-export const useAddPaymentMode = () => {
+export const useAddBookingType = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn: addPaymentMode,
+            mutationFn: addBookingType,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
@@ -68,11 +68,11 @@ export const useAddPaymentMode = () => {
     return mutation;
 };
 
-export const useRemovePaymentMode = () => {
+export const useRemoveBookingType = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn: removePaymentMode,
+            mutationFn: removeBookingType,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});

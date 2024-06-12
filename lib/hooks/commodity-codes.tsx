@@ -2,49 +2,49 @@ import axios from 'axios';
 import { setHeaders } from '../utils/network';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const route = "payment-modes"
+const route = "commodity-codes"
 
 const config = {
     headers: setHeaders(),
     baseURL: process.env.NEXT_PUBLIC_API_URL
 };
 
-export const fetchPaymentModes = async () => {
+export const fetchCommodityCodes = async () => {
     const { data } = await axios.get(`/${route}`, config);
     return data;
 };
 
-export const updatePaymentMode = async (prop : { id: string, name: string}) => {
-    const updateData = { name : prop.name };
+export const updateCommodityCode = async (prop : { id: string, name: string,  description: string}) => {
+    const updateData = { name : prop.name, description : prop.description };
     const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config);
     return data;
 };
 
-export const addPaymentMode = async (prop : {  name: string}) => {
-    const newData = { name : prop.name };
+export const addCommodityCode = async (prop : {  name: string, description: string}) => {
+    const newData = { name : prop.name, description: prop.description };
     const { data } = await axios.post(`/${route}`, newData, config);
     return data;
 };
 
-export const removePaymentMode = async (prop : {  id: string}) => {
+export const removeCommodityCode = async (prop : {  id: string}) => {
     const resp = await axios.delete(`/${route}/${prop.id}`,  config);
     return resp
 
 };
 
-export const usePaymentModes = () => {
+export const useCommodityCodes = () => {
     return useQuery(
         {
             queryKey: [route],
-            queryFn: fetchPaymentModes
+            queryFn: fetchCommodityCodes
         });
 };
 
-export const useUpdatePaymentMode = () => {
+export const useUpdateCommodityCode = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn:   updatePaymentMode,
+            mutationFn:   updateCommodityCode,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
@@ -54,11 +54,11 @@ export const useUpdatePaymentMode = () => {
     return mutation;
 };
 
-export const useAddPaymentMode = () => {
+export const useAddCommodityCode = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn: addPaymentMode,
+            mutationFn: addCommodityCode,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
@@ -68,11 +68,11 @@ export const useAddPaymentMode = () => {
     return mutation;
 };
 
-export const useRemovePaymentMode = () => {
+export const useRemoveCommodityCode = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn: removePaymentMode,
+            mutationFn: removeCommodityCode,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
