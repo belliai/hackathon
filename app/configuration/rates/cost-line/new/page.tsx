@@ -320,7 +320,6 @@ export default function MasterCostLinePage() {
         {
           name: "includeAirlineCode",
           type: "radio",
-          label: "Include Airline Code",
           orientation: "horizontal",
           options: excludeIncludeOptions,
         },

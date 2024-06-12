@@ -286,7 +286,11 @@ export const settingNavigation: TSidebarItem[] = [
               },
             ],
           },
-          { name: "Rate Parameter Priority", href: "#", current: false },
+          {
+            name: "Rate Parameter Priority",
+            href: "/configuration/rates/rate-parameter-priority",
+            current: false,
+          },
           {
             name: "Other Charges",
             href: "#",
