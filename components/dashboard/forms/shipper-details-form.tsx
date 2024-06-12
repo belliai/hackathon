@@ -25,9 +25,17 @@ import { PlusIcon, PlusSquareIcon, SearchIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import React from "react";
+import { usePartnerCodes } from "@/lib/hooks/partner-codes";
+import { useStatuses } from "@/lib/hooks/statuses";
+import { usePartnerTypes } from "@/lib/hooks/partner-types";
+import { useLocations } from "@/lib/hooks/locations";
 
 const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext();
+  const { data: partnerCodes } = usePartnerCodes()
+  const { data: statuses } = useStatuses()
+  const { data: partnerTypes } = usePartnerTypes()
+  const { data: locations } = useLocations()
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     { control: form.control, name: "shipperDetails" }
@@ -122,17 +130,20 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Origin *</FormLabel>
-                    <FormControl>
-                      <div className="relative h-fit">
-                        <Input
-                          {...field}
-                          className="border-2 border-foreground/30"
-                        />
-                        <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                          <SearchIcon className="w-3 h-3" />
-                        </div>
-                      </div>
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-2 border-foreground/30">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {locations && locations.map((location: any) =>
+                          <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -143,17 +154,20 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Destination *</FormLabel>
-                    <FormControl>
-                      <div className="relative h-fit">
-                        <Input
-                          {...field}
-                          className="border-2 border-foreground/30"
-                        />
-                        <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                          <SearchIcon className="w-3 h-3" />
-                        </div>
-                      </div>
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-2 border-foreground/30">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {locations && locations.map((location: any) =>
+                          <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -174,9 +188,9 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="air">AIR</SelectItem>
-                        <SelectItem value="origin-2">Parner Type 2</SelectItem>
-                        <SelectItem value="origin-3">Parner Type 3</SelectItem>
+                        {partnerTypes && partnerTypes.map((partnerType: any) =>
+                          <SelectItem value={partnerType.ID} key={partnerType.ID} >{partnerType.name}</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -199,9 +213,9 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="sg">SG</SelectItem>
-                        <SelectItem value="origin-2">Parner Type 2</SelectItem>
-                        <SelectItem value="origin-3">Parner Type 3</SelectItem>
+                        {partnerCodes && partnerCodes.map((partnerCode: any) =>
+                          <SelectItem value={partnerCode.ID} key={partnerCode.ID} >{partnerCode.name}</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -270,11 +284,9 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {selectOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
+                        {statuses && statuses.map((status: any) =>
+                          <SelectItem value={status.ID} key={status.ID} >{status.name}</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />

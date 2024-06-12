@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -30,7 +30,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import OrderSummaryCard from "./order-summary-card";
 import BalanceCard from "./balance-card";
-import { useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import CreateBookingForm from "./forms/create-booking-form";
 import ConsignmentDetailsForm from "./forms/consignment-details.form";
@@ -54,6 +54,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   const [open, setOpen] = useState(props.open ?? false);
   const [isFullScreen, setFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     setOpen(props.open ?? false);
@@ -86,6 +87,13 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   const form = useForm<Order>({
     defaultValues,
   });
+
+  // Watch the entire form for changes
+  const formValues = form.watch();
+  useEffect(() => {
+    // Log the updated form values whenever they change
+    //console.log("Form Values Changed:", formValues);
+  }, [formValues]);
 
   useEffect(() => {
     if (selectedBooking) {
@@ -212,7 +220,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 </div>
                 <div className="gap-4 max-w-[300px] flex flex-col items-stretch justify-between">
                   <div className="space-y-4">
-                    <OrderSummaryCard />
+                    <OrderSummaryCard {...formValues} />
                     <DimensionsCard />
                     <BalanceCard />
                   </div>
