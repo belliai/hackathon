@@ -215,7 +215,7 @@ export const defaultNavigation: TSidebarItem[] = [
           { name: "Export Manifest", href: "/operation/export/export-manifest", current: false },
           { name: "ePouch Flight", href: "/operation/export/epouch-flight", current: false },
           { name: "Export Summary", href: "/operation/export/export-summary", current: false },
-          { name: "Export Inventory", href: "#", current: false },
+          { name: "Export Inventory", href: "/operation/export/export-inventory", current: false },
           { name: "NOTOC Details", href: "#", current: false },
         ],
       },
