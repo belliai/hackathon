@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CollaborativeApp } from "@/app/CollaborativeApp";
-import { Room } from "@/app/Room";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { GoogleTagManager } from "@next/third-parties/google";
 import UIWrapper from "@/components/ui/wrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toast } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { BookingProvider } from "@/components/dashboard/BookingContext";
 import { FavoritesProvider } from "@/components/nav/favorites/favorites-provider";
