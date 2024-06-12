@@ -244,7 +244,7 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "List", href: "#", current: false },
+          { name: "List", href: "/operation/transfer/list", current: false },
           { name: "CTM Out", href: "/operation/transfer/ctm-out", current: false },
           { name: "CTM In", href: "/operation/transfer/ctm-in", current: false },
         ],
