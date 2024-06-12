@@ -316,7 +316,7 @@ export const settingNavigation: TSidebarItem[] = [
             current: false,
             children: [
               { name: "List", href: "/configuration/rates/tax-line", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "New", href: "/configuration/rates/tax-line/new", current: false },
             ],
           },
           {
