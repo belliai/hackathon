@@ -1,12 +1,6 @@
 "use client";
 
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
-import {
   Breadcrumb,
   BreadcrumbEllipsis,
   BreadcrumbItem,
@@ -19,17 +13,23 @@ import { usePathname } from "next/navigation";
 import { TSidebarItem } from "./SidebarItem";
 import { settingNavigation } from "./data/settingNavigation";
 import { defaultNavigation } from "./data/defaultNavigation";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { StarIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import { Path, useFavorites } from "./favorites/favorites-provider";
 
 const findCurrentPaths = (
   items: TSidebarItem[],
   pathname: string,
-  path: { name: string; href: string }[] = []
-): { name: string; href: string }[] | null => {
+  path: TSidebarItem[] = []
+): TSidebarItem[] | null => {
   for (const item of items) {
     // Create a new path array including the current item
-    const currentPath = [...path, { name: item.name, href: item.href }];
+    const currentPath: TSidebarItem[] = [
+      ...path,
+      { name: item.name, href: item.href, children: undefined },
+    ];
 
     // Check if the current item's href matches the pathname
     if (item.href === pathname) {
@@ -50,7 +50,7 @@ const findCurrentPaths = (
 };
 
 const getCurrentPaths = (pathname: string) => {
-  let currentPaths: { name: string; href: string }[] = [];
+  let currentPaths: TSidebarItem[] = [];
   const navMenus: TSidebarItem[] = [...settingNavigation, ...defaultNavigation];
 
   // Use the helper function to find the current path
@@ -64,11 +64,18 @@ const getCurrentPaths = (pathname: string) => {
 
 export default function BreadCrumbSection() {
   const pathname = usePathname();
+  const { insertPath, isPathFavorited, deletePathByHref, favorites } =
+    useFavorites();
+
+  const isFavorited = useMemo(
+    () => isPathFavorited(pathname),
+    [pathname, favorites, isPathFavorited]
+  );
 
   const currentPaths = getCurrentPaths(pathname);
 
   return (
-    <div className="fixed w-full h-10 flex flex-row items-center px-4 border-b bg-background/90 z-10 backdrop-blur-sm">
+    <div className="fixed w-full h-12 flex flex-row items-center gap-4 px-4 border-b bg-background/90 z-10 backdrop-blur-sm">
       <Breadcrumb>
         <BreadcrumbList>
           {currentPaths.map((path, index) => (
@@ -86,6 +93,23 @@ export default function BreadCrumbSection() {
           ))}
         </BreadcrumbList>
       </Breadcrumb>
+      <Button
+        onClick={() => {
+          if (isFavorited) {
+            deletePathByHref(pathname);
+            return;
+          }
+          insertPath(currentPaths.at(-1) as Path);
+        }}
+        variant={"ghost"}
+        size={"icon"}
+        className="h-6 w-6 text-muted-foreground"
+      >
+        <StarIcon
+          className="size-4"
+          fill={isFavorited ? "hsl(var(--foreground))" : undefined}
+        />
+      </Button>
     </div>
   );
 }

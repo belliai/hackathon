@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
+import FavoritesMenu from "./favorites/favorites-menu";
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -95,7 +96,8 @@ export default function SideBar() {
                   {firstCurrentNavigationItem.name}
                 </li>
               )}
-              <ul className="flex flex-col gap-1">
+              <ul className="flex flex-col gap-4">
+                <FavoritesMenu />
                 <SidebarMenu items={currentNavigationItems} />
               </ul>
               {sidebarType === SIDEBAR_TYPE.SETTING && (
