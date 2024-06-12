@@ -1,23 +1,23 @@
 import CrudTable from "./components/crud-table";
-import { usePaymentModes, useUpdatePaymentMode, useAddPaymentMode, useRemovePaymentMode } from '@/lib/hooks/payment-modes';
+import { useStatuses, useUpdateStatus, useAddStatus, useRemoveStatus } from '@/lib/hooks/statuses';
 
-const PaymentMode = () => {
+const Status = () => {
 
-    const { isLoading, isPending, error, data } = usePaymentModes()
-    const update = useUpdatePaymentMode()
-    const add = useAddPaymentMode()
-    const remove = useRemovePaymentMode()
+    const { isLoading, isPending, error, data } = useStatuses()
+    const update = useUpdateStatus()
+    const add = useAddStatus()
+    const remove = useRemoveStatus()
 
     if (isPending) return 'Loading...'
 
     if (error) return 'An error has occurred: ' + error.message
 
     return (<CrudTable
-        title="Payment Mode"
+        title="Status"
         columns={[{ accessorKey: "option" }]}
         form={[
             { name: "id", type: "hidden" },
-            { name: "option", type: "text", label: "Payment Mode" },
+            { name: "option", type: "text", label: "Status" },
         ]}
         data={data.map((item: any) => ({ option: item.name, id: item.ID }))}
         onSave={(data) => {
@@ -37,4 +37,4 @@ const PaymentMode = () => {
         }}
     />)
 }
-export default PaymentMode
+export default Status

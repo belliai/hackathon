@@ -2,49 +2,49 @@ import axios from 'axios';
 import { setHeaders } from '../utils/network';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const route = "payment-modes"
+const route = "partner-prefixes"
 
 const config = {
     headers: setHeaders(),
     baseURL: process.env.NEXT_PUBLIC_API_URL
 };
 
-export const fetchPaymentModes = async () => {
+export const fetchPartnerPrefixes = async () => {
     const { data } = await axios.get(`/${route}`, config);
     return data;
 };
 
-export const updatePaymentMode = async (prop : { id: string, name: string}) => {
+export const updatePartnerPrefix = async (prop : { id: string, name: string}) => {
     const updateData = { name : prop.name };
     const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config);
     return data;
 };
 
-export const addPaymentMode = async (prop : {  name: string}) => {
+export const addPartnerPrefix = async (prop : {  name: string}) => {
     const newData = { name : prop.name };
     const { data } = await axios.post(`/${route}`, newData, config);
     return data;
 };
 
-export const removePaymentMode = async (prop : {  id: string}) => {
+export const removePartnerPrefix = async (prop : {  id: string}) => {
     const resp = await axios.delete(`/${route}/${prop.id}`,  config);
     return resp
 
 };
 
-export const usePaymentModes = () => {
+export const usePartnerPrefixes = () => {
     return useQuery(
         {
             queryKey: [route],
-            queryFn: fetchPaymentModes
+            queryFn: fetchPartnerPrefixes
         });
 };
 
-export const useUpdatePaymentMode = () => {
+export const useUpdatePartnerPrefix = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn:   updatePaymentMode,
+            mutationFn:   updatePartnerPrefix,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
@@ -54,11 +54,11 @@ export const useUpdatePaymentMode = () => {
     return mutation;
 };
 
-export const useAddPaymentMode = () => {
+export const useAddPartnerPrefix = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn: addPaymentMode,
+            mutationFn: addPartnerPrefix,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
@@ -68,11 +68,11 @@ export const useAddPaymentMode = () => {
     return mutation;
 };
 
-export const useRemovePaymentMode = () => {
+export const useRemovePartnerPrefix = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn: removePaymentMode,
+            mutationFn: removePartnerPrefix,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({queryKey:[route]});
