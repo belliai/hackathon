@@ -574,7 +574,7 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Daily Sales", href: "#", current: false },
+          { name: "Daily Sales", href: "/reports/standard/daily-sales", current: false },
           {
             name: "Agent Perfomance",
             href: "/reports/standard/agent-performance",
