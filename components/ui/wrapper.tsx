@@ -101,7 +101,7 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
           <ResizablePanel defaultSize={80} minSize={33}>
             <main className="overflow-y-auto custom-scrollbar min-h-[100dvh] h-1">
               <BreadCrumbSection />
-              <div className="px-4 py-4 mt-10 ">{children}</div>
+              <div className="px-4 py-4 mt-12 ">{children}</div>
             </main>
           </ResizablePanel>
         </ResizablePanelGroup>

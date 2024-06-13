@@ -29,9 +29,14 @@ export type TSidebarItem = {
 interface SidebarItemProps {
   item: TSidebarItem;
   active: boolean;
+  disabled?: boolean;
 }
 
-export default function SidebarItem({ item, active }: SidebarItemProps) {
+export default function SidebarItem({
+  item,
+  active,
+  disabled,
+}: SidebarItemProps) {
   function getBaseItemClassName(currentActive: boolean) {
     const className = cn(
       "group flex [&_svg]:text-[#949496]  [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-md px-[5px] py-0 font-medium leading-normal hover:no-underline",
@@ -71,7 +76,10 @@ export default function SidebarItem({ item, active }: SidebarItemProps) {
       ) : (
         <Link
           href={item.href}
-          className={cn(getBaseItemClassName(!!item.current || active))}
+          className={cn(
+            getBaseItemClassName(!!item.current || active),
+            disabled && "pointer-events-none"
+          )}
         >
           <div className="flex items-center gap-x-[7px]">
             {item.icon && (
@@ -136,7 +144,7 @@ export default function SidebarItem({ item, active }: SidebarItemProps) {
                                 />
                               </div>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent side="right" align="start" >
+                            <DropdownMenuContent side="right" align="start">
                               {submenu.children.map((subsubmenu) => {
                                 if (subsubmenu?.children) {
                                   return (

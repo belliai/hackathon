@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -20,10 +20,27 @@ import {
 } from "@/components/ui/select";
 import { ListIcon, SearchIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import { usePaymentModes } from "@/lib/hooks/payment-modes"
+import { useLocations } from "@/lib/hooks/locations";
+import { useCommodityCodes } from "@/lib/hooks/commodity-codes";
 
 const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
   (_, ref) => {
     const form = useFormContext();
+
+    const formValues = form.watch();
+    useEffect(() => {
+      // Log the updated form values whenever they change
+     // console.log("Form Values Changed:", formValues);
+    }, [formValues]);
+    
+    const { commodityCode } = formValues
+    
+    const { data: paymentModes } = usePaymentModes()
+    const { data: locations } = useLocations()
+    const { data: commodityCodes } = useCommodityCodes()
+    const commodity = commodityCode && commodityCodes && commodityCodes.find((item: any) => item.ID === commodityCode)
+
 
     return (
       <Card className="p-4 grid grid-cols-2 gap-y-2 gap-x-3">
@@ -35,7 +52,6 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
               <FormLabel info="booking type info here">Origin</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value ?? "ah1"}
               >
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
@@ -43,9 +59,9 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="ah1">AH1</SelectItem>
-                  <SelectItem value="origin-2">Origin Type 2</SelectItem>
-                  <SelectItem value="origin-3">Origin Type 3</SelectItem>
+                  {locations && locations.map((location: any) =>
+                    <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -60,14 +76,20 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
               <FormLabel info="hellow world!, this is info">
                 Destination
               </FormLabel>
-              <FormControl>
-                <div className="relative h-fit">
-                  <Input {...field} className="border-2 border-foreground/30" />
-                  <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                    <SearchIcon className="w-3 h-3" />
-                  </div>
-                </div>
-              </FormControl>
+              <Select
+                onValueChange={field.onChange}
+              >
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {locations && locations.map((location: any) =>
+                    <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -80,14 +102,20 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
               <FormLabel info="hellow world!, this is info">
                 Commodity Code *
               </FormLabel>
-              <FormControl>
-                <div className="relative h-fit">
-                  <Input {...field} className="border-2 border-foreground/30" />
-                  <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                    <SearchIcon className="w-3 h-3" />
-                  </div>
-                </div>
-              </FormControl>
+              <Select
+                onValueChange={field.onChange}
+              >
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {commodityCodes && commodityCodes.map((commodityCode: any) =>
+                    <SelectItem value={commodityCode.ID} key={commodityCode.ID} >{commodityCode.name}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -101,7 +129,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
                 Commodity Description
               </FormLabel>
               <FormControl>
-                <Input {...field} className="border-2 border-foreground/30" />
+                <Input readOnly defaultValue={commodity && commodity.name} {...field} className="border-2 border-foreground/30" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -122,9 +150,9 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="booking-1">Credit</SelectItem>
-                  <SelectItem value="booking-2">Deposit</SelectItem>
-                  <SelectItem value="booking-3">Cash</SelectItem>
+                  {paymentModes && paymentModes.map((paymentMode: any) =>
+                    <SelectItem value={paymentMode.ID} key={paymentMode.ID} >{paymentMode.name}</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage />

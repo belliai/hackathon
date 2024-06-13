@@ -1,0 +1,103 @@
+import { ImportSummaryType } from "@/components/operation/Import/ImportSummary/columns";
+
+export const DUMMY_DATA: ImportSummaryType[] = [
+  {
+    cargo_id: "CARGO001",
+    shipper: "Company A",
+    consignee: "Company X",
+    origin: "NYC",
+    destination: "LON",
+    pieces: "100",
+    weight: "1000kg",
+    volume: "10m³",
+    commodity: "Electronics",
+    chargeable_weight: "950kg",
+    freight_charges: "5000",
+    other_charges: "200",
+    total_charges: "5200",
+    currency: "USD",
+    flight_number: "FL123",
+    flight_date: "2024-06-01",
+    status: "Shipped"
+  },
+  {
+    cargo_id: "CARGO002",
+    shipper: "Company B",
+    consignee: "Company Y",
+    origin: "LAX",
+    destination: "SYD",
+    pieces: "50",
+    weight: "500kg",
+    volume: "5m³",
+    commodity: "Clothing",
+    chargeable_weight: "480kg",
+    freight_charges: "3000",
+    other_charges: "150",
+    total_charges: "3150",
+    currency: "USD",
+    flight_number: "FL456",
+    flight_date: "2024-06-02",
+    status: "In Transit"
+  },
+  {
+    cargo_id: "CARGO003",
+    shipper: "Company C",
+    consignee: "Company Z",
+    origin: "CHI",
+    destination: "TOR",
+    pieces: "70",
+    weight: "700kg",
+    volume: "7m³",
+    commodity: "Furniture",
+    chargeable_weight: "680kg",
+    freight_charges: "4000",
+    other_charges: "100",
+    total_charges: "4100",
+    currency: "CAD",
+    flight_number: "FL789",
+    flight_date: "2024-06-03",
+    status: "Delivered"
+  },
+  {
+    cargo_id: "CARGO004",
+    shipper: "Company D",
+    consignee: "Company W",
+    origin: "MIA",
+    destination: "JFK",
+    pieces: "30",
+    weight: "300kg",
+    volume: "3m³",
+    commodity: "Toys",
+    chargeable_weight: "290kg",
+    freight_charges: "2000",
+    other_charges: "50",
+    total_charges: "2050",
+    currency: "USD",
+    flight_number: "FL012",
+    flight_date: "2024-06-04",
+    status: "Pending"
+  },
+  {
+    cargo_id: "CARGO005",
+    shipper: "Company E",
+    consignee: "Company V",
+    origin: "HOU",
+    destination: "SFO",
+    pieces: "40",
+    weight: "400kg",
+    volume: "4m³",
+    commodity: "Books",
+    chargeable_weight: "380kg",
+    freight_charges: "2500",
+    other_charges: "75",
+    total_charges: "2575",
+    currency: "USD",
+    flight_number: "FL345",
+    flight_date: "2024-06-05",
+    status: "Cancelled"
+  }
+];
+
+export async function getData() {
+  return DUMMY_DATA;
+}

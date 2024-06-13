@@ -1,25 +1,60 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CollaborativeApp } from "@/app/CollaborativeApp";
-import { Room } from "@/app/Room";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { GoogleTagManager } from "@next/third-parties/google";
 import UIWrapper from "@/components/ui/wrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toast } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { BookingProvider } from "@/components/dashboard/BookingContext";
+import { FavoritesProvider } from "@/components/nav/favorites/favorites-provider";
+import QueryProvider from "@/components/query-provider";
+import { headers } from "next/headers";
+import { findActiveItem } from "@/lib/utils/nav-utils";
+import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
+import { k360Navigation } from "@/components/nav/data/k360Navigation";
+import { settingNavigation } from "@/components/nav/data/settingNavigation";
+import { accountNavigation } from "@/components/nav/data/accountNavigation";
 
-export const metadata: Metadata = {
-  title: "Belli",
-  description: "Next-gen Air Cargo SaaS",
-};
+// export const metadata: Metadata = {
+//   title: "Belli",
+//   description: "Next-gen Air Cargo SaaS",
+// };
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+export async function generateMetadata() {
+  const defaultMetadata: Metadata = {
+    title: "Belli",
+    description: "Next-gen Air Cargo SaaS",
+  };
+
+  const pathname = headers().get("x-pathname");
+
+  if (!pathname) return defaultMetadata;
+
+  const menuItem = findActiveItem(
+    [
+      ...defaultNavigation,
+      ...k360Navigation,
+      ...settingNavigation,
+      ...accountNavigation,
+    ],
+    pathname
+  );
+
+  if (!menuItem) return defaultMetadata;
+
+  console.log({ pathname });
+
+  return {
+    title: menuItem.item.name,
+    description: "Next-gen Air Cargo SaaS",
+  };
+}
 
 export default function RootLayout({
   children,
@@ -41,12 +76,16 @@ export default function RootLayout({
       <body className="  h-full text-white overflow-y-hidden bg-background">
         {/* <ProgressBar />
       <Nav /> */}
-        <TooltipProvider>
-          <BookingProvider>
-            <UIWrapper>{children}</UIWrapper>
-            <Toaster />
-          </BookingProvider>
-        </TooltipProvider>
+        <QueryProvider>
+          <TooltipProvider>
+            <BookingProvider>
+              <FavoritesProvider>
+                <UIWrapper>{children}</UIWrapper>
+              </FavoritesProvider>
+              <Toaster />
+            </BookingProvider>
+          </TooltipProvider>
+        </QueryProvider>
       </body>
     </html>
   );

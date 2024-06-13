@@ -286,14 +286,18 @@ export const settingNavigation: TSidebarItem[] = [
               },
             ],
           },
-          { name: "Rate Parameter Priority", href: "#", current: false },
+          {
+            name: "Rate Parameter Priority",
+            href: "/configuration/rates/rate-parameter-priority",
+            current: false,
+          },
           {
             name: "Other Charges",
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/configuration/rates/other-charges", current: false },
+              { name: "New", href: "/configuration/rates/other-charges/new", current: false },
             ],
           },
           {
@@ -301,9 +305,9 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
-              { name: "Approval", href: "#", current: false },
+              { name: "List", href: "/configuration/rates/spot-rates", current: false },
+              { name: "New", href: "/configuration/rates/spot-rates/new", current: false },
+              { name: "Approval", href: "/configuration/rates/spot-rates/approval", current: false },
             ],
           },
           {
@@ -311,8 +315,8 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/configuration/rates/tax-line", current: false },
+              { name: "New", href: "/configuration/rates/tax-line/new", current: false },
             ],
           },
           {
@@ -320,8 +324,8 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/configuration/rates/config-line", current: false },
+              { name: "New", href: "/configuration/rates/config-line/new", current: false },
             ],
           },
           {

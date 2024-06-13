@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -30,7 +30,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import OrderSummaryCard from "./order-summary-card";
 import BalanceCard from "./balance-card";
-import { useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import CreateBookingForm from "./forms/create-booking-form";
 import ConsignmentDetailsForm from "./forms/consignment-details.form";
@@ -87,6 +87,13 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     defaultValues,
   });
 
+  // Watch the entire form for changes
+  const formValues = form.watch();
+  useEffect(() => {
+    // Log the updated form values whenever they change
+    //console.log("Form Values Changed:", formValues);
+  }, [formValues]);
+
   useEffect(() => {
     if (selectedBooking) {
       form.reset(defaultValues);
@@ -132,7 +139,11 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         hideCloseButton
-        className={isFullScreen ? "w-screen h-screen max-w-none" : "max-w-6xl"}
+        className={
+          isFullScreen
+            ? "w-screen h-screen max-w-none"
+            : "max-w-6xl top-8 translate-y-0"
+        }
         onInteractOutside={(e) => e.preventDefault()}
       >
         <Form {...form}>
@@ -163,7 +174,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
               </div>
             </DialogHeader>
             <Tabs defaultValue="booking-details">
-              <div className="w-full flex flex-row items-stretch gap-4 py-4">
+              <div className="w-full flex flex-row items-stretch gap-4 pt-4">
                 <div className="min-w-[220px]">
                   <Card className="h-full">
                     <TabsList className="p-0 py-2  ">
@@ -212,7 +223,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 </div>
                 <div className="gap-4 max-w-[300px] flex flex-col items-stretch justify-between">
                   <div className="space-y-4">
-                    <OrderSummaryCard />
+                    <OrderSummaryCard {...formValues} />
                     <DimensionsCard />
                     <BalanceCard />
                   </div>
