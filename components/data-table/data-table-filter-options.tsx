@@ -25,6 +25,7 @@ import { Separator } from "../ui/separator";
 import { useDebounceValue } from "usehooks-ts";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import DateInput from "../ui/date-input";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -112,7 +113,9 @@ const ColumnFilterView = <TData,>(props: {
     );
   }, [debouncedFilter]);
 
-  const options = column.columnDef.meta?.filterSelectOptions;
+  const meta = column.columnDef.meta;
+  const options = meta?.filterSelectOptions;
+  const isDate = meta?.isDateFilter;
 
   return (
     <div className="">
@@ -129,7 +132,14 @@ const ColumnFilterView = <TData,>(props: {
       </div>
       <Separator />
       <div className="">
-        {options ? (
+        {isDate ? (
+          <DateInput
+            onBlur={() => {}}
+            name="date"
+            value={filterValue}
+            onChange={setFilterValue}
+          />
+        ) : options ? (
           <Command>
             <CommandInput placeholder="Search for a value..." />
             <CommandList className="custom-scrollbar">
