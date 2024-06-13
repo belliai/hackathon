@@ -544,7 +544,7 @@ export const defaultNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Maintain AWB",
-        href: "#",
+        href: "/maintenance",
         icon: CubeIcon,
         current: false,
       },
