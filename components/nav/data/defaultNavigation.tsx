@@ -585,7 +585,7 @@ export const defaultNavigation: TSidebarItem[] = [
           { name: "Deliveries", href: "#", current: false },
           { name: "AWB Movement", href: "/reports/standard/awb-movement", current: false },
           { name: "StationWise Tonnage", href: "/reports/standard/stationwise-tonnage", current: false },
-          { name: "Daily Shift", href: "#", current: false },
+          { name: "Daily Shift", href: "/reports/standard/daily-shift", current: false },
           { name: "Flight Perfomance", href: "#", current: false },
           { name: "Offload", href: "#", current: false },
           { name: "Cargo Revenue Tracking", href: "#", current: false },
