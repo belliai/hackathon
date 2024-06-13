@@ -381,7 +381,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/track/messaging/monitor-messaging",
             current: false,
           },
-          { name: "ASM/SSM Monitoring", href: "#", current: false },
+          { name: "ASM/SSM Monitoring", href: "/track/messaging/asm-monitoring", current: false },
         ],
       },
       {
@@ -400,9 +400,9 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/track/audit-trail/billing-audit-trail",
             current: false,
           },
-          { name: "ULD Audit Trail", href: "#", current: false },
-          { name: "Page Lock History", href: "#", current: false },
-          { name: "Report Log", href: "#", current: false },
+          { name: "ULD Audit Trail", href: "/track/audit-trail/uld-tracking", current: false },
+          { name: "Page Lock History", href: "/track/audit-trail/page-lock-history", current: false },
+          { name: "Report Log", href: "/track/audit-trail/report-log", current: false },
           {
             name: "User Login Log",
             href: "/track/audit-trail/user-login-log",
@@ -413,7 +413,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/track/audit-trail/master-audit-log",
             current: false,
           },
-          { name: "Master Upload Log", href: "#", current: false },
+          { name: "Master Upload Log", href: "/track/audit-trail/master-upload-log", current: false },
           {
             name: "Flight Audit Log",
             href: "/track/audit-trail/flight-audit-log",
