@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-export type DailyCollctionType = {
+export type DailyCollectionType = {
   awb_number: string;
   from_date: string;
   from_time: string;
@@ -13,7 +13,7 @@ export type DailyCollctionType = {
   carrier: string;
 };
 
-export const columns: ColumnDef<DailyCollctionType>[] = [
+export const columns: ColumnDef<DailyCollectionType>[] = [
   {
     header: "AWB Number",
     accessorKey: "awb_number",

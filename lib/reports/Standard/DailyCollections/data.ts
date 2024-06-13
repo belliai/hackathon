@@ -1,6 +1,6 @@
-import { DailySalesType } from "@/components/reports/Standard/DailySales/columns";
+import { DailyCollectionType } from "@/components/reports/Standard/DailyCollections/columns";
 
-export const DUMMY_DATA: DailySalesType[] = [
+export const DUMMY_DATA: DailyCollectionType[] = [
   {
     awb_number: "123-45678901",
     from_date: "2024-05-14",
