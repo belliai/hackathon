@@ -296,8 +296,16 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "/configuration/rates/other-charges", current: false },
-              { name: "New", href: "/configuration/rates/other-charges/new", current: false },
+              {
+                name: "List",
+                href: "/configuration/rates/other-charges",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/rates/other-charges/new",
+                current: false,
+              },
             ],
           },
           {
@@ -305,9 +313,21 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "/configuration/rates/spot-rates", current: false },
-              { name: "New", href: "/configuration/rates/spot-rates/new", current: false },
-              { name: "Approval", href: "/configuration/rates/spot-rates/approval", current: false },
+              {
+                name: "List",
+                href: "/configuration/rates/spot-rates",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/rates/spot-rates/new",
+                current: false,
+              },
+              {
+                name: "Approval",
+                href: "/configuration/rates/spot-rates/approval",
+                current: false,
+              },
             ],
           },
           {
@@ -315,8 +335,16 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "/configuration/rates/tax-line", current: false },
-              { name: "New", href: "/configuration/rates/tax-line/new", current: false },
+              {
+                name: "List",
+                href: "/configuration/rates/tax-line",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/rates/tax-line/new",
+                current: false,
+              },
             ],
           },
           {
@@ -324,8 +352,16 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "/configuration/rates/config-line", current: false },
-              { name: "New", href: "/configuration/rates/config-line/new", current: false },
+              {
+                name: "List",
+                href: "/configuration/rates/config-line",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/configuration/rates/config-line/new",
+                current: false,
+              },
             ],
           },
           {
@@ -333,7 +369,11 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "New Deal", href: "#", current: false },
+              {
+                name: "New Deal",
+                href: "/configuration/rates/deals/new-deal",
+                current: false,
+              },
               { name: "Apply Deal", href: "#", current: false },
               { name: "List Deal", href: "#", current: false },
               { name: "Deal Audit", href: "#", current: false },
