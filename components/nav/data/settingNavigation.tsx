@@ -374,12 +374,28 @@ export const settingNavigation: TSidebarItem[] = [
                 href: "/configuration/rates/deals/new-deal",
                 current: false,
               },
-              { name: "Apply Deal", href: "/configuration/rates/deals/apply-deal", current: false },
-              { name: "List Deal", href: "/configuration/rates/deals", current: false },
-              { name: "Deal Audit", href: "/configuration/rates/deals/deal-audit", current: false },
+              {
+                name: "Apply Deal",
+                href: "/configuration/rates/deals/apply-deal",
+                current: false,
+              },
+              {
+                name: "List Deal",
+                href: "/configuration/rates/deals",
+                current: false,
+              },
+              {
+                name: "Deal Audit",
+                href: "/configuration/rates/deals/deal-audit",
+                current: false,
+              },
             ],
           },
-          { name: "Airline Proration", href: "#", current: false },
+          {
+            name: "Airline Proration",
+            href: "/configuration/rates/airline-proration",
+            current: false,
+          },
           {
             name: "Vol. Exemption",
             href: "#",
