@@ -55,7 +55,6 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   const [isFullScreen, setFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
   useEffect(() => {
     setOpen(props.open ?? false);
   }, [props.open]);
@@ -140,7 +139,11 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         hideCloseButton
-        className={isFullScreen ? "w-screen h-screen max-w-none" : "max-w-6xl"}
+        className={
+          isFullScreen
+            ? "w-screen h-screen max-w-none"
+            : "max-w-6xl top-8 translate-y-0"
+        }
         onInteractOutside={(e) => e.preventDefault()}
       >
         <Form {...form}>
@@ -171,7 +174,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
               </div>
             </DialogHeader>
             <Tabs defaultValue="booking-details">
-              <div className="w-full flex flex-row items-stretch gap-4 py-4">
+              <div className="w-full flex flex-row items-stretch gap-4 pt-4">
                 <div className="min-w-[220px]">
                   <Card className="h-full">
                     <TabsList className="p-0 py-2  ">

@@ -13,6 +13,7 @@ import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
 import FavoritesMenu from "./favorites/favorites-menu";
+import { k360Navigation } from "./data/k360Navigation";
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -36,11 +37,6 @@ export default function SideBar() {
   const currentNavigation =
     sidebarType === SIDEBAR_TYPE.SETTING
       ? settingNavigation
-      : defaultNavigation;
-
-  const currentNavigationItems =
-    sidebarType === SIDEBAR_TYPE.SETTING
-      ? settingNavigation[0].children ?? []
       : defaultNavigation;
 
   const firstCurrentNavigationItem = currentNavigation[0];
@@ -96,9 +92,24 @@ export default function SideBar() {
                   {firstCurrentNavigationItem.name}
                 </li>
               )}
-              <ul className="flex flex-col gap-4">
-                <FavoritesMenu />
-                <SidebarMenu items={currentNavigationItems} />
+              <ul className="flex flex-col gap-1">
+                {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
+                  <>
+                    <FavoritesMenu />
+                    <SidebarMenu
+                      items={defaultNavigation}
+                      sectionTitle="SK"
+                      collapsible
+                    />
+                    <SidebarMenu
+                      items={k360Navigation}
+                      sectionTitle="K360"
+                      collapsible
+                    />
+                  </>
+                ) : (
+                  <SidebarMenu items={settingNavigation[0].children ?? []} />
+                )}
               </ul>
               {sidebarType === SIDEBAR_TYPE.SETTING && (
                 <>
