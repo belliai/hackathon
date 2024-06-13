@@ -375,7 +375,7 @@ export const settingNavigation: TSidebarItem[] = [
                 current: false,
               },
               { name: "Apply Deal", href: "/configuration/rates/deals/apply-deal", current: false },
-              { name: "List Deal", href: "#", current: false },
+              { name: "List Deal", href: "/configuration/rates/deals", current: false },
               { name: "Deal Audit", href: "#", current: false },
             ],
           },
