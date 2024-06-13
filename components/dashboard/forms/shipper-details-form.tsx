@@ -101,7 +101,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
             >
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.select`}
+                name={`shipperDetails[${index}].select`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Select</FormLabel>
@@ -126,7 +126,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.origin`}
+                name={`shipperDetails[${index}].origin`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Origin *</FormLabel>
@@ -174,7 +174,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.partnerType`}
+                name={`shipperDetails[${index}].partnerType`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Partner Type</FormLabel>
@@ -199,7 +199,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.partnerType`}
+                name={`shipperDetails[${index}].partnerType`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Partner Code</FormLabel>
@@ -224,7 +224,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.date`}
+                name={`shipperDetails[${index}].date`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date</FormLabel>
@@ -238,7 +238,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails.${index}.flightCode`}
+                name={`shipperDetails[${index}].flightCode`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Flight Code *</FormLabel>
@@ -254,7 +254,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={"`shipperDetails.${index}.allotmentCode`"}
+                name={`shipperDetails[${index}].allotmentCode`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Allotment Code</FormLabel>
