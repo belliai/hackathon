@@ -9,16 +9,52 @@ import { Toaster } from "@/components/ui/toaster";
 import { BookingProvider } from "@/components/dashboard/BookingContext";
 import { FavoritesProvider } from "@/components/nav/favorites/favorites-provider";
 import QueryProvider from "@/components/query-provider";
+import { headers } from "next/headers";
+import { findActiveItem } from "@/lib/utils/nav-utils";
+import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
+import { k360Navigation } from "@/components/nav/data/k360Navigation";
+import { settingNavigation } from "@/components/nav/data/settingNavigation";
+import { accountNavigation } from "@/components/nav/data/accountNavigation";
 
-export const metadata: Metadata = {
-  title: "Belli",
-  description: "Next-gen Air Cargo SaaS",
-};
+// export const metadata: Metadata = {
+//   title: "Belli",
+//   description: "Next-gen Air Cargo SaaS",
+// };
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+export async function generateMetadata() {
+  const defaultMetadata: Metadata = {
+    title: "Belli",
+    description: "Next-gen Air Cargo SaaS",
+  };
+
+  const pathname = headers().get("x-pathname");
+
+  if (!pathname) return defaultMetadata;
+
+  const menuItem = findActiveItem(
+    [
+      ...defaultNavigation,
+      ...k360Navigation,
+      ...settingNavigation,
+      ...accountNavigation,
+    ],
+    pathname
+  );
+
+  if (!menuItem) return defaultMetadata;
+
+  console.log({ pathname });
+
+  return {
+    title: menuItem.item.name,
+    description: "Next-gen Air Cargo SaaS",
+  };
+}
 
 export default function RootLayout({
   children,

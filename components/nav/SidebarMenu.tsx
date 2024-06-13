@@ -1,33 +1,28 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Accordion } from "../ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 import SidebarItem, { TSidebarItem } from "./SidebarItem";
+import { ChevronRight } from "lucide-react";
+import { findActiveItem } from "@/lib/utils/nav-utils";
 
 interface SidebarMenuProps {
   items: TSidebarItem[];
+  collapsible?: boolean;
+  sectionTitle?: string;
 }
 
-export default function SidebarMenu({ items }: SidebarMenuProps) {
+export default function SidebarMenu({
+  items,
+  collapsible,
+  sectionTitle,
+}: SidebarMenuProps) {
   const pathname = usePathname();
-
-  const findActiveItem = (
-    items: TSidebarItem[],
-    pathname: string
-  ): { parent?: TSidebarItem; item: TSidebarItem } | undefined => {
-    for (const item of items) {
-      if (item.href === pathname) {
-        return { parent: undefined, item };
-      }
-      if (item.children) {
-        const activeChild = findActiveItem(item.children, pathname);
-        if (activeChild) {
-          return { parent: item, item: activeChild.item };
-        }
-      }
-    }
-    return undefined;
-  };
 
   const activeItem = findActiveItem(items, pathname);
 
@@ -41,7 +36,7 @@ export default function SidebarMenu({ items }: SidebarMenuProps) {
     );
   }
 
-  return (
+  const menu = (
     <Accordion
       type="single"
       collapsible
@@ -61,4 +56,31 @@ export default function SidebarMenu({ items }: SidebarMenuProps) {
       })}
     </Accordion>
   );
+
+  if (collapsible && sectionTitle) {
+    return (
+      <Accordion
+        type="single"
+        collapsible
+        defaultValue="favorites"
+        className="space-y-1"
+      >
+        <AccordionItem className="border-b-0" value="favorites">
+          <AccordionTrigger
+            customarrow={
+              <ChevronRight className="h-3 w-3 shrink-0 transition-transform duration-200 text-muted-foreground" />
+            }
+            className="border-b-0 py-2 px-[5px] text-xs text-muted-foreground hover:no-underline justify-start gap-2 [&[data-state=open]>svg]:rotate-90 "
+          >
+            <div className="inline-flex items-center gap-2">
+              <span>{sectionTitle}</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="pb-0">{menu}</AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    );
+  }
+
+  return menu;
 }
