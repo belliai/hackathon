@@ -2,8 +2,16 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
+import {
+  Box,
+  Calculator,
+  DoorClosed,
+  Plane,
+  Plus,
+  ScrollTextIcon,
+  Search,
+} from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
 import MastersPageTemplate, {
   SectionedFormFields,
 } from "../../components/MastersPageTemplate";
@@ -13,202 +21,210 @@ import {
 } from "../../components/dummySelectOptions";
 import { actionColumn, selectColumn } from "../../components/columnItem";
 import StatusBadge from "../../components/StatusBadge";
+import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal";
+import { useEffect, useState } from "react";
+import MastersPageFieldArrayForm from "../../components/MastersPageFieldArrayForm";
+import DimensionsCard from "@/components/dashboard/dimensions-card";
+import BalanceCard from "@/components/dashboard/balance-card";
+import { Button } from "@/components/ui/button";
 
 export default function MasterAircraftPage() {
+  const [openModal, setOpenModal] = useState<string | boolean>(false); // When the state is a string, it means the modal is in edit mode
+
   const sectionedFormFields: SectionedFormFields[] = [
     {
       fields: [
         {
           name: "manufacturer",
-          placeholder: "Manufacturer",
+          label: "Manufacturer",
           type: "text",
         },
         {
           name: "aircraftType",
-          placeholder: "Aircraft Type",
+          label: "Aircraft Type",
           type: "text",
         },
         {
           name: "version",
-          placeholder: "Version",
+          label: "Version",
           type: "text",
         },
         {
           name: "mtow",
-          placeholder: "MTOW",
+          label: "MTOW",
           type: "text",
         },
         {
           name: "unitMtow",
-          placeholder: "MTOW Unit",
+          label: "MTOW Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "maxZeroFuelWt",
-          placeholder: "Max Zero Fuel Weight",
+          label: "Max Zero Fuel Weight",
           type: "text",
         },
         {
           name: "unitMaxZeroFuelWt",
-          placeholder: "Max Zero Fuel Weight Unit",
+          label: "Max Zero Fuel Weight Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "bodyType",
-          placeholder: "Body Type",
+          label: "Body Type",
           type: "text",
         },
         {
           name: "paxCap",
-          placeholder: "Passenger Capacity",
+          label: "Passenger Capacity",
           type: "text",
         },
         {
           name: "uldPos",
-          placeholder: "ULD Positions",
+          label: "ULD Positions",
           type: "text",
         },
         {
           name: "landingWt",
-          placeholder: "Landing Weight",
+          label: "Landing Weight",
           type: "text",
         },
         {
           name: "unitLandingWt",
-          placeholder: "Landing Weight Unit",
+          label: "Landing Weight Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "cargoCap",
-          placeholder: "Cargo Capacity",
+          label: "Cargo Capacity",
           type: "text",
         },
         {
           name: "unitCargoCap",
-          placeholder: "Cargo Capacity Unit",
+          label: "Cargo Capacity Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "maxBulkCapWt",
-          placeholder: "Max Bulk Capacity Weight",
+          label: "Max Bulk Capacity Weight",
           type: "text",
         },
         {
           name: "unitMaxBulkCapWt",
-          placeholder: "Max Bulk Capacity Weight Unit",
+          label: "Max Bulk Capacity Weight Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "maxBulkCapVol",
-          placeholder: "Max Bulk Capacity Volume",
+          label: "Max Bulk Capacity Volume",
           type: "text",
         },
         {
           name: "unitMaxBulkCapVol",
-          placeholder: "Max Bulk Capacity Volume Unit",
+          label: "Max Bulk Capacity Volume Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "maxVolume",
-          placeholder: "Max Volume",
+          label: "Max Volume",
           type: "text",
         },
         {
           name: "cubicMaxVolume",
-          placeholder: "Cubic (Max Volume)",
+          label: "Cubic (Max Volume)",
           type: "text",
         },
         {
           name: "restrWtPc",
-          placeholder: "Restricted Weight per Piece",
+          label: "Restricted Weight per Piece",
           type: "text",
         },
         {
           name: "unitRestrWtPc",
-          placeholder: "Restricted Weight per Piece Unit",
+          label: "Restricted Weight per Piece Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "maxDimPcL",
-          placeholder: "Max Dimension per Piece (Length)",
+          label: "Max Dimension per Piece (Length)",
           type: "text",
         },
         {
           name: "maxDimPcB",
-          placeholder: "Max Dimension per Piece (Breadth)",
+          label: "Max Dimension per Piece (Breadth)",
           type: "text",
         },
         {
           name: "maxDimPcH",
-          placeholder: "Max Dimension per Piece (Height)",
+          label: "Max Dimension per Piece (Height)",
           type: "text",
         },
         {
           name: "unitDimensions",
-          placeholder: "Dimensions Unit",
+          label: "Dimensions Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "status",
-          placeholder: "Status",
+          label: "Status",
           type: "text",
         },
         {
           name: "glCode",
-          placeholder: "GL Code",
+          label: "GL Code",
           type: "text",
         },
         {
           name: "count",
-          placeholder: "Count",
+          label: "Count",
           type: "text",
         },
       ],
     },
     {
-      sectionName: "Door Dim",
+      sectionName: "Door Dimensions",
       fields: [
         {
           name: "aftHeight",
-          placeholder: "AFT (H)",
+          label: "AFT (H)",
           type: "text",
         },
         {
           name: "aftWidth",
-          placeholder: "AFT (W)",
+          label: "AFT (W)",
           type: "text",
         },
         {
           name: "fwdHeight",
-          placeholder: "FWD (H)",
+          label: "FWD (H)",
           type: "text",
         },
         {
           name: "fwdWidth",
-          placeholder: "FWD (W)",
+          label: "FWD (W)",
           type: "text",
         },
         {
           name: "bulkHeight",
-          placeholder: "Bulk (H)",
+          label: "Bulk (H)",
           type: "text",
         },
         {
           name: "bulkWidth",
-          placeholder: "Bulk (W)",
+          label: "Bulk (W)",
           type: "text",
         },
         {
           name: "unit",
-          placeholder: "Unit",
+          label: "Unit",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
@@ -219,22 +235,22 @@ export default function MasterAircraftPage() {
       fields: [
         {
           name: "FWT",
-          placeholder: "FWT",
+          label: "FWT",
           type: "text",
         },
         {
           name: "FWD",
-          placeholder: "FWD",
+          label: "FWD",
           type: "text",
         },
         {
           name: "bulk",
-          placeholder: "Bulk",
+          label: "Bulk",
           type: "text",
         },
         {
           name: "cubic",
-          placeholder: "Cubic",
+          label: "Cubic",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
         },
@@ -349,10 +365,71 @@ export default function MasterAircraftPage() {
   ];
 
   const filterHookForm = useForm();
-  const sectionedHookForm = useForm();
+
+  const formDefaultValues = {
+    id: "",
+    manufacturer: "",
+    aircraftType: "",
+    version: "",
+    paxCap: "",
+    landingWt: "",
+    cargoCap: "",
+    mtow: "",
+    maxZeroFuelWt: "",
+    bodyType: "",
+    activeCount: "",
+    inactiveCount: "",
+    status: "",
+    tailNumbers: [
+      {
+        tailNumber: "",
+        status: "",
+      },
+    ],
+    unitMtow: "",
+    unitMaxZeroFuelWt: "",
+    uldPos: "",
+    unitLandingWt: "",
+    unitCargoCap: "",
+    maxBulkCapWt: "",
+    unitMaxBulkCapWt: "",
+    maxBulkCapVol: "",
+    unitMaxBulkCapVol: "",
+    maxVolume: "",
+    cubicMaxVolume: "",
+    restrWtPc: "",
+    unitRestrWtPc: "",
+    maxDimPcL: "",
+    maxDimPcB: "",
+    maxDimPcH: "",
+    unitDimensions: "",
+    glCode: "",
+    count: "",
+    aftHeight: "",
+    aftWidth: "",
+    fwdHeight: "",
+    fwdWidth: "",
+    bulkHeight: "",
+    bulkWidth: "",
+    unit: "",
+    FWT: "",
+    FWD: "",
+    bulk: "",
+    cubic: "",
+  };
+
+  const sectionedHookForm = useForm({
+    defaultValues: formDefaultValues,
+  });
+
+  const fieldArray = useFieldArray<any>({
+    name: "tailNumbers",
+    control: sectionedHookForm.control,
+  });
 
   const data = [
     {
+      id: "1",
       manufacturer: "Boeing",
       aircraftType: "737",
       version: "800",
@@ -368,8 +445,45 @@ export default function MasterAircraftPage() {
       createdAt: "2023-01-15",
       updatedAt: "2023-12-01",
       action: "Edit",
+      tailNumbers: [
+        {
+          tailNumber: "N737AA",
+          status: "active",
+        },
+      ],
+      unitMtow: "kg",
+      unitMaxZeroFuelWt: "kg",
+      uldPos: "10",
+      unitLandingWt: "kg",
+      unitCargoCap: "kg",
+      maxBulkCapWt: "15,000 kg",
+      unitMaxBulkCapWt: "kg",
+      maxBulkCapVol: "200 m³",
+      unitMaxBulkCapVol: "m³",
+      maxVolume: "800 m³",
+      cubicMaxVolume: "900 m³",
+      restrWtPc: "1500 kg",
+      unitRestrWtPc: "kg",
+      maxDimPcL: "10 m",
+      maxDimPcB: "3 m",
+      maxDimPcH: "2.5 m",
+      unitDimensions: "m",
+      glCode: "737GL",
+      count: 18,
+      aftHeight: "4 m",
+      aftWidth: "5 m",
+      fwdHeight: "4 m",
+      fwdWidth: "5 m",
+      bulkHeight: "2.5 m",
+      bulkWidth: "3 m",
+      unit: "m",
+      FWT: "300 m³",
+      FWD: "500 m³",
+      bulk: "100 m³",
+      cubic: "m³",
     },
     {
+      id: "2",
       manufacturer: "Airbus",
       aircraftType: "A320",
       version: "Neo",
@@ -385,8 +499,45 @@ export default function MasterAircraftPage() {
       createdAt: "2023-02-20",
       updatedAt: "2023-11-25",
       action: "Edit",
+      tailNumbers: [
+        {
+          tailNumber: "A320AB",
+          status: "inactive",
+        },
+      ],
+      unitMtow: "kg",
+      unitMaxZeroFuelWt: "kg",
+      uldPos: "12",
+      unitLandingWt: "kg",
+      unitCargoCap: "kg",
+      maxBulkCapWt: "17,000 kg",
+      unitMaxBulkCapWt: "kg",
+      maxBulkCapVol: "250 m³",
+      unitMaxBulkCapVol: "m³",
+      maxVolume: "900 m³",
+      cubicMaxVolume: "1000 m³",
+      restrWtPc: "1600 kg",
+      unitRestrWtPc: "kg",
+      maxDimPcL: "11 m",
+      maxDimPcB: "3.2 m",
+      maxDimPcH: "2.6 m",
+      unitDimensions: "m",
+      glCode: "A320GL",
+      count: 16,
+      aftHeight: "4.2 m",
+      aftWidth: "5.1 m",
+      fwdHeight: "4.2 m",
+      fwdWidth: "5.1 m",
+      bulkHeight: "2.6 m",
+      bulkWidth: "3.1 m",
+      unit: "m",
+      FWT: "320 m³",
+      FWD: "520 m³",
+      bulk: "110 m³",
+      cubic: "m³",
     },
     {
+      id: "3",
       manufacturer: "Embraer",
       aircraftType: "E195",
       version: "E2",
@@ -402,8 +553,45 @@ export default function MasterAircraftPage() {
       createdAt: "2023-03-05",
       updatedAt: "2023-10-30",
       action: "Edit",
+      tailNumbers: [
+        {
+          tailNumber: "E195AC",
+          status: "active",
+        },
+      ],
+      unitMtow: "kg",
+      unitMaxZeroFuelWt: "kg",
+      uldPos: "8",
+      unitLandingWt: "kg",
+      unitCargoCap: "kg",
+      maxBulkCapWt: "12,000 kg",
+      unitMaxBulkCapWt: "kg",
+      maxBulkCapVol: "150 m³",
+      unitMaxBulkCapVol: "m³",
+      maxVolume: "600 m³",
+      cubicMaxVolume: "700 m³",
+      restrWtPc: "1400 kg",
+      unitRestrWtPc: "kg",
+      maxDimPcL: "9 m",
+      maxDimPcB: "2.8 m",
+      maxDimPcH: "2.4 m",
+      unitDimensions: "m",
+      glCode: "E195GL",
+      count: 12,
+      aftHeight: "3.8 m",
+      aftWidth: "4.8 m",
+      fwdHeight: "3.8 m",
+      fwdWidth: "4.8 m",
+      bulkHeight: "2.3 m",
+      bulkWidth: "2.8 m",
+      unit: "m",
+      FWT: "280 m³",
+      FWD: "480 m³",
+      bulk: "90 m³",
+      cubic: "m³",
     },
     {
+      id: "4",
       manufacturer: "Boeing",
       aircraftType: "787",
       version: "9",
@@ -419,36 +607,165 @@ export default function MasterAircraftPage() {
       createdAt: "2023-04-10",
       updatedAt: "2023-09-15",
       action: "Edit",
-    },
-    {
-      manufacturer: "Airbus",
-      aircraftType: "A350",
-      version: "1000",
-      paxCap: 369,
-      landingWt: "233,000 kg",
-      cargoCap: "51,000 kg",
-      mtow: "308,000 kg",
-      maxZeroFuelWt: "223,000 kg",
-      bodyType: "Wide-body",
-      activeCount: 7,
-      inactiveCount: 0,
-      status: "Inactive",
-      createdAt: "2023-05-25",
-      updatedAt: "2023-08-20",
-      action: "Edit",
+      tailNumbers: [
+        {
+          tailNumber: "N787BB",
+          status: "Active",
+        },
+      ],
+      unitMtow: "kg",
+      unitMaxZeroFuelWt: "kg",
+      uldPos: "20",
+      unitLandingWt: "kg",
+      unitCargoCap: "kg",
+      maxBulkCapWt: "40,000 kg",
+      unitMaxBulkCapWt: "kg",
+      maxBulkCapVol: "700 m³",
+      unitMaxBulkCapVol: "m³",
+      maxVolume: "2000 m³",
+      cubicMaxVolume: "2100 m³",
+      restrWtPc: "3000 kg",
+      unitRestrWtPc: "kg",
+      maxDimPcL: "15 m",
+      maxDimPcB: "5 m",
+      maxDimPcH: "4 m",
+      unitDimensions: "m",
+      glCode: "787GL",
+      count: 6,
+      aftHeight: "5 m",
+      aftWidth: "6 m",
+      fwdHeight: "5 m",
+      fwdWidth: "6 m",
+      bulkHeight: "3.5 m",
+      bulkWidth: "4 m",
+      unit: "m",
+      FWT: "500 m³",
+      FWD: "700 m³",
+      bulk: "150 m³",
+      cubic: "m³",
     },
   ];
 
   return (
-    <MastersPageTemplate
-      heading="Aircraft Master"
-      buttonText="Create Aircraft"
-      columns={columns}
-      sectionedFormFields={sectionedFormFields}
-      filterFormFields={filterFormFields}
-      filterHookForm={filterHookForm}
-      hookForm={sectionedHookForm}
-      data={data}
-    />
+    <>
+      <MastersPageTemplate
+        heading="Aircraft Master"
+        buttonText="Create Aircraft"
+        columns={columns}
+        sectionedFormFields={sectionedFormFields}
+        filterFormFields={filterFormFields}
+        filterHookForm={filterHookForm}
+        hookForm={sectionedHookForm}
+        data={data}
+        canCreate={false}
+        onRowClick={(data) => {
+          setOpenModal(data.id);
+          sectionedHookForm.reset(data);
+        }}
+        extraTableToolbarButtons={[
+          {
+            label: "Create Aircraft",
+            icon: Plus,
+            variant: "button-primary",
+            onClick: () => setOpenModal(true),
+          },
+        ]}
+      />
+      <CreateEditModal
+        title={
+          typeof openModal === "string"
+            ? "Edit Aircraft"
+            : openModal
+            ? "Create Aircraft"
+            : ""
+        }
+        open={openModal !== false}
+        form={sectionedHookForm}
+        onSubmit={(data) => console.log(data)}
+        setOpen={(open) => {
+          if (open) {
+            setOpenModal(openModal);
+          } else {
+            sectionedHookForm.reset(formDefaultValues);
+            setOpenModal(false);
+          }
+        }}
+        tabItems={[
+          {
+            label: "Aircraft Details",
+            value: "aircraft-details",
+            icon: <Plane />,
+            formFields: sectionedFormFields[0].fields,
+          },
+          {
+            label: "Tail Numbers",
+            value: "tail-numbers",
+            icon: <Calculator />,
+            content: (
+              <MastersPageFieldArrayForm
+                fieldArrayProps={{
+                  fieldArray,
+                  fields: [
+                    {
+                      name: "tailNumber",
+                      placeholder: "Tail Number",
+                      type: "text",
+                    },
+                    {
+                      name: "status",
+                      placeholder: "Status",
+                      type: "select",
+                      options: DUMMY_SELECT_OPTIONS_STATUS,
+                    },
+                  ],
+                  fieldArrayName: "tailNumbers",
+                }}
+                hookForm={sectionedHookForm}
+              />
+            ),
+          },
+          {
+            label: "Door Dimensions",
+            value: "door-dimensions",
+            icon: <DoorClosed />,
+            formFields: sectionedFormFields[1].fields,
+          },
+          {
+            label: "Volume",
+            value: "volume",
+            icon: <Box />,
+            formFields: sectionedFormFields[2].fields,
+          },
+        ]}
+        rightComponent={
+          // This is a dummy component, will replace once there is a use for this
+          <>
+            <div className="space-y-4">
+              {/* <OrderSummaryCard {...formValues} /> */}
+              <DimensionsCard />
+              <BalanceCard />
+            </div>
+            <div className="space-y-4">
+              <Button
+                type="button"
+                variant={"button-secondary"}
+                className="w-full"
+              >
+                <ScrollTextIcon className="w-4 h-4 mr-2" />
+                View Invoice
+              </Button>
+              <Button
+                isLoading={false}
+                variant={"button-primary"}
+                className="w-full"
+                type="submit"
+              >
+                Save Reservation
+              </Button>
+            </div>
+          </>
+        }
+      />
+    </>
   );
 }

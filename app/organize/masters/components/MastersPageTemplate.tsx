@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/data-table/data-table";
+import { DataTable, DataTableProps } from "@/components/data-table/data-table";
 import FormTextField, { TFormTextField } from "@/components/form/FormTextField";
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
@@ -19,6 +19,7 @@ import { Download, Plus, RefreshCcw, Search } from "lucide-react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import CreateFormTemplate from "./CreateFormTemplate";
+import { DataTableToolbarProps } from "@/components/data-table/data-table-toolbar";
 
 export type FieldArrayProps = {
   fieldArray: UseFieldArrayReturn<any>;
@@ -35,7 +36,7 @@ export type SectionedFormFields = {
   additionalColumns?: ColumnDef<any>[];
 };
 
-interface MastersPageTemplateProps {
+interface MastersPageTemplateProps extends DataTableProps<any, any> {
   heading: string;
   buttonText?: string;
   hookForm?: UseFormReturn<any>;
@@ -43,8 +44,6 @@ interface MastersPageTemplateProps {
   formFields?: TFormTextField[];
   sectionedFormFields?: SectionedFormFields[];
   filterFormFields: TFormTextField[];
-  columns: ColumnDef<any>[];
-  data: any[];
   pageActions?: React.ReactNode;
   canCreate?: boolean;
   customDialogContent?: React.ReactNode;
@@ -52,6 +51,7 @@ interface MastersPageTemplateProps {
   customFilterButtons?: React.ReactNode;
   customComponent?: React.ReactNode;
   bottomCustomComponent?: React.ReactNode;
+  extraTableToolbarButtons?: DataTableToolbarProps<any>["extraButtons"];
 }
 
 export default function MastersPageTemplate({
@@ -71,6 +71,8 @@ export default function MastersPageTemplate({
   customFilterButtons,
   customComponent,
   bottomCustomComponent,
+  extraTableToolbarButtons,
+  onRowClick,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -159,7 +161,12 @@ export default function MastersPageTemplate({
         </Form>
       </div>
       {customComponent}
-      <DataTable columns={columns} data={data} hideToolbar />
+      <DataTable
+        columns={columns}
+        onRowClick={onRowClick}
+        data={data}
+        extraToolbarButtons={extraTableToolbarButtons}
+      />
       {bottomCustomComponent}
     </PageContainer>
   );

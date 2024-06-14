@@ -31,7 +31,7 @@ import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar";
 import { cn } from "@/lib/utils";
 import { ButtonProps } from "../ui/button";
 
-interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   hideToolbar?: boolean;
