@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { StarIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Path, useFavorites } from "./favorites/favorites-provider";
+import { k360Navigation } from "./data/k360Navigation";
 
 const findCurrentPaths = (
   items: TSidebarItem[],
@@ -51,7 +52,11 @@ const findCurrentPaths = (
 
 const getCurrentPaths = (pathname: string) => {
   let currentPaths: TSidebarItem[] = [];
-  const navMenus: TSidebarItem[] = [...settingNavigation, ...defaultNavigation];
+  const navMenus: TSidebarItem[] = [
+    ...settingNavigation,
+    ...defaultNavigation,
+    ...k360Navigation,
+  ];
 
   // Use the helper function to find the current path
   const result = findCurrentPaths(navMenus, pathname);

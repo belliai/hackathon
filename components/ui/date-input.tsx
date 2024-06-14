@@ -17,20 +17,18 @@ const DateInput = forwardRef(
     return (
       <Popover>
         <PopoverTrigger asChild>
-          <FormControl>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full pl-3 text-left font-normal",
-                !value && "text-muted-foreground",
-                className
-              )}
-              ref={ref as React.RefObject<HTMLButtonElement>}
-            >
-              {value ? formatDate(String(value)) : <span>Pick a date</span>}
-              <CalendarIcon className="ml-auto h-3 w-3" />
-            </Button>
-          </FormControl>
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-full pl-3 text-left font-normal",
+              !value && "text-muted-foreground",
+              className
+            )}
+            ref={ref as React.RefObject<HTMLButtonElement>}
+          >
+            {value ? formatDate(String(value)) : <span>Pick a date</span>}
+            <CalendarIcon className="ml-auto h-3 w-3" />
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar

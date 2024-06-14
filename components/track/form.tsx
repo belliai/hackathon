@@ -22,8 +22,8 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 // Define the props for your component, including the schema
 interface PropsFormData<T extends ZodSchema<any>> {
-    schema: T;
-    defaultValues: z.infer<T>;
+    schema?: T;
+    defaultValues?: z.infer<T>;
     fields: Array<PropsField>;
     actions?: React.ReactNode
     cols?: number
@@ -34,7 +34,7 @@ const FormFields = forwardRef(<T extends ZodSchema<any>>(
     ref: React.Ref<UseFormReturn<z.infer<T>> | null>
 ) => {
     const form = useForm<z.infer<T>>({
-        resolver: zodResolver(schema),
+        resolver: schema && zodResolver(schema),
         defaultValues,
     });
 

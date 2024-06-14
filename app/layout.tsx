@@ -48,11 +48,9 @@ export async function generateMetadata() {
 
   if (!menuItem) return defaultMetadata;
 
-  console.log({ pathname });
-
   return {
     title: menuItem.item.name,
-    description: "Next-gen Air Cargo SaaS",
+    description: "Belli - Next-gen Air Cargo SaaS",
   };
 }
 
