@@ -13,7 +13,7 @@ import AssignULDPopup from "@/components/operation/PlanFlight/FlightPlanning/Ass
 
 export default function FilterSection() {
   return (
-    <div className="flex flex-col mt-10 gap-4">
+    <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <h1 className="text-xl font-semibold">Flight Planning</h1>
         <div className="flex gap-4">
