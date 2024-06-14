@@ -640,7 +640,7 @@ export const defaultNavigation: TSidebarItem[] = [
           { name: "Square Root Proration", href: "/reports/standard/square-root-proration", current: false },
           { name: "WH App Traffic Report", href: "/reports/standard/wh-app-traffic-report", current: false },
           { name: "Tonnage Report", href: "#", current: false },
-          { name: "FFM Report", href: "#", current: false },
+          { name: "FFM Report", href: "/reports/standard/ffm-report", current: false },
           { name: "Delivery Report", href: "#", current: false },
         ],
       },
