@@ -633,7 +633,7 @@ export const defaultNavigation: TSidebarItem[] = [
           { name: "Statement of Account", href: "#", current: false },
           { name: "A/R Aging", href: "#", current: false },
           { name: "Proration Report", href: "/reports/standard/proration-report", current: false },
-          { name: "Screening", href: "#", current: false },
+          { name: "Screening", href: "/reports/standard/screening", current: false },
           { name: "GHA Tonnage", href: "#", current: false },
           { name: "AWB Statement", href: "#", current: false },
           { name: "OCDC Report", href: "#", current: false },
