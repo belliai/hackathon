@@ -319,25 +319,25 @@ export const defaultNavigation: TSidebarItem[] = [
     children: [
       {
         name: "List ULD",
-        href: "#",
+        href: "/uld/listULD",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "New ULD",
-        href: "#",
+        href: "/uld/newULD",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "List UCR",
-        href: "#",
+        href: "/uld/listUCR",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "New UCR",
-        href: "#",
+        href: "/uld/newUCR",
         icon: CubeIcon,
         current: false,
       },
