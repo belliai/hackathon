@@ -1,253 +1,162 @@
 "use client";
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
 import { DataTable } from "@/components/data-table/data-table";
-import DataTableFilterForm, {
-  FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
+import DataTableFilterForm from "@/components/data-table/data-table-filter-form";
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
-import { ColumnDef } from "@tanstack/react-table";
+import { PackageIcon, PlaneIcon, Plus, ScrollTextIcon, SquarePenIcon, UserIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal";
+import { useState } from "react";
+import DimensionsCard from "@/components/dashboard/dimensions-card";
+import BalanceCard from "@/components/dashboard/balance-card";
+import { Button } from "@/components/ui/button";
+import OrderSummaryCard from "@/components/dashboard/order-summary-card";
+import FlightMasterForm from "./components/FlightMasterForm";
+import { DUMMY_DATA, columns } from "./components/column";
+import { formFilters } from "./components/filter";
 
-type FlightMasterDataType = {
-  entry_type: string;
-  flight_no: string;
-  source: string;
-  destination: string;
-  std_api: string;
-  sta: string;
-  aircraft_type: string;
-  tail_no: string;
-  flight_type: string;
-  status: string;
-  sector: string;
-  created_at: string;
-  updated_at: string;
-  updated_by: string;
+const formDefaultValues = {
+  flightNo: '',
+  source: '',
+  destination: '',
+  fromDate: '',
+  toDate: '',
+  deptDay: '',
+  deptHour: '',
+  deptMinute: '',
+  arrivalDay: '',
+  arrivalHour: '',
+  arrivalMinute: '',
+  frequencyItems: ['mon'],
+  aircraftType: '',
+  tailNo: '',
+  capacity: '',
+  uom: '',
+  sector: '',
+  status: '',
+  flightType: '',
 };
-
-const columns: ColumnDef<FlightMasterDataType>[] = [
-  {
-    id: "select",
-    header: ({ table }) => <DataTableSelectHead table={table} />,
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "entry_type",
-    header: "Entry Type",
-  },
-  {
-    accessorKey: "flight_no",
-    header: "Flight No.",
-  },
-  {
-    accessorKey: "source",
-    header: "Source",
-  },
-  {
-    accessorKey: "destination",
-    header: "Destination",
-  },
-  {
-    accessorKey: "std_api",
-    header: "STD(API)",
-  },
-  {
-    accessorKey: "sta",
-    header: "STA",
-  },
-  {
-    accessorKey: "aircraft_type",
-    header: "Aircraft Type",
-  },
-  {
-    accessorKey: "tail_no",
-    header: "Tail No.",
-  },
-  {
-    accessorKey: "flight_type",
-    header: "Flight Type",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
-    accessorKey: "sector",
-    header: "Sector",
-  },
-  {
-    accessorKey: "created_at",
-    header: "Created At",
-  },
-  {
-    accessorKey: "updated_at",
-    header: "Updated At",
-  },
-  {
-    accessorKey: "updated_by",
-    header: "Updated By",
-  },
-  {
-    accessorKey: "action",
-    header: "Action",
-    cell: ({ row }) => <DataTableRowActions />,
-  },
-];
-
-const data: FlightMasterDataType[] = [
-  {
-    entry_type: "Scheduled",
-    flight_no: "AA123",
-    source: "JFK",
-    destination: "LAX",
-    std_api: "2024-05-23T08:00:00Z",
-    sta: "2024-05-23T11:00:00Z",
-    aircraft_type: "Boeing 737",
-    tail_no: "N12345",
-    flight_type: "Domestic",
-    status: "On Time",
-    sector: "NYC-LA",
-    created_at: "2024-05-20T10:00:00Z",
-    updated_at: "2024-05-22T10:00:00Z",
-    updated_by: "John Doe",
-  },
-  {
-    entry_type: "Charter",
-    flight_no: "BB456",
-    source: "SFO",
-    destination: "ORD",
-    std_api: "2024-05-23T09:30:00Z",
-    sta: "2024-05-23T13:30:00Z",
-    aircraft_type: "Airbus A320",
-    tail_no: "N67890",
-    flight_type: "Domestic",
-    status: "Delayed",
-    sector: "SF-CHI",
-    created_at: "2024-05-20T12:00:00Z",
-    updated_at: "2024-05-22T12:00:00Z",
-    updated_by: "Jane Smith",
-  },
-  {
-    entry_type: "Cargo",
-    flight_no: "CC789",
-    source: "MIA",
-    destination: "DFW",
-    std_api: "2024-05-23T07:00:00Z",
-    sta: "2024-05-23T10:00:00Z",
-    aircraft_type: "Boeing 747",
-    tail_no: "N54321",
-    flight_type: "Cargo",
-    status: "Cancelled",
-    sector: "MIA-DFW",
-    created_at: "2024-05-20T14:00:00Z",
-    updated_at: "2024-05-22T14:00:00Z",
-    updated_by: "Mike Johnson",
-  },
-];
-
-type FilterDataType = Partial<FlightMasterDataType> & {
-  date_from?: string;
-  date_to?: string;
-};
-
-const formFilters: FormFieldOption<FilterDataType>[] = [
-  {
-    key: "source",
-    type: "select",
-    label: "Origin",
-    selectOptions: [
-      { value: "JFK", label: "JFK" },
-      { value: "SFO", label: "SFO" },
-      { value: "MIA", label: "MIA" },
-      // Add more options as needed
-    ],
-    placeholder: "Select Origin",
-  },
-  {
-    key: "destination",
-    type: "select",
-    label: "Destination",
-    selectOptions: [
-      { value: "LAX", label: "LAX" },
-      { value: "ORD", label: "ORD" },
-      { value: "DFW", label: "DFW" },
-      // Add more options as needed
-    ],
-    placeholder: "Select Destination",
-  },
-  {
-    key: "flight_no",
-    type: "text",
-    label: "Flight No",
-    placeholder: "Enter Flight No",
-  },
-  {
-    key: "date_from",
-    type: "date",
-    label: "Choose From Date",
-  },
-  {
-    key: "date_to",
-    type: "date",
-    label: "Choose To Date",
-  },
-  {
-    key: "aircraft_type",
-    type: "select",
-    label: "Aircraft Type",
-    selectOptions: [
-      { value: "Boeing 737", label: "Boeing 737" },
-      { value: "Airbus A320", label: "Airbus A320" },
-      { value: "Boeing 747", label: "Boeing 747" },
-      // Add more options as needed
-    ],
-    placeholder: "Select Aircraft Type",
-  },
-  {
-    key: "sector",
-    type: "text",
-    label: "Sector",
-    placeholder: "Enter Sector",
-  },
-  {
-    key: "flight_type",
-    type: "select",
-    label: "Flight Type",
-    selectOptions: [
-      { value: "Domestic", label: "Domestic" },
-      { value: "International", label: "International" },
-      { value: "Cargo", label: "Cargo" },
-      // Add more options as needed
-    ],
-    placeholder: "Select Flight Type",
-  },
-  {
-    key: "status",
-    type: "select",
-    label: "Status",
-    selectOptions: [
-      { value: "On Time", label: "On Time" },
-      { value: "Delayed", label: "Delayed" },
-      { value: "Cancelled", label: "Cancelled" },
-      // Add more options as needed
-    ],
-    placeholder: "Select Status",
-  },
-];
 
 export default function Page() {
-  const form = useForm();
+  const [openModal, setOpenModal] = useState<string | boolean>(false);
+  const hookFilter = useForm();
+  const sectionedHookForm = useForm({
+    defaultValues: formDefaultValues,
+  });
+
+  console.log(sectionedHookForm.watch())
+
+  const sectionedFormFields = [
+    {
+      label: "Booking Details",
+      value: "booking-details",
+      icon: <SquarePenIcon />,
+      content: (
+        <FlightMasterForm
+          hookForm={sectionedHookForm} 
+        />
+      )
+    },
+    {
+      label: "Consignment Details",
+      value: "consignment-details",
+      icon: <PlaneIcon />,
+      FormFields:[],
+    },
+    {
+      label: "Shipper Details",
+      value: "shipper-details",
+      icon: <UserIcon />,
+      formFields: [],
+    },
+    {
+      label: "Process Rates",
+      value: "process-rates",
+      icon: <PackageIcon />,
+      formFields: [],
+    },
+  ];
+
   return (
-    <PageContainer className="gap-6">
-      <PageHeader title="Flight Master" />
-      <DataTableFilterForm form={form} formFilters={formFilters} />
-      <DataTable columns={columns} data={data} hideToolbar />
-    </PageContainer>
+    <>
+      <PageContainer className="gap-6">
+        <PageHeader title="Flight Master" />
+        <DataTableFilterForm form={hookFilter} formFilters={formFilters} />
+        <DataTable
+          columns={columns}
+          data={DUMMY_DATA}
+          onRowClick={(data) => {
+            setOpenModal('Edit');
+            sectionedHookForm.reset(formDefaultValues);
+          }}
+          extraToolbarButtons={[
+            {
+              label: "Create New Flight",
+              icon: Plus,
+              variant: "button-primary",
+              onClick: () => setOpenModal(true),
+            },
+          ]}
+        />
+      </PageContainer>
+
+      <CreateEditModal
+        title={
+          typeof openModal === "string"
+            ? "Edit Flight"
+            : openModal
+            ? "Create New Flight"
+            : ""
+        }
+        open={openModal !== false}
+        form={sectionedHookForm}
+        onSubmit={(data) => console.log(data)}
+        setOpen={(open) => {
+          if (open) {
+            setOpenModal(openModal);
+          } else {
+            sectionedHookForm.reset(formDefaultValues);
+            setOpenModal(false);
+          }
+        }}
+        tabItems={sectionedFormFields}
+        rightComponent={
+          // This is a dummy component, will replace once there is a use for this
+          <>
+            <div className="space-y-4">
+              <OrderSummaryCard
+                bookingType="37ce1cdf-cd24-4a6a-895e-5e513b175ce6"
+                partnerPrefix="d3139164-9222-4a76-b1fe-c076314d5542"
+                axb="112233"
+                origin="9bb940c1-0bc2-417a-a975-6811d5c0b7ea"
+                destination="5de641cd-f699-4fcd-9efc-ea9f6db039a2"
+                commodityCode="5ec17d70-3da8-4c32-ac15-8b2eaeae162f"
+              />
+              <DimensionsCard />
+              <BalanceCard />
+            </div>
+            <div className="space-y-4">
+              <Button
+                type="button"
+                variant={"button-secondary"}
+                className="w-full"
+              >
+                <ScrollTextIcon className="w-4 h-4 mr-2" />
+                View Invoice
+              </Button>
+              <Button
+                isLoading={false}
+                variant={"button-primary"}
+                className="w-full"
+                type="submit"
+              >
+                Save Reservation
+              </Button>
+            </div>
+          </>
+        }
+      />
+    </>
   );
 }
