@@ -6,7 +6,9 @@ import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTem
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 
-export default function NewDealPage() {
+export default function PliPage() {
+  const form = useForm();
+
   const excludeIncludeOptions = [
     {
       label: "Exclude",
@@ -20,120 +22,110 @@ export default function NewDealPage() {
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
-      sectionName: "Deal Details",
+      sectionName: "PLI Details",
       fields: [
         {
-          name: "dealName",
-          label: "Deal Name",
+          name: "pliName",
           type: "text",
+          label: "PLI Name",
           orientation: "horizontal",
         },
         {
-          name: "dealDescription",
-          label: "Deal Description",
+          name: "pliDescription",
           type: "text",
+          label: "PLI Description",
           orientation: "horizontal",
         },
         {
           name: "applicableFrom",
-          label: "Applicable From",
           type: "date",
+          label: "Applicable From",
           orientation: "horizontal",
         },
         {
           name: "applicableTo",
-          label: "Applicable To",
           type: "date",
+          label: "Applicable To",
           orientation: "horizontal",
         },
         {
           name: "originLevel",
-          label: "Origin Level",
           type: "select",
+          label: "Origin Level",
           orientation: "horizontal",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "origin",
-          label: "Origin",
           type: "select",
+          label: "Origin",
           orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "destinationLevel",
-          label: "Destination Level",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          label: "Destination Level",
           orientation: "horizontal",
+          options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "destination",
-          label: "Destination",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          label: "Destination",
           orientation: "horizontal",
+          options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "shipmentType",
-          label: "Shipment Type",
           type: "select",
+          label: "Shipment Type",
           orientation: "horizontal",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "currency",
-          label: "Currency",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          label: "Currency",
           orientation: "horizontal",
+          options: DUMMY_SELECT_OPTIONS,
         },
         {
-          name: "dealType",
-          label: "Deal Type",
+          name: "pliType",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          label: "PLI Type",
           orientation: "horizontal",
         },
         {
           name: "status",
-          label: "Status",
           type: "select",
+          label: "Status",
           orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "glAccountCode",
+          type: "select",
           label: "GL Account Code",
-          type: "select",
           orientation: "horizontal",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
-          name: "UOM",
+          name: "uom",
+          type: "select",
           label: "UOM",
-          type: "select",
           orientation: "horizontal",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
-          name: "isIncludeTds",
-          label: "Is Include TDS",
-          type: "select",
-          orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
-        },
-        {
-          name: "qualifiyingWeight",
-          label: "Qualifying Weight",
-          type: "number",
-          orientation: "horizontal",
-        },
-        {
-          name: "relatedDealId",
-          orientation: "horizontal",
-          label: "Related Deal Id",
+          name: "qualifyingRevenue",
           type: "text",
+          label: "Qualifying Revenue",
+          orientation: "horizontal",
+        },
+        {
+          name: "relatedPliId",
+          type: "text",
+          orientation: "horizontal",
+          label: "Related PLI ID",
         },
       ],
     },
@@ -141,26 +133,14 @@ export default function NewDealPage() {
       sectionName: "Applied On",
       fields: [
         {
-          name: "flightType",
-          label: "Flight Type",
+          name: "rateType",
+          label: "Rate Type",
           type: "select",
           orientation: "horizontal",
           options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "includeFlightType",
-          type: "radio",
-          options: excludeIncludeOptions,
-        },
-        {
-          name: "rateClass",
-          label: "Rate Class",
-          type: "select",
-          orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
-        },
-        {
-          name: "includeRateClass",
           type: "radio",
           options: excludeIncludeOptions,
         },
@@ -183,17 +163,6 @@ export default function NewDealPage() {
         },
         {
           name: "includeToDate",
-          type: "radio",
-          options: excludeIncludeOptions,
-        },
-        {
-          name: "depInterval",
-          label: "Dep Interval",
-          type: "text",
-          orientation: "horizontal",
-        },
-        {
-          name: "includeDepInterval",
           type: "radio",
           options: excludeIncludeOptions,
         },
@@ -233,35 +202,21 @@ export default function NewDealPage() {
           options: excludeIncludeOptions,
         },
         {
-          name: "shipperCode",
-          label: "Shipper Code",
-          type: "select",
+          name: "commCode",
+          label: "Comm. Code",
+          type: "text",
           orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
         },
         {
-          name: "includeShipmentType",
-          type: "radio",
-          options: excludeIncludeOptions,
-        },
-        {
-          name: "consigneeCode",
-          label: "Consignee Code",
-          type: "select",
-          orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
-        },
-        {
-          name: "includeFlightType",
+          name: "includeCommCode",
           type: "radio",
           options: excludeIncludeOptions,
         },
         {
           name: "splHandCode",
-          label: "Spl Handling Code",
-          type: "select",
+          label: "SPL Hand Code",
+          type: "text",
           orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "includeSplHandCode",
@@ -431,7 +386,7 @@ export default function NewDealPage() {
         },
         {
           name: "splHandCode",
-          label: "Spl Handling Code",
+          label: "SPL Handling Code",
           type: "select",
           orientation: "horizontal",
           options: DUMMY_SELECT_OPTIONS,
@@ -440,6 +395,13 @@ export default function NewDealPage() {
           name: "includeSplHandCode",
           type: "radio",
           options: excludeIncludeOptions,
+        },
+        {
+          name: "flightType",
+          label: "Flight Type",
+          type: "select",
+          orientation: "horizontal",
+          options: DUMMY_SELECT_OPTIONS,
         },
         {
           name: "monday",
@@ -508,16 +470,14 @@ export default function NewDealPage() {
     },
   ];
 
-  const form = useForm();
-
   return (
     <CreateFormPageTemplate
-      heading="Agent Deals"
-      sectionedFormFields={sectionedFormFields}
+      heading="Agent PLI"
       hookForm={form}
-      className="max-h-none"
+      sectionedFormFields={sectionedFormFields}
+      className="max-h-none "
       customDialogContent={
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2 mt-8">
           <Button variant="button-primary">Save</Button>
           <Button variant="button-primary">Clear</Button>
           <Button variant="button-primary">Add Another</Button>
