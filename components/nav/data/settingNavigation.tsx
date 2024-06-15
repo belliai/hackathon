@@ -401,8 +401,8 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/configuration/rates/vol-exemption", current: false },
+              { name: "New", href: "/configuration/rates/vol-exemption/new", current: false },
             ],
           },
           {
@@ -410,13 +410,13 @@ export const settingNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "New PLI", href: "#", current: false },
-              { name: "Apply PLI", href: "#", current: false },
-              { name: "List PLI", href: "#", current: false },
-              { name: "PLI Audit", href: "#", current: false },
+              { name: "New PLI", href: "/configuration/rates/pli/new", current: false },
+              { name: "Apply PLI", href: "/configuration/rates/pli/apply", current: false },
+              { name: "List PLI", href: "/configuration/rates/pli", current: false },
+              { name: "PLI Audit", href: "/configuration/rates/pli/audit", current: false },
             ],
           },
-          { name: "MSR Rate", href: "#", current: false },
+          { name: "MSR Rate", href: "/configuration/rates/msr-rate", current: false },
         ],
       },
       {

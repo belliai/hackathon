@@ -29,6 +29,7 @@ import { usePartnerCodes } from "@/lib/hooks/partner-codes";
 import { useStatuses } from "@/lib/hooks/statuses";
 import { usePartnerTypes } from "@/lib/hooks/partner-types";
 import { useLocations } from "@/lib/hooks/locations";
+import { useTransportMethods } from "@/lib/hooks/transport-method";
 
 const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext();
@@ -36,6 +37,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const { data: statuses } = useStatuses()
   const { data: partnerTypes } = usePartnerTypes()
   const { data: locations } = useLocations()
+  const { data: transportMethods } = useTransportMethods()
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     { control: form.control, name: "shipperDetails" }
@@ -115,9 +117,9 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="truck">Truck</SelectItem>
-                        <SelectItem value="origin-2">Origin Type 2</SelectItem>
-                        <SelectItem value="origin-3">Origin Type 3</SelectItem>
+                      {transportMethods && transportMethods.map((transportMethod: any) =>
+                          <SelectItem value={transportMethod.ID} key={transportMethod.ID} >{transportMethod.name}</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
