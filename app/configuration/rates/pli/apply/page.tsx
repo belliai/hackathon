@@ -46,7 +46,7 @@ export default function PliApplyPage() {
         <div className="flex flex-col gap-4 mt-8">
           <div className="flex gap-2">
             <Button variant="button-primary">List</Button>
-            <Button variant="button-primary">Recheck AWB's</Button>
+            <Button variant="button-primary">Recheck AWB&apos;s</Button>
             <Button variant="button-primary">Clear</Button>
           </div>
           <Separator />

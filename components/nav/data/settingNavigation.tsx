@@ -416,7 +416,7 @@ export const settingNavigation: TSidebarItem[] = [
               { name: "PLI Audit", href: "/configuration/rates/pli/audit", current: false },
             ],
           },
-          { name: "MSR Rate", href: "#", current: false },
+          { name: "MSR Rate", href: "/configuration/rates/msr-rate", current: false },
         ],
       },
       {
