@@ -1,7 +1,6 @@
 "use client";
 
 import { DataTable } from "@/components/data-table/data-table";
-import DataTableFilterForm from "@/components/data-table/data-table-filter-form";
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
 import { PackageIcon, PlaneIcon, Plus, ScrollTextIcon, SquarePenIcon, UserIcon } from "lucide-react";
@@ -14,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import OrderSummaryCard from "@/components/dashboard/order-summary-card";
 import FlightMasterForm from "./components/FlightMasterForm";
 import { DUMMY_DATA, columns } from "./components/column";
-import { formFilters } from "./components/filter";
 
 const formDefaultValues = {
   flightNo: '',
@@ -40,12 +38,9 @@ const formDefaultValues = {
 
 export default function Page() {
   const [openModal, setOpenModal] = useState<string | boolean>(false);
-  const hookFilter = useForm();
   const sectionedHookForm = useForm({
     defaultValues: formDefaultValues,
   });
-
-  console.log(sectionedHookForm.watch())
 
   const sectionedFormFields = [
     {
@@ -82,7 +77,6 @@ export default function Page() {
     <>
       <PageContainer className="gap-6">
         <PageHeader title="Flight Master" />
-        <DataTableFilterForm form={hookFilter} formFilters={formFilters} />
         <DataTable
           columns={columns}
           data={DUMMY_DATA}
