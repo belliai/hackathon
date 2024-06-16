@@ -456,7 +456,7 @@ export const settingNavigation: TSidebarItem[] = [
         current: false,
         children: [
           { name: "List", href: "/configuration/vendor", current: false },
-          { name: "New", href: "#", current: false },
+          { name: "New", href: "/configuration/vendor/new", current: false },
         ],
       },
       {
