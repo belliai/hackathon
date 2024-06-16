@@ -439,8 +439,8 @@ export const settingNavigation: TSidebarItem[] = [
         href: "#",
         current: false,
         children: [
-          { name: "List", href: "#", current: false },
-          { name: "New", href: "#", current: false },
+          { name: "List", href: "/configuration/agent", current: false },
+          { name: "New", href: "/configuration/agent/new", current: false },
           { name: "Agent MGP", href: "#", current: false },
         ],
       },
