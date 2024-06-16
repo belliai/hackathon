@@ -448,7 +448,7 @@ export const settingNavigation: TSidebarItem[] = [
         name: "Shipper Consignee",
         href: "#",
         current: false,
-        children: [{ name: "Shipper Consignee", href: "#", current: false }],
+        children: [{ name: "Shipper Consignee", href: "/configuration/shipper-consignee", current: false }],
       },
       {
         name: "Vendor Master",
