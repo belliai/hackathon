@@ -4,6 +4,15 @@ import { createRoomContext, createLiveblocksContext } from "@liveblocks/react";
 const client = createClient({
   publicApiKey: process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_API_KEY as string,
 });
+
+declare global {
+  interface Liveblocks {
+    // Each user's Presence, for room.getPresence, room.subscribe("others"), etc.
+    Presence: {
+      cursor: { x?: number; y?: number } | null;
+    };
+  }
+}
 /*
   // authEndpoint: "/api/liveblocks-auth",
   // throttle: 100,
@@ -107,9 +116,6 @@ export const {
     useEventListener,
     useErrorListener,
     useStorage,
-    useObject,
-    useMap,
-    useList,
     useBatch,
     useHistory,
     useUndo,

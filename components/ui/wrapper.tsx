@@ -2,7 +2,6 @@
 import { Fragment, Suspense, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CollaborativeApp } from "@/app/CollaborativeApp";
-import { Room } from "@/app/Room";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -19,6 +18,8 @@ import {
   ResizablePanelGroup,
 } from "./resizable";
 import BreadCrumbSection from "../nav/breadcrumb-section";
+import { Room } from "../liveblocks/room";
+import { usePathname } from "next/navigation";
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -30,7 +31,7 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <Suspense>
-      <div>
+      <div id="main">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -99,9 +100,9 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={80} minSize={33}>
-            <main className="overflow-y-auto custom-scrollbar min-h-[100dvh] h-1">
+            <main className="relative overflow-y-auto custom-scrollbar w-full min-h-[100dvh] h-1">
               <BreadCrumbSection />
-              <div className="px-4 py-4 mt-12 ">{children}</div>
+              <div className="px-4 py-4 ">{children}</div>
             </main>
           </ResizablePanel>
         </ResizablePanelGroup>
