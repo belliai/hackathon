@@ -52,6 +52,9 @@ interface MastersPageTemplateProps extends DataTableProps<any, any> {
   customComponent?: React.ReactNode;
   bottomCustomComponent?: React.ReactNode;
   extraTableToolbarButtons?: DataTableToolbarProps<any>["extraButtons"];
+  onSave?: () => void,
+  setOpenForm?: React.Dispatch<React.SetStateAction<boolean>>
+  openForm?: boolean
 }
 
 export default function MastersPageTemplate({
@@ -73,6 +76,9 @@ export default function MastersPageTemplate({
   bottomCustomComponent,
   extraTableToolbarButtons,
   onRowClick,
+  onSave,
+  setOpenForm,
+  openForm
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -82,7 +88,7 @@ export default function MastersPageTemplate({
           <>
             {pageActions}
             {canCreate && hookForm && (
-              <Dialog>
+              <Dialog open={openForm}  onOpenChange={setOpenForm}>
                 <DialogTrigger asChild>
                   <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
                     <Plus size={16} className="mr-2" />
@@ -103,11 +109,13 @@ export default function MastersPageTemplate({
                     <DialogClose asChild>
                       <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                    <DialogClose asChild>
-                      <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+                    {/* <DialogClose asChild> */}
+                      <Button onClick={() => {
+                        onSave && onSave()
+                      }} className="bg-button-primary hover:bg-button-primary/80 text-white">
                         Create
                       </Button>
-                    </DialogClose>
+                    {/* </DialogClose> */}
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

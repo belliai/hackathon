@@ -21,11 +21,14 @@ import {
 export type DataTableRowActionItem = {
   label: string;
   value: string;
+  fn?: (data: any) => void
+  shortcut?: string
 };
 
 interface DataTableRowActionsProps<TData> {
   row?: Row<TData>;
   items?: DataTableRowActionItem[];
+
 }
 
 export function DataTableRowActions<TData>({
@@ -55,14 +58,14 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align="end" className="w-[160px]">
         {items?.map((item) => {
           return (
-            <DropdownMenuItem key={item.value}>{item.label}</DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => {
+              e.stopPropagation()
+              item.fn && item.fn(row)
+            }} key={item.value}>{item.label}
+            {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+            </DropdownMenuItem>
           );
         })}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
