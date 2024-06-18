@@ -15,7 +15,7 @@ export function getDefaults<T extends z.ZodTypeAny>(schema: z.AnyZodObject | z.Z
         // return an empty array if it is
         if (schema instanceof z.ZodArray) return [];
         // return an empty string if it is
-        if (schema instanceof z.ZodString) return undefined;
+        if (schema instanceof z.ZodString) return "";
         // return an content of object recursivly
         if (schema instanceof z.ZodObject) return getDefaults(schema);
 

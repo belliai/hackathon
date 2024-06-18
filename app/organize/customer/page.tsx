@@ -512,6 +512,7 @@ export default function MasterCustomerPage() {
   });
 
   const onRowClick = (data: any) => {
+    setSelectedData(data)
     const filteredCustomer = Object.entries(data)
       .filter(([key, value]) => value !== null)
       .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Customer);
@@ -523,12 +524,12 @@ export default function MasterCustomerPage() {
     setSelectedData(data)
     setDeleteConfirm(true)
   }
+
   const onDelete = (data: any) => {
     if (data.ID)
       remove.mutate({ id: data.ID })
-
+    setSelectedData(undefined)
   }
-
 
   const columns = [
     selectColumn,
@@ -605,10 +606,12 @@ export default function MasterCustomerPage() {
           update.mutate({ ...data as Customer, id: data.ID })
         }
         setOpenForm(false)
+        setSelectedData(undefined)
         toast({
           title: "Success!",
           description: "Customer has been " + actionText,
         });
+
         hookForm.reset(defaulValues);
       } catch (e) {
         toast({
@@ -620,51 +623,55 @@ export default function MasterCustomerPage() {
   }
 
   useEffect(() => {
-    if (!openForm) hookForm.reset(defaulValues)
+    if (!openForm) {
+      hookForm.reset(defaulValues)
+      setSelectedData(undefined)
+    }
   }, [openForm])
 
   return (
-      <MastersPageTemplate
-        heading="Customer Master"
-        buttonText="Create Customer"
-        columns={columns}
-        data={isLoading ? [] : customersData.data}
-        filterFormFields={filterFormFields}
-        filterHookForm={filterForm}
-        hookForm={hookForm}
-        sectionedFormFields={sectionedFormFields}
-        pageActions={
-          <>
-            <Button className="gap-2 bg-button-primary text-white hover:bg-button-primary/80">
-              <Download size={16} />
-              GSTIN
-            </Button>
-            <Button className="gap-2 bg-button-primary text-white hover:bg-button-primary/80">
-              <Download size={16} />
-              Export
-            </Button>
-          </>
-        }
-        bottomCustomComponent={
-          <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will delete {selectedData && `[${selectedData.code}]` + " " + selectedData.name}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => onDelete(selectedData)}>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        }
-        onSave={onSave}
-        setOpenForm={setOpenForm}
-        openForm={openForm}
-        onRowClick={onRowClick}
-      />
+    <MastersPageTemplate
+      heading="Customer Master"
+      buttonText="Create Customer"
+      columns={columns}
+      data={isLoading ? [] : customersData.data}
+      filterFormFields={filterFormFields}
+      filterHookForm={filterForm}
+      hookForm={hookForm}
+      sectionedFormFields={sectionedFormFields}
+      pageActions={
+        <>
+          <Button className="gap-2 bg-button-primary text-white hover:bg-button-primary/80">
+            <Download size={16} />
+            GSTIN
+          </Button>
+          <Button className="gap-2 bg-button-primary text-white hover:bg-button-primary/80">
+            <Download size={16} />
+            Export
+          </Button>
+        </>
+      }
+      bottomCustomComponent={
+        <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will delete {selectedData && `[${selectedData.code}]` + " " + selectedData.name}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onDelete(selectedData)}>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      }
+      onSave={onSave}
+      setOpenForm={setOpenForm}
+      openForm={openForm}
+      onRowClick={onRowClick}
+      activeData={selectedData}
+    />
   );
 }

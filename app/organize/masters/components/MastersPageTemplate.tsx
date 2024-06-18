@@ -55,6 +55,7 @@ interface MastersPageTemplateProps extends DataTableProps<any, any> {
   onSave?: () => void,
   setOpenForm?: React.Dispatch<React.SetStateAction<boolean>>
   openForm?: boolean
+  activeData?: any
 }
 
 export default function MastersPageTemplate({
@@ -78,7 +79,8 @@ export default function MastersPageTemplate({
   onRowClick,
   onSave,
   setOpenForm,
-  openForm
+  openForm,
+  activeData
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -97,7 +99,7 @@ export default function MastersPageTemplate({
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="w-full max-w-3xl">
-                  <DialogTitle>{buttonText}</DialogTitle>
+                  <DialogTitle>{activeData ? "Update" : "Create"} {heading}</DialogTitle>
                   <CreateFormTemplate
                     hookForm={hookForm}
                     formFields={formFields}
@@ -109,13 +111,12 @@ export default function MastersPageTemplate({
                     <DialogClose asChild>
                       <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                    {/* <DialogClose asChild> */}
                       <Button onClick={() => {
                         onSave && onSave()
                       }} className="bg-button-primary hover:bg-button-primary/80 text-white">
-                        Create
+                        {activeData ? "Update":"Create"}
                       </Button>
-                    {/* </DialogClose> */}
+
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

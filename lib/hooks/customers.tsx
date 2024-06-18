@@ -16,13 +16,22 @@ export const fetchCustomers = async () => {
 };
 
 export const updateCustomer = async (prop: Customer & { id: string }) => {
-    const updateData = prop
+    const filteredCustomer = Object.entries(prop)
+    .filter(([key, value]) => value)
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Customer);
+
+    const updateData = filteredCustomer
     const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config);
     return data;
 };
 
 export const addCustomer = async (prop: Customer) => {
-    const newData = prop;
+
+    const filteredCustomer = Object.entries(prop)
+    .filter(([key, value]) => value)
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Customer);
+
+    const newData = filteredCustomer;
     delete prop.ID
     const { data } = await axios.post(`/${route}`, newData, config);
     return data;
