@@ -5,9 +5,18 @@ import { UseFormReturn } from "react-hook-form";
 import FormTextField from "@/components/form/FormTextField";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLocations } from "@/lib/hooks/locations";
+import { useUnits } from "@/lib/hooks/units/units";
+import { useEnums } from "@/lib/hooks/enums";
+import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types";
+import { useEffect, useState } from "react";
 
 interface FlightMasterFormType {
   hookForm: UseFormReturn<any>;
+}
+
+interface TailNoType {
+  label: string;
+  value: string;
 }
 
 type LocationListType = {
@@ -49,8 +58,62 @@ const frequencyItems = [
 export default function FlightMasterForm({
   hookForm,
 }: FlightMasterFormType) {
+  const [tailNoOptions, setTailNoOptions] = useState<Array<TailNoType>>([]);
+  const formData = hookForm.watch();
+
   const { data: locations } = useLocations();
+  const { data: units } = useUnits({
+    category: "weight",
+  });
+  const { data: flightSectorList } = useEnums({
+    category: "flight_sector",
+  });
+  const { data: flightStatusList } = useEnums({
+    category: "flight_status",
+  });
+  const { data: flightTypeList } = useEnums({
+    category: "flight_type",
+  });
+  const { data: aircraftTypeList } = useAircraftTypes();
+
   const formattedLocation = locations?.map((locationList: LocationListType) => ({ label: locationList.name, value: locationList.ID })) || [];
+
+  const weightUnitsOptions = units?.map((unit) => ({
+    value: String(unit.ID),
+    label: `${unit.Name} - ${unit.Symbol}`,
+  }));
+
+  const flightSectorOptions = flightSectorList?.map((list) => ({
+    value: String(list.ID),
+    label: list.value,
+  }));
+
+  const flightStatusOptions = flightStatusList?.map((list) => ({
+    value: String(list.ID),
+    label: list.value,
+  }));
+
+  const flightTypeOptions = flightTypeList?.map((list) => ({
+    value: String(list.ID),
+    label: list.value,
+  }));
+
+  const aircraftTypeOptions = aircraftTypeList?.map((list) => ({
+    value: String(list.id),
+    label: list.aircraft_type,
+  }));
+
+  useEffect(() => {
+    const selectedAircraftType = aircraftTypeList?.find((item: any) => item.id === formData.aircraftType);
+    const tailNo = selectedAircraftType && selectedAircraftType.aircraft_tail_numbers?.map((list) => ({
+      value: String(list.id),
+      label: list.tail_number,
+    }));
+    
+    hookForm.setValue('tailNo', '');
+    setTailNoOptions(tailNo || []);
+    
+  }, [formData.aircraftType]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -183,14 +246,14 @@ export default function FlightMasterForm({
             name="aircraftType"
             label="Aircraft Type"
             type="select"
-            options={[]}
+            options={aircraftTypeOptions}
           />
           <FormTextField
             form={hookForm}
             name="tailNo"
             label="Tail No"
             type="select"
-            options={[]}
+            options={tailNoOptions}
           />
           <FormTextField
             name="capacity"
@@ -203,7 +266,7 @@ export default function FlightMasterForm({
             name="uom"
             label="UOM"
             type="select"
-            options={[]}
+            options={weightUnitsOptions}
           />
         </div>
         <div className="grid grid-cols-3 gap-2">
@@ -212,64 +275,21 @@ export default function FlightMasterForm({
             name="sector"
             label="Sector"
             type="select"
-            options={[
-              {
-                label: 'Domestic',
-                value: 'domestic',
-              },
-              {
-                label: 'International',
-                value: 'international',
-              }
-            ]}
+            options={flightSectorOptions}
           />
           <FormTextField
             form={hookForm}
             name="status"
             label="Status"
             type="select"
-            options={[
-              {
-                label: 'Operational',
-                value: 'operational',
-              },
-              {
-                label: 'Cancelled',
-                value: 'cancelled',
-              }
-            ]}
+            options={flightStatusOptions}
           />
           <FormTextField
             form={hookForm}
             name="flightType"
             label="Flight Type"
             type="select"
-            options={[
-              {
-                label: 'FREIGHTER',
-                value: 'freighter',
-              },
-              {
-                label: 'GENERAL',
-                value: 'general',
-              },
-              {
-                label: 'LEAN',
-                value: 'lean',
-              },
-              {
-                label: 'PRIME',
-                value: 'prime',
-              },
-              {
-                label: 'STANDBY',
-                value: 'standby',
-              },
-              {
-                label: 'PAX',
-                value: 'pax',
-              }
-            ]}
+            options={flightTypeOptions}
           />
         </div>
       </Form>

@@ -16,7 +16,7 @@ interface AircraftTailNumber {
 
 interface AircraftTailNumberRequest {
     id?: string;
-    status_id: string;
+    status_id?: string;
     tail_number: string;
 }
 
@@ -107,4 +107,10 @@ interface CreateAircraftRequest {
     status_id: string;
     uld_position: string;
     version: string;
+}
+
+interface AircraftTypeList {
+    id: string;
+    aircraft_type: string;
+    aircraft_tail_numbers: AircraftTailNumberRequest[];
 }
