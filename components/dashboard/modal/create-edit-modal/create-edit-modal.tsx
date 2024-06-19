@@ -41,6 +41,7 @@ interface CreateEditModalProps {
   tabItems2?: TabItem[];
   rightComponent?: React.ReactNode;
   defaultTabValue?: string;
+  defaultFullScreen?: boolean;
 }
 
 export default function CreateEditModal({
@@ -54,8 +55,9 @@ export default function CreateEditModal({
   tabItems2,
   rightComponent,
   defaultTabValue,
+  defaultFullScreen = false,
 }: CreateEditModalProps) {
-  const [isFullScreen, setFullScreen] = useState(false);
+  const [isFullScreen, setFullScreen] = useState(defaultFullScreen);
 
   const toggleFullScreen = () => {
     setFullScreen((prev) => !prev);
@@ -68,7 +70,7 @@ export default function CreateEditModal({
         hideCloseButton
         className={
           isFullScreen
-            ? "w-screen h-screen max-w-none"
+            ? "w-screen h-screen overflow-auto max-w-none"
             : "max-w-6xl top-8 translate-y-0"
         }
         onInteractOutside={(e) => e.preventDefault()}
@@ -137,11 +139,16 @@ export default function CreateEditModal({
                 <div className="flex-1 grid">
                   {[...tabItems, ...(tabItems2 ?? [])].map((item) => {
                     return (
-                      <TabsContent key={item.value} value={item.value} asChild>
+                      <TabsContent
+                        key={item.value}
+                        value={item.value}
+                        asChild
+                        className="overflow-auto max-h-screen"
+                      >
                         <>
                           {item.content && item.content}
                           {item.formFields && (
-                            <div className="grid grid-cols-4 items-end h-fit gap-2 gap-y-4 [&_label]:text-xs">
+                            <div className="grid grid-cols-4 items-end h-fit gap-2 gap-y-8 [&_label]:text-xs">
                               {item.formFields.map((field, index) => {
                                 return (
                                   <FormTextField

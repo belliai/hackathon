@@ -19,7 +19,10 @@ import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
 } from "../../components/dummySelectOptions";
-import { actionColumn, selectColumn } from "../../components/columnItem";
+import createActionColumn, {
+  actionColumn,
+  selectColumn,
+} from "../../components/columnItem";
 import StatusBadge from "../../components/StatusBadge";
 import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal";
 import { useEffect, useState } from "react";
@@ -27,9 +30,149 @@ import MastersPageFieldArrayForm from "../../components/MastersPageFieldArrayFor
 import DimensionsCard from "@/components/dashboard/dimensions-card";
 import BalanceCard from "@/components/dashboard/balance-card";
 import { Button } from "@/components/ui/button";
+import {
+  useAircrafts,
+  useCreateAircraft,
+  useDeleteAircraft,
+  useUpdateAircraft,
+} from "@/lib/hooks/aircrafts/aircrafts";
+import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type";
+import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses";
+import { useUnits } from "@/lib/hooks/units/units";
+import {
+  AircraftFormValues,
+  aircraftFormSchema,
+} from "@/schemas/aircraft/aircraft";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function MasterAircraftPage() {
+  const [deleteConfirm, setDeleteConfirm] = useState<Aircraft | null>(null);
   const [openModal, setOpenModal] = useState<string | boolean>(false); // When the state is a string, it means the modal is in edit mode
+
+  const { toast } = useToast();
+
+  const { data: aircraftBodyTypes, isLoading: isLoadingAircraftBodyTypes } =
+    useAircraftBodyTypes();
+
+  const { data: aircraftStatuses, isLoading: isLoadingAircraftStatuses } =
+    useAircraftStatuses();
+
+  const { data: units, isLoading: isLoadingUnits } = useUnits({
+    category: "weight",
+  });
+
+  const { data: unitsVol, isLoading: isLoadingUnitsVol } = useUnits({
+    category: "volume",
+  });
+
+  const { data: unitsLen, isLoading: isLoadingUnitsLen } = useUnits({
+    category: "length",
+  });
+
+  const aircraftStatusOptions = aircraftStatuses?.map((status) => ({
+    value: String(status.ID),
+    label: status.Name,
+  }));
+
+  const aircraftBodyTypesOptions = aircraftBodyTypes?.map((bodyType) => ({
+    value: String(bodyType.ID),
+    label: bodyType.Name,
+  }));
+
+  const weightUnitsOptions = units?.map((unit) => ({
+    value: String(unit.ID),
+    label: `${unit.Name} - ${unit.Symbol}`,
+  }));
+
+  const volumeUnitsOptions = unitsVol?.map((unit) => ({
+    value: String(unit.ID),
+    label: `${unit.Name} - ${unit.Symbol}`,
+  }));
+
+  const lengthUnitsOptions = units?.map((unit) => ({
+    value: String(unit.ID),
+    label: `${unit.Name} - ${unit.Symbol}`,
+  }));
+
+  const { data: aircrafts, isLoading } = useAircrafts({
+    page: 1,
+    page_size: 1000,
+  });
+
+  const aircraftsData = aircrafts?.data;
+
+  const filterHookForm = useForm();
+
+  const formDefaultValues: AircraftFormValues = {
+    aft_h: "",
+    aft_w: "",
+    aircraft_tail_numbers: [
+      {
+        id: "",
+        status_id: "",
+        tail_number: "",
+      },
+    ],
+    aircraft_type: "",
+    body_type_id: "",
+    bulk: "",
+    bulk_cubic_id: "",
+    bulk_h: "",
+    bulk_unit_id: "",
+    bulk_w: "",
+    cargo_capacity: "",
+    cargo_capacity_unit_id: "",
+    count: "",
+    fwd: "",
+    fwd_h: "",
+    fwd_w: "",
+    fwt: "",
+    gl_code_id: "",
+    landing_weight: "",
+    landing_weight_unit_id: "",
+    max_bulk_capacity_volume: "",
+    max_bulk_capacity_volume_unit_id: "",
+    max_bulk_capacity_weight: "",
+    max_bulk_capacity_weight_unit_id: "",
+    max_dimension_breadth: "",
+    max_dimension_height: "",
+    manufacturer: "",
+    max_dimension_length: "",
+    max_dimension_unit_id: "",
+    max_volume: "",
+    max_volume_unit_id: "",
+    max_zero_fuel_weight: "",
+    max_zero_fuel_weight_unit_id: "",
+    mtow: "",
+    mtow_unit_id: "",
+    passenger_capacity: "",
+    restricted_weight_piece: "",
+    restricted_weight_piece_unit_id: "",
+    status_id: "",
+    uld_position: "",
+    version: "",
+  };
+
+  const sectionedHookForm = useForm<AircraftFormValues>({
+    resolver: zodResolver(aircraftFormSchema),
+    defaultValues: formDefaultValues,
+  });
+
+  const fieldArray = useFieldArray<any>({
+    name: "aircraft_tail_numbers",
+    control: sectionedHookForm.control,
+  });
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -40,7 +183,7 @@ export default function MasterAircraftPage() {
           type: "text",
         },
         {
-          name: "aircraftType",
+          name: "aircraft_type",
           label: "Aircraft Type",
           type: "text",
         },
@@ -52,140 +195,144 @@ export default function MasterAircraftPage() {
         {
           name: "mtow",
           label: "MTOW",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unitMtow",
+          name: "mtow_unit_id",
           label: "MTOW Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: weightUnitsOptions,
         },
         {
-          name: "maxZeroFuelWt",
+          name: "max_zero_fuel_weight",
           label: "Max Zero Fuel Weight",
           type: "text",
         },
         {
-          name: "unitMaxZeroFuelWt",
+          name: "max_zero_fuel_weight_unit_id",
           label: "Max Zero Fuel Weight Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: weightUnitsOptions,
         },
         {
-          name: "bodyType",
+          name: "body_type_id",
           label: "Body Type",
-          type: "text",
+          type: "select",
+          options: aircraftBodyTypesOptions,
         },
         {
-          name: "paxCap",
+          name: "passenger_capacity",
           label: "Passenger Capacity",
           type: "text",
         },
         {
-          name: "uldPos",
+          name: "uld_position",
           label: "ULD Positions",
           type: "text",
         },
         {
-          name: "landingWt",
+          name: "landing_weight",
           label: "Landing Weight",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unitLandingWt",
+          name: "landing_weight_unit_id",
           label: "Landing Weight Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: weightUnitsOptions,
         },
         {
-          name: "cargoCap",
+          name: "cargo_capacity",
           label: "Cargo Capacity",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unitCargoCap",
+          name: "cargo_capacity_unit_id",
           label: "Cargo Capacity Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: volumeUnitsOptions,
         },
         {
-          name: "maxBulkCapWt",
+          name: "max_bulk_capacity_weight",
           label: "Max Bulk Capacity Weight",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unitMaxBulkCapWt",
+          name: "max_bulk_capacity_weight_unit_id",
           label: "Max Bulk Capacity Weight Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: weightUnitsOptions,
         },
         {
-          name: "maxBulkCapVol",
+          name: "max_bulk_capacity_volume",
           label: "Max Bulk Capacity Volume",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unitMaxBulkCapVol",
+          name: "max_bulk_capacity_volume_unit_id",
           label: "Max Bulk Capacity Volume Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: volumeUnitsOptions,
         },
         {
-          name: "maxVolume",
+          name: "max_volume",
           label: "Max Volume",
-          type: "text",
+          type: "number",
         },
         {
-          name: "cubicMaxVolume",
-          label: "Cubic (Max Volume)",
-          type: "text",
+          name: "max_volume_unit_id",
+          label: "Max Volume Unit",
+          type: "select",
+          options: volumeUnitsOptions,
         },
         {
-          name: "restrWtPc",
+          name: "restricted_weight_piece",
           label: "Restricted Weight per Piece",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unitRestrWtPc",
+          name: "restricted_weight_piece_unit_id",
           label: "Restricted Weight per Piece Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: weightUnitsOptions,
         },
         {
-          name: "maxDimPcL",
+          name: "max_dimension_length",
           label: "Max Dimension per Piece (Length)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "maxDimPcB",
+          name: "max_dimension_breadth",
           label: "Max Dimension per Piece (Breadth)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "maxDimPcH",
+          name: "max_dimension_height",
           label: "Max Dimension per Piece (Height)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unitDimensions",
+          name: "max_dimension_unit_id",
           label: "Dimensions Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: lengthUnitsOptions,
         },
         {
-          name: "status",
+          name: "status_id",
           label: "Status",
-          type: "text",
+          type: "select",
+          options: aircraftStatusOptions,
         },
         {
-          name: "glCode",
+          name: "gl_code_id",
           label: "GL Code",
-          type: "text",
+          type: "select",
+          options: aircraftBodyTypesOptions,
         },
         {
           name: "count",
           label: "Count",
-          type: "text",
+          type: "number",
         },
       ],
     },
@@ -193,40 +340,40 @@ export default function MasterAircraftPage() {
       sectionName: "Door Dimensions",
       fields: [
         {
-          name: "aftHeight",
+          name: "aft_h",
           label: "AFT (H)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "aftWidth",
+          name: "aft_w",
           label: "AFT (W)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "fwdHeight",
+          name: "fwd_h",
           label: "FWD (H)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "fwdWidth",
+          name: "fwd_w",
           label: "FWD (W)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "bulkHeight",
+          name: "bulk_h",
           label: "Bulk (H)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "bulkWidth",
+          name: "bulk_w",
           label: "Bulk (W)",
-          type: "text",
+          type: "number",
         },
         {
-          name: "unit",
+          name: "bulk_unit_id",
           label: "Unit",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: lengthUnitsOptions,
         },
       ],
     },
@@ -234,30 +381,29 @@ export default function MasterAircraftPage() {
       sectionName: "Section Volume",
       fields: [
         {
-          name: "FWT",
+          name: "fwt",
           label: "FWT",
-          type: "text",
+          type: "number",
         },
         {
-          name: "FWD",
+          name: "fwd",
           label: "FWD",
-          type: "text",
+          type: "number",
         },
         {
           name: "bulk",
           label: "Bulk",
-          type: "text",
+          type: "number",
         },
         {
-          name: "cubic",
+          name: "bulk_cubic_id",
           label: "Cubic",
           type: "select",
-          options: DUMMY_SELECT_OPTIONS,
+          options: volumeUnitsOptions,
         },
       ],
     },
   ];
-
   const filterFormFields: TFormTextField[] = [
     {
       name: "manufacturer",
@@ -297,14 +443,52 @@ export default function MasterAircraftPage() {
     },
   ];
 
-  const columns: ColumnDef<any>[] = [
-    selectColumn,
+  function handleRowClick(data: Aircraft) {
+    setOpenModal(data.ID);
+
+    sectionedHookForm.reset({
+      ...data,
+      aircraft_tail_numbers: data.aircraft_tail_numbers.map((tailNumber) => ({
+        id: tailNumber.ID,
+        status_id: String(tailNumber.status.ID),
+        tail_number: tailNumber.tail_number,
+      })),
+      body_type_id: String(data.body_type.ID),
+      bulk_cubic_id: String(data.bulk_cubic.ID),
+      bulk_unit_id: String(data.bulk_unit.ID),
+      cargo_capacity_unit_id: String(data.cargo_capacity_unit.ID),
+      landing_weight_unit_id: String(data.landing_weight_unit.ID),
+      max_bulk_capacity_volume_unit_id: String(
+        data.max_bulk_capacity_volume_unit.ID
+      ),
+      max_bulk_capacity_weight_unit_id: String(
+        data.max_bulk_capacity_weight_unit.ID
+      ),
+      max_dimension_unit_id: String(data.max_dimension_unit.ID),
+      max_volume_unit_id: String(data.max_volume_unit.ID),
+      max_zero_fuel_weight_unit_id: String(data.max_zero_fuel_weight_unit.ID),
+      mtow_unit_id: String(data.mtow_unit.ID),
+      status_id: String(data.status.ID),
+      gl_code_id: String(data.gl_code.ID),
+      restricted_weight_piece_unit_id: String(
+        data.restricted_weight_piece_unit.ID
+      ),
+      count: String(data.count),
+    });
+  }
+
+  const onShowDelete = (data: Aircraft) => {
+    setDeleteConfirm(data);
+  };
+
+  const columns: ColumnDef<Aircraft>[] = [
+    selectColumn as ColumnDef<Aircraft>,
     {
       accessorKey: "manufacturer",
       header: "Manufacturer",
     },
     {
-      accessorKey: "aircraftType",
+      accessorKey: "aircraft_type",
       header: "Aircraft Type",
     },
     {
@@ -312,15 +496,15 @@ export default function MasterAircraftPage() {
       header: "Version",
     },
     {
-      accessorKey: "paxCap",
+      accessorKey: "passenger_capacity",
       header: "Pax Capacity",
     },
     {
-      accessorKey: "landingWt",
+      accessorKey: "landing_weight",
       header: "Landing Wt",
     },
     {
-      accessorKey: "cargoCap",
+      accessorKey: "cargo_capacity",
       header: "Cargo Cap",
     },
     {
@@ -328,323 +512,127 @@ export default function MasterAircraftPage() {
       header: "MTOW",
     },
     {
-      accessorKey: "maxZeroFuelWt",
+      accessorKey: "max_zero_fuel_weight",
       header: "Max Zero Fuel Wt",
     },
     {
-      accessorKey: "bodyType",
+      accessorKey: "body_type.Name",
       header: "Body Type",
     },
     {
-      accessorKey: "activeCount",
+      accessorKey: "count",
       header: "Active Count",
-    },
-    {
-      accessorKey: "inactiveCount",
-      header: "Inactive Count",
     },
     {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => (
         <StatusBadge
-          statusText={row.original.status}
-          severity={row.original.status === "Active" ? "default" : "error"}
+          statusText={row.original.status.Name}
+          severity={row.original.status.Name === "Active" ? "default" : "error"}
         />
       ),
     },
-    {
-      accessorKey: "createdAt",
-      header: "Created At",
-    },
-    {
-      accessorKey: "updatedAt",
-      header: "Updated At",
-    },
-    actionColumn,
+    createActionColumn({
+      items: [
+        {
+          label: "Edit",
+          value: "edit",
+          fn: handleRowClick,
+        },
+        {
+          label: "Delete",
+          value: "delete",
+          fn: onShowDelete,
+          shortcut: "⌘⌫",
+        },
+      ],
+    }) as ColumnDef<Aircraft>,
   ];
 
-  const filterHookForm = useForm();
+  const { mutateAsync, isPending } = useCreateAircraft();
+  const { mutateAsync: updateMutateAsync, isPending: isPendingUpdate } =
+    useUpdateAircraft();
+  const { mutateAsync: deleteMutateAsync } = useDeleteAircraft();
 
-  const formDefaultValues = {
-    id: "",
-    manufacturer: "",
-    aircraftType: "",
-    version: "",
-    paxCap: "",
-    landingWt: "",
-    cargoCap: "",
-    mtow: "",
-    maxZeroFuelWt: "",
-    bodyType: "",
-    activeCount: "",
-    inactiveCount: "",
-    status: "",
-    tailNumbers: [
-      {
-        tailNumber: "",
-        status: "",
-      },
-    ],
-    unitMtow: "",
-    unitMaxZeroFuelWt: "",
-    uldPos: "",
-    unitLandingWt: "",
-    unitCargoCap: "",
-    maxBulkCapWt: "",
-    unitMaxBulkCapWt: "",
-    maxBulkCapVol: "",
-    unitMaxBulkCapVol: "",
-    maxVolume: "",
-    cubicMaxVolume: "",
-    restrWtPc: "",
-    unitRestrWtPc: "",
-    maxDimPcL: "",
-    maxDimPcB: "",
-    maxDimPcH: "",
-    unitDimensions: "",
-    glCode: "",
-    count: "",
-    aftHeight: "",
-    aftWidth: "",
-    fwdHeight: "",
-    fwdWidth: "",
-    bulkHeight: "",
-    bulkWidth: "",
-    unit: "",
-    FWT: "",
-    FWD: "",
-    bulk: "",
-    cubic: "",
-  };
+  async function onDelete(data: Aircraft) {
+    if (data) {
+      await deleteMutateAsync(
+        { id: data.ID },
+        {
+          onError: (error) => {
+            console.error(error);
+            toast({
+              title: "Error!",
+              description: "An error occurred while deleting aircraft",
+            });
+          },
+          onSuccess: (data) => {
+            setDeleteConfirm(null);
+            console.log("res data", data);
+            toast({
+              title: "Success!",
+              description: "Aircraft deleted successfully",
+            });
+          },
+        }
+      );
+    }
+  }
 
-  const sectionedHookForm = useForm({
-    defaultValues: formDefaultValues,
-  });
+  async function handleSubmitAircraft(data: AircraftFormValues) {
+    const payload: CreateAircraftRequest = {
+      ...data,
+      count: Number(data.count),
+      // Generate uuid for tail numbers
+      aircraft_tail_numbers: data.aircraft_tail_numbers.map((tailNumber) => ({
+        ...tailNumber,
+        id: tailNumber.id || undefined,
+      })),
+    };
 
-  const fieldArray = useFieldArray<any>({
-    name: "tailNumbers",
-    control: sectionedHookForm.control,
-  });
-
-  const data = [
-    {
-      id: "1",
-      manufacturer: "Boeing",
-      aircraftType: "737",
-      version: "800",
-      paxCap: 189,
-      landingWt: "65,317 kg",
-      cargoCap: "20,000 kg",
-      mtow: "79,015 kg",
-      maxZeroFuelWt: "61,688 kg",
-      bodyType: "Narrow-body",
-      activeCount: 15,
-      inactiveCount: 3,
-      status: "Active",
-      createdAt: "2023-01-15",
-      updatedAt: "2023-12-01",
-      action: "Edit",
-      tailNumbers: [
+    if (typeof openModal === "string") {
+      // Update aircraft
+      await updateMutateAsync(
+        { id: openModal, ...payload },
         {
-          tailNumber: "N737AA",
-          status: "active",
+          onError: (error) => {
+            console.error(error);
+            toast({
+              title: "Error!",
+              description: "An error occurred while updating aircraft",
+            });
+          },
+          onSuccess: (data) => {
+            setOpenModal(false);
+            console.log("res data", data);
+            toast({
+              title: "Success!",
+              description: "Aircraft updated successfully",
+            });
+          },
+        }
+      );
+    } else {
+      await mutateAsync(payload, {
+        onError: (error) => {
+          console.error(error);
+          toast({
+            title: "Error!",
+            description: "An error occurred while creating aircraft",
+          });
         },
-      ],
-      unitMtow: "kg",
-      unitMaxZeroFuelWt: "kg",
-      uldPos: "10",
-      unitLandingWt: "kg",
-      unitCargoCap: "kg",
-      maxBulkCapWt: "15,000 kg",
-      unitMaxBulkCapWt: "kg",
-      maxBulkCapVol: "200 m³",
-      unitMaxBulkCapVol: "m³",
-      maxVolume: "800 m³",
-      cubicMaxVolume: "900 m³",
-      restrWtPc: "1500 kg",
-      unitRestrWtPc: "kg",
-      maxDimPcL: "10 m",
-      maxDimPcB: "3 m",
-      maxDimPcH: "2.5 m",
-      unitDimensions: "m",
-      glCode: "737GL",
-      count: 18,
-      aftHeight: "4 m",
-      aftWidth: "5 m",
-      fwdHeight: "4 m",
-      fwdWidth: "5 m",
-      bulkHeight: "2.5 m",
-      bulkWidth: "3 m",
-      unit: "m",
-      FWT: "300 m³",
-      FWD: "500 m³",
-      bulk: "100 m³",
-      cubic: "m³",
-    },
-    {
-      id: "2",
-      manufacturer: "Airbus",
-      aircraftType: "A320",
-      version: "Neo",
-      paxCap: 195,
-      landingWt: "66,000 kg",
-      cargoCap: "21,000 kg",
-      mtow: "79,000 kg",
-      maxZeroFuelWt: "62,500 kg",
-      bodyType: "Narrow-body",
-      activeCount: 12,
-      inactiveCount: 4,
-      status: "Inactive",
-      createdAt: "2023-02-20",
-      updatedAt: "2023-11-25",
-      action: "Edit",
-      tailNumbers: [
-        {
-          tailNumber: "A320AB",
-          status: "inactive",
+        onSuccess: (data) => {
+          setOpenModal(false);
+          console.log("res data", data);
+          toast({
+            title: "Success!",
+            description: "Aircraft created successfully",
+          });
         },
-      ],
-      unitMtow: "kg",
-      unitMaxZeroFuelWt: "kg",
-      uldPos: "12",
-      unitLandingWt: "kg",
-      unitCargoCap: "kg",
-      maxBulkCapWt: "17,000 kg",
-      unitMaxBulkCapWt: "kg",
-      maxBulkCapVol: "250 m³",
-      unitMaxBulkCapVol: "m³",
-      maxVolume: "900 m³",
-      cubicMaxVolume: "1000 m³",
-      restrWtPc: "1600 kg",
-      unitRestrWtPc: "kg",
-      maxDimPcL: "11 m",
-      maxDimPcB: "3.2 m",
-      maxDimPcH: "2.6 m",
-      unitDimensions: "m",
-      glCode: "A320GL",
-      count: 16,
-      aftHeight: "4.2 m",
-      aftWidth: "5.1 m",
-      fwdHeight: "4.2 m",
-      fwdWidth: "5.1 m",
-      bulkHeight: "2.6 m",
-      bulkWidth: "3.1 m",
-      unit: "m",
-      FWT: "320 m³",
-      FWD: "520 m³",
-      bulk: "110 m³",
-      cubic: "m³",
-    },
-    {
-      id: "3",
-      manufacturer: "Embraer",
-      aircraftType: "E195",
-      version: "E2",
-      paxCap: 132,
-      landingWt: "49,800 kg",
-      cargoCap: "13,300 kg",
-      mtow: "62,000 kg",
-      maxZeroFuelWt: "50,790 kg",
-      bodyType: "Narrow-body",
-      activeCount: 10,
-      inactiveCount: 2,
-      status: "Active",
-      createdAt: "2023-03-05",
-      updatedAt: "2023-10-30",
-      action: "Edit",
-      tailNumbers: [
-        {
-          tailNumber: "E195AC",
-          status: "active",
-        },
-      ],
-      unitMtow: "kg",
-      unitMaxZeroFuelWt: "kg",
-      uldPos: "8",
-      unitLandingWt: "kg",
-      unitCargoCap: "kg",
-      maxBulkCapWt: "12,000 kg",
-      unitMaxBulkCapWt: "kg",
-      maxBulkCapVol: "150 m³",
-      unitMaxBulkCapVol: "m³",
-      maxVolume: "600 m³",
-      cubicMaxVolume: "700 m³",
-      restrWtPc: "1400 kg",
-      unitRestrWtPc: "kg",
-      maxDimPcL: "9 m",
-      maxDimPcB: "2.8 m",
-      maxDimPcH: "2.4 m",
-      unitDimensions: "m",
-      glCode: "E195GL",
-      count: 12,
-      aftHeight: "3.8 m",
-      aftWidth: "4.8 m",
-      fwdHeight: "3.8 m",
-      fwdWidth: "4.8 m",
-      bulkHeight: "2.3 m",
-      bulkWidth: "2.8 m",
-      unit: "m",
-      FWT: "280 m³",
-      FWD: "480 m³",
-      bulk: "90 m³",
-      cubic: "m³",
-    },
-    {
-      id: "4",
-      manufacturer: "Boeing",
-      aircraftType: "787",
-      version: "9",
-      paxCap: 296,
-      landingWt: "192,000 kg",
-      cargoCap: "47,000 kg",
-      mtow: "254,000 kg",
-      maxZeroFuelWt: "187,000 kg",
-      bodyType: "Wide-body",
-      activeCount: 5,
-      inactiveCount: 1,
-      status: "Active",
-      createdAt: "2023-04-10",
-      updatedAt: "2023-09-15",
-      action: "Edit",
-      tailNumbers: [
-        {
-          tailNumber: "N787BB",
-          status: "Active",
-        },
-      ],
-      unitMtow: "kg",
-      unitMaxZeroFuelWt: "kg",
-      uldPos: "20",
-      unitLandingWt: "kg",
-      unitCargoCap: "kg",
-      maxBulkCapWt: "40,000 kg",
-      unitMaxBulkCapWt: "kg",
-      maxBulkCapVol: "700 m³",
-      unitMaxBulkCapVol: "m³",
-      maxVolume: "2000 m³",
-      cubicMaxVolume: "2100 m³",
-      restrWtPc: "3000 kg",
-      unitRestrWtPc: "kg",
-      maxDimPcL: "15 m",
-      maxDimPcB: "5 m",
-      maxDimPcH: "4 m",
-      unitDimensions: "m",
-      glCode: "787GL",
-      count: 6,
-      aftHeight: "5 m",
-      aftWidth: "6 m",
-      fwdHeight: "5 m",
-      fwdWidth: "6 m",
-      bulkHeight: "3.5 m",
-      bulkWidth: "4 m",
-      unit: "m",
-      FWT: "500 m³",
-      FWD: "700 m³",
-      bulk: "150 m³",
-      cubic: "m³",
-    },
-  ];
+      });
+    }
+  }
 
   return (
     <>
@@ -656,12 +644,9 @@ export default function MasterAircraftPage() {
         filterFormFields={filterFormFields}
         filterHookForm={filterHookForm}
         hookForm={sectionedHookForm}
-        data={data}
+        data={aircraftsData ?? []}
         canCreate={false}
-        onRowClick={(data) => {
-          setOpenModal(data.id);
-          sectionedHookForm.reset(data);
-        }}
+        onRowClick={handleRowClick}
         extraTableToolbarButtons={[
           {
             label: "Create Aircraft",
@@ -670,8 +655,42 @@ export default function MasterAircraftPage() {
             onClick: () => setOpenModal(true),
           },
         ]}
+        bottomCustomComponent={
+          <AlertDialog
+            open={deleteConfirm !== null}
+            onOpenChange={(open) => {
+              if (!open) {
+                setDeleteConfirm(null);
+              } else {
+                setDeleteConfirm(deleteConfirm);
+              }
+            }}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will delete{" "}
+                  {deleteConfirm &&
+                    `${deleteConfirm?.manufacturer}` +
+                      " " +
+                      deleteConfirm.aircraft_type}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => deleteConfirm && onDelete(deleteConfirm)}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        }
       />
       <CreateEditModal
+        defaultFullScreen={true}
         title={
           typeof openModal === "string"
             ? "Edit Aircraft"
@@ -681,12 +700,14 @@ export default function MasterAircraftPage() {
         }
         open={openModal !== false}
         form={sectionedHookForm}
-        onSubmit={(data) => console.log(data)}
+        onSubmit={handleSubmitAircraft}
         setOpen={(open) => {
           if (open) {
             setOpenModal(openModal);
           } else {
-            sectionedHookForm.reset(formDefaultValues);
+            if (typeof openModal === "string") {
+              sectionedHookForm.reset(formDefaultValues);
+            }
             setOpenModal(false);
           }
         }}
@@ -707,18 +728,18 @@ export default function MasterAircraftPage() {
                   fieldArray,
                   fields: [
                     {
-                      name: "tailNumber",
+                      name: "tail_number",
                       placeholder: "Tail Number",
                       type: "text",
                     },
                     {
-                      name: "status",
+                      name: "status_id",
                       placeholder: "Status",
                       type: "select",
-                      options: DUMMY_SELECT_OPTIONS_STATUS,
+                      options: aircraftStatusOptions,
                     },
                   ],
-                  fieldArrayName: "tailNumbers",
+                  fieldArrayName: "aircraft_tail_numbers",
                 }}
                 hookForm={sectionedHookForm}
               />
@@ -755,7 +776,7 @@ export default function MasterAircraftPage() {
                 View Invoice
               </Button>
               <Button
-                isLoading={false}
+                isLoading={isPending || isPendingUpdate}
                 variant={"button-primary"}
                 className="w-full"
                 type="submit"
