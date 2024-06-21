@@ -16,6 +16,8 @@ import { k360Navigation } from "@/components/nav/data/k360Navigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { RouteRoom } from "@/components/liveblocks/route-room";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from '@clerk/themes';
 
 // export const metadata: Metadata = {
 //   title: "Belli",
@@ -63,31 +65,37 @@ export default function RootLayout({
   const isProduction = process.env.NODE_ENV === "production";
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
   return (
-    <html
-      lang="en"
-      className={cn(
-        "scrollbar h-full scroll-smooth antialiased dark",
-
-        ` ${inter.className}`
-      )}
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark
+      }}
     >
-      {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
-      <body className="  h-full text-white overflow-y-hidden bg-background">
-        {/* <ProgressBar />
+      <html
+        lang="en"
+        className={cn(
+          "scrollbar h-full scroll-smooth antialiased dark",
+
+          ` ${inter.className}`
+        )}
+      >
+        {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
+        <body className="  h-full text-white overflow-y-hidden bg-background">
+          {/* <ProgressBar />
       <Nav /> */}
-        <QueryProvider>
-          <TooltipProvider>
-            <BookingProvider>
-              <FavoritesProvider>
-                <RouteRoom>
-                  <UIWrapper>{children}</UIWrapper>
-                </RouteRoom>
-              </FavoritesProvider>
-              <Toaster />
-            </BookingProvider>
-          </TooltipProvider>
-        </QueryProvider>
-      </body>
-    </html>
+          <QueryProvider>
+            <TooltipProvider>
+              <BookingProvider>
+                <FavoritesProvider>
+                  <RouteRoom>
+                    <UIWrapper>{children}</UIWrapper>
+                  </RouteRoom>
+                </FavoritesProvider>
+                <Toaster />
+              </BookingProvider>
+            </TooltipProvider>
+          </QueryProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
