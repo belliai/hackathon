@@ -17,7 +17,7 @@ import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { RouteRoom } from "@/components/liveblocks/route-room";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from '@clerk/themes';
+import { dark } from "@clerk/themes";
 
 // export const metadata: Metadata = {
 //   title: "Belli",
@@ -67,7 +67,7 @@ export default function RootLayout({
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: dark
+        baseTheme: dark,
       }}
     >
       <html
