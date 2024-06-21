@@ -14,17 +14,18 @@ import { useFormContext } from "react-hook-form";
 import React from "react";
 import { useCurrencies } from "@/lib/hooks/currencies";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Order } from "@/schemas/order/order";
 
 const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext();
   const { data: currencies } = useCurrencies()
 
   return (
-    <Card className="p-4">
+    <Card className="p-4" ref={ref}>
       <div className="grid grid-cols-2 gap-y-2 gap-x-3">
         <FormField
           control={form.control}
-          name="vol"
+          name="volume_kg"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hello this is info here">Vol (KG)</FormLabel>
@@ -37,7 +38,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="currency"
+          name="currency_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hello this is info here">Currency</FormLabel>
@@ -72,7 +73,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="sRate"
+          name="s_rate"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hello this is info here">S Rate</FormLabel>
@@ -85,7 +86,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="sFreight"
+          name="s_freight"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hello this is info here">S Freight</FormLabel>
@@ -98,7 +99,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="spotId"
+          name="spot_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hello this is info here">Spot ID</FormLabel>
@@ -111,7 +112,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="grosswt"
+          name="gs_weight_kg"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="Gross Weight in Kg">GS Wt.KG</FormLabel>
@@ -124,7 +125,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="ch"
+          name="ch_weight_kg"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hello this is info here">CH Wt.KG</FormLabel>
@@ -137,7 +138,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="amountDue"
+          name="amount_due"
           render={({ field }) => (
             <FormItem className="col-span-2">
               <FormLabel info="hellow world!, this is info">
