@@ -1,9 +1,25 @@
-import { createClient } from "@liveblocks/client";
+import { LiveMap, LiveObject, createClient } from "@liveblocks/client";
 import { createRoomContext, createLiveblocksContext } from "@liveblocks/react";
+import { Storage, UserMeta } from "./app/liveblock-spreadsheet/types";
+
 
 const client = createClient({
   publicApiKey: process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_API_KEY as string,
 });
+
+declare global {
+  interface Liveblocks {
+    // Each user's Presence, for room.getPresence, room.subscribe("others"), etc.
+    Presence: Presence & {
+      cursor: { x?: number; y?: number } | null;
+    };
+      // Each user's Presence, for useMyPresence, useOthers, etc.
+      // The Storage tree for the room, for useMutation, useStorage, etc.
+      Storage: Storage;
+      // Custom user info set when authenticating with a secret key
+      UserMeta: UserMeta;
+  }
+}
 /*
   // authEndpoint: "/api/liveblocks-auth",
   // throttle: 100,
@@ -54,7 +70,8 @@ const client = createClient({
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
 type Presence = {
-  // cursor: { x: number, y: number } | null,
+  selectedCell: string | null;
+  cursor: { x: number, y: number } | null,
   // ...
 };
 
@@ -62,18 +79,11 @@ type Presence = {
 // Room, even after all users leave. Fields under Storage typically are
 // LiveList, LiveMap, LiveObject instances, for which updates are
 // automatically persisted and synced to all connected clients.
-type Storage = {
-  // author: LiveObject<{ firstName: string, lastName: string }>,
-  // ...
-};
+
 
 // Optionally, UserMeta represents static/readonly metadata on each user, as
 // provided by your own custom auth back end (if used). Useful for data that
 // will not change during a session, like a user's name or avatar.
-type UserMeta = {
-  // id?: string,  // Accessible through `user.id`
-  // info?: Json,  // Accessible through `user.info`
-};
 
 // Optionally, the type of custom events broadcast and listened to in this
 // room. Use a union for multiple events. Must be JSON-serializable.
@@ -107,9 +117,6 @@ export const {
     useEventListener,
     useErrorListener,
     useStorage,
-    useObject,
-    useMap,
-    useList,
     useBatch,
     useHistory,
     useUndo,

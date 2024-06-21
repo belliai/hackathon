@@ -15,6 +15,7 @@ import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
 import { k360Navigation } from "@/components/nav/data/k360Navigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
+import { RouteRoom } from "@/components/liveblocks/route-room";
 
 // export const metadata: Metadata = {
 //   title: "Belli",
@@ -78,7 +79,9 @@ export default function RootLayout({
           <TooltipProvider>
             <BookingProvider>
               <FavoritesProvider>
-                <UIWrapper>{children}</UIWrapper>
+                <RouteRoom>
+                  <UIWrapper>{children}</UIWrapper>
+                </RouteRoom>
               </FavoritesProvider>
               <Toaster />
             </BookingProvider>

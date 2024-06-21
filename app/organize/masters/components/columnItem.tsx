@@ -16,3 +16,19 @@ export const actionColumn: ColumnDef<any> = {
   header: "Action",
   cell: ({ row }) => <DataTableRowActions />,
 };
+
+const createActionColumn = (props: any): ColumnDef<any> => {
+  const items = props.items
+  return {
+    accessorKey: "id",
+    header: "Action",
+    cell: ({ row }) => (
+      <DataTableRowActions
+        row={row.original}
+        items={items}
+      />
+    ),
+  };
+};
+
+export default createActionColumn;

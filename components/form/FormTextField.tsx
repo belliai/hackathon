@@ -258,10 +258,10 @@ export default function FormTextField({
                 )}
               </div>
             )}
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full relative">
               {conditionalRender()}
               {description && <FormDescription>{description}</FormDescription>}
-              <FormMessage />
+              <FormMessage className="absolute top-10 text-[10px]" />
             </div>
           </FormItem>
         );

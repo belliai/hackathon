@@ -28,15 +28,15 @@ export default function MastersPageFieldArrayForm({
           accessorKey: field.name,
           header: field.label ?? field.placeholder,
           cell: ({ row }: { row: Row<any> }) => {
+            const fieldName = `${
+              fieldArrayProps.fieldArrayName ?? "fieldArray"
+            }.${row.index}.${field.name}`;
+
             return (
               <FormTextField
-                key={`${fieldArrayProps.fieldArrayName ?? "fieldArray"}.${
-                  row.index
-                }.${field.name}`}
+                key={fieldName}
                 {...field}
-                name={`${fieldArrayProps.fieldArrayName ?? "fieldArray"}.${
-                  row.index
-                }.${field.name}`}
+                name={fieldName}
                 form={hookForm}
                 disabled={field.disabled}
               />
@@ -64,7 +64,11 @@ export default function MastersPageFieldArrayForm({
           } as ColumnDef<any>)
         : undefined,
     ].filter(Boolean) as ColumnDef<any>[];
-  }, [showRemoveButton]);
+  }, [
+    showRemoveButton,
+    fieldArrayProps.fieldArray.fields,
+    hookForm.getValues(fieldArrayProps.fieldArrayName ?? "fieldArray"),
+  ]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -73,13 +77,12 @@ export default function MastersPageFieldArrayForm({
           columns={columns}
           hidePagination
           hideToolbar
-          data={
-            hookForm.watch(fieldArrayProps.fieldArrayName ?? "fieldArray") ?? []
-          }
+          data={fieldArrayProps.fieldArray.fields}
         />
       </Form>
       <Button
         onClick={() => fieldArrayProps?.fieldArray.append({})}
+        type="button"
         className="bg-button-primary hover:bg-button-primary/80 text-white mr-auto"
       >
         <Plus className="mr-2" size={16} />

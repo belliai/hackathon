@@ -319,18 +319,6 @@ export default function NewDealPage() {
         },
         {
           name: "countrySource",
-          type: "select",
-          label: "countrySource",
-          orientation: "horizontal",
-          options: DUMMY_SELECT_OPTIONS,
-        },
-        {
-          name: "includeCountySource",
-          type: "radio",
-          options: excludeIncludeOptions,
-        },
-        {
-          name: "countrySource",
           type: "text",
           label: "Country Source",
           orientation: "horizontal",

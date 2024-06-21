@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/data-table/data-table";
+import { DataTable, DataTableProps } from "@/components/data-table/data-table";
 import FormTextField, { TFormTextField } from "@/components/form/FormTextField";
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
@@ -19,6 +19,7 @@ import { Download, Plus, RefreshCcw, Search } from "lucide-react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import CreateFormTemplate from "./CreateFormTemplate";
+import { DataTableToolbarProps } from "@/components/data-table/data-table-toolbar";
 
 export type FieldArrayProps = {
   fieldArray: UseFieldArrayReturn<any>;
@@ -35,7 +36,7 @@ export type SectionedFormFields = {
   additionalColumns?: ColumnDef<any>[];
 };
 
-interface MastersPageTemplateProps {
+interface MastersPageTemplateProps extends DataTableProps<any, any> {
   heading: string;
   buttonText?: string;
   hookForm?: UseFormReturn<any>;
@@ -43,8 +44,6 @@ interface MastersPageTemplateProps {
   formFields?: TFormTextField[];
   sectionedFormFields?: SectionedFormFields[];
   filterFormFields: TFormTextField[];
-  columns: ColumnDef<any>[];
-  data: any[];
   pageActions?: React.ReactNode;
   canCreate?: boolean;
   customDialogContent?: React.ReactNode;
@@ -52,6 +51,11 @@ interface MastersPageTemplateProps {
   customFilterButtons?: React.ReactNode;
   customComponent?: React.ReactNode;
   bottomCustomComponent?: React.ReactNode;
+  extraTableToolbarButtons?: DataTableToolbarProps<any>["extraButtons"];
+  onSave?: () => void,
+  setOpenForm?: React.Dispatch<React.SetStateAction<boolean>>
+  openForm?: boolean
+  activeData?: any
 }
 
 export default function MastersPageTemplate({
@@ -71,6 +75,12 @@ export default function MastersPageTemplate({
   customFilterButtons,
   customComponent,
   bottomCustomComponent,
+  extraTableToolbarButtons,
+  onRowClick,
+  onSave,
+  setOpenForm,
+  openForm,
+  activeData
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -80,7 +90,7 @@ export default function MastersPageTemplate({
           <>
             {pageActions}
             {canCreate && hookForm && (
-              <Dialog>
+              <Dialog open={openForm}  onOpenChange={setOpenForm}>
                 <DialogTrigger asChild>
                   <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
                     <Plus size={16} className="mr-2" />
@@ -89,7 +99,7 @@ export default function MastersPageTemplate({
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="w-full max-w-3xl">
-                  <DialogTitle>{buttonText}</DialogTitle>
+                  <DialogTitle>{activeData ? "Update" : "Create"} {heading}</DialogTitle>
                   <CreateFormTemplate
                     hookForm={hookForm}
                     formFields={formFields}
@@ -101,11 +111,12 @@ export default function MastersPageTemplate({
                     <DialogClose asChild>
                       <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                    <DialogClose asChild>
-                      <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
-                        Create
+                      <Button onClick={() => {
+                        onSave && onSave()
+                      }} className="bg-button-primary hover:bg-button-primary/80 text-white">
+                        {activeData ? "Update":"Create"}
                       </Button>
-                    </DialogClose>
+
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -159,7 +170,12 @@ export default function MastersPageTemplate({
         </Form>
       </div>
       {customComponent}
-      <DataTable columns={columns} data={data} hideToolbar />
+      <DataTable
+        columns={columns}
+        onRowClick={onRowClick}
+        data={data}
+        extraToolbarButtons={extraTableToolbarButtons}
+      />
       {bottomCustomComponent}
     </PageContainer>
   );
