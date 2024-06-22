@@ -76,7 +76,6 @@ export const useAddOrder = () => {
     const mutation : any = useMutation(
         {
             mutationFn: addOrder,
-            throwOnError: true,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({ queryKey: [route] });

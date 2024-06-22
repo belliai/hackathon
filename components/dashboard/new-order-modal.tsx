@@ -125,13 +125,13 @@ export default function NewOrderModal(props: NewOrderModalProps) {
 
       try {
         if (!data.ID) {
-          await add.mutate(data as Order)
+          await add.mutateAsync(data as Order)
           toast({
             title: "Success!",
             description: "Your order has been created",
           });
         } else {
-          await update.mutate({ ...data as Order, id: data.ID })
+          await update.mutateAsync({ ...data as Order, id: data.ID })
           toast({
             title: "Success!",
             description: "Your order has been updated",
