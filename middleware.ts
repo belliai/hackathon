@@ -1,7 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
+import { updateSession } from "./lib/utils/supabase/middleware";
 
-export async function middleware(req: NextRequest) {
+clerkMiddleware();
+
+export default clerkMiddleware(async (auth, req: NextRequest) => {
   const pathname = req.nextUrl.pathname;
+
+  await updateSession(req)
 
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", pathname);
@@ -11,7 +17,7 @@ export async function middleware(req: NextRequest) {
       headers: requestHeaders,
     },
   });
-}
+});
 
 export const config = {
   matcher: [

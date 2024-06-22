@@ -14,29 +14,29 @@ import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix";
 
 export default function OrderSummaryCard(props: any) {
   const { 
-    bookingType: bookingTypeId,
-    partnerPrefix: partnerPrefixId,
-    axb,
-    origin,
-    destination,
-    commodityCode
+    booking_type_id,
+    partner_prefix_id,
+    awb,
+    origin_id,
+    destination_id,
+    commodity_code_id
    } = props
 
   const { data: bookingTypes } = useBookingTypes()
   const { data: partnerPrefixes } = usePartnerPrefixes()
   const { data: locations } = useLocations()
   const { data: commodityCodes } = useCommodityCodes()
-  const bookingType = bookingTypes && bookingTypes.find((item: any) => item.ID === bookingTypeId)
-  const partnerPrefix = partnerPrefixes && partnerPrefixes.find((item: any) => item.ID === partnerPrefixId)
-  const originLoc = origin && locations && locations.find((item: any) => item.ID === origin)
-  const destLoc = destination && locations && locations.find((item: any) => item.ID === destination)
-  const commodity = commodityCode && commodityCodes && commodityCodes.find((item: any) => item.ID === commodityCode)
+  const bookingType = bookingTypes && bookingTypes.find((item: any) => item.ID === booking_type_id)
+  const partnerPrefix = partnerPrefixes && partnerPrefixes.find((item: any) => item.ID === partner_prefix_id)
+  const originLoc = origin_id && locations && locations.find((item: any) => item.ID === origin_id)
+  const destLoc = destination_id && locations && locations.find((item: any) => item.ID === destination_id)
+  const commodity = commodity_code_id && commodityCodes && commodityCodes.find((item: any) => item.ID === commodity_code_id)
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
         <CardTitle>{bookingType && bookingType.name}</CardTitle>
-        <CardDescription>{partnerPrefix && partnerPrefix.name}-{axb}</CardDescription>
+        <CardDescription>{partnerPrefix && partnerPrefix.name}-{awb}</CardDescription>
       </CardHeader>
       <Separator />
       <CardContent className="p-4 pt-3">

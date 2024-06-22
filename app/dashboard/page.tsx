@@ -9,11 +9,14 @@ import { useState, useCallback } from "react";
 import { useBookingContext } from "@/components/dashboard/BookingContext";
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc";
 import { ClientSideSuspense } from "@liveblocks/react/suspense";
+import { useOrders } from "@/lib/hooks/orders";
 
 export default function Dashboard() {
   const data = getData();
   const { setSelectedBooking } = useBookingContext();
   const [modalOpen, setModalOpen] = useState(false);
+
+  const { isLoading, isPending, error, data: ordersData } = useOrders()
 
   const openModal = (data: Order) => {
     setSelectedBooking(data);
@@ -25,28 +28,25 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <ClientSideSuspense
-      fallback={
-        <Loader className="size-5 text-muted-foreground animate-spin" />
-      }
-    >
-      <LiveCursorHoc>
-        <DataTable
-          initialPinning={{
-            left: [],
-            right: ["actions"],
-          }}
-          columns={columns}
-          onRowClick={openModal}
-          data={data}
-          className="border-none [&_th]:text-foreground [&_th]:py-2 [&_th]:px-3 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground"
-        />
-        <NewOrderModal
-          open={modalOpen}
-          onOpenChange={onOpenChange}
-          mode="edit"
-        />
-      </LiveCursorHoc>
-    </ClientSideSuspense>
+    <div className="relative">
+      <ClientSideSuspense
+        fallback={
+          <Loader className="absolute size-5 text-muted-foreground animate-spin" />
+        }
+      >
+        <LiveCursorHoc />
+      </ClientSideSuspense>
+      <DataTable
+        initialPinning={{
+          left: [],
+          right: ["actions"],
+        }}
+        columns={columns}
+        onRowClick={openModal}
+        data={isLoading ? [] : ordersData.data}
+        className="border-none [&_th]:text-foreground [&_th]:py-2 [&_th]:px-3 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground"
+      />
+      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode="edit" />
+    </div>
   );
 }

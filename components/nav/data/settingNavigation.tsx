@@ -1,6 +1,10 @@
 import { TSidebarItem } from "@/components/nav/SidebarItem";
 import { CubeIcon } from "@radix-ui/react-icons";
-
+import { 
+  ListBulletIcon, 
+  PlusCircleIcon, 
+  UserIcon,
+} from "@heroicons/react/24/outline";
 export const settingNavigation: TSidebarItem[] = [
   {
     name: "Configuration",
@@ -456,10 +460,11 @@ export const settingNavigation: TSidebarItem[] = [
       {
         name: "Partner",
         href: "#",
+        icon: UserIcon,
         current: false,
         children: [
-          { name: "List", href: "/configuration/partner", current: false },
-          { name: "New", href: "/configuration/partner/new", current: false },
+          { name: "List", href: "/configuration/partner", icon: ListBulletIcon, current: false },
+          { name: "New", href: "/configuration/partner/new", icon: PlusCircleIcon, current: false },
         ],
       },
       {

@@ -21,13 +21,14 @@ const createActionColumn = (props: any): ColumnDef<any> => {
   const items = props.items
   return {
     accessorKey: "id",
-    header: "Action",
+    header: "Actions",
     cell: ({ row }) => (
       <DataTableRowActions
         row={row.original}
         items={items}
       />
     ),
+    enablePinning: true,
   };
 };
 

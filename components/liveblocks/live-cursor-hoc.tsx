@@ -65,7 +65,7 @@ export default function LiveCursorHoc({ children }: PropsWithChildren) {
           /**
            * Iterate over other users and display a cursor based on their presence
            */
-          others.map(({ connectionId, presence }) => {
+          others.map(({ connectionId, presence, info }) => {
             if (presence.cursor === null) {
               return null;
             }
@@ -75,7 +75,7 @@ export default function LiveCursorHoc({ children }: PropsWithChildren) {
                 key={`cursor-${connectionId}`}
                 // connectionId is an integer that is incremented at every new connections
                 // Assigning a color with a modulo makes sure that a specific user has the same colors on every clients
-                color={COLORS[connectionId % COLORS.length]}
+                color={info.color}
                 x={presence.cursor.x}
                 y={presence.cursor.y}
               />

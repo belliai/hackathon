@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ForwardedRef } from "react";
+import React, { ForwardedRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,14 +22,7 @@ import {
 import { RotateCcwIcon, SearchIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 
-type FormValues = {
-  bookingType: string;
-  partnerPrefix: string;
-  axb: string;
-  partnerCode: string;
-  isPhysical: boolean;
-  status: string;
-};
+
 
 const generateAWBNumbers = (start: number, length: number) => {
   return Array.from({ length }, (_, i) => {
@@ -44,9 +37,18 @@ import { useBookingTypes } from "@/lib/hooks/booking-types"
 import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
 import { usePartnerCodes } from "@/lib/hooks/partner-codes"
 import { useStatuses } from "@/lib/hooks/statuses";
+import { Order } from "@/schemas/order/order";
 
-const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
-  const form = useFormContext<FormValues>();
+const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
+
+  // const { 
+  //   bookingTypes,
+  //   partnerPrefixes,
+  //   partnerCodes,
+  //   statuses
+  // } = props
+
+  const form = useFormContext();
   const awb = generateAWBNumbers(7752000270, 20);
   const { data: bookingTypes } = useBookingTypes()
   const { data: partnerPrefixes } = usePartnerPrefixes()
@@ -54,12 +56,15 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const { data: statuses } = useStatuses()
 
 
+  
+  useEffect(()=>{},[form.formState])
+
   return (
     <Card className="p-4 space-y-2" ref={ref}>
       <div className="grid grid-cols-4 gap-2">
         <FormField
           control={form.control}
-          name="bookingType"
+          name="booking_type_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="booking type info here">Booking Type</FormLabel>
@@ -81,7 +86,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="partnerPrefix"
+          name="partner_prefix_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
@@ -105,7 +110,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="axb"
+          name="awb"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">AWB#</FormLabel>
@@ -118,7 +123,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
         />
         <FormField
           control={form.control}
-          name="partnerCode"
+          name="partner_code_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
@@ -144,13 +149,13 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
       <div className="w-full flex flex-row items-center justify-between">
         <FormField
           control={form.control}
-          name="isPhysical"
+          name="is_physical"
           render={({ field }) => (
             <FormItem>
               <div className="flex flex-row items-center gap-2">
                 <FormControl>
                   <Checkbox
-                    checked={field.value}
+                    checked={!!field.value}
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
@@ -171,7 +176,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
       </div>
       <FormField
         control={form.control}
-        name="status"
+        name="status_id"
         render={({ field }) => (
           <FormItem>
             <FormLabel info="info here">Status</FormLabel>

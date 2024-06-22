@@ -30,6 +30,7 @@ import { useStatuses } from "@/lib/hooks/statuses";
 import { usePartnerTypes } from "@/lib/hooks/partner-types";
 import { useLocations } from "@/lib/hooks/locations";
 import { useTransportMethods } from "@/lib/hooks/transport-method";
+import { Order } from "@/schemas/order/order";
 
 const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext();
@@ -40,23 +41,18 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const { data: transportMethods } = useTransportMethods()
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    { control: form.control, name: "shipperDetails" }
+    { control: form.control, name: "shipper_details" }
   );
 
-  const [tabValue, setTabValue] = useState(fields[0].id);
+  const [tabValue, setTabValue] = useState(fields.length && fields[0].id || "0");
 
   const appendField = () => {
     append({});
   };
 
-  const selectOptions = [
-    { value: "AXB Booked & Confirmed", label: "AXB Booked & Confirmed" },
-    { value: "Shipped", label: "Shipped" },
-    { value: "Delivered", label: "Delivered" },
-  ];
-
   useEffect(() => {
     setTabValue(fields[fields.length - 1]?.id ?? "");
+
   }, [fields]);
 
   return (
@@ -64,6 +60,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
       value={tabValue}
       onValueChange={setTabValue}
       className="flex flex-col"
+      ref={ref}
     >
       <TabsList className="flex flex-row justify-start items-center p-0 bg-transparent transition-all">
         {fields.map((field, index) => {
@@ -101,9 +98,21 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               value={field.id}
               className="mt-0 grid grid-cols-2 gap-y-2 gap-x-3"
             >
+              <FormField  
+                name={`shipper_details[${index}].ID`}
+                render={({ field }) => (
+                  <FormItem className="hidden">
+                      <Input
+                        type="hidden"
+                        {...field}
+                        className="border-2 border-foreground/30"
+                      />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
-                name={`shipperDetails[${index}].select`}
+                name={`shipper_details[${index}].transport_method_id`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Select</FormLabel>
@@ -117,7 +126,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                      {transportMethods && transportMethods.map((transportMethod: any) =>
+                        {transportMethods && transportMethods.map((transportMethod: any) =>
                           <SelectItem value={transportMethod.ID} key={transportMethod.ID} >{transportMethod.name}</SelectItem>
                         )}
                       </SelectContent>
@@ -128,13 +137,12 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails[${index}].origin`}
+                name={`shipper_details[${index}].origin_id`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Origin *</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                    >
+                      onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="border-2 border-foreground/30">
                           <SelectValue />
@@ -152,12 +160,12 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`des`}
+                name={`shipper_details[${index}].destination_id`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Destination *</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                       onValueChange={field.onChange} defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="border-2 border-foreground/30">
@@ -176,7 +184,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails[${index}].partnerType`}
+                name={`shipper_details[${index}].partner_type_id`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Partner Type</FormLabel>
@@ -201,7 +209,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails[${index}].partnerType`}
+                name={`shipper_details[${index}].partner_code_id`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Partner Code</FormLabel>
@@ -226,7 +234,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails[${index}].date`}
+                name={`shipper_details[${index}].date`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date</FormLabel>
@@ -240,7 +248,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails[${index}].flightCode`}
+                name={`shipper_details[${index}].flight_code`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Flight Code *</FormLabel>
@@ -256,7 +264,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`shipperDetails[${index}].allotmentCode`}
+                name={`shipper_details[${index}].allotment_code`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Allotment Code</FormLabel>
@@ -272,7 +280,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
               />
               <FormField
                 control={form.control}
-                name={`status`}
+                name={`shipper_details[${index}].status_id`}
                 render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormLabel>AWB Status</FormLabel>

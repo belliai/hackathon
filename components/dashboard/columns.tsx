@@ -1,93 +1,102 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { actionColumn } from "@/app/organize/masters/components/columnItem";
-import { DataTableRowActions } from "../data-table/data-table-row-actions";
-import DataTableSelectHead from "../data-table/DataTableSelectHead";
-import DataTableSelectRow from "../data-table/DataTableSelectRow";
+import { Order } from "@/schemas/order/order";
 
-export type Order = {
-  axb: string; // airway bill
-  org: string; // origin
-  des: string; // destination
-  cusc: string; // customer code
-  status: string;
-  mode: string;
-  // NUMBERS
-  grosswt: number;
-  total: number; // total number of pieces
-  // DATETIME
-  // todo: change to date object
-  bookdate: string; // booking date and time
-  execdate: string; // execution date and time
-  fflightassign: string; // first-flight-assign date and time
-  delivery: string; // delivery date and time
-};
+export type { Order }
 
 export const columns: ColumnDef<Order>[] = [
+
   {
-    accessorKey: "axb",
-    header: "AXB",
+    header: 'AWB',
+    accessorKey: 'awb'
+  },
+
+  {
+    header: 'Booking Type',
+    accessorKey: 'booking_type.name'
   },
   {
-    accessorKey: "org",
-    header: "Organization",
+    header: 'Destination',
+    accessorKey: 'destination.name'
   },
   {
-    accessorKey: "des",
-    header: "Des",
+    header: 'Origin',
+    accessorKey: 'origin.name'
   },
   {
-    accessorKey: "cusc",
-    header: "Cust. Code",
+    header: 'Customer',
+    accessorKey: 'bill_to.name'
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <span className=" font-semibold"> {row.original.status}</span>
-    ),
-    meta: {
-      filterSelectOptions: [
-        { value: "AXB Booked & Confirmed", label: "AXB Booked & Confirmed" },
-        { value: "Shipped", label: "Shipped" },
-        { value: "Delivered", label: "Delivered" },
-      ],
-    },
+    header: 'Partner Code',
+    accessorKey: 'partner_code.name'
   },
   {
-    accessorKey: "mode",
-    header: "Mode",
+    header: 'Partner Prefix',
+    accessorKey: 'partner_prefix.name'
   },
   {
-    accessorKey: "grosswt",
-    header: "Gross Wt",
+    header: 'Payment Mode',
+    accessorKey: 'payment_mode.name'
   },
   {
-    accessorKey: "total",
-    header: "Total",
+    header: 'Charged Weight (kg)',
+    accessorKey: 'ch_weight_kg'
   },
   {
-    accessorKey: "bookdate",
-    header: "Book Date",
+    header: 'Commodity Code',
+    accessorKey: 'commodity_code.name'
+  },
+
+  {
+    header: 'Currency',
+    accessorKey: 'currency.name'
+  },
+
+  {
+    header: 'Freight Forwarder',
+    accessorKey: 'freight_forwarder.name'
   },
   {
-    accessorKey: "execdate",
-    header: "Exec Date",
+    header: 'Gross Weight (kg)',
+    accessorKey: 'gs_weight_kg'
   },
   {
-    accessorKey: "fflightassign",
-    header: "First Flight Assign",
+    header: 'Mode',
+    accessorKey: 'mode'
+  },
+
+  {
+    header: 'Rate',
+    accessorKey: 'rate'
   },
   {
-    accessorKey: "delivery",
-    header: "Delivery",
+    header: 'S Freight',
+    accessorKey: 's_freight'
   },
   {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <DataTableRowActions />,
-    enablePinning: true,
+    header: 'S Rate',
+    accessorKey: 's_rate'
   },
+  {
+    header: 'Shipper',
+    accessorKey: 'shipper.name'
+  },
+  {
+    header: 'Spot ID',
+    accessorKey: 'spot_id'
+  },
+  {
+    header: 'Status',
+    accessorKey: 'status.name'
+  },
+  {
+    header: 'Total',
+    accessorKey: 'total'
+  },
+  {
+    header: 'Volume (kg)',
+    accessorKey: 'volume_kg'
+  }
 ];

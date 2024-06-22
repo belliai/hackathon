@@ -3,6 +3,7 @@
 import { useOthers, useSelf } from "@liveblocks/react/suspense";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { CSSProperties } from "react";
 
 export default function ActiveUsers() {
   const users = useOthers();
@@ -17,12 +18,16 @@ export default function ActiveUsers() {
       {currentUser && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Avatar className="w-6 h-6 border " key={currentUser.connectionId}>
-              <AvatarImage
-                src={`https://liveblocks.io/avatars/avatar-${Math.floor(
-                  currentUser.connectionId % 30
-                )}.png`}
-              />
+            <Avatar
+              style={
+                {
+                  "--accent": currentUser.info.color,
+                } as CSSProperties
+              }
+              className="w-6 h-6 ring-1 ring-offset-2 ring-offset-background ring-[var(--accent)]"
+              key={currentUser.connectionId}
+            >
+              <AvatarImage src={currentUser.info.avatar} />
               <AvatarFallback>BL</AvatarFallback>
             </Avatar>
           </TooltipTrigger>
@@ -35,17 +40,21 @@ export default function ActiveUsers() {
         return (
           <Tooltip key={connectionId}>
             <TooltipTrigger asChild>
-              <Avatar className="w-6 h-6 border" key={currentUser.connectionId}>
-                <AvatarImage
-                  src={`https://liveblocks.io/avatars/avatar-${Math.floor(
-                    currentUser.connectionId % 30
-                  )}.png`}
-                />
+              <Avatar
+                style={
+                  {
+                    "--accent": info.color,
+                  } as CSSProperties
+                }
+                className="w-6 h-6 ring-1 ring-offset-2 ring-offset-background ring-[var(--accent)]"
+                key={currentUser.connectionId}
+              >
+                <AvatarImage src={info.avatar} />
                 <AvatarFallback>BL</AvatarFallback>
               </Avatar>
             </TooltipTrigger>
             <TooltipContent className="bg-background text-foreground border">
-              My Name
+              {info.name}
             </TooltipContent>
           </Tooltip>
         );

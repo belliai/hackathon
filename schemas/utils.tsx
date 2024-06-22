@@ -13,7 +13,7 @@ export function getDefaults<T extends z.ZodTypeAny>(schema: z.AnyZodObject | z.Z
     function getDefaultValue(schema: z.ZodTypeAny): unknown {
         if (schema instanceof z.ZodDefault) return schema._def.defaultValue();
         // return an empty array if it is
-        if (schema instanceof z.ZodArray) return [];
+        if (schema instanceof z.ZodArray) return [{}];
         // return an empty string if it is
         if (schema instanceof z.ZodString) return "";
         // return an content of object recursivly

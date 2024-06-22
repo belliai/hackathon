@@ -4,6 +4,12 @@ import {
   HandThumbUpIcon,
   PresentationChartLineIcon,
   ServerStackIcon,
+  CurrencyDollarIcon,
+  ReceiptPercentIcon, 
+  CircleStackIcon,
+  BanknotesIcon, 
+  BoltIcon, 
+  ChartBarIcon
 } from "@heroicons/react/24/outline";
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
 import { CubeIcon, UploadIcon } from "@radix-ui/react-icons";
@@ -20,19 +26,19 @@ export const defaultNavigation: TSidebarItem[] = [
   {
     name: "Sales",
     href: "#",
-    icon: CubeIcon,
+    icon: BanknotesIcon,
     current: false,
     children: [
       {
         name: "Stock Allocation",
         href: "#",
-        icon: CubeIcon,
+        icon: ChartBarIcon,
         current: false,
       },
       {
         name: "Capacity Allocation",
         href: "#",
-        icon: CubeIcon,
+        icon: CircleStackIcon,
         current: false,
         children: [
           { name: "List", href: "#", current: false },
@@ -43,7 +49,7 @@ export const defaultNavigation: TSidebarItem[] = [
       {
         name: "Rate Line",
         href: "#",
-        icon: CubeIcon,
+        icon: CurrencyDollarIcon,
         current: false,
         children: [
           { name: "List", href: "#", current: false },
@@ -53,7 +59,7 @@ export const defaultNavigation: TSidebarItem[] = [
       {
         name: "Other Charges",
         href: "#",
-        icon: CubeIcon,
+        icon: ReceiptPercentIcon,
         current: false,
         children: [
           { name: "List", href: "#", current: false },
@@ -63,7 +69,7 @@ export const defaultNavigation: TSidebarItem[] = [
       {
         name: "Spot rate",
         href: "#",
-        icon: CubeIcon,
+        icon: BoltIcon ,
         current: false,
         children: [
           { name: "List", href: "#", current: false },
@@ -81,13 +87,13 @@ export const defaultNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Flight Control",
-        href: "#",
+        href: "/planning/flightControl",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "Manage Capacity",
-        href: "#",
+        href: "/planning/manageCapacity",
         icon: CubeIcon,
         current: false,
       },
@@ -97,29 +103,29 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Fight Master", href: "#", current: false },
-          { name: "Active Flights", href: "#", current: false },
-          { name: "New Flight", href: "#", current: false },
+          { name: "Fight Master", href: "/planning/flightSchedule/flightMaster", current: false },
+          { name: "Active Flights", href: "/planning/flightSchedule/activeFlights", current: false },
+          { name: "New Flight", href: "/planning/flightSchedule/newFlight", current: false },
           {
             name: "Route Control",
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/planning/flightSchedule/routeControl/List", current: false },
+              { name: "New", href: "/planning/flightSchedule/routeControl/New", current: false },
             ],
           },
         ],
       },
       {
         name: "Flight Load Plan",
-        href: "#",
+        href: "/planning/flightLoadPlan",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "List Flight Plan",
-        href: "#",
+        href: "/planning/listFlightPlan",
         icon: CubeIcon,
         current: false,
       },
@@ -349,8 +355,8 @@ export const defaultNavigation: TSidebarItem[] = [
         children: [
           { name: "UCM In", href: "#", current: false },
           { name: "UCM Out", href: "#", current: false },
-          { name: "ULD Stock Management", href: "#", current: false },
-          { name: "Station ULD Stock", href: "#", current: false },
+          { name: "ULD Stock Management", href: "/uld/uldStockManagement", current: false },
+          { name: "Station ULD Stock", href: "/uld/uldStationStock", current: false },
         ],
       },
     ],
