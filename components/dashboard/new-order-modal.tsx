@@ -59,7 +59,7 @@ const initialValues = getDefaults(orderSchema);
 
 export default function NewOrderModal(props: NewOrderModalProps) {
   const { children, onOpenChange, mode = "create" } = props;
-  const { selectedBooking , setSelectedBooking} = useBookingContext();
+  const { selectedBooking, setSelectedBooking } = useBookingContext();
   const [open, setOpen] = useState(props.open ?? false);
   const [isFullScreen, setFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -84,14 +84,14 @@ export default function NewOrderModal(props: NewOrderModalProps) {
 
   useEffect(() => {
     setOpen(props.open ?? false);
-    if(!props.open && mode === "edit"){
+    if (!props.open && mode === "edit") {
       setSelectedBooking(initialValues);
     }
   }, [props.open]);
 
-  useEffect(()=>{
+  useEffect(() => {
 
-  },[selectedBooking])
+  }, [selectedBooking])
 
 
   const form = useForm<Order>({
@@ -137,16 +137,17 @@ export default function NewOrderModal(props: NewOrderModalProps) {
             description: "Your order has been updated",
           });
         }
+        setOpen(false);
+        form.reset();
       } catch (e) {
         toast({
           title: "Failed!",
-          variant:"destructive",
+          variant: "destructive",
           description: "Your request failed",
         });
       }
 
-      setOpen(false);
-      form.reset();
+
     } catch (error) {
       console.error({ error });
     } finally {
