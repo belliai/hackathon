@@ -44,7 +44,7 @@ import { Order, orderSchema } from "@/schemas/order/order";
 import { getDefaults } from "@/schemas/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddOrder, useUpdateOrder } from "@/lib/hooks/orders";
-import { mapJsonToSchema } from "@/lib/mapper/order";
+import { mapJsonToSchema, mapSchemaToJson } from "@/lib/mapper/order";
 
 import { format } from "date-fns";
 
@@ -118,20 +118,23 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   };
 
   const onSubmit = async (data: Order) => {
+
+
     try {
       const mappedShipperDetails = data.shipper_details?.map(item => ({ ...item, date: item.date ? format(item.date, "yyyy-MM-dd") : "" }))
       data.shipper_details = mappedShipperDetails
       setIsLoading(true);
+      const dataMapped = mapSchemaToJson(data);
 
       try {
         if (!data.ID) {
-          await add.mutateAsync(data as Order)
+          await add.mutateAsync(dataMapped as Order)
           toast({
             title: "Success!",
             description: "Your order has been created",
           });
         } else {
-          await update.mutateAsync({ ...data as Order, id: data.ID })
+          await update.mutateAsync({ ...dataMapped as Order, id: data.ID })
           toast({
             title: "Success!",
             description: "Your order has been updated",
@@ -227,12 +230,10 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 </div>
                 <div className="flex-1 grid">
                   <TabsContent value="booking-details" asChild>
-                    <CreateBookingForm
-                    />
+                    <CreateBookingForm />
                   </TabsContent>
                   <TabsContent value="consignment-details" asChild>
-                    <ConsignmentDetailsForm
-                    />
+                    <ConsignmentDetailsForm/>
                   </TabsContent>
                   <TabsContent value="shipper-details" asChild>
                     <ShipperDetailsForm />

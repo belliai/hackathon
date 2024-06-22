@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {  setHeaders } from '../utils/network';
+import { objectToParams, setHeaders } from '../utils/network';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Order } from '@/schemas/order/order';
 import { error } from 'console';
@@ -11,28 +11,34 @@ const config = {
     baseURL: process.env.NEXT_PUBLIC_API_URL
 };
 
-export const fetchOrders = async () => {
-    const { data } = await axios.get(`/${route}`, config);
+export const fetchOrders = async (filter: FetchOrdersProps) => {
+    const pagination = {
+        page: filter.pagination.pageIndex + 1,
+        page_size: filter.pagination.pageSize
+    }
+    const queryParams = objectToParams(pagination)
+    
+    const { data } = await axios.get(`/${route}?${queryParams}`, config);
     return data;
 };
 
 export const updateOrder = async (prop: Order & { id: string }) => {
     const filteredOrder = Object.entries(prop)
-    .filter(([key, value]) => value)
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Order);
+        .filter(([key, value]) => value)
+        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Order);
 
     const updateData = filteredOrder
 
-        const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config);
-        return data;
+    const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config);
+    return data;
 
 };
 
 export const addOrder = async (prop: Order) => {
 
     const filteredOrder = Object.entries(prop)
-    .filter(([key, value]) => value)
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Order);
+        .filter(([key, value]) => value)
+        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Order);
 
     const newData = filteredOrder;
     delete prop.ID
@@ -45,11 +51,18 @@ export const removeOrder = async (prop: { id: string }) => {
     return resp
 };
 
-export const useOrders = () => {
+
+type FetchOrdersProps = {
+    pagination: {
+        pageSize: number,
+        pageIndex: number
+    }
+}
+export const useOrders = (props: FetchOrdersProps) => {
     return useQuery(
         {
-            queryKey: [route],
-            queryFn: fetchOrders
+            queryKey: [route, props],
+            queryFn: () => fetchOrders(props)
         });
 };
 
@@ -57,9 +70,9 @@ export const useUpdateOrder = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn:  updateOrder,
-           
-            onError : (error) =>{
+            mutationFn: updateOrder,
+
+            onError: (error) => {
                 throw Error("Error")
             },
             onSuccess: () => {
@@ -73,7 +86,7 @@ export const useUpdateOrder = () => {
 
 export const useAddOrder = () => {
     const queryClient = useQueryClient();
-    const mutation : any = useMutation(
+    const mutation: any = useMutation(
         {
             mutationFn: addOrder,
             onSuccess: () => {

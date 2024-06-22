@@ -41,21 +41,12 @@ import { Order } from "@/schemas/order/order";
 
 const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
-  // const { 
-  //   bookingTypes,
-  //   partnerPrefixes,
-  //   partnerCodes,
-  //   statuses
-  // } = props
-
   const form = useFormContext();
   const awb = generateAWBNumbers(7752000270, 20);
   const { data: bookingTypes } = useBookingTypes()
   const { data: partnerPrefixes } = usePartnerPrefixes()
   const { data: partnerCodes } = usePartnerCodes()
   const { data: statuses } = useStatuses()
-
-
   
   useEffect(()=>{},[form.formState])
 
