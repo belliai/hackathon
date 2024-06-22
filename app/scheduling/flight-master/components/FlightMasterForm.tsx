@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import FormTextField from "@/components/form/FormTextField";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -110,11 +110,10 @@ export default function FlightMasterForm({
       label: list.tail_number,
     }));
     
-    hookForm.setValue('tailNo', '');
     setTailNoOptions(tailNo || []);
     
   }, [formData.aircraftType]);
-
+  
   return (
     <div className="flex flex-col gap-4">
       <Form {...hookForm}>
@@ -156,89 +155,102 @@ export default function FlightMasterForm({
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
-            <label className="text-sm">Dept. Time (D H M)</label>
+          <FormLabel className="text-sm">Dept Time (D H M)</FormLabel>
             <div className="grid grid-cols-3 gap-1">
               <FormTextField
-                name="deptDay"
+                name="deptTime.deptDay"
                 form={hookForm}
-                type="text"
+                type="number"
                 label=""
               />
               <FormTextField
-                name="deptHour"
+                name="deptTime.deptHour"
                 form={hookForm}
-                type="text"
+                type="number"
                 label=""
+                hideErrorMessage
               />
               <FormTextField
-                name="deptMinute"
+                name="deptTime.deptMinute"
                 form={hookForm}
-                type="text"
+                type="number"
                 label=""
+                hideErrorMessage
               />
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-sm">Arrival Time (D H M)</label>
+            <FormLabel className="text-sm">Arrival Time (D H M)</FormLabel>
             <div className="grid grid-cols-3 gap-1">
               <FormTextField
-                name="arrivalDay"
+                name="arrivalTime.arrivalDay"
                 form={hookForm}
-                type="text"
+                type="number"
                 label=""
               />
               <FormTextField
-                name="arrivalHour"
+                name="arrivalTime.arrivalHour"
                 form={hookForm}
-                type="text"
+                type="number"
                 label=""
+                hideErrorMessage
               />
               <FormTextField
-                name="arrivalMinute"
+                name="arrivalTime.arrivalMinute"
                 form={hookForm}
-                type="text"
+                type="number"
                 label=""
+                hideErrorMessage
               />
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-2 my-2">
-          <label className="text-sm">Frequency</label>
-          <FormItem className="flex gap-3 w-full space-y-0">
-            {frequencyItems.map((item) => (
-              <FormField
-                key={item.id}
-                control={hookForm.control}
-                name="frequencyItems"
-                render={({ field }) => {
-                  return (
-                    <FormItem
+          <FormField
+            control={hookForm.control}
+            name="frequencyItems"
+            render={() => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-sm">Frequency</FormLabel>
+                <div className="flex gap-3 w-full space-y-0">
+                  {frequencyItems.map((item) => (
+                    <FormField
                       key={item.id}
-                      className="flex flex-row items-start gap-1 space-y-0"
-                    >
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value?.includes(item.id)}
-                          onCheckedChange={(checked) => {
-                            return checked
-                              ? field.onChange([...field.value, item.id])
-                              : field.onChange(
-                                  field.value?.filter(
-                                    (value: string) => value !== item.id
-                                  )
-                                )
-                          }}
-                        />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        {item.label}
-                      </FormLabel>
-                    </FormItem>
-                  )
-                }}
-              />
-            ))}
-          </FormItem>
+                      control={hookForm.control}
+                      name="frequencyItems"
+                      render={({ field }) => {
+                        return (
+                          <FormItem
+                            key={item.id}
+                            className="flex flex-row items-start gap-1 space-y-0"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(item.id)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([...field.value, item.id])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                          (value: string) => value !== item.id
+                                        )
+                                      )
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {item.label}
+                            </FormLabel>
+                          </FormItem>
+                        )
+                      }}
+                    />
+                  ))}
+                </div>
+                <FormMessage className="top-10 text-[10px]" />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="grid grid-cols-4 gap-2">
           <FormTextField
