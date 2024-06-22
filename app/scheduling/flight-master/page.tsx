@@ -30,6 +30,33 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+type FlightDetailFormValues = {
+  flightNo: string;
+  source: string;
+  destination: string;
+  fromDate: Date;
+  toDate: Date;
+  frequencyItems: any;
+  aircraftType: string | undefined;
+  tailNo: string;
+  capacity: string;
+  uom: string;
+  sector: string;
+  status: string;
+  flightType: string;
+  deptTime: {
+    deptDay: string;
+    deptHour: string;
+    deptMinute: string;
+  };
+  arrivalTime: {
+    arrivalDay: string;
+    arrivalHour: string;
+    arrivalMinute: string;
+  };
+};
+
+
 const formDefaultValues = {
   flightNo: '',
   source: '',
@@ -182,30 +209,22 @@ export default function Page() {
     }
   }
 
-  const reformatDetailToForm = (data: Flight) => {
+  const reformatDays = (data: Flight) => {
+    const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+    
+    return days.filter(day => data[day as keyof Flight]);
+  }
+
+  const reformatDetailToForm = (data: Flight): FlightDetailFormValues => {
     const aircraftTypeId = aircraftTypeList?.find((item: any) => item.aircraft_type === data.aircraft.aircraft_type);
-
-    const days = {
-      mon: data.mon,
-      tue: data.tue,
-      wed: data.wed,
-      thu: data.thu,
-      fri: data.fri,
-      sat: data.sat,
-      sun: data.sun,
-    };
   
-    const activeDays = Object.entries(days)
-      .filter(([key, value]) => value)
-      .map(([key]) => key);
-
-    const formattedPayload = {
+    const formattedPayload: FlightDetailFormValues = {
       flightNo: data.flight_no,
       source: data.source.ID,
       destination: data.destination.ID,
       fromDate: new Date(data.from_date),
       toDate: new Date(data.to_date),
-      frequencyItems: activeDays,
+      frequencyItems: reformatDays(data) || [],
       aircraftType: aircraftTypeId?.id,
       tailNo: data.tail.ID,
       capacity: data.capacity.toString(),
@@ -223,16 +242,16 @@ export default function Page() {
         arrivalHour: data.arrival_h.toString(),
         arrivalMinute: data.arrival_m.toString(),
       }
-    }
-
-    return formattedPayload
-  }
+    };
+  
+    return formattedPayload;
+  };
 
   const openDetailFlight = (data: Flight) => {
-      const formValue = reformatDetailToForm(data);
-      setOpenModal(data.ID);
-      sectionedHookForm.reset(formValue);
-  }
+    const formValue = reformatDetailToForm(data);
+    setOpenModal(data.ID);
+    sectionedHookForm.reset(formValue as FlightDetailFormValues); // Ensure correct type assertion
+  };
 
   const handleDeleteFlight = async (data: Flight) => {
     if (data) {
