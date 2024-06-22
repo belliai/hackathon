@@ -18,6 +18,8 @@ import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { RouteRoom } from "@/components/liveblocks/route-room";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { PHProvider } from "@/components/posthog-provider";
+import dynamic from "next/dynamic";
 
 // export const metadata: Metadata = {
 //   title: "Belli",
@@ -57,6 +59,11 @@ export async function generateMetadata() {
   };
 }
 
+const PostHogPageView = dynamic(() => import('@/components/posthog-pageview'), {
+  ssr: false,
+})
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -79,22 +86,25 @@ export default function RootLayout({
         )}
       >
         {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
-        <body className="  h-full text-white overflow-y-hidden bg-background">
-          {/* <ProgressBar />
+        <PHProvider>
+          <body className="  h-full text-white overflow-y-hidden bg-background">
+            {/* <ProgressBar />
       <Nav /> */}
-          <QueryProvider>
-            <TooltipProvider>
-              <BookingProvider>
-                <FavoritesProvider>
-                  <RouteRoom>
-                    <UIWrapper>{children}</UIWrapper>
-                  </RouteRoom>
-                </FavoritesProvider>
-                <Toaster />
-              </BookingProvider>
-            </TooltipProvider>
-          </QueryProvider>
-        </body>
+            <PostHogPageView />
+            <QueryProvider>
+              <TooltipProvider>
+                <BookingProvider>
+                  <FavoritesProvider>
+                    <RouteRoom>
+                      <UIWrapper>{children}</UIWrapper>
+                    </RouteRoom>
+                  </FavoritesProvider>
+                  <Toaster />
+                </BookingProvider>
+              </TooltipProvider>
+            </QueryProvider>
+          </body>
+        </PHProvider>
       </html>
     </ClerkProvider>
   );
