@@ -36,7 +36,7 @@ const formDefaultValues = {
   destination: '',
   fromDate: new Date(),
   toDate: new Date(),
-  frequencyItems: ['mon', 'tue'],
+  frequencyItems: [],
   aircraftType: '',
   tailNo: '',
   capacity: '',
@@ -151,6 +151,7 @@ export default function Page() {
           },
           onSuccess: (data) => {
             setOpenModal(false);
+            sectionedHookForm.reset(formDefaultValues);
             console.log("res data", data);
             toast({
               title: "Success!",
@@ -184,13 +185,27 @@ export default function Page() {
   const reformatDetailToForm = (data: Flight) => {
     const aircraftTypeId = aircraftTypeList?.find((item: any) => item.aircraft_type === data.aircraft.aircraft_type);
 
+    const days = {
+      mon: data.mon,
+      tue: data.tue,
+      wed: data.wed,
+      thu: data.thu,
+      fri: data.fri,
+      sat: data.sat,
+      sun: data.sun,
+    };
+  
+    const activeDays = Object.entries(days)
+      .filter(([key, value]) => value)
+      .map(([key]) => key);
+
     const formattedPayload = {
       flightNo: data.flight_no,
       source: data.source.ID,
       destination: data.destination.ID,
       fromDate: new Date(data.from_date),
       toDate: new Date(data.to_date),
-      frequencyItems: ['mon', 'tue'],
+      frequencyItems: activeDays,
       aircraftType: aircraftTypeId?.id,
       tailNo: data.tail.ID,
       capacity: data.capacity.toString(),

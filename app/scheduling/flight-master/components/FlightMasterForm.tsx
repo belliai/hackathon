@@ -270,7 +270,7 @@ export default function FlightMasterForm({
           <FormTextField
             name="capacity"
             form={hookForm}
-            type="text"
+            type="number"
             label="Capacity"
           />
           <FormTextField
