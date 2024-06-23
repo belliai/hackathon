@@ -5,11 +5,11 @@ import {
   PresentationChartLineIcon,
   ServerStackIcon,
   CurrencyDollarIcon,
-  ReceiptPercentIcon, 
+  ReceiptPercentIcon,
   CircleStackIcon,
-  BanknotesIcon, 
-  BoltIcon, 
-  ChartBarIcon
+  BanknotesIcon,
+  BoltIcon,
+  ChartBarIcon,
 } from "@heroicons/react/24/outline";
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
 import { CubeIcon, UploadIcon } from "@radix-ui/react-icons";
@@ -69,7 +69,7 @@ export const defaultNavigation: TSidebarItem[] = [
       {
         name: "Spot rate",
         href: "#",
-        icon: BoltIcon ,
+        icon: BoltIcon,
         current: false,
         children: [
           { name: "List", href: "#", current: false },
@@ -103,16 +103,36 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         children: [
-          { name: "Fight Master", href: "/planning/flightSchedule/flightMaster", current: false },
-          { name: "Active Flights", href: "/planning/flightSchedule/activeFlights", current: false },
-          { name: "New Flight", href: "/planning/flightSchedule/newFlight", current: false },
+          {
+            name: "Fight Master",
+            href: "/planning/flightSchedule/flightMaster",
+            current: false,
+          },
+          {
+            name: "Active Flights",
+            href: "/planning/flightSchedule/activeFlights",
+            current: false,
+          },
+          {
+            name: "New Flight",
+            href: "/planning/flightSchedule/newFlight",
+            current: false,
+          },
           {
             name: "Route Control",
             href: "#",
             current: false,
             children: [
-              { name: "List", href: "/planning/flightSchedule/routeControl/List", current: false },
-              { name: "New", href: "/planning/flightSchedule/routeControl/New", current: false },
+              {
+                name: "List",
+                href: "/planning/flightSchedule/routeControl/List",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/planning/flightSchedule/routeControl/New",
+                current: false,
+              },
             ],
           },
         ],
@@ -145,7 +165,11 @@ export const defaultNavigation: TSidebarItem[] = [
         children: [
           { name: "List", href: "/booking/cargo/list", current: false },
           // { name: "New", href: "#", current: false },
-          { name: "Templates", href: "#", current: false },
+          {
+            name: "Templates",
+            href: "/booking/cargo/templates",
+            current: false,
+          },
           {
             name: "Dangerous Goods",
             href: "#",
@@ -355,8 +379,16 @@ export const defaultNavigation: TSidebarItem[] = [
         children: [
           { name: "UCM In", href: "#", current: false },
           { name: "UCM Out", href: "#", current: false },
-          { name: "ULD Stock Management", href: "/uld/uldStockManagement", current: false },
-          { name: "Station ULD Stock", href: "/uld/uldStationStock", current: false },
+          {
+            name: "ULD Stock Management",
+            href: "/uld/uldStockManagement",
+            current: false,
+          },
+          {
+            name: "Station ULD Stock",
+            href: "/uld/uldStationStock",
+            current: false,
+          },
         ],
       },
     ],
@@ -615,7 +647,11 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/reports/standard/daily-collections",
             current: false,
           },
-          { name: "AWB Detail Report", href: "/reports/standard/awb-detail-report", current: false },
+          {
+            name: "AWB Detail Report",
+            href: "/reports/standard/awb-detail-report",
+            current: false,
+          },
           { name: "Deliveries", href: "#", current: false },
           {
             name: "AWB Movement",
@@ -638,15 +674,39 @@ export const defaultNavigation: TSidebarItem[] = [
           { name: "A/R Deposit", href: "#", current: false },
           { name: "Statement of Account", href: "#", current: false },
           { name: "A/R Aging", href: "#", current: false },
-          { name: "Proration Report", href: "/reports/standard/proration-report", current: false },
-          { name: "Screening", href: "/reports/standard/screening", current: false },
-          { name: "GHA Tonnage", href: "/reports/standard/gha-tonnage", current: false },
+          {
+            name: "Proration Report",
+            href: "/reports/standard/proration-report",
+            current: false,
+          },
+          {
+            name: "Screening",
+            href: "/reports/standard/screening",
+            current: false,
+          },
+          {
+            name: "GHA Tonnage",
+            href: "/reports/standard/gha-tonnage",
+            current: false,
+          },
           { name: "AWB Statement", href: "#", current: false },
           { name: "OCDC Report", href: "#", current: false },
-          { name: "Square Root Proration", href: "/reports/standard/square-root-proration", current: false },
-          { name: "WH App Traffic Report", href: "/reports/standard/wh-app-traffic-report", current: false },
+          {
+            name: "Square Root Proration",
+            href: "/reports/standard/square-root-proration",
+            current: false,
+          },
+          {
+            name: "WH App Traffic Report",
+            href: "/reports/standard/wh-app-traffic-report",
+            current: false,
+          },
           { name: "Tonnage Report", href: "#", current: false },
-          { name: "FFM Report", href: "/reports/standard/ffm-report", current: false },
+          {
+            name: "FFM Report",
+            href: "/reports/standard/ffm-report",
+            current: false,
+          },
           { name: "Delivery Report", href: "#", current: false },
         ],
       },
