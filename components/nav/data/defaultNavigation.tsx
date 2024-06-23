@@ -175,7 +175,11 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "#",
             current: false,
             children: [
-              { name: "DGR Approval", href: "#", current: false },
+              {
+                name: "DGR Approval",
+                href: "/booking/cargo/dangerous-goods/dgr-approval",
+                current: false,
+              },
               {
                 name: "MSDS",
                 href: "#",
