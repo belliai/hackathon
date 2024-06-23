@@ -182,12 +182,12 @@ export const defaultNavigation: TSidebarItem[] = [
               },
               {
                 name: "MSDS",
-                href: "#",
+                href: "/booking/cargo/dangerous-goods/msds",
                 current: false,
-                children: [
-                  { name: "List", href: "#", current: false },
-                  { name: "New", href: "#", current: false },
-                ],
+                // children: [
+                //   { name: "List", href: "#", current: false },
+                //   { name: "New", href: "#", current: false },
+                // ],
               },
             ],
           },
