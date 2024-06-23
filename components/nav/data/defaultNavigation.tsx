@@ -194,6 +194,12 @@ export const defaultNavigation: TSidebarItem[] = [
         ],
       },
       {
+        name: "ePouch",
+        href: "/booking/epouch",
+        icon: CubeIcon,
+        current: false,
+      },
+      {
         name: "Flight Load Plan",
         href: "#",
         icon: CubeIcon,
