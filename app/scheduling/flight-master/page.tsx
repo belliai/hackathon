@@ -173,7 +173,7 @@ export default function Page() {
             console.error(error);
             toast({
               title: "Error!",
-              description: "An error occurred while updating aircraft",
+              description: "An error occurred while updating flight",
             });
           },
           onSuccess: (data) => {
@@ -182,7 +182,7 @@ export default function Page() {
             console.log("res data", data);
             toast({
               title: "Success!",
-              description: "Aircraft updated successfully",
+              description: "Flight updated successfully",
             });
           },
         }
@@ -262,7 +262,7 @@ export default function Page() {
             console.error(error);
             toast({
               title: "Error!",
-              description: "An error occurred while deleting aircraft",
+              description: "An error occurred while deleting flight",
             });
           },
           onSuccess: (data) => {
@@ -270,7 +270,7 @@ export default function Page() {
             console.log("res data", data);
             toast({
               title: "Success!",
-              description: "Aircraft deleted successfully",
+              description: "Flight deleted successfully",
             });
           },
         }

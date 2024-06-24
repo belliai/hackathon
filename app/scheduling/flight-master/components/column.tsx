@@ -28,6 +28,9 @@ export const columns = (
   {
     accessorKey: "entry_type",
     header: "Entry Type",
+    cell: ({ row }) => {
+      return 'Manual';
+    },
   },
   {
     accessorKey: "flight_no",
@@ -54,10 +57,7 @@ export const columns = (
     header: "STD(API)",
     cell: ({ row }) => {
       const date = row.original.from_date || '';
-      const hour = row.original.departure_h || '';
-      const day = row.original.departure_d || '';
-      const minute = row.original.departure_m || '';
-      return `${moment(date).format('YYYY-MM-DD')} ${day}:${hour}:${minute}`;
+      return moment(date).format('YYYY-MM-DD');
     },
   },
   {
@@ -65,10 +65,7 @@ export const columns = (
     header: "STA",
     cell: ({ row }) => {
       const date = row.original.to_date || '';
-      const hour = row.original.arrival_h || '';
-      const day = row.original.arrival_d || '';
-      const minute = row.original.arrival_m || '';
-      return `${moment(date).format('YYYY-MM-DD')} ${day}:${hour}:${minute}`;
+      return moment(date).format('YYYY-MM-DD');
     },
   },
   {
@@ -122,6 +119,9 @@ export const columns = (
   {
     accessorKey: "updated_by",
     header: "Updated By",
+    cell: ({ row }) => {
+      return 'Jeff Pan';
+    },
   },
   createActionColumn({
     items: [
