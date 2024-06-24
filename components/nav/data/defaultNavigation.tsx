@@ -662,7 +662,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/reports/standard/awb-detail-report",
             current: false,
           },
-          { name: "Deliveries", href: "#", current: false },
+          { name: "Deliveries", href: "/reports/standard/deliveries", current: false },
           {
             name: "AWB Movement",
             href: "/reports/standard/awb-movement",
