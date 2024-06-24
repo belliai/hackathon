@@ -39,6 +39,8 @@ interface Flight {
     tue: boolean;
     uom: UOMType;
     wed: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 interface CreateFlightMasterPayload {

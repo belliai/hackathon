@@ -111,10 +111,18 @@ export const columns = (
   {
     accessorKey: "created_at",
     header: "Created At",
+    cell: ({ row }) => {
+      const date = row.original.created_at || '';
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   {
     accessorKey: "updated_at",
     header: "Updated At",
+    cell: ({ row }) => {
+      const date = row.original.updated_at || '';
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   {
     accessorKey: "updated_by",
