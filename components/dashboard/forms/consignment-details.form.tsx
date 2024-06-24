@@ -24,6 +24,7 @@ import { usePaymentModes } from "@/lib/hooks/payment-modes"
 import { useLocations } from "@/lib/hooks/locations";
 import { useCustomers } from "@/lib/hooks/customers";
 import { useCommodityCodes } from "@/lib/hooks/commodity-codes";
+import { Customer } from "@/schemas/customer";
 
 const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
   (_, ref) => {
@@ -42,10 +43,10 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
     const { data: customers } = useCustomers()
 
     const commodity = commodity_code_id && commodityCodes && commodityCodes.find((item: any) => item.ID === commodity_code_id)
-    const customer = customer_id && customers && customers.data.find((item: any) => item.code === customer_id)
+    const customer = customer_id && customers && customers.data.find((item: Customer) => item.ID === customer_id)
     const bill = bill_to_id && customers && customers.data.find((item: any) => item.ID === bill_to_id)
 
-    
+
     return (
       <Card className="p-4 grid grid-cols-2 gap-y-2 gap-x-3" ref={ref}>
         <FormField
@@ -186,6 +187,19 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           )}
         />
         <FormField
+          name={`bill_to_old_name`}
+          render={({ field }) => (
+            <FormItem className="hidden">
+              <Input
+                type="hidden"
+                {...field}
+                defaultValue={bill && bill.name}
+                className="border-2 border-foreground/30"
+              />
+            </FormItem>
+          )}
+        />
+        <FormField
           control={form.control}
           name="bill_to_name"
           render={({ field }) => (
@@ -194,7 +208,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                 Bill To Name
               </FormLabel>
               <FormControl>
-                <Input  defaultValue={bill && bill.name} {...field} className="border-2 border-foreground/30" />
+                <Input defaultValue={bill && bill.name} {...field} className="border-2 border-foreground/30" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -260,7 +274,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                 </FormControl>
                 <SelectContent>
                   {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.code} key={customer.code} >{customer.code}</SelectItem>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.code}</SelectItem>
                   )}
                 </SelectContent>
               </Select>
@@ -340,7 +354,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                 </FormControl>
                 <SelectContent>
                   {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.code} key={customer.code} >{customer.name}</SelectItem>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
                   )}
                 </SelectContent>
               </Select>
