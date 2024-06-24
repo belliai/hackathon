@@ -711,7 +711,7 @@ export const defaultNavigation: TSidebarItem[] = [
             href: "/reports/standard/wh-app-traffic-report",
             current: false,
           },
-          { name: "Tonnage Report", href: "#", current: false },
+          { name: "Tonnage Report", href: "tonnage-report", current: false },
           {
             name: "FFM Report",
             href: "/reports/standard/ffm-report",
