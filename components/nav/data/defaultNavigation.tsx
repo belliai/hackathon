@@ -680,7 +680,7 @@ export const defaultNavigation: TSidebarItem[] = [
           },
           { name: "Flight Perfomance", href: "#", current: false },
           { name: "Offload", href: "/reports/standard/offload", current: false },
-          { name: "Cargo Revenue Tracking", href: "#", current: false },
+          { name: "Cargo Revenue Tracking", href: "/reports/standard/cargo-revenue-tracking", current: false },
           { name: "A/R Deposit", href: "#", current: false },
           { name: "Statement of Account", href: "#", current: false },
           { name: "A/R Aging", href: "#", current: false },
