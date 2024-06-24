@@ -105,6 +105,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                       <Input
                         type="hidden"
                         {...field}
+                        defaultValue={field.value ?? undefined}
                         className="border-2 border-foreground/30"
                       />
                   </FormItem>

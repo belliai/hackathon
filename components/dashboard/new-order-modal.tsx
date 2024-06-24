@@ -47,6 +47,8 @@ import { useAddOrder, useUpdateOrder } from "@/lib/hooks/orders";
 import { mapJsonToSchema, mapSchemaToJson } from "@/lib/mapper/order";
 
 import { format } from "date-fns";
+import { useUpdateCustomer } from "@/lib/hooks/customers";
+import { Customer } from "@/schemas/customer";
 
 
 type NewOrderModalProps = PropsWithChildren & {
@@ -55,7 +57,9 @@ type NewOrderModalProps = PropsWithChildren & {
   mode?: "edit" | "create";
 };
 
-const initialValues = getDefaults(orderSchema);
+
+const schemas = orderSchema.omit({ activity_logs: true })
+const initialValues = getDefaults(schemas);
 
 export default function NewOrderModal(props: NewOrderModalProps) {
   const { children, onOpenChange, mode = "create" } = props;
@@ -66,6 +70,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
 
   const add = useAddOrder()
   const update = useUpdateOrder()
+  const updateCustomer = useUpdateCustomer()
 
 
 
@@ -96,7 +101,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
 
   const form = useForm<Order>({
     // TODO : implement later
-    resolver: zodResolver(orderSchema),
+    resolver: zodResolver(schemas),
     defaultValues,
   });
 
@@ -118,13 +123,19 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   };
 
   const onSubmit = async (data: Order) => {
-
+    const { bill_to_name, bill_to_old_name, bill_to_id } = data
 
     try {
       const mappedShipperDetails = data.shipper_details?.map(item => ({ ...item, date: item.date ? format(item.date, "yyyy-MM-dd") : "" }))
       data.shipper_details = mappedShipperDetails
       setIsLoading(true);
+
+
       const dataMapped = mapSchemaToJson(data);
+      //update bill to name if the value changes
+      if (bill_to_id && bill_to_name && (bill_to_old_name !== bill_to_name)) {
+        await updateCustomer.mutateAsync({ id: bill_to_id, name: bill_to_name })
+      }
 
       try {
         if (!data.ID) {
@@ -233,7 +244,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                     <CreateBookingForm />
                   </TabsContent>
                   <TabsContent value="consignment-details" asChild>
-                    <ConsignmentDetailsForm/>
+                    <ConsignmentDetailsForm />
                   </TabsContent>
                   <TabsContent value="shipper-details" asChild>
                     <ShipperDetailsForm />

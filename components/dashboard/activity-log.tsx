@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { CalendarIcon, ClockIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import {
   FormField,
   FormItem,
@@ -25,6 +25,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { useBookingContext } from "./BookingContext";
 
 const activities = [
   {
@@ -36,12 +37,16 @@ const activities = [
 ];
 
 const ActivityLog = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
-  const form = useForm<{
-    bookdate: string;
-    execdate: string;
-    fflightassign: string;
-    delivery: string;
-  }>();
+  // const form = useForm<{
+  //   bookdate: string;
+  //   execdate: string;
+  //   fflightassign: string;
+  //   delivery: string;
+  // }>();
+  const { selectedBooking } = useBookingContext()
+  const activity_logs = selectedBooking?.activity_logs || []
+  const form = useFormContext();
+
 
   return (
     <Card className="flex flex-col" ref={ref}>
@@ -55,20 +60,20 @@ const ActivityLog = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {activities.map((activity, index) => {
-              const datetime = formatDate(activity.datetime);
+            {activity_logs.map((activity: any, index: number) => {
+              const datetime = formatDate(new Date(activity.created_at));
               return (
                 <TableRow key={index}>
                   <TableCell className="px-4 py-2">
                     <div className="flex flex-col gap-1">
-                      <span className="leading-none">{activity.username}</span>
+                      <span className="leading-none">Jeff Pan</span>
                       <span className="leading-none text-xs text-muted-foreground">
                         {activity.email}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-2">
-                    {activity.activity}
+                    {activity.action}
                   </TableCell>
                   <TableCell className="px-4 py-2">
                     <div className="flex flex-col gap-1 text-muted-foreground ">
@@ -91,16 +96,15 @@ const ActivityLog = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
       <CardContent className="p-4 space-y-2">
         <FormField
           control={form.control}
-          name="bookdate"
+          name="created_at"
           render={({ field }) => (
             <FormItem>
-              <FormLabel info="Book Date" htmlFor="bookdate">
+              <FormLabel info="Book Date" htmlFor="created_at">
                 Book Date
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  id="bookdate"
                   className="border-2 border-foreground/30"
                 />
               </FormControl>
