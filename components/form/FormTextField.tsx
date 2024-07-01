@@ -53,6 +53,7 @@ export interface FormTextFieldProps {
   placeholder?: string;
   disabled?: boolean;
   orientation?: "horizontal" | "vertical";
+  hideErrorMessage?: boolean;
 }
 
 export default function FormTextField({
@@ -70,6 +71,7 @@ export default function FormTextField({
   placeholder,
   disabled,
   orientation = "vertical",
+  hideErrorMessage = false,
 }: FormTextFieldProps) {
   const fieldClassName = cn(
     "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700 w-full",
@@ -261,7 +263,7 @@ export default function FormTextField({
             <div className="flex flex-col w-full relative">
               {conditionalRender()}
               {description && <FormDescription>{description}</FormDescription>}
-              <FormMessage className="absolute top-10 text-[10px]" />
+              {!hideErrorMessage && <FormMessage className="top-10 text-[10px]" />}
             </div>
           </FormItem>
         );

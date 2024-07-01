@@ -15,10 +15,11 @@ export const fetchCustomers = async () => {
     return data;
 };
 
-export const updateCustomer = async (prop: Customer & { id: string }) => {
+export const updateCustomer = async (prop: Partial<Customer> & { id: string  }) => {
+
     const filteredCustomer = Object.entries(prop)
     .filter(([key, value]) => value)
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Customer);
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Partial<Customer>);
 
     const updateData = filteredCustomer
     const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config);
@@ -55,7 +56,7 @@ export const useUpdateCustomer = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation(
         {
-            mutationFn: updateCustomer,
+            mutationFn:  updateCustomer,
             onSuccess: () => {
                 // Invalidate and refetch
                 queryClient.invalidateQueries({ queryKey: [route] });

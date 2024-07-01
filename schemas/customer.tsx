@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const customerSchema = z.object({
     ID: z.string().optional(),
+    id: z.string().optional(),
     account_email: z.string()
         .min(1, { message: "This field has to be filled." })
         .email(),

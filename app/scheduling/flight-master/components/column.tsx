@@ -1,9 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
+import moment from "moment";
+import createActionColumn from "@/app/organize/masters/components/columnItem";
 
 export type FlightMasterDataType = {
     entry_type: string;
@@ -22,17 +21,16 @@ export type FlightMasterDataType = {
     updated_by: string;
 };
 
-export const columns: ColumnDef<FlightMasterDataType>[] = [
-  {
-    id: "select",
-    header: ({ table }) => <DataTableSelectHead table={table} />,
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
-    enableSorting: false,
-    enableHiding: false,
-  },
+export const columns = (
+  onRowClick: (data: Flight) => void,
+  onDelete: (data: Flight) => void
+): ColumnDef<Flight>[] => ([
   {
     accessorKey: "entry_type",
     header: "Entry Type",
+    cell: ({ row }) => {
+      return 'Manual';
+    },
   },
   {
     accessorKey: "flight_no",
@@ -41,105 +39,111 @@ export const columns: ColumnDef<FlightMasterDataType>[] = [
   {
     accessorKey: "source",
     header: "Source",
+    cell: ({ row }) => {
+      const source = row.original.source;
+      return source ? source.name : '';
+    },
   },
   {
     accessorKey: "destination",
     header: "Destination",
+    cell: ({ row }) => {
+      const destination = row.original.destination;
+      return destination ? destination.name : '';
+    },
   },
   {
-    accessorKey: "std_api",
+    accessorKey: "from_date",
     header: "STD(API)",
+    cell: ({ row }) => {
+      const date = row.original.from_date || '';
+      return moment(date).format('YYYY-MM-DD');
+    },
   },
   {
-    accessorKey: "sta",
+    accessorKey: "to_date",
     header: "STA",
+    cell: ({ row }) => {
+      const date = row.original.to_date || '';
+      return moment(date).format('YYYY-MM-DD');
+    },
   },
   {
-    accessorKey: "aircraft_type",
+    accessorKey: "aircraft",
     header: "Aircraft Type",
+    cell: ({ row }) => {
+      const aircraft = row.original.aircraft;
+      return aircraft ? aircraft.aircraft_type : '';
+    },
   },
   {
-    accessorKey: "tail_no",
+    accessorKey: "tail",
     header: "Tail No.",
+    cell: ({ row }) => {
+      const tail = row.original.tail;
+      return tail ? tail.tail_number : '';
+    },
   },
   {
     accessorKey: "flight_type",
     header: "Flight Type",
+    cell: ({ row }) => {
+      const flightType = row.original.flight_type;
+      return flightType ? flightType.value : '';
+    },
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return status ? status.value : '';
+    },
   },
   {
     accessorKey: "sector",
     header: "Sector",
+    cell: ({ row }) => {
+      const sector = row.original.sector;
+      return sector ? sector.value : '';
+    },
   },
   {
     accessorKey: "created_at",
     header: "Created At",
+    cell: ({ row }) => {
+      const date = row.original.created_at || '';
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   {
     accessorKey: "updated_at",
     header: "Updated At",
+    cell: ({ row }) => {
+      const date = row.original.updated_at || '';
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   {
     accessorKey: "updated_by",
     header: "Updated By",
+    cell: ({ row }) => {
+      return 'Jeff Pan';
+    },
   },
-  {
-    accessorKey: "action",
-    header: "Action",
-    cell: ({ row }) => <DataTableRowActions />,
-  },
-];
-
-export const DUMMY_DATA: FlightMasterDataType[] = [
-  {
-    entry_type: "Scheduled",
-    flight_no: "AA123",
-    source: "JFK",
-    destination: "LAX",
-    std_api: "2024-05-23T08:00:00Z",
-    sta: "2024-05-23T11:00:00Z",
-    aircraft_type: "Boeing 737",
-    tail_no: "N12345",
-    flight_type: "Domestic",
-    status: "On Time",
-    sector: "NYC-LA",
-    created_at: "2024-05-20T10:00:00Z",
-    updated_at: "2024-05-22T10:00:00Z",
-    updated_by: "John Doe",
-  },
-  {
-    entry_type: "Charter",
-    flight_no: "BB456",
-    source: "SFO",
-    destination: "ORD",
-    std_api: "2024-05-23T09:30:00Z",
-    sta: "2024-05-23T13:30:00Z",
-    aircraft_type: "Airbus A320",
-    tail_no: "N67890",
-    flight_type: "Domestic",
-    status: "Delayed",
-    sector: "SF-CHI",
-    created_at: "2024-05-20T12:00:00Z",
-    updated_at: "2024-05-22T12:00:00Z",
-    updated_by: "Jane Smith",
-  },
-  {
-    entry_type: "Cargo",
-    flight_no: "CC789",
-    source: "MIA",
-    destination: "DFW",
-    std_api: "2024-05-23T07:00:00Z",
-    sta: "2024-05-23T10:00:00Z",
-    aircraft_type: "Boeing 747",
-    tail_no: "N54321",
-    flight_type: "Cargo",
-    status: "Cancelled",
-    sector: "MIA-DFW",
-    created_at: "2024-05-20T14:00:00Z",
-    updated_at: "2024-05-22T14:00:00Z",
-    updated_by: "Mike Johnson",
-  },
-];
+  createActionColumn({
+    items: [
+      {
+        label: "Edit",
+        value: "edit",
+        fn: onRowClick,
+      },
+      {
+        label: "Delete",
+        value: "delete",
+        fn: onDelete,
+        shortcut: "⌘⌫",
+      },
+    ],
+  }) as ColumnDef<Flight>
+]);

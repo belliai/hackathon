@@ -1,7 +1,8 @@
 "use client";
 
+import { Order } from "@/schemas/order/order";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Order } from "@/components/dashboard/columns";
+
 
 type BookingContextType = {
   selectedBooking: Order | undefined;

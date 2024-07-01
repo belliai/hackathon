@@ -7,6 +7,20 @@ export const accountNavigation: TSidebarItem[] = [
     current: false,
   },
   {
+    name: "Auth",
+    href: "#",
+    children: [
+      {
+        name: "Clerk",
+        href: "/clerk",
+      },
+      {
+        name: "Supabase",
+        href: "/supabase",
+      },
+    ],
+  },
+  {
     name: "Preferences",
     href: "/setting/preferences",
     current: false,

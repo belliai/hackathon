@@ -5,6 +5,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   ColumnPinningState,
+  PaginationState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -30,6 +31,7 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar";
 import { cn } from "@/lib/utils";
 import { ButtonProps } from "../ui/button";
+import { useEffect } from "react";
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,6 +43,9 @@ export interface DataTableProps<TData, TValue> {
   toolbarButtonVariant?: ButtonProps["variant"];
   onRowClick?: (data: TData) => void;
   initialPinning?: ColumnPinningState;
+  manualPagination?: boolean,
+  tableState?: (prop: any) => void,
+  pageCount?: number
 }
 
 export function DataTable<TData, TValue>({
@@ -53,6 +58,10 @@ export function DataTable<TData, TValue>({
   toolbarButtonVariant,
   initialPinning,
   onRowClick,
+  manualPagination,
+  tableState,
+  pageCount
+
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -65,15 +74,22 @@ export function DataTable<TData, TValue>({
     initialPinning ?? { left: [], right: [] }
   );
 
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
   const table = useReactTable({
     data,
     columns,
+    pageCount: pageCount ?? undefined,
     state: {
       sorting,
       columnVisibility,
       rowSelection,
       columnFilters,
       columnPinning,
+      pagination
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -86,7 +102,13 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    onPaginationChange: setPagination,
+    manualPagination: manualPagination ?? false
   });
+
+  useEffect(() => {
+    tableState && tableState({ pagination })
+  }, [pagination])
 
   return (
     <div className="space-y-4 ">
@@ -112,9 +134,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

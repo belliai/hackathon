@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { headers } from "next/headers"
 
 export const setHeaders = () => {
@@ -13,3 +13,14 @@ export const belliApi = axios.create({
     headers: setHeaders()
 })
 
+
+
+export function objectToParams(obj: any) {
+    const params = new URLSearchParams();
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            params.append(key, obj[key]);
+        }
+    }
+    return params.toString();
+}

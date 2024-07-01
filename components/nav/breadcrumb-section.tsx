@@ -19,6 +19,7 @@ import { Loader, StarIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Path, useFavorites } from "./favorites/favorites-provider";
 import { k360Navigation } from "./data/k360Navigation";
+import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
 import {
   ClientSideSuspense,
   useOthers,
@@ -65,6 +66,7 @@ const getCurrentPaths = (pathname: string) => {
     ...settingNavigation,
     ...defaultNavigation,
     ...k360Navigation,
+    ...operationsNavigation,
   ];
 
   // Use the helper function to find the current path
@@ -76,6 +78,20 @@ const getCurrentPaths = (pathname: string) => {
   return currentPaths;
 };
 
+const getSection = (pathname: string, items: TSidebarItem[]): boolean => {
+  for (const item of items) {
+    if (item.href === pathname) {
+      return true;
+    }
+    if (item.children?.length) {
+      if (getSection(pathname, item.children)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 export default function BreadCrumbSection() {
   const pathname = usePathname();
   const { insertPath, isPathFavorited, deletePathByHref, favorites } =
@@ -85,6 +101,11 @@ export default function BreadCrumbSection() {
     () => isPathFavorited(pathname),
     [pathname, favorites, isPathFavorited]
   );
+
+  const isK360 = useMemo(
+    () => getSection(pathname, k360Navigation),
+    [pathname]
+  );
   const currentPaths = getCurrentPaths(pathname);
 
   return (
@@ -92,6 +113,7 @@ export default function BreadCrumbSection() {
       <div className="flex flex-row items-center gap-4">
         <Breadcrumb>
           <BreadcrumbList>
+            {isK360 ? "K360" : "SK"}
             {currentPaths.map((path, index) => (
               <React.Fragment key={index}>
                 {index !== 0 && <BreadcrumbSeparator />}

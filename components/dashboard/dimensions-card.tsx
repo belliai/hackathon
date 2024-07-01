@@ -8,12 +8,16 @@ import {
 import KeyValueDisplay from "@/components/ui/key-value-display";
 import { Separator } from "@/components/ui/separator";
 
-export default function DimensionsCard() {
+export default function DimensionsCard(props : any) {
+  const {
+    volume_kg
+  } = props
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
         <CardTitle>Weight</CardTitle>
-        <CardDescription>100 Kg</CardDescription>
+        <CardDescription>{volume_kg} Kg</CardDescription>
       </CardHeader>
       <Separator />
       <CardContent className="p-4 pt-3">

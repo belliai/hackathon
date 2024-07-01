@@ -22,36 +22,41 @@ import { ListIcon, SearchIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { usePaymentModes } from "@/lib/hooks/payment-modes"
 import { useLocations } from "@/lib/hooks/locations";
+import { useCustomers } from "@/lib/hooks/customers";
 import { useCommodityCodes } from "@/lib/hooks/commodity-codes";
+import { Customer } from "@/schemas/customer";
 
-const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
+const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
   (_, ref) => {
+
+
+
     const form = useFormContext();
 
     const formValues = form.watch();
-    useEffect(() => {
-      // Log the updated form values whenever they change
-     // console.log("Form Values Changed:", formValues);
-    }, [formValues]);
-    
-    const { commodityCode } = formValues
-    
+
+    const { commodity_code_id, customer_id, bill_to_id } = formValues
+
     const { data: paymentModes } = usePaymentModes()
     const { data: locations } = useLocations()
     const { data: commodityCodes } = useCommodityCodes()
-    const commodity = commodityCode && commodityCodes && commodityCodes.find((item: any) => item.ID === commodityCode)
+    const { data: customers } = useCustomers()
+
+    const commodity = commodity_code_id && commodityCodes && commodityCodes.find((item: any) => item.ID === commodity_code_id)
+    const customer = customer_id && customers && customers.data.find((item: Customer) => item.ID === customer_id)
+    const bill = bill_to_id && customers && customers.data.find((item: any) => item.ID === bill_to_id)
 
 
     return (
-      <Card className="p-4 grid grid-cols-2 gap-y-2 gap-x-3">
+      <Card className="p-4 grid grid-cols-2 gap-y-2 gap-x-3" ref={ref}>
         <FormField
           control={form.control}
-          name="origin"
+          name="origin_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="booking type info here">Origin</FormLabel>
               <Select
-                onValueChange={field.onChange}
+                onValueChange={field.onChange} defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
@@ -70,14 +75,14 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
         />
         <FormField
           control={form.control}
-          name="destination"
+          name="destination_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
                 Destination
               </FormLabel>
               <Select
-                onValueChange={field.onChange}
+                onValueChange={field.onChange} defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
@@ -96,14 +101,14 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
         />
         <FormField
           control={form.control}
-          name="commodityCode"
+          name="commodity_code_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
                 Commodity Code *
               </FormLabel>
               <Select
-                onValueChange={field.onChange}
+                onValueChange={field.onChange} defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
@@ -122,14 +127,14 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
         />
         <FormField
           control={form.control}
-          name="commodityDescription"
+          name="commodity_name"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
                 Commodity Description
               </FormLabel>
               <FormControl>
-                <Input readOnly defaultValue={commodity && commodity.name} {...field} className="border-2 border-foreground/30" />
+                <Input readOnly defaultValue={commodity && commodity.description} {...field} className="border-2 border-foreground/30" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -137,7 +142,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
         />
         <FormField
           control={form.control}
-          name="paymentMode"
+          name="payment_mode_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
@@ -161,120 +166,10 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
         />
         <FormField
           control={form.control}
-          name="billTo"
+          name="bill_to_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">Bill To</FormLabel>
-              <FormControl>
-                <Input {...field} className="border-2 border-foreground/30" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="billToName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Bill To Name
-              </FormLabel>
-              <FormControl>
-                <Input {...field} className="border-2 border-foreground/30" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="shipper"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">Shipper</FormLabel>
-              <FormControl>
-                <div className="inline-flex items-center gap-1">
-                  <div className="relative h-fit">
-                    <Input
-                      {...field}
-                      className="border-2 border-foreground/30"
-                    />
-                    <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                      <SearchIcon className="w-3 h-3" />
-                    </div>
-                  </div>
-                  <Button
-                    type="button"
-                    size={"icon"}
-                    variant={"ghost"}
-                    className="aspect-square"
-                  >
-                    <ListIcon className="size-4" />
-                  </Button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="consignee"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Consignee
-              </FormLabel>
-              <FormControl>
-                <div className="inline-flex items-center gap-1">
-                  <div className="relative h-fit">
-                    <Input
-                      {...field}
-                      className="border-2 border-foreground/30"
-                    />
-                    <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                      <SearchIcon className="w-3 h-3" />
-                    </div>
-                  </div>
-                  <Button
-                    type="button"
-                    size={"icon"}
-                    variant={"ghost"}
-                    className="aspect-square"
-                  >
-                    <ListIcon className="size-4" />
-                  </Button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="cusc"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="Customer">Customer</FormLabel>
-              <FormControl>
-                <div className="relative h-fit">
-                  <Input {...field} className="border-2 border-foreground/30" />
-                  <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                    <SearchIcon className="w-3 h-3" />
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="customerName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="booking type info here">Customer Name</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
@@ -282,11 +177,121 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="origin-1">Origin Type 1</SelectItem>
-                  <SelectItem value="origin-2">Origin Type 2</SelectItem>
-                  <SelectItem value="origin-3">Origin Type 3</SelectItem>
+                  {customers && customers.data.map((customer: any) =>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name={`bill_to_old_name`}
+          render={({ field }) => (
+            <FormItem className="hidden">
+              <Input
+                type="hidden"
+                {...field}
+                defaultValue={bill && bill.name}
+                className="border-2 border-foreground/30"
+              />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="bill_to_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel info="hellow world!, this is info">
+                Bill To Name
+              </FormLabel>
+              <FormControl>
+                <Input defaultValue={bill && bill.name} {...field} className="border-2 border-foreground/30" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="shipper_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel info="hellow world!, this is info">Shipper</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {customers && customers.data.map((customer: any) =>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="consignee_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel info="hellow world!, this is info">
+                Consignee
+              </FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {customers && customers.data.map((customer: any) =>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="customer_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel info="Customer">Customer</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {customers && customers.data.map((customer: any) =>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.code}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="customer_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel info="booking type info here">Customer Name</FormLabel>
+              <FormControl>
+                <Input readOnly defaultValue={customer && customer.name} {...field} className="border-2 border-foreground/30" />
+              </FormControl>
+              <FormMessage />
               <FormMessage />
             </FormItem>
           )}
@@ -315,7 +320,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
         />
         <FormField
           control={form.control}
-          name="grossWeight"
+          name="gs_weight_kg"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
@@ -335,35 +340,46 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, {}>(
         />
         <FormField
           control={form.control}
-          name="freightForwarder"
+          name="freight_forwarder_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="hellow world!, this is info">
                 Freight Forwarder
               </FormLabel>
-              <FormControl>
-                <div className="relative h-fit">
-                  <Input {...field} className="border-2 border-foreground/30" />
-                  <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                    <SearchIcon className="w-3 h-3" />
-                  </div>
-                </div>
-              </FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {customers && customers.data.map((customer: any) =>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="org"
+          name="organization_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="Organization">Organization</FormLabel>
-              <FormControl>
-                <div className="relative h-fit">
-                  <Input {...field} className="border-2 border-foreground/30" />
-                </div>
-              </FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-2 border-foreground/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {customers && customers.data.map((customer: any) =>
+                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

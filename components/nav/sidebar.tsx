@@ -14,6 +14,7 @@ import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
 import FavoritesMenu from "./favorites/favorites-menu";
 import { k360Navigation } from "./data/k360Navigation";
+import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -96,6 +97,7 @@ export default function SideBar() {
                 {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
                   <>
                     <FavoritesMenu />
+                    <SidebarMenu items={operationsNavigation} collapsible />
                     <SidebarMenu
                       items={defaultNavigation}
                       sectionTitle="SK"

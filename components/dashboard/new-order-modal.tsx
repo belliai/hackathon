@@ -30,7 +30,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import OrderSummaryCard from "./order-summary-card";
 import BalanceCard from "./balance-card";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import CreateBookingForm from "./forms/create-booking-form";
 import ConsignmentDetailsForm from "./forms/consignment-details.form";
@@ -39,8 +39,17 @@ import ProcessRatesForm from "./forms/process-rates-form";
 import { toast } from "@/components/ui/use-toast";
 import DimensionsCard from "./dimensions-card";
 import { useBookingContext } from "@/components/dashboard/BookingContext";
-import { Order } from "@/components/dashboard/columns";
 import ActivityLog from "./activity-log";
+import { Order, orderSchema } from "@/schemas/order/order";
+import { getDefaults } from "@/schemas/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAddOrder, useUpdateOrder } from "@/lib/hooks/orders";
+import { mapJsonToSchema, mapSchemaToJson } from "@/lib/mapper/order";
+
+import { format } from "date-fns";
+import { useUpdateCustomer } from "@/lib/hooks/customers";
+import { Customer } from "@/schemas/customer";
+
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange?: (open: boolean) => void;
@@ -48,42 +57,51 @@ type NewOrderModalProps = PropsWithChildren & {
   mode?: "edit" | "create";
 };
 
+
+const schemas = orderSchema.omit({ activity_logs: true })
+const initialValues = getDefaults(schemas);
+
 export default function NewOrderModal(props: NewOrderModalProps) {
   const { children, onOpenChange, mode = "create" } = props;
-  const { selectedBooking } = useBookingContext();
+  const { selectedBooking, setSelectedBooking } = useBookingContext();
   const [open, setOpen] = useState(props.open ?? false);
   const [isFullScreen, setFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    setOpen(props.open ?? false);
-  }, [props.open]);
+  const add = useAddOrder()
+  const update = useUpdateOrder()
+  const updateCustomer = useUpdateCustomer()
+
+
+
 
   useEffect(() => {
     onOpenChange && onOpenChange(open);
   }, [open, onOpenChange]);
 
-  const defaultValues: Order = useMemo(
+  const defaultValues = useMemo(
     () => ({
-      axb: "",
-      org: "",
-      des: "",
-      cusc: "",
-      status: "",
-      mode: "",
-      grosswt: 0,
-      total: 0,
-      bookdate: "",
-      execdate: "",
-      fflightassign: "",
-      delivery: "",
-      shipperDetails: [{}],
-      ...selectedBooking,
+      ...initialValues,
+      ...(selectedBooking && { ...mapJsonToSchema(selectedBooking) }),
     }),
     [selectedBooking]
   );
 
+  useEffect(() => {
+    setOpen(props.open ?? false);
+    if (!props.open && mode === "edit") {
+      setSelectedBooking(initialValues);
+    }
+  }, [props.open]);
+
+  useEffect(() => {
+
+  }, [selectedBooking])
+
+
   const form = useForm<Order>({
+    // TODO : implement later
+    resolver: zodResolver(schemas),
     defaultValues,
   });
 
@@ -104,29 +122,46 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     setFullScreen((prev) => !prev);
   };
 
-  const onSubmit = async (data: unknown) => {
+  const onSubmit = async (data: Order) => {
+    const { bill_to_name, bill_to_old_name, bill_to_id } = data
+
     try {
-      console.log({ data });
+      const mappedShipperDetails = data.shipper_details?.map(item => ({ ...item, date: item.date ? format(item.date, "yyyy-MM-dd") : "" }))
+      data.shipper_details = mappedShipperDetails
       setIsLoading(true);
 
-      // Mock server interaction
-      const mockServerResponse = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            message: "Order created successfully",
+
+      const dataMapped = mapSchemaToJson(data);
+      //update bill to name if the value changes
+      if (bill_to_id && bill_to_name && (bill_to_old_name !== bill_to_name)) {
+        await updateCustomer.mutateAsync({ id: bill_to_id, name: bill_to_name })
+      }
+
+      try {
+        if (!data.ID) {
+          await add.mutateAsync(dataMapped as Order)
+          toast({
+            title: "Success!",
+            description: "Your order has been created",
           });
-        }, 2000); // Simulating network delay
-      });
+        } else {
+          await update.mutateAsync({ ...dataMapped as Order, id: data.ID })
+          toast({
+            title: "Success!",
+            description: "Your order has been updated",
+          });
+        }
+        setOpen(false);
+        form.reset();
+      } catch (e) {
+        toast({
+          title: "Failed!",
+          variant: "destructive",
+          description: "Your request failed",
+        });
+      }
 
-      const response = await mockServerResponse;
 
-      toast({
-        title: "Success!",
-        description: "Your order has been created",
-      });
-      setOpen(false);
-      form.reset();
     } catch (error) {
       console.error({ error });
     } finally {
@@ -224,8 +259,8 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 <div className="gap-4 max-w-[300px] flex flex-col items-stretch justify-between">
                   <div className="space-y-4">
                     <OrderSummaryCard {...formValues} />
-                    <DimensionsCard />
-                    <BalanceCard />
+                    <DimensionsCard {...formValues} />
+                    <BalanceCard {...formValues} />
                   </div>
                   <div className="space-y-4">
                     <Button
