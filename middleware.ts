@@ -1,13 +1,18 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { clerkMiddleware } from "@clerk/nextjs/server";
-import { updateSession } from "./lib/utils/supabase/middleware";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-clerkMiddleware();
+const isProtectedRoute = createRouteMatcher([
+  '/(.*)', // Match all routes
+]);
+
+const isAdminROute = createRouteMatcher([
+  '/admin/(.*)', // Match all admin routes
+]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const pathname = req.nextUrl.pathname;
 
-  await updateSession(req)
+  if (isProtectedRoute(req)) auth().protect();
 
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", pathname);

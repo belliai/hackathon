@@ -5,10 +5,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { CSSProperties } from "react";
 
+function getInitials(name: string) {
+  //Convert multi spaces to single space
+  name = name.replace(/\s+/g, " ");
+
+  //Capitalize all words
+  name = name.replace(/\b\w/g, (c) => c.toUpperCase());
+
+  return name.split(" ").map((n) => n[0]);
+}
+
 export default function ActiveUsers() {
   const users = useOthers();
   const currentUser = useSelf();
   const hasMoreUsers = users.length > 3;
+  const initials = getInitials(currentUser.info.name);
 
   return (
     <div className="flex flex-row items-center text-foreground -space-x-1">
@@ -28,7 +39,7 @@ export default function ActiveUsers() {
               key={currentUser.connectionId}
             >
               <AvatarImage src={currentUser.info.avatar} />
-              <AvatarFallback>BL</AvatarFallback>
+              <AvatarFallback className="text-sm cursor-default">{initials}</AvatarFallback>
             </Avatar>
           </TooltipTrigger>
           <TooltipContent className="bg-background text-foreground border">

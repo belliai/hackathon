@@ -15,6 +15,8 @@ import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
 import FavoritesMenu from "./favorites/favorites-menu";
 import { k360Navigation } from "./data/k360Navigation";
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
+import { toast } from "../ui/use-toast";
+import { useOrganization } from "@clerk/nextjs";
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -28,6 +30,9 @@ export default function SideBar() {
   const router = useRouter();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [sidebarType, setNavigationType] = useState(SIDEBAR_TYPE.DEFAULT);
+
+  const { organization, isLoaded } = useOrganization();
+  const isBelliAdmin = organization?.slug === "admin";
 
   useEffect(() => {
     if (settings === "true") {
@@ -131,6 +136,20 @@ export default function SideBar() {
               )}
             </ul>
           </ul>
+          {isBelliAdmin && (
+            <Button
+              onClick={() =>
+                toast({
+                  title: "Hello :D",
+                })
+              }
+              className="mt-4"
+              size="sm"
+              variant="button-primary"
+            >
+              Click me
+            </Button>
+          )}
         </nav>
       </div>
     </Suspense>
