@@ -16,7 +16,7 @@ import FavoritesMenu from "./favorites/favorites-menu";
 import { k360Navigation } from "./data/k360Navigation";
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
 import { toast } from "../ui/use-toast";
-import { useOrganization } from "@clerk/nextjs";
+import { useOrganization, useOrganizationList } from "@clerk/nextjs";
 import Link from "next/link";
 
 const SIDEBAR_TYPE = {
@@ -32,8 +32,15 @@ export default function SideBar() {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [sidebarType, setNavigationType] = useState(SIDEBAR_TYPE.DEFAULT);
 
-  const { organization, isLoaded } = useOrganization();
-  const isBelliAdmin = organization?.slug === "admin";
+  const { userMemberships } = useOrganizationList({
+    userMemberships: {
+      infinite: true,
+    },
+  });
+
+  const isBelliAdmin = userMemberships.data?.some(
+    (data) => data.organization.slug === "admin"
+  );
 
   useEffect(() => {
     if (settings === "true") {
