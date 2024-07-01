@@ -16,7 +16,12 @@ import { k360Navigation } from "@/components/nav/data/k360Navigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { RouteRoom } from "@/components/liveblocks/route-room";
-import { ClerkProvider } from "@clerk/nextjs";
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { PHProvider } from "@/components/posthog-provider";
 import dynamic from "next/dynamic";
@@ -59,10 +64,9 @@ export async function generateMetadata() {
   };
 }
 
-const PostHogPageView = dynamic(() => import('@/components/posthog-pageview'), {
+const PostHogPageView = dynamic(() => import("@/components/posthog-pageview"), {
   ssr: false,
-})
-
+});
 
 export default function RootLayout({
   children,
@@ -92,16 +96,21 @@ export default function RootLayout({
       <Nav /> */}
             <PostHogPageView />
             <QueryProvider>
-              <TooltipProvider>
-                <BookingProvider>
-                  <FavoritesProvider>
-                    <RouteRoom>
-                      <UIWrapper>{children}</UIWrapper>
-                    </RouteRoom>
-                  </FavoritesProvider>
-                  <Toaster />
-                </BookingProvider>
-              </TooltipProvider>
+              <SignedIn>
+                <TooltipProvider>
+                  <BookingProvider>
+                    <FavoritesProvider>
+                      <RouteRoom>
+                        <UIWrapper>{children}</UIWrapper>
+                      </RouteRoom>
+                    </FavoritesProvider>
+                    <Toaster />
+                  </BookingProvider>
+                </TooltipProvider>
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
             </QueryProvider>
           </body>
         </PHProvider>

@@ -17,6 +17,7 @@ import { k360Navigation } from "./data/k360Navigation";
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
 import { toast } from "../ui/use-toast";
 import { useOrganization } from "@clerk/nextjs";
+import Link from "next/link";
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -137,17 +138,8 @@ export default function SideBar() {
             </ul>
           </ul>
           {isBelliAdmin && (
-            <Button
-              onClick={() =>
-                toast({
-                  title: "Hello :D",
-                })
-              }
-              className="mt-4"
-              size="sm"
-              variant="button-primary"
-            >
-              Click me
+            <Button className="mt-4" size="sm" variant="button-primary" asChild>
+              <Link href="/admin/organization/organization-members">Admin</Link>
             </Button>
           )}
         </nav>

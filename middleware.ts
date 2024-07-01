@@ -5,14 +5,29 @@ const isProtectedRoute = createRouteMatcher([
   '/(.*)', // Match all routes
 ]);
 
-const isAdminROute = createRouteMatcher([
+const isPublicRoute = createRouteMatcher([
+  '/login'
+])
+
+const isAdminRoute = createRouteMatcher([
   '/admin/(.*)', // Match all admin routes
 ]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const pathname = req.nextUrl.pathname;
 
-  if (isProtectedRoute(req)) auth().protect();
+  if (isProtectedRoute(req) && !isPublicRoute(req)) auth().protect();
+
+  const { orgSlug } = auth()
+
+  // Protect admin pages
+  if (orgSlug !== 'admin' && isAdminRoute(req)) {
+    const origin = req.nextUrl.origin
+
+    return NextResponse.redirect(
+      origin
+    )
+  }
 
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", pathname);

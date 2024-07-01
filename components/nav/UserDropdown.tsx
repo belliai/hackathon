@@ -22,6 +22,7 @@ import {
   SignedOut,
   UserButton,
   useAuth,
+  useOrganization,
   useOrganizationList,
   useUser,
 } from "@clerk/nextjs";
@@ -55,6 +56,8 @@ export default function UserDropdown({
       infinite: true,
     },
   });
+
+  const org = useOrganization();
 
   useEffect(() => {
     // Force active org if none is selected
