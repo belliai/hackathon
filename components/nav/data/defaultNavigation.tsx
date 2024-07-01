@@ -31,7 +31,7 @@ export const defaultNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Stock Allocation",
-        href: "#",
+        href: "/sales/stock-allocation",
         icon: ChartBarIcon,
         current: false,
       },
@@ -41,9 +41,9 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CircleStackIcon,
         current: false,
         children: [
-          { name: "List", href: "#", current: false },
-          { name: "New", href: "#", current: false },
-          { name: "Capacity Usage", href: "#", current: false },
+          { name: "List", href: "/sales/capacity-allocation/capacity-allocation-list", current: false },
+          { name: "New", href: "/sales/capacity-allocation/capacity-allocation-new", current: false },
+          { name: "Capacity Usage", href: "/sales/capacity-allocation/capacity-allocation-usage", current: false },
         ],
       },
       {
@@ -52,8 +52,8 @@ export const defaultNavigation: TSidebarItem[] = [
         icon: CurrencyDollarIcon,
         current: false,
         children: [
-          { name: "List", href: "#", current: false },
-          { name: "New", href: "#", current: false },
+          { name: "List", href: "/sales/rate-line-list", current: false },
+          { name: "New", href: "/sales/rate-line-new", current: false },
         ],
       },
       {
