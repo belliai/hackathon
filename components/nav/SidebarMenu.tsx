@@ -59,13 +59,8 @@ export default function SidebarMenu({
 
   if (collapsible && sectionTitle) {
     return (
-      <Accordion
-        type="single"
-        collapsible
-        defaultValue="favorites"
-        className="space-y-1"
-      >
-        <AccordionItem className="border-b-0" value="favorites">
+      <Accordion type="single" collapsible className="space-y-1">
+        <AccordionItem className="border-b-0" value={sectionTitle}>
           <AccordionTrigger
             customarrow={
               <ChevronRight className="h-3 w-3 shrink-0 transition-transform duration-200 text-muted-foreground" />
