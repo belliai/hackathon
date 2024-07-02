@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { CalendarIcon } from "lucide-react";
 import { SpotRateDateIcon, SpotRateDatePicker } from "@/components/sales/spot-rate/SpotRateDatePicker";
 import { Button } from "@/components/ui/button";
+import SpotRateDetails from "@/components/sales/spot-rate/SpotRateDetails";
 
 export default function SpotRateList() {
 
@@ -95,7 +96,8 @@ export default function SpotRateList() {
       </div>
 
 
-      {/* Spot Rate Details */}
+      <SpotRateDetails />
+      
     </PageContainer>
 
   );
