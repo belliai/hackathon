@@ -38,6 +38,7 @@ import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
 import { usePartnerCodes } from "@/lib/hooks/partner-codes"
 import { useStatuses } from "@/lib/hooks/statuses";
 import { Order } from "@/schemas/order/order";
+import { fetchTooltips } from "@/lib/contentful";
 
 const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
@@ -50,6 +51,10 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   
   useEffect(()=>{},[form.formState])
 
+  useEffect(() => {
+    fetchTooltips()
+  }, [])
+  
   return (
     <Card className="p-4 space-y-2" ref={ref}>
       <div className="grid grid-cols-4 gap-2">
