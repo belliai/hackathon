@@ -730,7 +730,11 @@ export const skNavigation: TSidebarItem[] = [
                 href: "/sk/reports/standard/daily-shift",
                 current: false,
               },
-              { name: "Flight Perfomance", href: "#", current: false },
+              {
+                name: "Flight Perfomance",
+                href: "/sk/reports/standard/flight-performance",
+                current: false,
+              },
               {
                 name: "Offload",
                 href: "/sk/reports/standard/offload",
@@ -741,13 +745,21 @@ export const skNavigation: TSidebarItem[] = [
                 href: "/sk/reports/standard/cargo-revenue-tracking",
                 current: false,
               },
-              { name: "A/R Deposit", href: "#", current: false },
+              {
+                name: "A/R Deposit",
+                href: "/sk/reports/standard/ar-deposit",
+                current: false,
+              },
               {
                 name: "Statement of Account",
                 href: "/sk/reports/standard/statement-of-account",
                 current: false,
               },
-              { name: "A/R Aging", href: "#", current: false },
+              {
+                name: "A/R Aging",
+                href: "/sk/reports/standard/ar-aging",
+                current: false,
+              },
               {
                 name: "Proration Report",
                 href: "/sk/reports/standard/proration-report",
@@ -763,8 +775,16 @@ export const skNavigation: TSidebarItem[] = [
                 href: "/sk/reports/standard/gha-tonnage",
                 current: false,
               },
-              { name: "AWB Statement", href: "#", current: false },
-              { name: "OCDC Report", href: "#", current: false },
+              {
+                name: "AWB Statement",
+                href: "/sk/reports/standard/awb-statement",
+                current: false,
+              },
+              {
+                name: "OCDC Report",
+                href: "/sk/reports/standard/ocdc-report",
+                current: false,
+              },
               {
                 name: "Square Root Proration",
                 href: "/sk/reports/standard/square-root-proration",
@@ -777,7 +797,7 @@ export const skNavigation: TSidebarItem[] = [
               },
               {
                 name: "Tonnage Report",
-                href: "tonnage-report",
+                href: "/sk/reports/standard/tonnage-report",
                 current: false,
               },
               {
@@ -785,7 +805,11 @@ export const skNavigation: TSidebarItem[] = [
                 href: "/sk/reports/standard/ffm-report",
                 current: false,
               },
-              { name: "Delivery Report", href: "#", current: false },
+              {
+                name: "Delivery Report",
+                href: "/sk/reports/standard/delivery-report",
+                current: false,
+              },
             ],
           },
           {
