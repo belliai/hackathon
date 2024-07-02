@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, Suspense, useState } from "react";
+import { Fragment, Suspense, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CollaborativeApp } from "@/app/CollaborativeApp";
 import { Dialog, Menu, Transition } from "@headlessui/react";
@@ -20,6 +20,7 @@ import {
 import BreadCrumbSection from "../nav/breadcrumb-section";
 import { Room } from "../liveblocks/room";
 import { usePathname } from "next/navigation";
+import { fetchTooltips } from "@/lib/contentful";
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -28,6 +29,10 @@ const userNavigation = [
 
 export default function UIWrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    fetchTooltips()
+  }, [])
 
   return (
     <Suspense>

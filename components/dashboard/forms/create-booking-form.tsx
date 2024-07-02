@@ -50,10 +50,6 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const { data: statuses } = useStatuses()
   
   useEffect(()=>{},[form.formState])
-
-  useEffect(() => {
-    fetchTooltips()
-  }, [])
   
   return (
     <Card className="p-4 space-y-2" ref={ref}>

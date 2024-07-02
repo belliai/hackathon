@@ -10,18 +10,29 @@ const client = createClient({
 
 export async function fetchTooltips() {
   await client.getEntries({ content_type: 'tooltip' })
-  .then((mail) => {
-    console.log('then', mail);
+  .then((entries) => {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('tooltipContents', JSON.stringify(entries.items.map(item => item.fields)));
+    }
   })
   .catch((err) => {
     console.error('error', err);
-  })
-  .finally(() => {
-    console.log('Experiment completed');
   });
-//   if (typeof localStorage !== 'undefined') {
-//     localStorage.setItem('tooltipContents', JSON.stringify(entries.items.map(item => item.fields)));
-//   }
 }
 
-// export const getTooltipContents = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('tooltipContents') || '') : [];
+export const getTooltipContents = () => {
+  let tooltipData: any[] = [];
+  if (typeof localStorage !== 'undefined') {
+    const storedData = localStorage.getItem('tooltipContents');
+    if (storedData) {
+      try {
+        tooltipData = JSON.parse(storedData);
+      } catch (error) {
+        console.error('Failed to parse tooltip contents from localStorage', error);
+        tooltipData = [];
+      }
+    }
+  }
+
+  return tooltipData;
+}
