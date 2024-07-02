@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 import { InfoIcon } from "lucide-react";
+import { getTooltipContents } from "@/lib/contentful";
 
 const Form = FormProvider;
 
@@ -68,6 +69,11 @@ type FormItemContextValue = {
   id: string;
 };
 
+type ContentfulListType = {
+  id: string;
+  content: string;
+}
+
 const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue
 );
@@ -90,8 +96,9 @@ const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & {
     info?: string;
+    tooltipId?: string;
   }
->(({ className, info, ...props }, ref) => {
+>(({ className, info, tooltipId, ...props }, ref) => {
   const { error, formItemId } = useFormField();
 
   const label = (
@@ -106,8 +113,13 @@ const FormLabel = React.forwardRef<
       {...props}
     />
   );
+  
+  if (info || tooltipId) {
+    const tooltips = getTooltipContents();
+    const content = tooltips.find((list: ContentfulListType) => list.id === tooltipId);
 
-  if (info) {
+    const tooltipContent = info ? info : (content?.content || '');
+    
     return (
       <div className="inline-flex items-center gap-2">
         {label}
@@ -119,7 +131,7 @@ const FormLabel = React.forwardRef<
             side="right"
             className="bg-card border text-foreground"
           >
-            <p>{info}</p>
+            <p>{tooltipContent}</p>
           </TooltipContent>
         </Tooltip>
       </div>

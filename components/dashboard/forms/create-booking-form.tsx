@@ -59,7 +59,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           name="booking_type_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel info="booking type info here">Booking Type</FormLabel>
+              <FormLabel tooltipId="new-orders-booking-type">Booking Type</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
@@ -81,7 +81,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           name="partner_prefix_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel info="hellow world!, this is info">
+              <FormLabel tooltipId="new-orders-partner-prefix">
                 Partner Prefix *
               </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -105,7 +105,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           name="awb"
           render={({ field }) => (
             <FormItem>
-              <FormLabel info="hellow world!, this is info">AWB#</FormLabel>
+              <FormLabel tooltipId="new-orders-awb-number">AWB#</FormLabel>
               <FormControl>
                 <Input {...field} className="border-2 border-foreground/30" />
               </FormControl>
@@ -118,7 +118,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           name="partner_code_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel info="hellow world!, this is info">
+              <FormLabel tooltipId="new-orders-partner-code">
                 Partner Code *
               </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -171,7 +171,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         name="status_id"
         render={({ field }) => (
           <FormItem>
-            <FormLabel info="info here">Status</FormLabel>
+            <FormLabel tooltipId="new-orders-status">Status</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger className="border-2 border-foreground/30">
