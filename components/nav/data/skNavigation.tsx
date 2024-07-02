@@ -94,7 +94,7 @@ export const skNavigation: TSidebarItem[] = [
             icon: BoltIcon,
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
+              { name: "List", href: "/sk/sales/spot-rate/list", current: false },
               { name: "New", href: "#", current: false },
               { name: "Approval", href: "#", current: false },
             ],
