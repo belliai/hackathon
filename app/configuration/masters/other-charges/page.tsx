@@ -8,7 +8,7 @@ import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTem
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem";
 import { DataTable } from "@/components/data-table/data-table";
 import FilterActions from "@/components/page-template/FilterActions";
 import { Separator } from "@/components/ui/separator";

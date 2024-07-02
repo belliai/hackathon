@@ -2,13 +2,13 @@
 
 import MastersPageTemplate, {
   SectionedFormFields,
-} from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+} from "@/app/k360/organize/masters/components/MastersPageTemplate";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/columnItem";
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import { DataTable } from "@/components/data-table/data-table";
 import { TFormTextField } from "@/components/form/FormTextField";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
@@ -228,76 +228,76 @@ export default function AirportPositionConfiguration() {
           name: "aircraftType",
           label: "Aircraft Type *",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "equipmentNo",
           label: "Equipment No.",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "fromDate",
           label: "From Date",
           type: "date",
           hideTooltip: true,
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "toDate",
           label: "To Date",
           type: "date",
           hideTooltip: true,
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "patternName",
           label: "Pattern Name *",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "flightNo",
           label: "Flight No.",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "overLoad",
           label: "Over Load%",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "bulkWeight",
           label: "Bulk Weight",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "bulkVolume",
           label: "Bulk Volume",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "uom",
           label: "UOM",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "isActive",
           label: "isActive",
           type: "checkbox",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "isDefault",
           label: "isDefault",
           type: "checkbox",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
       ],
     },

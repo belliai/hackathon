@@ -3,12 +3,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { TFormTextField } from "@/components/form/FormTextField";
 import { useForm } from "react-hook-form";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
+} from "@/app/k360/organize/masters/components/columnItem";
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
 
 export default function MasterRolePage() {
   const filterFormFields: TFormTextField[] = [

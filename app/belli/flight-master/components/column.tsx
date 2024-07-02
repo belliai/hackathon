@@ -2,34 +2,34 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import createActionColumn from "@/app/organize/masters/components/columnItem";
+import createActionColumn from "@/app/k360/organize/masters/components/columnItem";
 
 export type FlightMasterDataType = {
-    entry_type: string;
-    flight_no: string;
-    source: string;
-    destination: string;
-    std_api: string;
-    sta: string;
-    aircraft_type: string;
-    tail_no: string;
-    flight_type: string;
-    status: string;
-    sector: string;
-    created_at: string;
-    updated_at: string;
-    updated_by: string;
+  entry_type: string;
+  flight_no: string;
+  source: string;
+  destination: string;
+  std_api: string;
+  sta: string;
+  aircraft_type: string;
+  tail_no: string;
+  flight_type: string;
+  status: string;
+  sector: string;
+  created_at: string;
+  updated_at: string;
+  updated_by: string;
 };
 
 export const columns = (
   onRowClick: (data: Flight) => void,
   onDelete: (data: Flight) => void
-): ColumnDef<Flight>[] => ([
+): ColumnDef<Flight>[] => [
   {
     accessorKey: "entry_type",
     header: "Entry Type",
     cell: ({ row }) => {
-      return 'Manual';
+      return "Manual";
     },
   },
   {
@@ -41,7 +41,7 @@ export const columns = (
     header: "Source",
     cell: ({ row }) => {
       const source = row.original.source;
-      return source ? source.name : '';
+      return source ? source.name : "";
     },
   },
   {
@@ -49,23 +49,23 @@ export const columns = (
     header: "Destination",
     cell: ({ row }) => {
       const destination = row.original.destination;
-      return destination ? destination.name : '';
+      return destination ? destination.name : "";
     },
   },
   {
     accessorKey: "from_date",
     header: "STD(API)",
     cell: ({ row }) => {
-      const date = row.original.from_date || '';
-      return moment(date).format('YYYY-MM-DD');
+      const date = row.original.from_date || "";
+      return moment(date).format("YYYY-MM-DD");
     },
   },
   {
     accessorKey: "to_date",
     header: "STA",
     cell: ({ row }) => {
-      const date = row.original.to_date || '';
-      return moment(date).format('YYYY-MM-DD');
+      const date = row.original.to_date || "";
+      return moment(date).format("YYYY-MM-DD");
     },
   },
   {
@@ -73,7 +73,7 @@ export const columns = (
     header: "Aircraft Type",
     cell: ({ row }) => {
       const aircraft = row.original.aircraft;
-      return aircraft ? aircraft.aircraft_type : '';
+      return aircraft ? aircraft.aircraft_type : "";
     },
   },
   {
@@ -81,7 +81,7 @@ export const columns = (
     header: "Tail No.",
     cell: ({ row }) => {
       const tail = row.original.tail;
-      return tail ? tail.tail_number : '';
+      return tail ? tail.tail_number : "";
     },
   },
   {
@@ -89,7 +89,7 @@ export const columns = (
     header: "Flight Type",
     cell: ({ row }) => {
       const flightType = row.original.flight_type;
-      return flightType ? flightType.value : '';
+      return flightType ? flightType.value : "";
     },
   },
   {
@@ -97,7 +97,7 @@ export const columns = (
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status;
-      return status ? status.value : '';
+      return status ? status.value : "";
     },
   },
   {
@@ -105,30 +105,30 @@ export const columns = (
     header: "Sector",
     cell: ({ row }) => {
       const sector = row.original.sector;
-      return sector ? sector.value : '';
+      return sector ? sector.value : "";
     },
   },
   {
     accessorKey: "created_at",
     header: "Created At",
     cell: ({ row }) => {
-      const date = row.original.created_at || '';
-      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+      const date = row.original.created_at || "";
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     },
   },
   {
     accessorKey: "updated_at",
     header: "Updated At",
     cell: ({ row }) => {
-      const date = row.original.updated_at || '';
-      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+      const date = row.original.updated_at || "";
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     },
   },
   {
     accessorKey: "updated_by",
     header: "Updated By",
     cell: ({ row }) => {
-      return 'Jeff Pan';
+      return "Jeff Pan";
     },
   },
   createActionColumn({
@@ -145,5 +145,5 @@ export const columns = (
         shortcut: "⌘⌫",
       },
     ],
-  }) as ColumnDef<Flight>
-]);
+  }) as ColumnDef<Flight>,
+];

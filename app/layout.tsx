@@ -11,7 +11,7 @@ import { FavoritesProvider } from "@/components/nav/favorites/favorites-provider
 import QueryProvider from "@/components/query-provider";
 import { headers } from "next/headers";
 import { findActiveItem } from "@/lib/utils/nav-utils";
-import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
+import { skNavigation } from "@/components/nav/data/skNavigation";
 import { k360Navigation } from "@/components/nav/data/k360Navigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
@@ -25,11 +25,6 @@ import {
 import { dark } from "@clerk/themes";
 import { PHProvider } from "@/components/posthog-provider";
 import dynamic from "next/dynamic";
-
-// export const metadata: Metadata = {
-//   title: "Belli",
-//   description: "Next-gen Air Cargo SaaS",
-// };
 
 const inter = Inter({
   subsets: ["latin"],
@@ -48,7 +43,7 @@ export async function generateMetadata() {
 
   const menuItem = findActiveItem(
     [
-      ...defaultNavigation,
+      ...skNavigation,
       ...k360Navigation,
       ...settingNavigation,
       ...accountNavigation,

@@ -1,6 +1,6 @@
 "use client";
 
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
 import { TFormTextField } from "@/components/form/FormTextField";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import FilterActions from "@/components/page-template/FilterActions";

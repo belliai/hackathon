@@ -5,12 +5,12 @@ import { TFormTextField } from "@/components/form/FormTextField";
 import { Search } from "lucide-react";
 import { useForm } from "react-hook-form";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/organize/masters/components/dummySelectOptions";
+import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+} from "@/app/k360/organize/masters/components/columnItem";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
 import { DataTable } from "@/components/data-table/data-table";
 import FilterActions from "@/components/page-template/FilterActions";
 import { Separator } from "@/components/ui/separator";

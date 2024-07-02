@@ -6,14 +6,14 @@ import { useFieldArray, useForm } from "react-hook-form";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+} from "@/app/k360/organize/masters/components/columnItem";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
 import { Button } from "@/components/ui/button";
 
 export default function MasterCostLinePage() {

@@ -1,6 +1,6 @@
 import CreateFormTemplate, {
   CreateFormTemplateProps,
-} from "@/app/organize/masters/components/CreateFormTemplate";
+} from "@/app/k360/organize/masters/components/CreateFormTemplate";
 import PageContainer from "../layout/PageContainer";
 import PageHeader from "../layout/PageHeader";
 import { Separator } from "../ui/separator";

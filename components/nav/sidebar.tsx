@@ -11,7 +11,7 @@ import SidebarMenu from "./SidebarMenu";
 import { useRouter, useSearchParams } from "next/navigation";
 import { accountNavigation } from "@/components/nav/data/accountNavigation";
 import { settingNavigation } from "@/components/nav/data/settingNavigation";
-import { defaultNavigation } from "@/components/nav/data/defaultNavigation";
+import { skNavigation } from "@/components/nav/data/skNavigation";
 import FavoritesMenu from "./favorites/favorites-menu";
 import { k360Navigation } from "./data/k360Navigation";
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
@@ -49,9 +49,7 @@ export default function SideBar() {
   }, [settings]);
 
   const currentNavigation =
-    sidebarType === SIDEBAR_TYPE.SETTING
-      ? settingNavigation
-      : defaultNavigation;
+    sidebarType === SIDEBAR_TYPE.SETTING ? settingNavigation : skNavigation;
 
   const firstCurrentNavigationItem = currentNavigation[0];
 
@@ -67,7 +65,7 @@ export default function SideBar() {
               className="flex items-center gap-x-2 cursor-pointer"
               onClick={() => {
                 setNavigationType(SIDEBAR_TYPE.DEFAULT);
-                router.push("/dashboard");
+                router.push("/belli/dashboard");
               }}
             >
               <ChevronLeftIcon
@@ -110,14 +108,18 @@ export default function SideBar() {
                 {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
                   <>
                     <FavoritesMenu />
-                    <SidebarMenu items={operationsNavigation} collapsible />
                     <SidebarMenu
-                      items={defaultNavigation}
+                      sectionTitle="Operations"
+                      items={operationsNavigation[0].children ?? []}
+                      collapsible
+                    />
+                    <SidebarMenu
+                      items={skNavigation[0].children ?? []}
                       sectionTitle="SK"
                       collapsible
                     />
                     <SidebarMenu
-                      items={k360Navigation}
+                      items={k360Navigation[0].children ?? []}
                       sectionTitle="K360"
                       collapsible
                     />

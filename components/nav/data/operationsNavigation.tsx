@@ -3,42 +3,40 @@ import { CubeIcon } from "@radix-ui/react-icons";
 
 export const operationsNavigation: TSidebarItem[] = [
   {
-    name: "Operations",
-    href: "/operations",
+    name: "Belli",
+    href: "/belli",
     current: false,
     children: [
       {
         name: "Home",
-        href: "/dashboard",
+        href: "/belli/dashboard",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "Flight Planning",
-        href: "/operations/flight-planning",
+        href: "/belli/flight-planning",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "Flight Master",
-        href: "/operations/flight-master",
+        href: "/belli/flight-master",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "Booking Modal",
-        href: "/operations/booking-modal",
+        href: "/belli/booking-modal",
         icon: CubeIcon,
         current: false,
       },
       {
         name: "Aircraft",
-        href: "/operations/aircraft",
+        href: "/belli/aircraft",
         icon: CubeIcon,
         current: false,
       },
     ],
   },
-
-  //
 ];

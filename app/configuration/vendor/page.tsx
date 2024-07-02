@@ -15,11 +15,11 @@ import { Separator } from "@/components/ui/separator";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem";
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions";
 
 export default function MasterVendorPage() {
   const columns: ColumnDef<any>[] = [

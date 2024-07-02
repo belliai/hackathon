@@ -1,11 +1,11 @@
 "use client";
 
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem";
 import { TFormTextField } from "@/components/form/FormTextField";
 import FilterActions from "@/components/page-template/FilterActions";
 import { ColumnDef } from "@tanstack/react-table";

@@ -1,6 +1,6 @@
 "use client";
 
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import { TFormTextField } from "@/components/form/FormTextField";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import { Button } from "@/components/ui/button";

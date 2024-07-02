@@ -7,10 +7,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/columnItem";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import { Button } from "@/components/ui/button";
 

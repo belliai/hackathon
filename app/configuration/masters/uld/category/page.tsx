@@ -1,16 +1,16 @@
 "use client";
 
-import CreateFormTemplate from "@/app/organize/masters/components/CreateFormTemplate";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate";
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem";
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions";
 import { TFormTextField } from "@/components/form/FormTextField";
 import FilterActions from "@/components/page-template/FilterActions";
 import { Button } from "@/components/ui/button";

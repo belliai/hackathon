@@ -2,33 +2,24 @@
 
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 import { usePathname } from "next/navigation";
 import { TSidebarItem } from "./SidebarItem";
 import { settingNavigation } from "./data/settingNavigation";
-import { defaultNavigation } from "./data/defaultNavigation";
-import React, { useEffect, useMemo, useState } from "react";
+import { skNavigation } from "./data/skNavigation";
+import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Loader, StarIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Path, useFavorites } from "./favorites/favorites-provider";
 import { k360Navigation } from "./data/k360Navigation";
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
-import {
-  ClientSideSuspense,
-  useOthers,
-  useSelf,
-} from "@liveblocks/react/suspense";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { ClientSideSuspense } from "@liveblocks/react/suspense";
 import ActiveUsers from "./active-users";
-import { Room } from "../liveblocks/room";
 
 const findCurrentPaths = (
   items: TSidebarItem[],
@@ -64,7 +55,7 @@ const getCurrentPaths = (pathname: string) => {
   let currentPaths: TSidebarItem[] = [];
   const navMenus: TSidebarItem[] = [
     ...settingNavigation,
-    ...defaultNavigation,
+    ...skNavigation,
     ...k360Navigation,
     ...operationsNavigation,
   ];
@@ -99,13 +90,9 @@ export default function BreadCrumbSection() {
 
   const isFavorited = useMemo(
     () => isPathFavorited(pathname),
-    [pathname, favorites, isPathFavorited]
+    [pathname, isPathFavorited]
   );
 
-  const isK360 = useMemo(
-    () => getSection(pathname, k360Navigation),
-    [pathname]
-  );
   const currentPaths = getCurrentPaths(pathname);
 
   return (
@@ -113,7 +100,6 @@ export default function BreadCrumbSection() {
       <div className="flex flex-row items-center gap-4">
         <Breadcrumb>
           <BreadcrumbList>
-            {isK360 ? "K360" : "SK"}
             {currentPaths.map((path, index) => (
               <React.Fragment key={index}>
                 {index !== 0 && <BreadcrumbSeparator />}

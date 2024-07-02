@@ -1,8 +1,8 @@
 "use client";
 
-import CreateFormTemplate from "@/app/organize/masters/components/CreateFormTemplate";
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate";
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import { TFormTextField } from "@/components/form/FormTextField";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import FilterActions from "@/components/page-template/FilterActions";

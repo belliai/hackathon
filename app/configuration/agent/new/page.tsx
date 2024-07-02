@@ -1,10 +1,10 @@
 "use client";
 
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";

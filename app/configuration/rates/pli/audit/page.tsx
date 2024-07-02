@@ -3,7 +3,7 @@
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions";
 import { TFormTextField } from "@/components/form/FormTextField";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import FilterActions from "@/components/page-template/FilterActions";

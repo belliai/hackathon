@@ -11,22 +11,35 @@ import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc";
 import { ClientSideSuspense } from "@liveblocks/react/suspense";
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders";
 import { PaginationState } from "@tanstack/react-table";
-import createActionColumn from "../organize/masters/components/columnItem";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import createActionColumn from "@/app/k360/organize/masters/components/columnItem";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Dashboard() {
   const data = getData();
   const { selectedBooking, setSelectedBooking } = useBookingContext();
   const [modalOpen, setModalOpen] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState(false)
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
-  })
+  });
 
-
-  const { isLoading, isPending, error, data: ordersData } = useOrders({ pagination })
-  const remove = useRemoveOrder()
+  const {
+    isLoading,
+    isPending,
+    error,
+    data: ordersData,
+  } = useOrders({ pagination });
+  const remove = useRemoveOrder();
 
   const openModal = (data: Order) => {
     setSelectedBooking(data);
@@ -35,26 +48,21 @@ export default function Dashboard() {
 
   const onShowDelete = (data: any) => {
     setSelectedBooking(data);
-    setDeleteConfirm(true)
-  }
-
+    setDeleteConfirm(true);
+  };
 
   const onOpenChange = useCallback((open: boolean) => {
     setModalOpen(open);
   }, []);
 
   const onDelete = (data: any) => {
-    if (data.ID)
-      remove.mutate({ id: data.ID })
-    setSelectedBooking(undefined)
-  }
+    if (data.ID) remove.mutate({ id: data.ID });
+    setSelectedBooking(undefined);
+  };
 
-
-  const tableState = useCallback(async ({
-    pagination
-  }: any) => {
-    setPagination(pagination)
-  }, [])
+  const tableState = useCallback(async ({ pagination }: any) => {
+    setPagination(pagination);
+  }, []);
 
   const columnWithActions = [
     ...columns,
@@ -64,18 +72,16 @@ export default function Dashboard() {
           label: "Edit",
           value: "edit",
           fn: openModal,
-
         },
         {
           label: "Delete",
           value: "delete",
           fn: onShowDelete,
-          shortcut: "⌘⌫"
-        }
-      ]
-    })
-  ]
-
+          shortcut: "⌘⌫",
+        },
+      ],
+    }),
+  ];
 
   return (
     <div className="relative">
@@ -98,7 +104,6 @@ export default function Dashboard() {
         manualPagination={true}
         tableState={tableState}
         className="border-none [&_th]:text-foreground [&_th]:py-2 [&_th]:px-3 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground"
-
       />
       <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode="edit" />
       <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>
@@ -111,7 +116,9 @@ export default function Dashboard() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => onDelete(selectedBooking)}>Continue</AlertDialogAction>
+            <AlertDialogAction onClick={() => onDelete(selectedBooking)}>
+              Continue
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

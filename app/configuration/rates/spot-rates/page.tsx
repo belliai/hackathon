@@ -4,17 +4,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TFormTextField } from "@/components/form/FormTextField";
 import { Search } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+} from "@/app/k360/organize/masters/components/columnItem";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
 import { DataTable } from "@/components/data-table/data-table";
 import FilterActions from "@/components/page-template/FilterActions";
 import { Separator } from "@/components/ui/separator";

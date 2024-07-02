@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TFormTextField } from "@/components/form/FormTextField";
 import { useFieldArray, useForm } from "react-hook-form";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import { Button } from "@/components/ui/button";
 
 export default function MasterRateLinePage() {

@@ -9,9 +9,9 @@ import FormTextField, {
   FormTextFieldProps,
 } from "@/components/form/FormTextField";
 import { Badge } from "@/components/ui/badge";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
 import FilterActions from "@/components/page-template/FilterActions";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";

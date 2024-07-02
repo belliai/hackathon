@@ -6,14 +6,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { useForm } from "react-hook-form";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/organize/masters/components/dummySelectOptions";
+import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/k360/organize/masters/components/dummySelectOptions";
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
+} from "@/app/k360/organize/masters/components/columnItem";
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
 import FilterActions from "@/components/page-template/FilterActions";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
 import { Separator } from "@/components/ui/separator";
