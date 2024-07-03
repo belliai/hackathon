@@ -43,6 +43,7 @@ interface CreateEditModalProps {
   rightComponent?: React.ReactNode
   defaultTabValue?: string
   defaultFullScreen?: boolean
+  content?: React.ReactNode
 }
 
 export default function CreateEditModal({
@@ -57,6 +58,7 @@ export default function CreateEditModal({
   rightComponent,
   defaultTabValue,
   defaultFullScreen = false,
+  content,
 }: CreateEditModalProps) {
   const [isFullScreen, setFullScreen] = useState(defaultFullScreen)
 
@@ -101,78 +103,81 @@ export default function CreateEditModal({
                 </Button>
               </div>
             </DialogHeader>
-            <Tabs defaultValue={defaultTabValue ?? tabItems[0].value}>
-              <div className="flex w-full flex-row items-stretch gap-4 pt-4">
-                <div className="min-w-[220px]">
-                  <Card className="h-full">
-                    <TabsList className="p-0 py-2">
-                      {tabItems.map((item) => {
-                        return (
-                          <TabsTrigger key={item.value} value={item.value}>
-                            <span className="[&_svg]:h-4 [&_svg]:w-4">
-                              {item.icon}
-                            </span>
-                            {item.label}
-                          </TabsTrigger>
-                        )
-                      })}
-                    </TabsList>
-                    {tabItems2 && (
-                      <>
-                        <Separator />
-                        <TabsList className="p-0 py-2">
-                          {tabItems2.map((item2) => {
-                            return (
-                              <TabsTrigger
-                                key={item2.value}
-                                value={item2.value}
-                              >
-                                {item2.icon}
-                                {item2.label}
-                              </TabsTrigger>
-                            )
-                          })}
-                        </TabsList>
-                      </>
-                    )}
-                  </Card>
-                </div>
-                <div className="grid flex-1">
-                  {[...tabItems, ...(tabItems2 ?? [])].map((item) => {
-                    return (
-                      <TabsContent
-                        key={item.value}
-                        value={item.value}
-                        asChild
-                        className="max-h-screen overflow-auto"
-                      >
+            {tabItems.length > 0 ? (
+              <Tabs defaultValue={defaultTabValue ?? tabItems[0].value}>
+                <div className="flex w-full flex-row items-stretch gap-4 pt-4">
+                  <div className="min-w-[220px]">
+                    <Card className="h-full">
+                      <TabsList className="p-0 py-2">
+                        {tabItems.map((item) => {
+                          return (
+                            <TabsTrigger key={item.value} value={item.value}>
+                              <span className="[&_svg]:h-4 [&_svg]:w-4">
+                                {item.icon}
+                              </span>
+                              {item.label}
+                            </TabsTrigger>
+                          )
+                        })}
+                      </TabsList>
+                      {tabItems2 && (
                         <>
-                          {item.content && item.content}
-                          {item.formFields && (
-                            <div className="grid h-fit grid-cols-4 items-end gap-2 gap-y-8 [&_label]:text-xs">
-                              {item.formFields.map((field, index) => {
-                                return (
-                                  <FormTextField
-                                    key={field.name}
-                                    {...field}
-                                    form={form}
-                                  />
-                                )
-                              })}
-                            </div>
-                          )}
+                          <Separator />
+                          <TabsList className="p-0 py-2">
+                            {tabItems2.map((item2) => {
+                              return (
+                                <TabsTrigger
+                                  key={item2.value}
+                                  value={item2.value}
+                                >
+                                  {item2.icon}
+                                  {item2.label}
+                                </TabsTrigger>
+                              )
+                            })}
+                          </TabsList>
                         </>
-                      </TabsContent>
-                    )
-                  })}
-                </div>
-                {rightComponent && (
-                  <div className="flex max-w-[300px] flex-col items-stretch justify-between gap-4">
-                    {rightComponent}
+                      )}
+                    </Card>
                   </div>
-                )}
-              </div>
-            </Tabs>
+                  <div className="grid flex-1">
+                    {[...tabItems, ...(tabItems2 ?? [])].map((item) => {
+                      return (
+                        <TabsContent
+                          key={item.value}
+                          value={item.value}
+                          asChild
+                          className="max-h-screen overflow-auto"
+                        >
+                          <>
+                            {item.content && item.content}
+                            {item.formFields && (
+                              <div className="grid h-fit grid-cols-4 items-end gap-2 gap-y-8 [&_label]:text-xs">
+                                {item.formFields.map((field, index) => {
+                                  return (
+                                    <FormTextField
+                                      key={field.name}
+                                      {...field}
+                                      form={form}
+                                    />
+                                  )
+                                })}
+                              </div>
+                            )}
+                          </>
+                        </TabsContent>
+                      )
+                    })}
+                  </div>
+                  {rightComponent && (
+                    <div className="flex max-w-[300px] flex-col items-stretch justify-between gap-4">
+                      {rightComponent}
+                    </div>
+                  )}
+                </div>
+              </Tabs>
+            ) : null}
+            {content && content}
           </form>
         </Form>
       </DialogContent>
