@@ -9,8 +9,8 @@ export const operationsNavigation: TSidebarItem[] = [
     current: false,
     children: [
       {
-        name: "Home",
-        href: "/belli/home",
+        name: "Airway Bill Dashboard",
+        href: "/belli/airway-bill-dashboard",
         icon: CubeIcon,
         current: false,
       },
@@ -23,6 +23,12 @@ export const operationsNavigation: TSidebarItem[] = [
       {
         name: "Flight Master",
         href: "/belli/flight-master",
+        icon: CubeIcon,
+        current: false,
+      },
+      {
+        name: "Flights Dashboard",
+        href: "/belli/flights-dashboard",
         icon: CubeIcon,
         current: false,
       },
