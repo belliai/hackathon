@@ -1,28 +1,29 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type PlannedManifestType = {
-  uld?: string;
-  cart_no?: string;
-  awb?: string;
-  pol?: string;
-  pou?: string;
-  next_flight?: string;
-  acc_pcs?: string;
-  acc_wt?: string;
-  mft_pcs?: string;
-  mft_wt?: string;
-  uom?: string;
-  scc?: string;
-  comm_desc?: string;
-  origin?: string;
-  dest?: string;
-  bonded?: string;
-  remarks?: string;
-  loading_priority?: string;
-};
+  uld?: string
+  cart_no?: string
+  awb?: string
+  pol?: string
+  pou?: string
+  next_flight?: string
+  acc_pcs?: string
+  acc_wt?: string
+  mft_pcs?: string
+  mft_wt?: string
+  uom?: string
+  scc?: string
+  comm_desc?: string
+  origin?: string
+  dest?: string
+  bonded?: string
+  remarks?: string
+  loading_priority?: string
+}
 
 export const plannedColumn: ColumnDef<PlannedManifestType>[] = [
   {
@@ -121,4 +122,4 @@ export const plannedColumn: ColumnDef<PlannedManifestType>[] = [
     accessorKey: "loading_priority",
     header: "Loading Priority",
   },
-];
+]

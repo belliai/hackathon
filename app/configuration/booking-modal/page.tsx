@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import CrudTable from "./components/crud-table";
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
-import CrudCurrency from "./currency";
-import CrudPartnerType from "./partner-type";
-import CrudTransportMethod from "./transport-method";
-import CrudPaymentMode from "./payment-mode";
-import CrudLocation from "./location";
-import CrudStatus from "./status";
-import CrudPartnerCode from "./partner-code";
-import CrudPartnerPrefix from "./partner-prefix";
-import CrudBookingType from "./booking-type";
-import CrudCommodityCode from "./commodity-code";
+import CrudBookingType from "./booking-type"
+import CrudCommodityCode from "./commodity-code"
+import CrudTable from "./components/crud-table"
+import CrudCurrency from "./currency"
+import CrudLocation from "./location"
+import CrudPartnerCode from "./partner-code"
+import CrudPartnerPrefix from "./partner-prefix"
+import CrudPartnerType from "./partner-type"
+import CrudPaymentMode from "./payment-mode"
+import CrudStatus from "./status"
+import CrudTransportMethod from "./transport-method"
 
 export default function Page() {
   return (
@@ -30,5 +30,5 @@ export default function Page() {
       <CrudPartnerType />
       <CrudCurrency />
     </PageContainer>
-  );
+  )
 }

@@ -1,27 +1,27 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type GHATonnageType = {
-  awb_number: string;
-  from_date: string;
-  to_date: string;
-  from_station: string;
-  to_station: string;
-  gha_code: string;
-  transit: string;
-  from_airline: string;
-  to_airline: string;
-  total_weight: string;
-  total_pieces: string;
-  gross_tonnage: string;
-  net_tonnage: string;
-  chargeable_weight: string;
-  revenue: string;
-  cost: string;
-  net_profit: string;
-  updated_on: string;
-};
+  awb_number: string
+  from_date: string
+  to_date: string
+  from_station: string
+  to_station: string
+  gha_code: string
+  transit: string
+  from_airline: string
+  to_airline: string
+  total_weight: string
+  total_pieces: string
+  gross_tonnage: string
+  net_tonnage: string
+  chargeable_weight: string
+  revenue: string
+  cost: string
+  net_profit: string
+  updated_on: string
+}
 
 export const columns: ColumnDef<GHATonnageType>[] = [
   {
@@ -96,4 +96,4 @@ export const columns: ColumnDef<GHATonnageType>[] = [
     header: "Updated On",
     accessorKey: "updated_on",
   },
-];
+]

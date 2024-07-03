@@ -1,27 +1,28 @@
-"use client";
+"use client"
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTable } from "@/components/data-table/data-table";
+import { ColumnDef } from "@tanstack/react-table"
+import { ShieldCheck, ShieldX } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
 import DataTableFilterForm, {
   FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { ColumnDef } from "@tanstack/react-table";
-import { ShieldCheck, ShieldX } from "lucide-react";
-import { useForm } from "react-hook-form";
+} from "@/components/data-table/data-table-filter-form"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 type DataType = {
-  origin: string;
-  destination: string;
-  agent_code: string;
-  awb_number: string;
-  flight: string;
-  status: string;
-  flight_date: string;
-};
+  origin: string
+  destination: string
+  agent_code: string
+  awb_number: string
+  flight: string
+  status: string
+  flight_date: string
+}
 
 const columns: ColumnDef<DataType>[] = [
   {
@@ -73,7 +74,7 @@ const columns: ColumnDef<DataType>[] = [
     header: "Action",
     cell: ({ row }) => <DataTableRowActions />,
   },
-];
+]
 
 const data: DataType[] = [
   {
@@ -103,12 +104,12 @@ const data: DataType[] = [
     status: "Rejected",
     flight_date: "2024-05-22",
   },
-];
+]
 
 type FilterDataType = Partial<DataType> & {
-  from_date?: string;
-  to_date?: string;
-};
+  from_date?: string
+  to_date?: string
+}
 
 const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -187,10 +188,10 @@ const formFilters: FormFieldOption<FilterDataType>[] = [
     label: "To Date",
     placeholder: "Select to date",
   },
-];
+]
 
 export default function Page() {
-  const form = useForm<FilterDataType>();
+  const form = useForm<FilterDataType>()
   return (
     <PageContainer className="gap-4">
       <PageHeader title="Dangerous Goods Approval" />
@@ -208,5 +209,5 @@ export default function Page() {
         data={data}
       />
     </PageContainer>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
 
 export default function Home() {
-  redirect("/belli/dashboard");
+  redirect("/belli/home")
 }

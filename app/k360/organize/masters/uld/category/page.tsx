@@ -1,15 +1,17 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
-import { ColumnDef } from "@tanstack/react-table";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import StatusBadge from "../../components/StatusBadge";
-import { useForm } from "react-hook-form";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterULDCategoryPage() {
   const filterFormFields: TFormTextField[] = [
@@ -43,7 +45,7 @@ export default function MasterULDCategoryPage() {
       placeholder: "To Date",
       hideTooltip: true,
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -186,7 +188,7 @@ export default function MasterULDCategoryPage() {
       placeholder: "Icon",
       type: "file",
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -261,7 +263,7 @@ export default function MasterULDCategoryPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -318,10 +320,10 @@ export default function MasterULDCategoryPage() {
       createdAt: "2023-03-01",
       updatedAt: "2023-03-10",
     },
-  ];
+  ]
 
-  const hookForm = useForm();
-  const filterHookForm = useForm();
+  const hookForm = useForm()
+  const filterHookForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -334,5 +336,5 @@ export default function MasterULDCategoryPage() {
       filterHookForm={filterHookForm}
       hookForm={hookForm}
     />
-  );
+  )
 }

@@ -1,30 +1,31 @@
-"use client";
+"use client"
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTable } from "@/components/data-table/data-table";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
 import DataTableFilterForm, {
   FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/components/data-table/data-table-filter-form"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 type DataType = {
-  details: string;
-  awb: string;
-  origin: string;
-  destination: string;
-  customer_code: string;
-  status: string;
-  mode: string;
-  charged_wt: string;
-  total_pcs: string;
-  created_at: string;
-  updated_at: string;
-};
+  details: string
+  awb: string
+  origin: string
+  destination: string
+  customer_code: string
+  status: string
+  mode: string
+  charged_wt: string
+  total_pcs: string
+  created_at: string
+  updated_at: string
+}
 
 const data: DataType[] = [
   {
@@ -66,7 +67,7 @@ const data: DataType[] = [
     created_at: "2024-05-18T08:00:00Z",
     updated_at: "2024-05-21T08:00:00Z",
   },
-];
+]
 
 const columns: ColumnDef<DataType>[] = [
   {
@@ -125,12 +126,12 @@ const columns: ColumnDef<DataType>[] = [
     header: "Action",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
-];
+]
 
 type FilterDataType = Partial<DataType> & {
-  choose_from_date?: string;
-  choose_to_date?: string;
-};
+  choose_from_date?: string
+  choose_to_date?: string
+}
 
 const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -187,15 +188,15 @@ const formFilters: FormFieldOption<FilterDataType>[] = [
     ],
     placeholder: "Select destination",
   },
-];
+]
 
 export default function Page() {
-  const form = useForm();
+  const form = useForm()
   return (
     <PageContainer className="gap-6">
       <PageHeader title="A2A Orders" />
       <DataTableFilterForm form={form} formFilters={formFilters} />
       <DataTable columns={columns} data={data} />
     </PageContainer>
-  );
+  )
 }

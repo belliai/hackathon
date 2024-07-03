@@ -1,77 +1,77 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type FlightPerformanceColumnType = {
-  flight_date: string;
-  flight_number: string;
-  origin: string;
-  destination: string;
-  aircraft_type: string;
-  aircraft_capacity: string;
-  booked_ch_wt: string;
-  manifested_ch_wt: string;
-  planned_ch_wt: string;
-  gross_tonnage: string;
-  total_vol_cbm: string;
-  gross_chargeable_tonnage: string;
-  pax_load: string;
-};
+  flight_date: string
+  flight_number: string
+  origin: string
+  destination: string
+  aircraft_type: string
+  aircraft_capacity: string
+  booked_ch_wt: string
+  manifested_ch_wt: string
+  planned_ch_wt: string
+  gross_tonnage: string
+  total_vol_cbm: string
+  gross_chargeable_tonnage: string
+  pax_load: string
+}
 
 export const columns: ColumnDef<FlightPerformanceColumnType>[] = [
   {
-    header: 'Flight Date',
-    accessorKey: 'flight_date',
+    header: "Flight Date",
+    accessorKey: "flight_date",
   },
   {
-    header: 'Flight#',
-    accessorKey: 'flight_number',
+    header: "Flight#",
+    accessorKey: "flight_number",
   },
   {
-    header: 'Origin',
-    accessorKey: 'origin',
+    header: "Origin",
+    accessorKey: "origin",
   },
   {
-    header: 'Destination',
-    accessorKey: 'destination',
+    header: "Destination",
+    accessorKey: "destination",
   },
   {
-    header: 'AircraftType',
-    accessorKey: 'aircraft_type',
+    header: "AircraftType",
+    accessorKey: "aircraft_type",
   },
   {
-    header: 'Aircraft Capacity',
-    accessorKey: 'aircraft_capacity',
+    header: "Aircraft Capacity",
+    accessorKey: "aircraft_capacity",
   },
   {
-    header: 'Booked CH Wt',
-    accessorKey: 'booked_ch_wt',
+    header: "Booked CH Wt",
+    accessorKey: "booked_ch_wt",
   },
   {
-    header: 'Manifested CH Wt',
-    accessorKey: 'manifested_ch_wt',
+    header: "Manifested CH Wt",
+    accessorKey: "manifested_ch_wt",
   },
   {
-    header: 'Planned CH Wt',
-    accessorKey: 'planned_ch_wt',
+    header: "Planned CH Wt",
+    accessorKey: "planned_ch_wt",
   },
   {
-    header: 'Gross Tonnage',
-    accessorKey: 'gross_tonnage',
+    header: "Gross Tonnage",
+    accessorKey: "gross_tonnage",
   },
   {
-    header: 'Total Vol CBM',
-    accessorKey: 'total_vol_cbm',
+    header: "Total Vol CBM",
+    accessorKey: "total_vol_cbm",
   },
   {
-    header: 'Gross Chargeable Tonnage',
-    accessorKey: 'gross_chargeable_tonnage',
+    header: "Gross Chargeable Tonnage",
+    accessorKey: "gross_chargeable_tonnage",
   },
   {
-    header: 'PaxLoad',
-    accessorKey: 'pax_load',
-  }
-];
+    header: "PaxLoad",
+    accessorKey: "pax_load",
+  },
+]
 
 export const DUMMY_DATA: FlightPerformanceColumnType[] = [
   {
@@ -87,7 +87,7 @@ export const DUMMY_DATA: FlightPerformanceColumnType[] = [
     gross_tonnage: "15",
     total_vol_cbm: "35",
     gross_chargeable_tonnage: "17",
-    pax_load: "180"
+    pax_load: "180",
   },
   {
     flight_date: "2024-07-02",
@@ -102,7 +102,7 @@ export const DUMMY_DATA: FlightPerformanceColumnType[] = [
     gross_tonnage: "50",
     total_vol_cbm: "75",
     gross_chargeable_tonnage: "52",
-    pax_load: "480"
+    pax_load: "480",
   },
   {
     flight_date: "2024-07-03",
@@ -117,7 +117,7 @@ export const DUMMY_DATA: FlightPerformanceColumnType[] = [
     gross_tonnage: "30",
     total_vol_cbm: "55",
     gross_chargeable_tonnage: "32",
-    pax_load: "290"
+    pax_load: "290",
   },
   {
     flight_date: "2024-07-04",
@@ -132,7 +132,7 @@ export const DUMMY_DATA: FlightPerformanceColumnType[] = [
     gross_tonnage: "40",
     total_vol_cbm: "60",
     gross_chargeable_tonnage: "42",
-    pax_load: "320"
+    pax_load: "320",
   },
   {
     flight_date: "2024-07-05",
@@ -147,7 +147,7 @@ export const DUMMY_DATA: FlightPerformanceColumnType[] = [
     gross_tonnage: "45",
     total_vol_cbm: "65",
     gross_chargeable_tonnage: "47",
-    pax_load: "340"
+    pax_load: "340",
   },
   {
     flight_date: "2024-07-06",
@@ -162,7 +162,7 @@ export const DUMMY_DATA: FlightPerformanceColumnType[] = [
     gross_tonnage: "35",
     total_vol_cbm: "50",
     gross_chargeable_tonnage: "37",
-    pax_load: "280"
+    pax_load: "280",
   },
   {
     flight_date: "2024-07-07",
@@ -177,6 +177,6 @@ export const DUMMY_DATA: FlightPerformanceColumnType[] = [
     gross_tonnage: "48",
     total_vol_cbm: "70",
     gross_chargeable_tonnage: "50",
-    pax_load: "390"
-  }
-];
+    pax_load: "390",
+  },
+]

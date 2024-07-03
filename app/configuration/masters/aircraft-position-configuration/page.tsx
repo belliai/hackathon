@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import MastersPageTemplate, {
-  SectionedFormFields,
-} from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { ColumnDef } from "@tanstack/react-table";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate, {
+  SectionedFormFields,
+} from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function AirportPositionConfiguration() {
   const columns: ColumnDef<any>[] = [
@@ -77,7 +78,7 @@ export default function AirportPositionConfiguration() {
       header: "Loading Pattern",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -160,7 +161,7 @@ export default function AirportPositionConfiguration() {
       loadingPattern: "Pattern 5",
       action: "Edit",
     },
-  ];
+  ]
 
   const form = useForm({
     defaultValues: {
@@ -173,12 +174,12 @@ export default function AirportPositionConfiguration() {
         },
       ],
     },
-  });
+  })
 
   const fieldArray = useFieldArray<any>({
     name: "fieldArray",
     control: form.control,
-  });
+  })
 
   const fieldArrayFormFields: TFormTextField[] = [
     {
@@ -219,7 +220,7 @@ export default function AirportPositionConfiguration() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -308,7 +309,7 @@ export default function AirportPositionConfiguration() {
         fieldArray,
       },
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -320,5 +321,5 @@ export default function AirportPositionConfiguration() {
         <DataTable columns={columns} data={data} hideToolbar className="mt-8" />
       }
     />
-  );
+  )
 }

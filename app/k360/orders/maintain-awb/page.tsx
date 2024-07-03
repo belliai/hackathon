@@ -1,108 +1,109 @@
-"use client";
+"use client"
 
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DateInput from "@/components/ui/date-input";
+import { useState } from "react"
+import { ListIcon, RotateCwIcon, Search, SearchIcon } from "lucide-react"
+import { Path, useForm, useFormContext } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import DateInput from "@/components/ui/date-input"
 import {
+  Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
-  Form,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { ListIcon, RotateCwIcon, Search, SearchIcon } from "lucide-react";
-import { useState } from "react";
-import { Path, useForm, useFormContext } from "react-hook-form";
+} from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
-type FilterDataType = { partner_code: string; awb: string };
+type FilterDataType = { partner_code: string; awb: string }
 
 type DataType = {
-  awbOrigin: string;
-  awbDestination: string;
-  shipperOldValue: string;
-  shipperNewValue: string;
-  consigneeOldValue: string;
-  consigneeNewValue: string;
-  notifyPartyOldValue: string;
-  notifyPartyNewValue: string;
-  commodityOldValue: string;
-  commodityNewValue: string;
-  commDescriptionOldValue: string;
-  commDescriptionNewValue: string;
-  customerOldValue: string;
-  customerNewValue: string;
-  billToOldValue: string;
-  billToNewValue: string;
-  productTypeOldValue: string;
-  productTypeNewValue: string;
-  shcOldValue: string;
-  shcNewValue: string;
-  payModeOldValue: string;
-  payModeNewValue: string;
-  grossWeightOldValue: string;
-  grossWeightNewValue: string;
-  volumeOldValue: string;
-  volumeNewValue: string;
-  chargeableWeightOldValue: string;
-  chargeableWeightNewValue: string;
-  currencyCodeOldValue: string;
-  currencyCodeNewValue: string;
-  executedOldDate: string;
-  executedNewDate: string;
-  dimensionsOldValue: string;
-  dimensionsNewValue: string;
-  dvForCarriageOldValue: string;
-  dvForCarriageNewValue: string;
-  eWayBillOldValue: string;
-  eWayBillNewValue: string;
-  shprInvNoOldValue: string;
-  shprInvNoNewValue: string;
+  awbOrigin: string
+  awbDestination: string
+  shipperOldValue: string
+  shipperNewValue: string
+  consigneeOldValue: string
+  consigneeNewValue: string
+  notifyPartyOldValue: string
+  notifyPartyNewValue: string
+  commodityOldValue: string
+  commodityNewValue: string
+  commDescriptionOldValue: string
+  commDescriptionNewValue: string
+  customerOldValue: string
+  customerNewValue: string
+  billToOldValue: string
+  billToNewValue: string
+  productTypeOldValue: string
+  productTypeNewValue: string
+  shcOldValue: string
+  shcNewValue: string
+  payModeOldValue: string
+  payModeNewValue: string
+  grossWeightOldValue: string
+  grossWeightNewValue: string
+  volumeOldValue: string
+  volumeNewValue: string
+  chargeableWeightOldValue: string
+  chargeableWeightNewValue: string
+  currencyCodeOldValue: string
+  currencyCodeNewValue: string
+  executedOldDate: string
+  executedNewDate: string
+  dimensionsOldValue: string
+  dimensionsNewValue: string
+  dvForCarriageOldValue: string
+  dvForCarriageNewValue: string
+  eWayBillOldValue: string
+  eWayBillNewValue: string
+  shprInvNoOldValue: string
+  shprInvNoNewValue: string
   //rate information
-  rateKgValue: string;
-  iataFreightValue: string;
-  iataTaxValue: string;
-  mktFreightValue: string;
-  mktTaxValue: string;
-  ocdcValue: string;
-  ocdcTaxValue: string;
-  ocdaValue: string;
-  ocdaTaxValue: string;
-  totalTaxValue: string;
-  awbAmountDueValue: string;
+  rateKgValue: string
+  iataFreightValue: string
+  iataTaxValue: string
+  mktFreightValue: string
+  mktTaxValue: string
+  ocdcValue: string
+  ocdcTaxValue: string
+  ocdaValue: string
+  ocdaTaxValue: string
+  totalTaxValue: string
+  awbAmountDueValue: string
   //other information
-  handlingInfoValue: string;
-  remarkValue: string;
-  consolidatorValue: string;
-  agentGstinNumberOldValue: string;
-  agentGstinNumberNewValue: string;
-  note: string;
-};
+  handlingInfoValue: string
+  remarkValue: string
+  consolidatorValue: string
+  agentGstinNumberOldValue: string
+  agentGstinNumberNewValue: string
+  note: string
+}
 
 export default function Page() {
-  const filterForm = useForm<FilterDataType>();
+  const filterForm = useForm<FilterDataType>()
 
-  const newDocumentForm = useForm<{ document_name: string }>();
+  const newDocumentForm = useForm<{ document_name: string }>()
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false)
 
-  const form = useForm<DataType>();
+  const form = useForm<DataType>()
 
   return (
     <PageContainer className="gap-6">
       <PageHeader title="Maintain AWB" />
-      <Card className="p-4 rounded-md transition-all">
+      <Card className="rounded-md p-4 transition-all">
         <Form {...filterForm}>
           <form className="flex flex-row gap-3">
             <FormField
@@ -153,18 +154,18 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            <div className="inline-flex gap-3 mt-7">
+            <div className="mt-7 inline-flex gap-3">
               <Button
                 size="icon"
                 type="button"
-                className="bg-button-primary  text-white hover:bg-button-primary/80 size-9"
+                className="size-9 bg-button-primary text-white hover:bg-button-primary/80"
               >
                 <Search size={16} />
               </Button>
               <Button
                 size="icon"
                 type="button"
-                className="bg-button-secondary  text-white hover:bg-button-secondary/80 size-9"
+                className="size-9 bg-button-secondary text-white hover:bg-button-secondary/80"
               >
                 <RotateCwIcon size={16} />
               </Button>
@@ -179,7 +180,7 @@ export default function Page() {
               <CardTitle>Consignment Information</CardTitle>
             </CardHeader>
             <Separator />
-            <CardContent className="p-4 grid grid-cols-4 gap-3">
+            <CardContent className="grid grid-cols-4 gap-3 p-4">
               <InputSwitch name="awbOrigin" label="AWB Origin" type="text" />
               <InputSwitch
                 name="awbDestination"
@@ -398,7 +399,7 @@ export default function Page() {
               <CardTitle>Rate Information</CardTitle>
             </CardHeader>
             <Separator />
-            <CardContent className="p-4 grid grid-cols-4 gap-3">
+            <CardContent className="grid grid-cols-4 gap-3 p-4">
               <InputSwitch
                 name="rateKgValue"
                 label="Rate / KG Value"
@@ -463,7 +464,7 @@ export default function Page() {
               <CardTitle>Other Information</CardTitle>
             </CardHeader>
             <Separator />
-            <CardContent className="p-4 grid grid-cols-4 gap-3">
+            <CardContent className="grid grid-cols-4 gap-3 p-4">
               <InputSwitch
                 name="handlingInfoValue"
                 label="Rate / KG Value"
@@ -489,7 +490,7 @@ export default function Page() {
               <InputSwitch name="note" label="Note" type="text" />
             </CardContent>
           </Card>
-          <div className="flex flex-row justify-end items-center gap-2">
+          <div className="flex flex-row items-center justify-end gap-2">
             <Button type="submit" variant={"button-primary"}>
               Save
             </Button>
@@ -509,17 +510,17 @@ export default function Page() {
         </form>
       </Form>
     </PageContainer>
-  );
+  )
 }
 
 function InputSwitch(props: {
-  type: "select" | "date" | "search" | "text";
-  name: Path<DataType>;
-  label: string;
-  selectOptions?: { value: string; label: string }[];
-  withDialog?: boolean;
+  type: "select" | "date" | "search" | "text"
+  name: Path<DataType>
+  label: string
+  selectOptions?: { value: string; label: string }[]
+  withDialog?: boolean
 }) {
-  const form = useFormContext<DataType>();
+  const form = useFormContext<DataType>()
   const input = () => {
     switch (props.type) {
       case "select":
@@ -554,7 +555,7 @@ function InputSwitch(props: {
               </FormItem>
             )}
           />
-        );
+        )
       case "date":
         return (
           <FormField
@@ -571,7 +572,7 @@ function InputSwitch(props: {
               </FormItem>
             )}
           />
-        );
+        )
       case "search":
         return (
           <FormField
@@ -587,7 +588,7 @@ function InputSwitch(props: {
                   <Input
                     {...field}
                     rightIcon={
-                      <SearchIcon className="size-4 text-muted-foreground min-w-10" />
+                      <SearchIcon className="size-4 min-w-10 text-muted-foreground" />
                     }
                   />
                 </FormControl>
@@ -595,7 +596,7 @@ function InputSwitch(props: {
               </FormItem>
             )}
           />
-        );
+        )
       default:
         return (
           <FormField
@@ -614,9 +615,9 @@ function InputSwitch(props: {
               </FormItem>
             )}
           />
-        );
+        )
     }
-  };
+  }
   if (props.withDialog) {
     return (
       <div className="flex flex-row gap-2">
@@ -625,12 +626,12 @@ function InputSwitch(props: {
           type="button"
           variant={"ghost"}
           size={"icon"}
-          className="h-9 w-9 mt-7"
+          className="mt-7 h-9 w-9"
         >
           <ListIcon className="size-4" />
         </Button>
       </div>
-    );
+    )
   }
-  return input();
+  return input()
 }

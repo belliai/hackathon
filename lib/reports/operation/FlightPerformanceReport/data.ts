@@ -1,4 +1,4 @@
-import { FlightPerformanceType } from "@/components/reports/operation/FlightPerformanceReport/columns";
+import { FlightPerformanceType } from "@/components/reports/operation/FlightPerformanceReport/columns"
 
 export const DUMMY_DATA: FlightPerformanceType[] = [
   {
@@ -17,7 +17,7 @@ export const DUMMY_DATA: FlightPerformanceType[] = [
     total_vol_cbm: "200 cbm",
     chargeable_tonnage: "37000 kg",
     actual_tail_no: "N12345",
-    actual_aircraft_type: "Boeing 777"
+    actual_aircraft_type: "Boeing 777",
   },
   {
     flight_date: "2023-05-02",
@@ -35,7 +35,7 @@ export const DUMMY_DATA: FlightPerformanceType[] = [
     total_vol_cbm: "250 cbm",
     chargeable_tonnage: "46000 kg",
     actual_tail_no: "N12346",
-    actual_aircraft_type: "Airbus A330"
+    actual_aircraft_type: "Airbus A330",
   },
   {
     flight_date: "2023-05-03",
@@ -53,7 +53,7 @@ export const DUMMY_DATA: FlightPerformanceType[] = [
     total_vol_cbm: "300 cbm",
     chargeable_tonnage: "57000 kg",
     actual_tail_no: "N12347",
-    actual_aircraft_type: "Boeing 747"
+    actual_aircraft_type: "Boeing 747",
   },
   {
     flight_date: "2023-05-04",
@@ -71,7 +71,7 @@ export const DUMMY_DATA: FlightPerformanceType[] = [
     total_vol_cbm: "100 cbm",
     chargeable_tonnage: "18500 kg",
     actual_tail_no: "N12348",
-    actual_aircraft_type: "Boeing 737"
+    actual_aircraft_type: "Boeing 737",
   },
   {
     flight_date: "2023-05-05",
@@ -89,7 +89,7 @@ export const DUMMY_DATA: FlightPerformanceType[] = [
     total_vol_cbm: "120 cbm",
     chargeable_tonnage: "22500 kg",
     actual_tail_no: "N12349",
-    actual_aircraft_type: "Airbus A320"
+    actual_aircraft_type: "Airbus A320",
   },
   {
     flight_date: "2023-05-06",
@@ -107,10 +107,10 @@ export const DUMMY_DATA: FlightPerformanceType[] = [
     total_vol_cbm: "220 cbm",
     chargeable_tonnage: "41000 kg",
     actual_tail_no: "N12350",
-    actual_aircraft_type: "Boeing 767"
-  }
-];
+    actual_aircraft_type: "Boeing 767",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

@@ -1,12 +1,9 @@
-
-import Contents from "./contents";
+import Contents from "./contents"
 
 export default async function Page() {
   const props = {
-    title: "Message Monitoring"
+    title: "Message Monitoring",
   }
 
-  return (
-    <Contents  {...props} />
-  );
+  return <Contents {...props} />
 }

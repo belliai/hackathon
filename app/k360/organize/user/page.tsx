@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../masters/components/MastersPageTemplate";
-import StatusBadge from "../masters/components/StatusBadge";
-import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useForm } from "react-hook-form";
-import { selectColumn } from "../masters/components/columnItem";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { selectColumn } from "../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../masters/components/MastersPageTemplate"
+import StatusBadge from "../masters/components/StatusBadge"
 
 export default function UserPage() {
   const columns: ColumnDef<any>[] = [
@@ -58,7 +60,7 @@ export default function UserPage() {
       accessorKey: "updatedAt",
       header: "Updated At",
     },
-  ];
+  ]
 
   const filterFormFields = [
     {
@@ -100,7 +102,7 @@ export default function UserPage() {
       placeholder: "Status",
       type: "text",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -171,11 +173,10 @@ export default function UserPage() {
     {
       name: "remark",
       placeholder: "Remark",
-      
+
       type: "text",
     },
-    
-  ];
+  ]
 
   const data = [
     {
@@ -226,10 +227,10 @@ export default function UserPage() {
       createdAt: "2023-03-01",
       updatedAt: "2023-03-10",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -241,5 +242,5 @@ export default function UserPage() {
       formFields={formFields}
       hookForm={form}
     />
-  );
+  )
 }

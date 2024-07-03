@@ -1,5 +1,6 @@
-import { TSidebarItem } from "@/components/nav/SidebarItem";
-import { CubeIcon } from "@radix-ui/react-icons";
+import { CubeIcon } from "@radix-ui/react-icons"
+
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const operationsNavigation: TSidebarItem[] = [
   {
@@ -9,7 +10,7 @@ export const operationsNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Home",
-        href: "/belli/dashboard",
+        href: "/belli/home",
         icon: CubeIcon,
         current: false,
       },
@@ -39,4 +40,4 @@ export const operationsNavigation: TSidebarItem[] = [
       },
     ],
   },
-];
+]

@@ -1,29 +1,30 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type CargoScreeningType = {
-  awb?: string;
-  pcs?: string;
-  weight?: string;
-  agent?: string;
-  shipper?: string;
-  commodity?: string;
-  shc?: string;
-  token?: string;
-  known_shipper?: string;
-  dimension?: string;
-  is_accepted?: string;
-  acceptance_method?: string;
-};
+  awb?: string
+  pcs?: string
+  weight?: string
+  agent?: string
+  shipper?: string
+  commodity?: string
+  shc?: string
+  token?: string
+  known_shipper?: string
+  dimension?: string
+  is_accepted?: string
+  acceptance_method?: string
+}
 
 export type CargoUnscreeningType = {
-  awb?: string;
-  pcs?: string;
-  weight?: string;
-  dimension?: string;
-};
+  awb?: string
+  pcs?: string
+  weight?: string
+  dimension?: string
+}
 
 export const columns: ColumnDef<CargoScreeningType>[] = [
   {
@@ -98,7 +99,7 @@ export const columns: ColumnDef<CargoScreeningType>[] = [
     accessorKey: "acceptance_method",
     header: "Acceptance Method",
   },
-];
+]
 
 export const unscreenedColumns: ColumnDef<CargoUnscreeningType>[] = [
   {
@@ -137,4 +138,4 @@ export const unscreenedColumns: ColumnDef<CargoUnscreeningType>[] = [
     accessorKey: "weight",
     header: "Weight",
   },
-];
+]

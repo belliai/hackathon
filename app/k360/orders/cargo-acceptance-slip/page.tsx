@@ -1,16 +1,11 @@
-"use client";
+"use client"
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTable } from "@/components/data-table/data-table";
-import DataTableFilterForm, {
-  FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ColumnDef } from "@tanstack/react-table"
+import { RotateCcwIcon } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -18,14 +13,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { ColumnDef } from "@tanstack/react-table";
-import { RotateCcwIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { DataTable } from "@/components/data-table/data-table"
+import DataTableFilterForm, {
+  FormFieldOption,
+} from "@/components/data-table/data-table-filter-form"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 export default function Page() {
-  const form = useForm();
+  const form = useForm()
   return (
     <PageContainer className="gap-6">
       <PageHeader title="Upload Cargo Acceptance Slip" />
@@ -57,7 +58,7 @@ export default function Page() {
                     <Input
                       type="file"
                       {...field}
-                      className="py-0 px-0 overflow-clip file:transition-colors file:h-full file:mr-5 file:py-1 file:px-3 file:text-xs file:font-medium file:bg-muted file:text-foreground hover:file:cursor-pointer hover:file:bg-muted/50"
+                      className="overflow-clip px-0 py-0 file:mr-5 file:h-full file:bg-muted file:px-3 file:py-1 file:text-xs file:font-medium file:text-foreground file:transition-colors hover:file:cursor-pointer hover:file:bg-muted/50"
                     />
                   </FormControl>
                   <FormMessage />
@@ -65,7 +66,7 @@ export default function Page() {
               )}
             />
           </Form>
-          <div className="flex flex-row items-center pt-6 gap-2">
+          <div className="flex flex-row items-center gap-2 pt-6">
             <Button variant={"button-primary"} className="flex-grow">
               Submit
             </Button>
@@ -76,5 +77,5 @@ export default function Page() {
         </div>
       </Card>
     </PageContainer>
-  );
+  )
 }

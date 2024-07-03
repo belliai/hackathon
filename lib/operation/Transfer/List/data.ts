@@ -1,4 +1,4 @@
-import { TransferListType } from "@/components/operation/Transfer/List/columns";
+import { TransferListType } from "@/components/operation/Transfer/List/columns"
 
 export const DUMMY_DATA: TransferListType[] = [
   {
@@ -14,7 +14,7 @@ export const DUMMY_DATA: TransferListType[] = [
     volume: "10m³",
     handling_info: "Handle with care",
     special_instructions: "Do not stack",
-    status: "In Transit"
+    status: "In Transit",
   },
   {
     manifest_id: "MANIFEST002",
@@ -29,7 +29,7 @@ export const DUMMY_DATA: TransferListType[] = [
     volume: "20m³",
     handling_info: "Fragile",
     special_instructions: "Keep upright",
-    status: "Pending"
+    status: "Pending",
   },
   {
     manifest_id: "MANIFEST003",
@@ -44,7 +44,7 @@ export const DUMMY_DATA: TransferListType[] = [
     volume: "15m³",
     handling_info: "Temperature controlled",
     special_instructions: "Store below 25°C",
-    status: "Completed"
+    status: "Completed",
   },
   {
     manifest_id: "MANIFEST004",
@@ -59,7 +59,7 @@ export const DUMMY_DATA: TransferListType[] = [
     volume: "5m³",
     handling_info: "Keep dry",
     special_instructions: "Avoid direct sunlight",
-    status: "In Transit"
+    status: "In Transit",
   },
   {
     manifest_id: "MANIFEST005",
@@ -74,11 +74,10 @@ export const DUMMY_DATA: TransferListType[] = [
     volume: "7.5m³",
     handling_info: "Handle with gloves",
     special_instructions: "Store in a cool place",
-    status: "Pending"
-  }
-];
-
+    status: "Pending",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

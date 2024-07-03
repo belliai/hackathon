@@ -1,4 +1,4 @@
-import { TSidebarItem } from "@/components/nav/SidebarItem";
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const findActiveItem = (
   items: TSidebarItem[],
@@ -6,14 +6,14 @@ export const findActiveItem = (
 ): { parent?: TSidebarItem; item: TSidebarItem } | undefined => {
   for (const item of items) {
     if (item.href === pathname) {
-      return { parent: undefined, item };
+      return { parent: undefined, item }
     }
     if (item.children) {
-      const activeChild = findActiveItem(item.children, pathname);
+      const activeChild = findActiveItem(item.children, pathname)
       if (activeChild) {
-        return { parent: item, item: activeChild.item };
+        return { parent: item, item: activeChild.item }
       }
     }
   }
-  return undefined;
-};
+  return undefined
+}

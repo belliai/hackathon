@@ -1,18 +1,20 @@
-"use client";
+"use client"
 
-import DataTableFilterForm, { FormFieldOption } from "@/components/data-table/data-table-filter-form";
+import DataTableFilterForm, {
+  FormFieldOption,
+} from "@/components/data-table/data-table-filter-form"
 
 export type FilterDataType = {
-  awb_number?: string;
-  awb_from_date?: string;
-  awb_to_date?: string;
-  origin?: string;
-  destination?: string;
-  flight_number?: string;
-  flight_from_date?: string;
-  flight_to_date?: string;
-  delivery_status?: string;
-};
+  awb_number?: string
+  awb_from_date?: string
+  awb_to_date?: string
+  origin?: string
+  destination?: string
+  flight_number?: string
+  flight_from_date?: string
+  flight_to_date?: string
+  delivery_status?: string
+}
 
 export const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -90,4 +92,4 @@ export const formFilters: FormFieldOption<FilterDataType>[] = [
     ],
     placeholder: "Select Delivery Status",
   },
-];
+]

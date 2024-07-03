@@ -1,12 +1,14 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { useFieldArray, useForm } from "react-hook-form";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions";
-import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterUsrPage() {
   const columns: ColumnDef<any>[] = [
@@ -40,7 +42,7 @@ export default function MasterUsrPage() {
       header: "ULD No.",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -70,7 +72,7 @@ export default function MasterUsrPage() {
       finalWarehouse: "Warehouse U",
       uldNumber: "ULD123456",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -115,7 +117,7 @@ export default function MasterUsrPage() {
       placeholder: "Carrier Receiving",
       type: "text",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -187,9 +189,9 @@ export default function MasterUsrPage() {
       placeholder: "Remarks",
       type: "text",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
   const hookForm = useForm({
     defaultValues: {
       fieldArray: [
@@ -216,17 +218,17 @@ export default function MasterUsrPage() {
         },
       ],
     },
-  });
+  })
 
   const fieldArray = useFieldArray<any>({
     control: hookForm.control,
     name: "fieldArray",
-  });
+  })
 
   const accessoriesfieldArray = useFieldArray<any>({
     control: hookForm.control,
     name: "accessories",
-  });
+  })
 
   return (
     <MastersPageTemplate
@@ -238,28 +240,28 @@ export default function MasterUsrPage() {
       filterHookForm={filterForm}
       hookForm={hookForm}
       customDialogContent={
-        <div className="flex gap-2 mt-8">
-          <Button className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+        <div className="mt-8 flex gap-2">
+          <Button className="bg-button-secondary text-white hover:bg-button-secondary/80">
             Save
           </Button>
-          <Button className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button className="bg-button-secondary text-white hover:bg-button-secondary/80">
             Print
           </Button>
           <Button
-            className="bg-button-secondary hover:bg-button-secondary/80 text-white"
+            className="bg-button-secondary text-white hover:bg-button-secondary/80"
             onClick={() => {
               hookForm.reset({
                 fieldArray: [],
                 accessories: [],
-              });
+              })
             }}
           >
             Clear
           </Button>
-          <Button className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button className="bg-button-secondary text-white hover:bg-button-secondary/80">
             Cancel
           </Button>
-          <Button className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button className="bg-button-secondary text-white hover:bg-button-secondary/80">
             Send LUC
           </Button>
         </div>
@@ -366,5 +368,5 @@ export default function MasterUsrPage() {
         },
       ]}
     />
-  );
+  )
 }

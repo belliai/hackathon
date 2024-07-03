@@ -4,11 +4,12 @@ import {
   HandThumbUpIcon,
   PresentationChartLineIcon,
   ServerStackIcon,
-} from "@heroicons/react/24/outline";
-import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
-import { CubeIcon, UploadIcon } from "@radix-ui/react-icons";
-import { Boxes, ReceiptText, TargetIcon } from "lucide-react";
-import { TSidebarItem } from "@/components/nav/SidebarItem";
+} from "@heroicons/react/24/outline"
+import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid"
+import { CubeIcon, UploadIcon } from "@radix-ui/react-icons"
+import { Boxes, ReceiptText, TargetIcon } from "lucide-react"
+
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const k360Navigation: TSidebarItem[] = [
   {
@@ -789,4 +790,4 @@ export const k360Navigation: TSidebarItem[] = [
       },
     ],
   },
-];
+]

@@ -1,17 +1,19 @@
-"use client";
+"use client"
 
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { Search } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import { selectColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
-import { ColumnDef } from "@tanstack/react-table";
-import { selectColumn } from "../../components/columnItem";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { Badge } from "@/components/ui/badge";
-import { useForm } from "react-hook-form";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterFreightForwarderPage() {
   const formFields: Omit<FormTextFieldProps, "form">[] = [
@@ -33,7 +35,7 @@ export default function MasterFreightForwarderPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     { ...selectColumn },
@@ -59,10 +61,10 @@ export default function MasterFreightForwarderPage() {
       header: "Actions",
       cell: ({ row }) => <DataTableRowActions row={row} />,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const freightForwarderForm = useForm();
+  const filterForm = useForm()
+  const freightForwarderForm = useForm()
 
   const data = [
     {
@@ -77,7 +79,7 @@ export default function MasterFreightForwarderPage() {
       status: "Inactive",
       actions: "Actions 2",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -90,5 +92,5 @@ export default function MasterFreightForwarderPage() {
       hookForm={freightForwarderForm}
       data={data}
     />
-  );
+  )
 }

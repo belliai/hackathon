@@ -1,4 +1,4 @@
-import { AwbMovementType } from "@/components/reports/Standard/AwbMovement/columns";
+import { AwbMovementType } from "@/components/reports/Standard/AwbMovement/columns"
 
 export const DUMMY_DATA: AwbMovementType[] = [
   {
@@ -71,8 +71,8 @@ export const DUMMY_DATA: AwbMovementType[] = [
     agent_code: "E567",
     status: "In Transit",
   },
-];
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

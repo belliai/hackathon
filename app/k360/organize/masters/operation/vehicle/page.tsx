@@ -1,15 +1,17 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import StatusBadge from "../../components/StatusBadge";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 // Registration Number *
 // Warehouse Code *
@@ -58,7 +60,7 @@ export default function MasterVehiclePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -101,7 +103,7 @@ export default function MasterVehiclePage() {
       createdAt: "2023-05-01",
       updatedAt: "2023-05-10",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -120,7 +122,7 @@ export default function MasterVehiclePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const formFields = [
     {
@@ -172,10 +174,10 @@ export default function MasterVehiclePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
-  const hookForm = useForm();
+  const filterHookForm = useForm()
+  const hookForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -188,5 +190,5 @@ export default function MasterVehiclePage() {
       filterHookForm={filterHookForm}
       hookForm={hookForm}
     />
-  );
+  )
 }

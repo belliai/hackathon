@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type AwbMovementType = {
-  awb_prefix: string;
-  awb_number: string;
-  from_date: string;
-  to_date: string;
-  flight_prefix: string;
-  flight_id: string;
-  origin: string;
-  destination: string;
-  country: string;
-  region: string;
-  agent_code: string;
-  status: string;
-};
+  awb_prefix: string
+  awb_number: string
+  from_date: string
+  to_date: string
+  flight_prefix: string
+  flight_id: string
+  origin: string
+  destination: string
+  country: string
+  region: string
+  agent_code: string
+  status: string
+}
 
 export const columns: ColumnDef<AwbMovementType>[] = [
   {
@@ -66,4 +66,4 @@ export const columns: ColumnDef<AwbMovementType>[] = [
     header: "Status",
     accessorKey: "status",
   },
-];
+]

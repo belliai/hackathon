@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import StatusBadge from "../../components/StatusBadge";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterProductType() {
   const columns: ColumnDef<any>[] = [
@@ -39,7 +41,7 @@ export default function MasterProductType() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -80,7 +82,7 @@ export default function MasterProductType() {
       createdAt: "2023-05-25",
       updatedAt: "2023-08-20",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -101,10 +103,10 @@ export default function MasterProductType() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const productTypeForm = useForm();
+  const filterForm = useForm()
+  const productTypeForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -116,5 +118,5 @@ export default function MasterProductType() {
       filterHookForm={filterForm}
       hookForm={productTypeForm}
     />
-  );
+  )
 }

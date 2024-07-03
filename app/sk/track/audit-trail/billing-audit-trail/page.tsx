@@ -1,12 +1,9 @@
-
-import Contents from "./contents";
+import Contents from "./contents"
 
 export default async function Page() {
   const props = {
-    title: "Billing Audit Trail"
+    title: "Billing Audit Trail",
   }
 
-  return (
-    <Contents  {...props} />
-  );
+  return <Contents {...props} />
 }

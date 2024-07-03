@@ -1,20 +1,20 @@
-import FilterSection from "@/components/operation/FlightPlanning/FilterSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RightSection from "@/components/operation/FlightPlanning/RightSection";
-import UnassinedSection from "@/components/operation/FlightPlanning/UnassignedSection";
-import AssignedSection from "@/components/operation/FlightPlanning/AssignedSection";
-import CartLoadSection from "@/components/operation/FlightPlanning/CartLoadSection";
-import UldLoadSection from "@/components/operation/FlightPlanning/UldLoadSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import AssignedSection from "@/components/operation/FlightPlanning/AssignedSection"
+import CartLoadSection from "@/components/operation/FlightPlanning/CartLoadSection"
+import RightSection from "@/components/operation/FlightPlanning/RightSection"
+import UldLoadSection from "@/components/operation/FlightPlanning/UldLoadSection"
+import UnassinedSection from "@/components/operation/FlightPlanning/UnassignedSection"
 
 export default async function FlightPlanning() {
   return (
     <div>
-      <FilterSection />
-      <div className="flex gap-5 py-5">
+      <div className="flex gap-5">
         <div className="w-3/4">
           <Tabs defaultValue="unassined-section" className="w-full">
             <TabsList>
-              <TabsTrigger value="unassined-section">Unassigned AWB</TabsTrigger>
+              <TabsTrigger value="unassined-section">
+                Unassigned AWB
+              </TabsTrigger>
               <TabsTrigger value="assigned-section">Assigned AWB</TabsTrigger>
               <TabsTrigger value="cart-load">Cart Load</TabsTrigger>
               <TabsTrigger value="uld-load">ULD Load</TabsTrigger>
@@ -38,5 +38,5 @@ export default async function FlightPlanning() {
         </div>
       </div>
     </div>
-  );
+  )
 }

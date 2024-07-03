@@ -1,16 +1,18 @@
-import { CalendarIcon } from "lucide-react";
-import { Button } from "./button";
-import { Calendar } from "./calendar";
-import { FormControl } from "./form";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { ControllerRenderProps } from "react-hook-form";
-import { cn } from "@/lib/utils";
-import { formatDate } from "@/lib/utils/date-utils";
-import React, { forwardRef } from "react";
+import React, { forwardRef } from "react"
+import { CalendarIcon } from "lucide-react"
+import { ControllerRenderProps } from "react-hook-form"
+
+import { cn } from "@/lib/utils"
+import { formatDate } from "@/lib/utils/date-utils"
+
+import { Button } from "./button"
+import { Calendar } from "./calendar"
+import { FormControl } from "./form"
+import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
 type DateInputProps = ControllerRenderProps & {
-  className?: HTMLDivElement["className"];
-};
+  className?: HTMLDivElement["className"]
+}
 
 const DateInput = forwardRef(
   ({ value, onChange, className }: DateInputProps, ref) => {
@@ -42,10 +44,10 @@ const DateInput = forwardRef(
           />
         </PopoverContent>
       </Popover>
-    );
+    )
   }
-);
+)
 
-DateInput.displayName = "DateInput";
+DateInput.displayName = "DateInput"
 
-export default DateInput;
+export default DateInput

@@ -1,17 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { selectColumn } from "../../components/columnItem";
-import { FormTextFieldProps } from "@/components/form/FormTextField";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import { selectColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { useForm } from "react-hook-form";
-import { Search } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterRegionPage() {
   const columns: ColumnDef<any>[] = [
@@ -52,7 +54,7 @@ export default function MasterRegionPage() {
       header: "Action",
       cell: ({ row }) => <DataTableRowActions />,
     },
-  ];
+  ]
 
   const formFields: Omit<FormTextFieldProps, "form">[] = [
     {
@@ -79,7 +81,7 @@ export default function MasterRegionPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -98,10 +100,10 @@ export default function MasterRegionPage() {
       created_at: "2021-09-01",
       updated_at: "2021-09-01",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const regionForm = useForm();
+  const filterForm = useForm()
+  const regionForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -114,5 +116,5 @@ export default function MasterRegionPage() {
       filterFormFields={formFields}
       data={data}
     />
-  );
+  )
 }

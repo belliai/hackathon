@@ -1,13 +1,14 @@
-"use client";
+"use client"
 
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
 
 export default function RateParameterPriorityPage() {
-  const form = useForm();
+  const form = useForm()
 
   const formFields: TFormTextField[] = [
     {
@@ -33,7 +34,7 @@ export default function RateParameterPriorityPage() {
       type: "checkbox",
       label: "Is Active",
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -41,12 +42,12 @@ export default function RateParameterPriorityPage() {
       hookForm={form}
       formFields={formFields}
       customDialogContent={
-        <div className="flex gap-2 mt-8">
+        <div className="mt-8 flex gap-2">
           <Button variant="button-primary">Save</Button>
           <Button variant="button-primary">List</Button>
           <Button variant="button-primary">Clear</Button>
         </div>
       }
     />
-  );
+  )
 }

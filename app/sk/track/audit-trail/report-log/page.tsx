@@ -1,12 +1,9 @@
-
-import Contents from "./contents";
+import Contents from "./contents"
 
 export default async function MasterAuditLog() {
   const props = {
-    title: "Report Log"
+    title: "Report Log",
   }
 
-  return (
-    <Contents  {...props} />
-  );
+  return <Contents {...props} />
 }

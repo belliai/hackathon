@@ -29,16 +29,23 @@ Progress.displayName = ProgressPrimitive.Root.displayName
 // BookingCount component
 export function BookingCount() {
   // Array of tags
-  const bookingCounts = Array.from({ length: 50 }).map((_, i, a) => `x.${a.length - i}`)
+  const bookingCounts = Array.from({ length: 50 }).map(
+    (_, i, a) => `x.${a.length - i}`
+  )
 
   return (
     <ScrollArea className="h-72 w-1/2 rounded-md border">
       <div className="p-4">
-        <h4 className="mb-4 text-sm font-medium leading-none">Booking Counts</h4>
+        <h4 className="mb-4 text-sm font-medium leading-none">
+          Booking Counts
+        </h4>
         {bookingCounts.map((count, index) => (
-          <div key={count} className="flex items-center justify-between text-sm">
+          <div
+            key={count}
+            className="flex items-center justify-between text-sm"
+          >
             <span>{count}</span>
-            <Progress value={(index + 1) * 2} /> 
+            <Progress value={(index + 1) * 2} />
             <span className="ml-2">{(index + 1) * 2}%</span>
           </div>
         ))}

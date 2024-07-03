@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DataTable } from "@/components/data-table/data-table";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterCostLinePage() {
   const columns: ColumnDef<any>[] = [
@@ -85,7 +86,7 @@ export default function MasterCostLinePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
   const data = [
     {
       costId: 1,
@@ -121,7 +122,7 @@ export default function MasterCostLinePage() {
       createdAt: "2021-09-01",
       updatedAt: "2021-09-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -198,9 +199,9 @@ export default function MasterCostLinePage() {
       label: "Cost ID",
       orientation: "horizontal",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -210,7 +211,7 @@ export default function MasterCostLinePage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -218,5 +219,5 @@ export default function MasterCostLinePage() {
         </div>
       }
     />
-  );
+  )
 }

@@ -1,10 +1,11 @@
-import FilterSection from "@/components/operation/Export/NotocDetail/FilterSection";
-import { DataTable } from "@components/data-table/data-table";
-import { columns } from "@/components/operation/Export/NotocDetail/columns";
-import { getData } from "@/lib/operation/Export/NotocDetail/data";
+import { DataTable } from "@components/data-table/data-table"
+
+import { getData } from "@/lib/operation/Export/NotocDetail/data"
+import { columns } from "@/components/operation/Export/NotocDetail/columns"
+import FilterSection from "@/components/operation/Export/NotocDetail/FilterSection"
 
 export default async function NotocDetail() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +15,6 @@ export default async function NotocDetail() {
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

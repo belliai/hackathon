@@ -1,11 +1,13 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import StatusBadge from "../../components/StatusBadge";
-import { TFormTextField } from "@/components/form/FormTextField";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterEquipmentPage() {
   const columns: ColumnDef<any>[] = [
@@ -71,7 +73,7 @@ export default function MasterEquipmentPage() {
       accessorKey: "updatedAt",
       header: "Updated At",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -112,7 +114,7 @@ export default function MasterEquipmentPage() {
       type: "date",
       hideTooltip: true,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -195,10 +197,10 @@ export default function MasterEquipmentPage() {
       createdAt: "2023-05-25",
       updatedAt: "2023-08-20",
     },
-  ];
+  ]
 
-  const equipmentForm = useForm();
-  const filterForm = useForm();
+  const equipmentForm = useForm()
+  const filterForm = useForm()
 
   // TODO: Complete formfields, currently it is missing in the reference
 
@@ -213,5 +215,5 @@ export default function MasterEquipmentPage() {
       columns={columns}
       data={data}
     />
-  );
+  )
 }

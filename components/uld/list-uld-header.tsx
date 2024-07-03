@@ -1,48 +1,63 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import React, { useState } from "react"
+import { Separator } from "@radix-ui/react-dropdown-menu"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export default function ListUldInputHeader() {
-return (
-  <div className="py-8 px-4 space-y-6">
-      <div className="flex justify-between w-full">
+  return (
+    <div className="space-y-6 px-4 py-8">
+      <div className="flex w-full justify-between">
         <div className="flex flex-wrap items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <label htmlFor="location" className="whitespace-nowrap">Location *</label>
+            <label htmlFor="location" className="whitespace-nowrap">
+              Location *
+            </label>
             <Selector />
           </div>
           <div className="flex items-center space-x-2">
-            <label htmlFor="uldNumber" className="whitespace-nowrap">ULD#</label>
+            <label htmlFor="uldNumber" className="whitespace-nowrap">
+              ULD#
+            </label>
             <Input type="text" id="uldNumber" className="w-24" />
           </div>
           <div className="flex items-center space-x-2">
-            <label htmlFor="uldType" className="whitespace-nowrap">ULD type</label>
+            <label htmlFor="uldType" className="whitespace-nowrap">
+              ULD type
+            </label>
             <Selector />
           </div>
           <div className="flex items-center space-x-2">
-            <label htmlFor="uldOwner" className="whitespace-nowrap">ULD Owner</label>
+            <label htmlFor="uldOwner" className="whitespace-nowrap">
+              ULD Owner
+            </label>
             <Selector />
           </div>
           <div className="flex items-center space-x-2">
-            <label htmlFor="uldUseStatus" className="whitespace-nowrap">ULD Use Status</label>
+            <label htmlFor="uldUseStatus" className="whitespace-nowrap">
+              ULD Use Status
+            </label>
             <Selector />
           </div>
           <div className="flex items-center space-x-2">
-            <label htmlFor="uldStatus" className="whitespace-nowrap">ULD Status</label>
+            <label htmlFor="uldStatus" className="whitespace-nowrap">
+              ULD Status
+            </label>
             <Selector />
           </div>
           <div className="flex items-center space-x-2">
-            <label htmlFor="status" className="whitespace-nowrap">Status</label>
+            <label htmlFor="status" className="whitespace-nowrap">
+              Status
+            </label>
             <Selector />
           </div>
         </div>
@@ -54,11 +69,11 @@ return (
       </div>
       <Separator className="my-4" />
     </div>
-  );
+  )
 }
 
 function Selector() {
-    return (
+  return (
     <Select>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select" />
@@ -72,5 +87,5 @@ function Selector() {
         </SelectGroup>
       </SelectContent>
     </Select>
-    )
+  )
 }

@@ -1,32 +1,33 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 export type UploadManualType = {
-  module_name?: string;
-  date_time?: string;
-};
+  module_name?: string
+  date_time?: string
+}
 
 export type CreateDialog = {
-  truck_no?: string;
-  truck_date?: string;
-  axb?: string;
-  comm_code?: string;
-  comm_desc?: string;
-  rem_pcs?: string;
-  rem_wt?: string;
-  acc_pcs?: string;
-  acc_wt?: string;
-};
+  truck_no?: string
+  truck_date?: string
+  axb?: string
+  comm_code?: string
+  comm_desc?: string
+  rem_pcs?: string
+  rem_wt?: string
+  acc_pcs?: string
+  acc_wt?: string
+}
 
 export const columns: ColumnDef<UploadManualType>[] = [
   {
@@ -43,26 +44,25 @@ export const columns: ColumnDef<UploadManualType>[] = [
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button
+            size="icon"
+            className="bg-button-secondary text-white hover:bg-button-secondary/80"
+          >
             <span className="h-4 w-4">
               <DotsHorizontalIcon />
             </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            Update Module
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Delete Module
-          </DropdownMenuItem>
+          <DropdownMenuItem>Update Module</DropdownMenuItem>
+          <DropdownMenuItem>Delete Module</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
     enableSorting: false,
     enableHiding: false,
   },
-];
+]
 
 export const createDialogColumn: ColumnDef<CreateDialog>[] = [
   {
@@ -125,4 +125,4 @@ export const createDialogColumn: ColumnDef<CreateDialog>[] = [
     accessorKey: "acc_wt",
     header: "Acc Wt",
   },
-];
+]

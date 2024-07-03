@@ -1,31 +1,32 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type AwbType = {
-  awb?: string;
-  priority?: string;
-  pol?: string;
-  pou?: string;
-  build_pcs?: string;
-  build_wgt?: string;
-  acc_pcs?: string;
-  acc_wt?: string;
-  arr_pcs?: string;
-  arr_wt?: string;
-  flight_no?: string;
-  flight_date?: string;
-};
+  awb?: string
+  priority?: string
+  pol?: string
+  pou?: string
+  build_pcs?: string
+  build_wgt?: string
+  acc_pcs?: string
+  acc_wt?: string
+  arr_pcs?: string
+  arr_wt?: string
+  flight_no?: string
+  flight_date?: string
+}
 
 export type UldType = {
-  uld?: string;
-  awb_count?: string;
-  pieces?: string;
-  weight?: string;
-  uom?: string;
-  location?: string;
-};
+  uld?: string
+  awb_count?: string
+  pieces?: string
+  weight?: string
+  uom?: string
+  location?: string
+}
 
 export const awbColumn: ColumnDef<AwbType>[] = [
   {
@@ -100,7 +101,7 @@ export const awbColumn: ColumnDef<AwbType>[] = [
     accessorKey: "flight_date",
     header: "Flight Date",
   },
-];
+]
 
 export const uldColumn: ColumnDef<UldType>[] = [
   {
@@ -151,4 +152,4 @@ export const uldColumn: ColumnDef<UldType>[] = [
     accessorKey: "location",
     header: "Location",
   },
-];
+]

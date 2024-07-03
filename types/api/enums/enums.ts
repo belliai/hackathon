@@ -1,6 +1,6 @@
-type EnumsCategory = 'flight_sector' | 'flight_type' | 'flight_status'
+type EnumsCategory = "flight_sector" | "flight_type" | "flight_status"
 
 interface Enums {
-    ID: string;
-    value: string;
+  ID: string
+  value: string
 }

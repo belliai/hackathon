@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterEntityPage() {
   const columns: ColumnDef<any>[] = [
@@ -75,7 +76,7 @@ export default function MasterEntityPage() {
       header: "Updated Date",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -183,7 +184,7 @@ export default function MasterEntityPage() {
       gstCodeVal: "ZEP-######",
       updatedDate: "2009-05-08",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -276,9 +277,9 @@ export default function MasterEntityPage() {
       label: "Active",
       type: "checkbox",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -288,7 +289,7 @@ export default function MasterEntityPage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -296,5 +297,5 @@ export default function MasterEntityPage() {
         </div>
       }
     />
-  );
+  )
 }

@@ -1,6 +1,7 @@
-import { Liveblocks } from "@liveblocks/node";
-import { COLORS, NAMES } from "@/app/liveblock-spreadsheet/constants";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server"
+import { Liveblocks } from "@liveblocks/node"
+
+import { COLORS, NAMES } from "@/app/liveblock-spreadsheet/constants"
 
 /**
  * Authenticating your Liveblocks application
@@ -9,7 +10,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const liveblocks = new Liveblocks({
   secret: process.env.LIVEBLOCKS_SECRET_KEY!,
-});
+})
 
 export async function POST(req: Request) {
   const user = await currentUser()
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
   if (!user || !user.primaryEmailAddress || !user.fullName) {
     console.error("Unauthorized", { user })
 
-    return new Response("Unauthorized", { status: 401 });
+    return new Response("Unauthorized", { status: 401 })
   }
 
   // Create a session for the current user (access token auth)
@@ -25,13 +26,13 @@ export async function POST(req: Request) {
     userInfo: {
       name: String(user.fullName),
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      avatar: user.hasImage ? user.imageUrl : '',
+      avatar: user.hasImage ? user.imageUrl : "",
     },
-  });
+  })
 
   // Use a naming pattern to allow access to rooms with a wildcard
-  session.allow(`belli:*`, session.FULL_ACCESS);
+  session.allow(`belli:*`, session.FULL_ACCESS)
 
-  const { status, body } = await session.authorize();
-  return new Response(body, { status });
+  const { status, body } = await session.authorize()
+  return new Response(body, { status })
 }

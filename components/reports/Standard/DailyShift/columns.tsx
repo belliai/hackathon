@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type DailyShiftType = {
-  awb_number: string;
-  user_id: string;
-  from_date: string;
-  from_time: string;
-  to_date: string;
-  to_time: string;
-  station: string;
-  flights: string;
-};
+  awb_number: string
+  user_id: string
+  from_date: string
+  from_time: string
+  to_date: string
+  to_time: string
+  station: string
+  flights: string
+}
 
 export const columns: ColumnDef<DailyShiftType>[] = [
   {
@@ -46,4 +46,4 @@ export const columns: ColumnDef<DailyShiftType>[] = [
     header: "Flights",
     accessorKey: "flights",
   },
-];
+]

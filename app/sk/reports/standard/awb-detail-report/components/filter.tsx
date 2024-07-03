@@ -1,18 +1,21 @@
-"use client";
+"use client"
 
-import DataTableFilterForm, { FormFieldOption } from "@/components/data-table/data-table-filter-form";
-import { AWBDetailReportType } from "./column";
+import DataTableFilterForm, {
+  FormFieldOption,
+} from "@/components/data-table/data-table-filter-form"
+
+import { AWBDetailReportType } from "./column"
 
 export type FilterDataType = Partial<AWBDetailReportType> & {
-  from_date?: string;
-  to_date?: string;
-  payment_type?: string;
-  controlling_location_code?: string;
-  level?: string;
-  level_code?: string;
-  awb_status?: string;
-  based_on?: string;
-};
+  from_date?: string
+  to_date?: string
+  payment_type?: string
+  controlling_location_code?: string
+  level?: string
+  level_code?: string
+  awb_status?: string
+  based_on?: string
+}
 
 export const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -63,26 +66,26 @@ export const formFilters: FormFieldOption<FilterDataType>[] = [
     type: "select",
     label: "Level Code",
     selectOptions: [
-      { label: 'ATL', value: 'ATL' },
-      { label: 'PEK', value: 'PEK' },
-      { label: 'LAX', value: 'LAX' },
-      { label: 'HND', value: 'HND' },
-      { label: 'DXB', value: 'DXB' },
-      { label: 'ORD', value: 'ORD' },
-      { label: 'LHR', value: 'LHR' },
-      { label: 'HKG', value: 'HKG' },
-      { label: 'PVG', value: 'PVG' },
-      { label: 'CDG', value: 'CDG' },
-      { label: 'DFW', value: 'DFW' },
-      { label: 'CAN', value: 'CAN' },
-      { label: 'IST', value: 'IST' },
-      { label: 'AMS', value: 'AMS' },
-      { label: 'FRA', value: 'FRA' },
-      { label: 'ICN', value: 'ICN' },
-      { label: 'SIN', value: 'SIN' },
-      { label: 'DEN', value: 'DEN' },
-      { label: 'BKK', value: 'BKK' },
-      { label: 'JFK', value: 'JFK' },
+      { label: "ATL", value: "ATL" },
+      { label: "PEK", value: "PEK" },
+      { label: "LAX", value: "LAX" },
+      { label: "HND", value: "HND" },
+      { label: "DXB", value: "DXB" },
+      { label: "ORD", value: "ORD" },
+      { label: "LHR", value: "LHR" },
+      { label: "HKG", value: "HKG" },
+      { label: "PVG", value: "PVG" },
+      { label: "CDG", value: "CDG" },
+      { label: "DFW", value: "DFW" },
+      { label: "CAN", value: "CAN" },
+      { label: "IST", value: "IST" },
+      { label: "AMS", value: "AMS" },
+      { label: "FRA", value: "FRA" },
+      { label: "ICN", value: "ICN" },
+      { label: "SIN", value: "SIN" },
+      { label: "DEN", value: "DEN" },
+      { label: "BKK", value: "BKK" },
+      { label: "JFK", value: "JFK" },
     ],
     placeholder: "Select Level Code",
   },
@@ -127,4 +130,4 @@ export const formFilters: FormFieldOption<FilterDataType>[] = [
     label: "To Date",
     placeholder: "Select To Date",
   },
-];
+]

@@ -1,4 +1,4 @@
-import type { Order } from "@/components/operation/TrackMotherBagList/columns";
+import type { Order } from "@/components/operation/TrackMotherBagList/columns"
 
 export const DUMMY_DATA: Order[] = [
   {
@@ -14,7 +14,7 @@ export const DUMMY_DATA: Order[] = [
     mwb: "775-20037485",
     status: "Pickup Airport Reached",
     created_at: "2024-05-23 10:00",
-    updated_at: "2024-05-23 10:00"
+    updated_at: "2024-05-23 10:00",
   },
   {
     mb_number: "DL1-24-0001011",
@@ -29,7 +29,7 @@ export const DUMMY_DATA: Order[] = [
     mwb: "775-20037486",
     status: "In Transit Mode",
     created_at: "2024-05-24 11:30",
-    updated_at: "2024-05-24 11:30"
+    updated_at: "2024-05-24 11:30",
   },
   {
     mb_number: "DL1-24-0001012",
@@ -44,7 +44,7 @@ export const DUMMY_DATA: Order[] = [
     mwb: "775-20037487",
     status: "Mother Bag Generated",
     created_at: "2024-05-25 13:45",
-    updated_at: "2024-05-25 13:45"
+    updated_at: "2024-05-25 13:45",
   },
   {
     mb_number: "DL1-24-0001013",
@@ -59,7 +59,7 @@ export const DUMMY_DATA: Order[] = [
     mwb: "775-20037488",
     status: "Destination Warehouse Reached",
     created_at: "2024-05-26 15:00",
-    updated_at: "2024-05-26 15:00"
+    updated_at: "2024-05-26 15:00",
   },
   {
     mb_number: "DL1-24-0001014",
@@ -74,7 +74,7 @@ export const DUMMY_DATA: Order[] = [
     mwb: "775-20037489",
     status: "Warehouse to Airport",
     created_at: "2024-05-27 16:30",
-    updated_at: "2024-05-27 16:30"
+    updated_at: "2024-05-27 16:30",
   },
   {
     mb_number: "DL1-24-0001015",
@@ -89,7 +89,7 @@ export const DUMMY_DATA: Order[] = [
     mwb: "775-20037490",
     status: "Departed",
     created_at: "2024-05-28 17:45",
-    updated_at: "2024-05-28 17:45"
+    updated_at: "2024-05-28 17:45",
   },
   {
     mb_number: "DL1-24-0001016",
@@ -104,10 +104,10 @@ export const DUMMY_DATA: Order[] = [
     mwb: "775-20037491",
     status: "Airport to Airport",
     created_at: "2024-05-29 19:00",
-    updated_at: "2024-05-29 19:00"
-  }
-];
+    updated_at: "2024-05-29 19:00",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

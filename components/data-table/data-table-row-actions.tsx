@@ -1,9 +1,6 @@
-"use client";
+"use client"
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Row } from "@tanstack/react-table";
-
-import { Button } from "@components/ui/button";
+import { Button } from "@components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,19 +13,20 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
+} from "@components/ui/dropdown-menu"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { Row } from "@tanstack/react-table"
 
 export type DataTableRowActionItem = {
-  label: string;
-  value: string;
+  label: string
+  value: string
   fn?: (data: any) => void
   shortcut?: string
-};
+}
 
 interface DataTableRowActionsProps<TData> {
-  row?: Row<TData>;
-  items?: DataTableRowActionItem[];
-
+  row?: Row<TData>
+  items?: DataTableRowActionItem[]
 }
 
 export function DataTableRowActions<TData>({
@@ -58,15 +56,21 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align="end" className="w-[160px]">
         {items?.map((item) => {
           return (
-            <DropdownMenuItem onClick={(e) => {
-              e.stopPropagation()
-              item.fn && item.fn(row)
-            }} key={item.value}>{item.label}
-            {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation()
+                item.fn && item.fn(row)
+              }}
+              key={item.value}
+            >
+              {item.label}
+              {item.shortcut && (
+                <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>
+              )}
             </DropdownMenuItem>
-          );
+          )
         })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

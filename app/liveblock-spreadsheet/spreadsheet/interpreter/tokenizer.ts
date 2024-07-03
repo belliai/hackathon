@@ -15,21 +15,21 @@ export enum SyntaxKind {
   SlashToken = "slash",
 }
 
-export type Token = CellToken | NumberToken | RefToken | SimpleCharToken;
+export type Token = CellToken | NumberToken | RefToken | SimpleCharToken
 
 export interface NumberToken {
-  kind: SyntaxKind.NumberLiteral;
-  value: string;
+  kind: SyntaxKind.NumberLiteral
+  value: string
 }
 
 export interface CellToken {
-  cell: string;
-  kind: SyntaxKind.CellToken;
+  cell: string
+  kind: SyntaxKind.CellToken
 }
 
 export interface RefToken {
-  kind: SyntaxKind.RefToken;
-  ref: string;
+  kind: SyntaxKind.RefToken
+  ref: string
 }
 
 interface SimpleCharToken {
@@ -43,7 +43,7 @@ interface SimpleCharToken {
     | SyntaxKind.ModToken
     | SyntaxKind.OpenParenthesis
     | SyntaxKind.PlusToken
-    | SyntaxKind.SlashToken;
+    | SyntaxKind.SlashToken
 }
 
 const simpleCharToSyntaxKindMap: Map<string, SyntaxKind> = new Map([
@@ -57,122 +57,122 @@ const simpleCharToSyntaxKindMap: Map<string, SyntaxKind> = new Map([
   ["^", SyntaxKind.CaretToken],
   ["%", SyntaxKind.ModToken],
   [":", SyntaxKind.ColonToken],
-]);
+])
 
 const syntaxKindToChar = new Map(
   [...simpleCharToSyntaxKindMap.entries()].map((entry) => [entry[1], entry[0]])
-);
+)
 
 function isDigit(char: string) {
-  const NUMBERS = /\d/;
-  return NUMBERS.test(char);
+  const NUMBERS = /\d/
+  return NUMBERS.test(char)
 }
 
 function isCapLetter(char: string) {
-  const CAP_LETTERS = /[A-Z]/;
-  return CAP_LETTERS.test(char);
+  const CAP_LETTERS = /[A-Z]/
+  return CAP_LETTERS.test(char)
 }
 
 function extractNumber(input: string, current: number): string {
-  let value = "";
-  let hasDecimals = false;
+  let value = ""
+  let hasDecimals = false
 
   while (input[current]) {
     if (isDigit(input[current])) {
-      value += input[current];
+      value += input[current]
     } else if (input[current] === "." && !hasDecimals) {
-      value += ".";
-      hasDecimals = true;
+      value += "."
+      hasDecimals = true
     } else {
-      break;
+      break
     }
-    current++;
+    current++
   }
-  return value;
+  return value
 }
 
 function extractWord(input: string, current: number): string {
-  let word = "";
+  let word = ""
 
   while (isCapLetter(input[current])) {
-    word += input[current];
-    current++;
+    word += input[current]
+    current++
   }
 
-  return word;
+  return word
 }
 
 function extractCell(input: string, current: number): string {
   if (!isCapLetter(input[current])) {
-    throw new Error("Expected cap letter but got " + input[current]);
+    throw new Error("Expected cap letter but got " + input[current])
   }
 
   if (!isDigit(input[current + 1])) {
     throw new Error(
       "Expected digit but got " + input[current + 1] + " " + input
-    );
+    )
   }
 
-  return `${input[current]}${input[current + 1]}`;
+  return `${input[current]}${input[current + 1]}`
 }
 
 function extractCellRef(input: string, current: number): string {
-  let result = "";
+  let result = ""
 
-  current += 4;
+  current += 4
   while (input[current] !== ")") {
-    result += input[current];
-    current++;
+    result += input[current]
+    current++
   }
 
-  return result;
+  return result
 }
 
 export default function tokenizer(input: string): Token[] {
-  let current = 0;
+  let current = 0
 
-  const tokens: Token[] = [];
+  const tokens: Token[] = []
 
   while (current < input.length) {
-    const char = input[current];
+    const char = input[current]
 
-    const syntaxKind = simpleCharToSyntaxKindMap.get(char);
+    const syntaxKind = simpleCharToSyntaxKindMap.get(char)
     if (syntaxKind !== undefined) {
       tokens.push({
         kind: syntaxKind,
-      } as SimpleCharToken);
-      current++;
+      } as SimpleCharToken)
+      current++
     } else if (isDigit(char)) {
-      const numberAsString = extractNumber(input, current);
-      current += numberAsString.length;
+      const numberAsString = extractNumber(input, current)
+      current += numberAsString.length
       tokens.push({
         kind: SyntaxKind.NumberLiteral,
         value: numberAsString,
-      });
+      })
     } else if (isCapLetter(char)) {
-      const word = extractWord(input, current);
+      const word = extractWord(input, current)
 
       if (word === "REF") {
-        const ref = extractCellRef(input, current);
-        current += ref.length + 5;
+        const ref = extractCellRef(input, current)
+        current += ref.length + 5
         tokens.push({
           kind: SyntaxKind.RefToken,
           ref,
-        });
+        })
       } else {
-        const cell = extractCell(input, current);
-        current += cell.length;
+        const cell = extractCell(input, current)
+        current += cell.length
         tokens.push({
           kind: SyntaxKind.CellToken,
           cell,
-        });
+        })
       }
     } else {
-      throw new Error("Unknown character: " + char);
+      throw new Error("Unknown character: " + char)
     }
   }
 
-  return tokens;
+  return tokens
 }
 
 export function tokenToString(token: Token): string {
@@ -187,12 +187,12 @@ export function tokenToString(token: Token): string {
     case SyntaxKind.PlusToken:
     case SyntaxKind.SlashToken:
     case SyntaxKind.ColonToken:
-      return syntaxKindToChar.get(token.kind)!;
+      return syntaxKindToChar.get(token.kind)!
     case SyntaxKind.CellToken:
-      return token.cell;
+      return token.cell
     case SyntaxKind.NumberLiteral:
-      return token.value.toString();
+      return token.value.toString()
     case SyntaxKind.RefToken:
-      return "REF(" + token.ref + ")";
+      return "REF(" + token.ref + ")"
   }
 }

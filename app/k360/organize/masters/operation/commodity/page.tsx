@@ -1,16 +1,18 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import StatusBadge from "../../components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterCommodityPage() {
   const columns: ColumnDef<any>[] = [
@@ -62,7 +64,7 @@ export default function MasterCommodityPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -113,10 +115,10 @@ export default function MasterCommodityPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
-  const commodityForm = useForm();
-  const filterForm = useForm();
+  const commodityForm = useForm()
+  const filterForm = useForm()
 
   const data = [
     {
@@ -185,7 +187,7 @@ export default function MasterCommodityPage() {
       updatedAt: "2023-08-20",
       action: "Edit",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -198,5 +200,5 @@ export default function MasterCommodityPage() {
       columns={columns}
       data={data}
     />
-  );
+  )
 }

@@ -1,14 +1,13 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS } from "../../masters/components/dummySelectOptions";
-import { useFieldArray, useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
 
 export default function MasterRateLinePage() {
   const columns: ColumnDef<any>[] = [
@@ -62,7 +61,7 @@ export default function MasterRateLinePage() {
       header: "Status",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -205,7 +204,7 @@ export default function MasterRateLinePage() {
       type: "Air",
       status: "Inactive",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -289,15 +288,15 @@ export default function MasterRateLinePage() {
       placeholder: "Type",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const rateLineForm = useForm();
+  const filterForm = useForm()
+  const rateLineForm = useForm()
 
   const ralateBases = useFieldArray<any>({
     control: rateLineForm.control,
     name: "rateBases",
-  });
+  })
 
   const excludeIncludeOptions = [
     {
@@ -308,7 +307,7 @@ export default function MasterRateLinePage() {
       label: "Include",
       value: "include",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -727,5 +726,5 @@ export default function MasterRateLinePage() {
         },
       ]}
     />
-  );
+  )
 }

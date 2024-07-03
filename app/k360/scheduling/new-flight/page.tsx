@@ -1,21 +1,22 @@
-"use client";
+"use client"
 
-import { DataTable } from "@/components/data-table/data-table";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import DateInput from "@/components/ui/date-input";
+import { flexRender } from "@tanstack/react-table"
+import { PlusIcon, SaveIcon, SearchIcon, TrashIcon } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import DateInput from "@/components/ui/date-input"
 import {
+  Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
-  Form,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import SelectInput from "@/components/ui/select-input";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import SelectInput from "@/components/ui/select-input"
 import {
   Table,
   TableBody,
@@ -23,55 +24,55 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { flexRender } from "@tanstack/react-table";
-import { PlusIcon, SaveIcon, SearchIcon, TrashIcon } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "@/components/ui/table"
+import { DataTable } from "@/components/data-table/data-table"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 type FormFields = {
   flights: Partial<{
-    flight_no: string;
-    source: string;
-    destination: string;
-    date_from: string;
-    date_to: string;
+    flight_no: string
+    source: string
+    destination: string
+    date_from: string
+    date_to: string
     dept_time: {
-      day: number;
-      hour: number;
-      minute: number;
-    };
+      day: number
+      hour: number
+      minute: number
+    }
     arrival_time: {
-      day: number;
-      hour: number;
-      minute: number;
-    };
+      day: number
+      hour: number
+      minute: number
+    }
     frequency: {
-      mon: boolean;
-      tue: boolean;
-      wed: boolean;
-      thu: boolean;
-      fri: boolean;
-      sat: boolean;
-      sun: boolean;
-    };
-    aircraft_type: string;
-    tail_no: string;
-    capacity: number;
-    uom: string;
-    sector: string;
-    status: string;
-    flight_type: string;
-  }>[];
-};
+      mon: boolean
+      tue: boolean
+      wed: boolean
+      thu: boolean
+      fri: boolean
+      sat: boolean
+      sun: boolean
+    }
+    aircraft_type: string
+    tail_no: string
+    capacity: number
+    uom: string
+    sector: string
+    status: string
+    flight_type: string
+  }>[]
+}
 
 export default function Page() {
   const form = useForm<FormFields>({
     defaultValues: { flights: [{}] },
-  });
+  })
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "flights",
-  });
+  })
   return (
     <PageContainer className="gap-6">
       <PageHeader
@@ -79,23 +80,23 @@ export default function Page() {
         actions={
           <div className="flex flex-row items-center gap-3">
             <Button variant={"button-primary"}>
-              <SaveIcon className="size-4 mr-2" />
+              <SaveIcon className="mr-2 size-4" />
               Save
             </Button>
             <Button
               onClick={() => {
-                append({});
+                append({})
               }}
               variant={"button-secondary"}
             >
-              <PlusIcon className="size-4 mr-2" />
+              <PlusIcon className="mr-2 size-4" />
               Add New
             </Button>
           </div>
         }
       />
       <Form {...form}>
-        <div className="rounded-md border ">
+        <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -126,12 +127,12 @@ export default function Page() {
             <TableBody>
               {fields.map((field, index) => (
                 <TableRow className="hover:bg-background" key={field.id}>
-                  <TableCell className="whitespace-nowrap ">
+                  <TableCell className="whitespace-nowrap">
                     <FormField
                       control={form.control}
                       name={`flights.${index}.flight_no`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-36">
+                        <FormItem className="min-w-36 space-y-1">
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
@@ -145,7 +146,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.source`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-20">
+                        <FormItem className="min-w-20 space-y-1">
                           <SelectInput
                             {...field}
                             selectOptions={[
@@ -164,7 +165,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.destination`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-20">
+                        <FormItem className="min-w-20 space-y-1">
                           <SelectInput
                             {...field}
                             selectOptions={[
@@ -183,7 +184,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.date_from`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-36">
+                        <FormItem className="min-w-36 space-y-1">
                           <DateInput {...field} />
                           <FormMessage />
                         </FormItem>
@@ -195,7 +196,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.date_to`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-36">
+                        <FormItem className="min-w-36 space-y-1">
                           <DateInput {...field} />
                           <FormMessage />
                         </FormItem>
@@ -208,7 +209,7 @@ export default function Page() {
                         control={form.control}
                         name={`flights.${index}.dept_time.day`}
                         render={({ field }) => (
-                          <FormItem className="space-y-1 w-12">
+                          <FormItem className="w-12 space-y-1">
                             <FormControl>
                               <Input type="number" maxLength={2} {...field} />
                             </FormControl>
@@ -220,7 +221,7 @@ export default function Page() {
                         control={form.control}
                         name={`flights.${index}.dept_time.hour`}
                         render={({ field }) => (
-                          <FormItem className="space-y-1 w-12">
+                          <FormItem className="w-12 space-y-1">
                             <FormControl>
                               <Input type="number" maxLength={2} {...field} />
                             </FormControl>
@@ -232,7 +233,7 @@ export default function Page() {
                         control={form.control}
                         name={`flights.${index}.dept_time.minute`}
                         render={({ field }) => (
-                          <FormItem className="space-y-1 w-12">
+                          <FormItem className="w-12 space-y-1">
                             <FormControl>
                               <Input type="number" maxLength={2} {...field} />
                             </FormControl>
@@ -248,7 +249,7 @@ export default function Page() {
                         control={form.control}
                         name={`flights.${index}.arrival_time.day`}
                         render={({ field }) => (
-                          <FormItem className="space-y-1 w-12">
+                          <FormItem className="w-12 space-y-1">
                             <FormControl>
                               <Input type="number" maxLength={2} {...field} />
                             </FormControl>
@@ -260,7 +261,7 @@ export default function Page() {
                         control={form.control}
                         name={`flights.${index}.arrival_time.hour`}
                         render={({ field }) => (
-                          <FormItem className="space-y-1 w-12">
+                          <FormItem className="w-12 space-y-1">
                             <FormControl>
                               <Input type="number" maxLength={2} {...field} />
                             </FormControl>
@@ -272,7 +273,7 @@ export default function Page() {
                         control={form.control}
                         name={`flights.${index}.arrival_time.minute`}
                         render={({ field }) => (
-                          <FormItem className="space-y-1 w-12">
+                          <FormItem className="w-12 space-y-1">
                             <FormControl>
                               <Input type="number" maxLength={2} {...field} />
                             </FormControl>
@@ -283,7 +284,7 @@ export default function Page() {
                     </div>
                   </TableCell>
                   <TableCell className="whitespace-nowrap !pr-2 text-muted-foreground">
-                    <div className="flex flex-row gap-2 items-center">
+                    <div className="flex flex-row items-center gap-2">
                       <FormField
                         control={form.control}
                         name={`flights.${index}.frequency.mon`}
@@ -431,7 +432,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.aircraft_type`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-32">
+                        <FormItem className="min-w-32 space-y-1">
                           <SelectInput
                             {...field}
                             selectOptions={[
@@ -449,7 +450,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.tail_no`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-32">
+                        <FormItem className="min-w-32 space-y-1">
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
@@ -463,7 +464,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.capacity`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-16">
+                        <FormItem className="min-w-16 space-y-1">
                           <FormControl>
                             <Input type="number" {...field} />
                           </FormControl>
@@ -477,7 +478,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.uom`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-16">
+                        <FormItem className="min-w-16 space-y-1">
                           <SelectInput
                             {...field}
                             selectOptions={[
@@ -495,7 +496,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.sector`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-32">
+                        <FormItem className="min-w-32 space-y-1">
                           <SelectInput
                             {...field}
                             selectOptions={[
@@ -513,7 +514,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.status`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-32">
+                        <FormItem className="min-w-32 space-y-1">
                           <SelectInput
                             {...field}
                             selectOptions={[
@@ -530,7 +531,7 @@ export default function Page() {
                       control={form.control}
                       name={`flights.${index}.flight_type`}
                       render={({ field }) => (
-                        <FormItem className="space-y-1 min-w-32">
+                        <FormItem className="min-w-32 space-y-1">
                           <SelectInput
                             {...field}
                             selectOptions={[
@@ -563,5 +564,5 @@ export default function Page() {
         </div>
       </Form>
     </PageContainer>
-  );
+  )
 }

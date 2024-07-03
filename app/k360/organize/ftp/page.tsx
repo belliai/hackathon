@@ -1,11 +1,13 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../masters/components/MastersPageTemplate";
-import { actionColumn, selectColumn } from "../masters/components/columnItem";
-import { useForm } from "react-hook-form";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../masters/components/MastersPageTemplate"
 
 export default function FtpPage() {
   const columns: ColumnDef<any>[] = [
@@ -47,7 +49,7 @@ export default function FtpPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -83,7 +85,7 @@ export default function FtpPage() {
       createdAt: "2021-01-01 00:00:00",
       updatedAt: "2021-01-01 00:00:00",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -101,7 +103,7 @@ export default function FtpPage() {
       placeholder: "To Date",
       type: "date",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -141,10 +143,10 @@ export default function FtpPage() {
       type: "number",
       placeholder: "FTP Port",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -157,5 +159,5 @@ export default function FtpPage() {
       filterFormFields={filterFormFields}
       formFields={formFields}
     />
-  );
+  )
 }

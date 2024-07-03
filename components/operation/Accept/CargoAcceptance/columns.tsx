@@ -1,22 +1,23 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type CargoAcceptanceType = {
-  awb?: string;
-  pcs?: string;
-  weight?: string;
-  agent?: string;
-  shipper?: string;
-  commodity?: string;
-  shc?: string;
-  token?: string;
-  known_shipper?: string;
-  dimension?: string;
-  is_accepted?: string;
-  acceptance_method?: string;
-};
+  awb?: string
+  pcs?: string
+  weight?: string
+  agent?: string
+  shipper?: string
+  commodity?: string
+  shc?: string
+  token?: string
+  known_shipper?: string
+  dimension?: string
+  is_accepted?: string
+  acceptance_method?: string
+}
 
 export const columns: ColumnDef<CargoAcceptanceType>[] = [
   {
@@ -91,4 +92,4 @@ export const columns: ColumnDef<CargoAcceptanceType>[] = [
     accessorKey: "acceptance_method",
     header: "Acceptance Method",
   },
-];
+]

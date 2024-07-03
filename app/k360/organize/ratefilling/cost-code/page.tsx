@@ -1,18 +1,17 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../masters/components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+} from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
 
 export default function MasterCostCodePage() {
   const columns: ColumnDef<any>[] = [
@@ -42,7 +41,7 @@ export default function MasterCostCodePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -63,7 +62,7 @@ export default function MasterCostCodePage() {
       createdAt: "2021-09-01",
       updatedAt: "2021-09-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -84,7 +83,7 @@ export default function MasterCostCodePage() {
       placeholder: "Status",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -111,10 +110,10 @@ export default function MasterCostCodePage() {
       placeholder: "Status",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -127,5 +126,5 @@ export default function MasterCostCodePage() {
       formFields={formFields}
       hookForm={form}
     />
-  );
+  )
 }

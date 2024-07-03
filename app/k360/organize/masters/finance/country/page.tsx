@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { useForm } from "react-hook-form";
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import { Badge } from "@/components/ui/badge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function CountryPage() {
   const columns: ColumnDef<any>[] = [
@@ -64,7 +66,7 @@ export default function CountryPage() {
       header: "Action",
       cell: ({ row }) => <DataTableRowActions />,
     },
-  ];
+  ]
 
   const filterForm = useForm({
     defaultValues: {
@@ -75,7 +77,7 @@ export default function CountryPage() {
       country_name: "",
       status: "",
     },
-  });
+  })
 
   const filterFormFields: Omit<FormTextFieldProps, "form">[] = [
     {
@@ -118,7 +120,7 @@ export default function CountryPage() {
       label: "Status",
       hideTooltip: true,
     },
-  ];
+  ]
 
   const countryForm = useForm({
     defaultValues: {
@@ -139,7 +141,7 @@ export default function CountryPage() {
       billing_period: "",
       cass_billing_offset_day: "",
     },
-  });
+  })
 
   const formFields: Omit<FormTextFieldProps, "form">[] = [
     {
@@ -301,7 +303,7 @@ export default function CountryPage() {
       label: "Cass Billing Offset Day",
       hideTooltip: true,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -340,7 +342,7 @@ export default function CountryPage() {
       fax: "555-3456",
       id: 3,
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -353,5 +355,5 @@ export default function CountryPage() {
       columns={columns}
       data={data}
     />
-  );
+  )
 }

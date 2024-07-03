@@ -1,17 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { selectColumn } from "../../components/columnItem";
-import { Badge } from "@/components/ui/badge";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import { selectColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterStatePage() {
   const columns: ColumnDef<any>[] = [
@@ -56,7 +58,7 @@ export default function MasterStatePage() {
       header: "Action",
       cell: ({ row }) => <DataTableRowActions />,
     },
-  ];
+  ]
 
   const formFields: Omit<FormTextFieldProps, "form">[] = [
     {
@@ -89,7 +91,7 @@ export default function MasterStatePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -112,10 +114,10 @@ export default function MasterStatePage() {
       created_at: "2021-10-01",
       updated_at: "2021-10-01",
     },
-  ];
+  ]
 
-  const stateForm = useForm();
-  const filterForm = useForm();
+  const stateForm = useForm()
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -128,5 +130,5 @@ export default function MasterStatePage() {
       filterHookForm={filterForm}
       hookForm={stateForm}
     />
-  );
+  )
 }

@@ -1,10 +1,11 @@
-import FilterSection from "@/components/operation/Export/ExportInventory/FilterSection";
-import { DataTable } from "@components/data-table/data-table";
-import { columns } from "@/components/operation/Export/ExportInventory/columns";
-import { getData } from "@/lib/operation/Export/ExportInventory/data";
+import { DataTable } from "@components/data-table/data-table"
+
+import { getData } from "@/lib/operation/Export/ExportInventory/data"
+import { columns } from "@/components/operation/Export/ExportInventory/columns"
+import FilterSection from "@/components/operation/Export/ExportInventory/FilterSection"
 
 export default async function ExportInventory() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +15,6 @@ export default async function ExportInventory() {
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

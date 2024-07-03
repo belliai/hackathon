@@ -1,20 +1,21 @@
 import {
+  BanknotesIcon,
+  BoltIcon,
   CalendarIcon,
+  ChartBarIcon,
+  CircleStackIcon,
+  CurrencyDollarIcon,
   GlobeAmericasIcon,
   HandThumbUpIcon,
   PresentationChartLineIcon,
-  ServerStackIcon,
-  CurrencyDollarIcon,
   ReceiptPercentIcon,
-  CircleStackIcon,
-  BanknotesIcon,
-  BoltIcon,
-  ChartBarIcon,
-} from "@heroicons/react/24/outline";
-import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
-import { CubeIcon, UploadIcon } from "@radix-ui/react-icons";
-import { Boxes, ReceiptText, TargetIcon } from "lucide-react";
-import { TSidebarItem } from "@/components/nav/SidebarItem";
+  ServerStackIcon,
+} from "@heroicons/react/24/outline"
+import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid"
+import { CubeIcon, UploadIcon } from "@radix-ui/react-icons"
+import { Boxes, ReceiptText, TargetIcon } from "lucide-react"
+
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const skNavigation: TSidebarItem[] = [
   {
@@ -94,9 +95,17 @@ export const skNavigation: TSidebarItem[] = [
             icon: BoltIcon,
             current: false,
             children: [
-              { name: "List", href: "/sk/sales/spot-rate/list", current: false },
+              {
+                name: "List",
+                href: "/sk/sales/spot-rate/list",
+                current: false,
+              },
               { name: "New", href: "#", current: false },
-              { name: "Approval", href: "#", current: false },
+              {
+                name: "Approval",
+                href: "/sk/sales/spot-rate/approval",
+                current: false,
+              },
             ],
           },
         ],
@@ -842,4 +851,4 @@ export const skNavigation: TSidebarItem[] = [
       },
     ],
   },
-];
+]

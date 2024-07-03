@@ -1,10 +1,10 @@
-import FilterSection from "@/components/manual/UploadManual/FilterSection";
-import { DataTable } from "@/components/dashboard/dashtable";
-import { columns } from "@/components/manual/UploadManual/columns";
-import { getData } from "@/lib/manual/UploadManual/data";
+import { getData } from "@/lib/manual/UploadManual/data"
+import { DataTable } from "@/components/dashboard/dashtable"
+import { columns } from "@/components/manual/UploadManual/columns"
+import FilterSection from "@/components/manual/UploadManual/FilterSection"
 
 export default async function UploadManual() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-5">
@@ -13,5 +13,5 @@ export default async function UploadManual() {
         <DataTable columns={columns} data={data} />
       </div>
     </div>
-  );
+  )
 }

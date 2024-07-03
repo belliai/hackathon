@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
 
 export default function MsrRatePage() {
-  const form = useForm();
+  const form = useForm()
   const formFields: TFormTextField[] = [
     {
       name: "origin",
@@ -63,7 +64,7 @@ export default function MsrRatePage() {
       label: "Active",
       orientation: "horizontal",
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -100,7 +101,7 @@ export default function MsrRatePage() {
       header: "Active",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -123,7 +124,7 @@ export default function MsrRatePage() {
       validTo: "2024-11-30",
       active: false,
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -132,7 +133,7 @@ export default function MsrRatePage() {
       formFields={formFields}
       className="max-h-none"
       customDialogContent={
-        <div className="flex flex-col gap-4 mt-8">
+        <div className="mt-8 flex flex-col gap-4">
           <div className="max-w-96">
             <FilterActions />
           </div>
@@ -141,5 +142,5 @@ export default function MsrRatePage() {
         </div>
       }
     />
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { StationWiseTonnageType } from "@/components/reports/Standard/StationWiseTonnage/columns";
+import { StationWiseTonnageType } from "@/components/reports/Standard/StationWiseTonnage/columns"
 
 export const DUMMY_DATA: StationWiseTonnageType[] = [
   {
@@ -17,7 +17,7 @@ export const DUMMY_DATA: StationWiseTonnageType[] = [
     total_vol_cbm: "70",
     chargeable_tonnage: "14000 kg",
     actual_tail_no: "N12345",
-    actual_aircraft_type: "Boeing 777"
+    actual_aircraft_type: "Boeing 777",
   },
   {
     flight_date: "2024-05-02",
@@ -35,7 +35,7 @@ export const DUMMY_DATA: StationWiseTonnageType[] = [
     total_vol_cbm: "60",
     chargeable_tonnage: "12500 kg",
     actual_tail_no: "N67890",
-    actual_aircraft_type: "Airbus A330"
+    actual_aircraft_type: "Airbus A330",
   },
   {
     flight_date: "2024-05-03",
@@ -53,7 +53,7 @@ export const DUMMY_DATA: StationWiseTonnageType[] = [
     total_vol_cbm: "90",
     chargeable_tonnage: "19000 kg",
     actual_tail_no: "N54321",
-    actual_aircraft_type: "Boeing 747"
+    actual_aircraft_type: "Boeing 747",
   },
   {
     flight_date: "2024-05-04",
@@ -71,7 +71,7 @@ export const DUMMY_DATA: StationWiseTonnageType[] = [
     total_vol_cbm: "120",
     chargeable_tonnage: "29000 kg",
     actual_tail_no: "N98765",
-    actual_aircraft_type: "Airbus A380"
+    actual_aircraft_type: "Airbus A380",
   },
   {
     flight_date: "2024-05-05",
@@ -89,7 +89,7 @@ export const DUMMY_DATA: StationWiseTonnageType[] = [
     total_vol_cbm: "40",
     chargeable_tonnage: "9000 kg",
     actual_tail_no: "N11223",
-    actual_aircraft_type: "Boeing 737"
+    actual_aircraft_type: "Boeing 737",
   },
   {
     flight_date: "2024-05-06",
@@ -107,10 +107,10 @@ export const DUMMY_DATA: StationWiseTonnageType[] = [
     total_vol_cbm: "70",
     chargeable_tonnage: "14000 kg",
     actual_tail_no: "N44556",
-    actual_aircraft_type: "Boeing 767"
-  }
-];
+    actual_aircraft_type: "Boeing 767",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

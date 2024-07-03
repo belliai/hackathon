@@ -1,4 +1,4 @@
-import { OffloadReportType } from "@/components/reports/operation/Offload/columns";
+import { OffloadReportType } from "@/components/reports/operation/Offload/columns"
 
 export const DUMMY_DATA: OffloadReportType[] = [
   {
@@ -13,7 +13,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Overweight",
     offloaded_flight: "FL123",
     offloaded_by: "Agent1",
-    offloaded_at: "2023-05-01 10:00"
+    offloaded_at: "2023-05-01 10:00",
   },
   {
     axb_number: "AXB12346",
@@ -27,7 +27,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Security",
     offloaded_flight: "FL124",
     offloaded_by: "Agent2",
-    offloaded_at: "2023-05-02 12:00"
+    offloaded_at: "2023-05-02 12:00",
   },
   {
     axb_number: "AXB12347",
@@ -41,7 +41,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Damage",
     offloaded_flight: "FL125",
     offloaded_by: "Agent3",
-    offloaded_at: "2023-05-03 14:00"
+    offloaded_at: "2023-05-03 14:00",
   },
   {
     axb_number: "AXB12348",
@@ -55,7 +55,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Mislabeling",
     offloaded_flight: "FL126",
     offloaded_by: "Agent4",
-    offloaded_at: "2023-05-04 16:00"
+    offloaded_at: "2023-05-04 16:00",
   },
   {
     axb_number: "AXB12349",
@@ -69,7 +69,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Late Arrival",
     offloaded_flight: "FL127",
     offloaded_by: "Agent5",
-    offloaded_at: "2023-05-05 18:00"
+    offloaded_at: "2023-05-05 18:00",
   },
   {
     axb_number: "AXB12350",
@@ -83,7 +83,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Customs Issue",
     offloaded_flight: "FL128",
     offloaded_by: "Agent6",
-    offloaded_at: "2023-05-06 20:00"
+    offloaded_at: "2023-05-06 20:00",
   },
   {
     axb_number: "AXB12351",
@@ -97,7 +97,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Technical Issue",
     offloaded_flight: "FL129",
     offloaded_by: "Agent7",
-    offloaded_at: "2023-05-07 22:00"
+    offloaded_at: "2023-05-07 22:00",
   },
   {
     axb_number: "AXB12352",
@@ -111,7 +111,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Operational Constraints",
     offloaded_flight: "FL130",
     offloaded_by: "Agent8",
-    offloaded_at: "2023-05-08 10:00"
+    offloaded_at: "2023-05-08 10:00",
   },
   {
     axb_number: "AXB12353",
@@ -125,7 +125,7 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Overbooking",
     offloaded_flight: "FL131",
     offloaded_by: "Agent9",
-    offloaded_at: "2023-05-09 12:00"
+    offloaded_at: "2023-05-09 12:00",
   },
   {
     axb_number: "AXB12354",
@@ -139,10 +139,10 @@ export const DUMMY_DATA: OffloadReportType[] = [
     reason: "Weather Delay",
     offloaded_flight: "FL132",
     offloaded_by: "Agent10",
-    offloaded_at: "2023-05-10 14:00"
-  }
-];
+    offloaded_at: "2023-05-10 14:00",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

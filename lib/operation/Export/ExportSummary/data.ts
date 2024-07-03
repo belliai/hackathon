@@ -1,4 +1,4 @@
-import { ExportSummaryType } from "@/components/operation/Export/ExportSummary/columns";
+import { ExportSummaryType } from "@/components/operation/Export/ExportSummary/columns"
 
 export const DUMMY_DATA: ExportSummaryType[] = [
   {
@@ -18,7 +18,7 @@ export const DUMMY_DATA: ExportSummaryType[] = [
     currency: "USD",
     flight_number: "FL123",
     flight_date: "2024-06-01",
-    status: "Shipped"
+    status: "Shipped",
   },
   {
     cargo_id: "CARGO002",
@@ -37,7 +37,7 @@ export const DUMMY_DATA: ExportSummaryType[] = [
     currency: "USD",
     flight_number: "FL456",
     flight_date: "2024-06-02",
-    status: "In Transit"
+    status: "In Transit",
   },
   {
     cargo_id: "CARGO003",
@@ -56,7 +56,7 @@ export const DUMMY_DATA: ExportSummaryType[] = [
     currency: "CAD",
     flight_number: "FL789",
     flight_date: "2024-06-03",
-    status: "Delivered"
+    status: "Delivered",
   },
   {
     cargo_id: "CARGO004",
@@ -75,7 +75,7 @@ export const DUMMY_DATA: ExportSummaryType[] = [
     currency: "USD",
     flight_number: "FL012",
     flight_date: "2024-06-04",
-    status: "Pending"
+    status: "Pending",
   },
   {
     cargo_id: "CARGO005",
@@ -94,10 +94,10 @@ export const DUMMY_DATA: ExportSummaryType[] = [
     currency: "USD",
     flight_number: "FL345",
     flight_date: "2024-06-05",
-    status: "Cancelled"
-  }
-];
+    status: "Cancelled",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

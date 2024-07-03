@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type ScreeningReportType = {
-  awb?: string;
-  pcs?: string;
-  weight?: string;
-  agent?: string;
-  shipper?: string;
-  commodity?: string;
-  shc?: string;
-  token?: string;
-  known_shipper?: string;
-  dimension?: string;
-  is_accepted?: string;
-  acceptance_method?: string;
-};
+  awb?: string
+  pcs?: string
+  weight?: string
+  agent?: string
+  shipper?: string
+  commodity?: string
+  shc?: string
+  token?: string
+  known_shipper?: string
+  dimension?: string
+  is_accepted?: string
+  acceptance_method?: string
+}
 
 export const columns: ColumnDef<ScreeningReportType>[] = [
   {
@@ -66,4 +66,4 @@ export const columns: ColumnDef<ScreeningReportType>[] = [
     accessorKey: "acceptance_method",
     header: "Acceptance Method",
   },
-];
+]

@@ -1,12 +1,13 @@
 import CreateFormTemplate, {
   CreateFormTemplateProps,
-} from "@/app/k360/organize/masters/components/CreateFormTemplate";
-import PageContainer from "../layout/PageContainer";
-import PageHeader from "../layout/PageHeader";
-import { Separator } from "../ui/separator";
+} from "@/app/k360/organize/masters/components/CreateFormTemplate"
+
+import PageContainer from "../layout/PageContainer"
+import PageHeader from "../layout/PageHeader"
+import { Separator } from "../ui/separator"
 
 interface CreateFormPageTemplateProps extends CreateFormTemplateProps {
-  heading: string;
+  heading: string
 }
 
 export default function CreateFormPageTemplate({
@@ -31,5 +32,5 @@ export default function CreateFormPageTemplate({
         className={className}
       />
     </PageContainer>
-  );
+  )
 }

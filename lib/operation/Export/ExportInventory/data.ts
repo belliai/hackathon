@@ -1,4 +1,4 @@
-import { ExportInventoryType } from "@/components/operation/Export/ExportInventory/columns";
+import { ExportInventoryType } from "@/components/operation/Export/ExportInventory/columns"
 
 export const DUMMY_DATA: ExportInventoryType[] = [
   {
@@ -11,7 +11,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "A1",
     arrival_date: "2024-06-01",
     status: "Stored",
-    owner: "Company A"
+    owner: "Company A",
   },
   {
     warehouse_id: "WH002",
@@ -23,7 +23,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "B2",
     arrival_date: "2024-06-02",
     status: "Stored",
-    owner: "Company B"
+    owner: "Company B",
   },
   {
     warehouse_id: "WH003",
@@ -35,7 +35,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "C3",
     arrival_date: "2024-06-03",
     status: "Stored",
-    owner: "Company C"
+    owner: "Company C",
   },
   {
     warehouse_id: "WH004",
@@ -47,7 +47,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "D4",
     arrival_date: "2024-06-04",
     status: "Pending",
-    owner: "Company D"
+    owner: "Company D",
   },
   {
     warehouse_id: "WH005",
@@ -59,7 +59,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "E5",
     arrival_date: "2024-06-05",
     status: "Stored",
-    owner: "Company E"
+    owner: "Company E",
   },
   {
     warehouse_id: "WH006",
@@ -71,7 +71,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "F6",
     arrival_date: "2024-06-06",
     status: "Stored",
-    owner: "Company F"
+    owner: "Company F",
   },
   {
     warehouse_id: "WH007",
@@ -83,7 +83,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "G7",
     arrival_date: "2024-06-07",
     status: "Stored",
-    owner: "Company G"
+    owner: "Company G",
   },
   {
     warehouse_id: "WH008",
@@ -95,7 +95,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "H8",
     arrival_date: "2024-06-08",
     status: "Stored",
-    owner: "Company H"
+    owner: "Company H",
   },
   {
     warehouse_id: "WH009",
@@ -107,7 +107,7 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "I9",
     arrival_date: "2024-06-09",
     status: "Pending",
-    owner: "Company I"
+    owner: "Company I",
   },
   {
     warehouse_id: "WH010",
@@ -119,10 +119,10 @@ export const DUMMY_DATA: ExportInventoryType[] = [
     location: "J10",
     arrival_date: "2024-06-10",
     status: "Stored",
-    owner: "Company J"
-  }
-];
+    owner: "Company J",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

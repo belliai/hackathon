@@ -1,35 +1,36 @@
-"use client";
+"use client"
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTable } from "@/components/data-table/data-table";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
 import DataTableFilterForm, {
   FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/components/data-table/data-table-filter-form"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 type ActiveFlightDataType = {
-  flight_no: string;
-  source: string;
-  destination: string;
-  dept_time: string;
-  arrival_time: string;
-  aircraft_type: number;
-  tail_no: string;
-  capacity: string;
-  uom: string;
-  cargo_volume: string;
-  status: string;
-  operation_status: string;
-  flight_type: string;
-  updated_by: string;
-  entry_type: string;
-  updated_at: string;
-};
+  flight_no: string
+  source: string
+  destination: string
+  dept_time: string
+  arrival_time: string
+  aircraft_type: number
+  tail_no: string
+  capacity: string
+  uom: string
+  cargo_volume: string
+  status: string
+  operation_status: string
+  flight_type: string
+  updated_by: string
+  entry_type: string
+  updated_at: string
+}
 
 const columns: ColumnDef<ActiveFlightDataType>[] = [
   {
@@ -104,7 +105,7 @@ const columns: ColumnDef<ActiveFlightDataType>[] = [
     header: "Action",
     cell: ({ row }) => <DataTableRowActions />,
   },
-];
+]
 
 const data: ActiveFlightDataType[] = [
   {
@@ -161,12 +162,12 @@ const data: ActiveFlightDataType[] = [
     entry_type: "Manual",
     updated_at: "2024-05-23T07:00:00Z",
   },
-];
+]
 
 type FilterDataType = Partial<ActiveFlightDataType> & {
-  dept_time_to?: string;
-  dept_time_from?: string;
-};
+  dept_time_to?: string
+  dept_time_from?: string
+}
 
 const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -264,15 +265,15 @@ const formFilters: FormFieldOption<FilterDataType>[] = [
     ],
     placeholder: "Select entry type",
   },
-];
+]
 
 export default function Page() {
-  const form = useForm();
+  const form = useForm()
   return (
     <PageContainer className="gap-6">
       <PageHeader title="Active Flights" />
       <DataTableFilterForm form={form} formFilters={formFilters} />
       <DataTable columns={columns} data={data} hideToolbar />
     </PageContainer>
-  );
+  )
 }

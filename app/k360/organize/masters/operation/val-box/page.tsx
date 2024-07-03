@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions";
-import { ColumnDef } from "@tanstack/react-table";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import StatusBadge from "../../components/StatusBadge";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterValBoxPage() {
   const columns: ColumnDef<any>[] = [
@@ -65,7 +67,7 @@ export default function MasterValBoxPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -86,7 +88,7 @@ export default function MasterValBoxPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -144,10 +146,10 @@ export default function MasterValBoxPage() {
       createdAt: "2023-05-01",
       updatedAt: "2023-09-01",
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
-  const hookForm = useForm();
+  const filterHookForm = useForm()
+  const hookForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -160,5 +162,5 @@ export default function MasterValBoxPage() {
       filterHookForm={filterHookForm}
       hookForm={hookForm}
     />
-  );
+  )
 }

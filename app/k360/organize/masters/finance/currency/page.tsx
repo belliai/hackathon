@@ -1,15 +1,17 @@
 "use client"
 
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions";
-import { useForm } from "react-hook-form";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { ColumnDef } from "@tanstack/react-table";
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { Badge } from "@/components/ui/badge";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MastersCurrencyPage() {
   const formFields: Omit<FormTextFieldProps, "form">[] = [
@@ -31,7 +33,7 @@ export default function MastersCurrencyPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     {
@@ -71,7 +73,7 @@ export default function MastersCurrencyPage() {
       header: "Action",
       cell: ({ row }) => <DataTableRowActions />,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -88,9 +90,9 @@ export default function MastersCurrencyPage() {
       created_at: "2022-01-03",
       updated_at: "2022-01-04",
     },
-  ];
+  ]
 
-  const currencyForm = useForm();
+  const currencyForm = useForm()
   return (
     <MastersPageTemplate
       columns={columns}
@@ -102,5 +104,5 @@ export default function MastersCurrencyPage() {
       heading="Currency Master"
       buttonText="Add Currency"
     />
-  );
+  )
 }

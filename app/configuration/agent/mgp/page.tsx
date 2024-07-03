@@ -1,11 +1,12 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 
 export default function AgentMgpPage() {
   const formFields: TFormTextField[] = [
@@ -15,9 +16,9 @@ export default function AgentMgpPage() {
       orientation: "horizontal",
       type: "text",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -27,7 +28,7 @@ export default function AgentMgpPage() {
       hookForm={form}
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="flex max-w-96 mt-8">
+          <div className="mt-8 flex max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -39,5 +40,5 @@ export default function AgentMgpPage() {
         </div>
       }
     />
-  );
+  )
 }

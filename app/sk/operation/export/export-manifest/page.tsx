@@ -1,8 +1,8 @@
-import FilterSection from "@/components/operation/Export/ExportManifest/FilterSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RightSection from "@/components/operation/Export/ExportManifest/RightSection";
-import PlannedSection from "@/components/operation/Export/ExportManifest/PlannedSection";
-import UnplannedSection from "@/components/operation/Export/ExportManifest/UnplannedSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import FilterSection from "@/components/operation/Export/ExportManifest/FilterSection"
+import PlannedSection from "@/components/operation/Export/ExportManifest/PlannedSection"
+import RightSection from "@/components/operation/Export/ExportManifest/RightSection"
+import UnplannedSection from "@/components/operation/Export/ExportManifest/UnplannedSection"
 
 export default async function ExportManifest() {
   return (
@@ -28,5 +28,5 @@ export default async function ExportManifest() {
         </div>
       </div>
     </div>
-  );
+  )
 }

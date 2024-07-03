@@ -1,20 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate, {
-  SectionedFormFields,
-} from "../../masters/components/MastersPageTemplate";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../masters/components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+} from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate, {
+  SectionedFormFields,
+} from "../../masters/components/MastersPageTemplate"
 
 export default function MasterTaxlinePage() {
   const columns: ColumnDef<any>[] = [
@@ -68,7 +67,7 @@ export default function MasterTaxlinePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -99,7 +98,7 @@ export default function MasterTaxlinePage() {
       createdAt: "2021-10-01",
       updatedAt: "2021-10-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -146,7 +145,7 @@ export default function MasterTaxlinePage() {
       placeholder: "Status",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -312,10 +311,10 @@ export default function MasterTaxlinePage() {
         },
       ],
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
-  const form = useForm();
+  const filterHookForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -328,5 +327,5 @@ export default function MasterTaxlinePage() {
       hookForm={form}
       sectionedFormFields={sectionedFormFields}
     />
-  );
+  )
 }

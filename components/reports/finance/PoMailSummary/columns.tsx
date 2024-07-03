@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type PoMailSummaryType = {
-  agent_code?: string;
-  invoice_no?: string;
-  invoice_date?: string;
-  type_of_mail?: string;
-  total_weight_in_kg?: string;
-};
+  agent_code?: string
+  invoice_no?: string
+  invoice_date?: string
+  type_of_mail?: string
+  total_weight_in_kg?: string
+}
 
 export const columns: ColumnDef<PoMailSummaryType>[] = [
   {
@@ -31,4 +31,4 @@ export const columns: ColumnDef<PoMailSummaryType>[] = [
     accessorKey: "total_weight_in_kg",
     header: "Total Weight (Kg)",
   },
-];
+]

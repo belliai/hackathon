@@ -1,12 +1,14 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions";
-import { ColumnDef } from "@tanstack/react-table";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import StatusBadge from "../../components/StatusBadge";
-import { useFieldArray, useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterAircraftPositioningConfigurationPage() {
   const formFields: TFormTextField[] = [
@@ -84,7 +86,7 @@ export default function MasterAircraftPositioningConfigurationPage() {
       placeholder: "Default",
       type: "text",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -114,7 +116,7 @@ export default function MasterAircraftPositioningConfigurationPage() {
       placeholder: "Partner Code",
       type: "text",
     },
-  ];
+  ]
 
   const fieldArrayFormFields: TFormTextField[] = [
     {
@@ -137,7 +139,7 @@ export default function MasterAircraftPositioningConfigurationPage() {
       placeholder: "Pallet Position",
       type: "text",
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -200,7 +202,7 @@ export default function MasterAircraftPositioningConfigurationPage() {
       header: "Loading Pattern",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -283,15 +285,15 @@ export default function MasterAircraftPositioningConfigurationPage() {
       loadingPattern: "Pattern 5",
       action: "Edit",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   const fieldArray = useFieldArray({
     name: "fieldArray" as string,
     control: form.control,
-  });
+  })
 
   return (
     <MastersPageTemplate
@@ -315,5 +317,5 @@ export default function MasterAircraftPositioningConfigurationPage() {
       hookForm={form}
       filterHookForm={filterForm}
     />
-  );
+  )
 }

@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import { PropsWithChildren } from "react";
-import { usePathname } from "next/navigation";
-import { LiveblocksProvider, RoomProvider } from "@liveblocks/react/suspense";
-import { LiveObject } from "@liveblocks/client";
+import { PropsWithChildren } from "react"
+import { usePathname } from "next/navigation"
+import { LiveObject } from "@liveblocks/client"
+import { LiveblocksProvider, RoomProvider } from "@liveblocks/react/suspense"
 
 export function RouteRoom({ children }: PropsWithChildren) {
-  const pathname = usePathname();
-  const publicKey = process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_API_KEY;
-  if (!publicKey) return children;
+  const pathname = usePathname()
+  const publicKey = process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_API_KEY
+  if (!publicKey) return children
   return (
     <LiveblocksProvider authEndpoint={"/api/liveblocks-auth"}>
       <RoomProvider
@@ -19,5 +19,5 @@ export function RouteRoom({ children }: PropsWithChildren) {
         {children}
       </RoomProvider>
     </LiveblocksProvider>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { DailyCollectionType } from "@/components/reports/Standard/DailyCollections/columns";
+import { DailyCollectionType } from "@/components/reports/Standard/DailyCollections/columns"
 
 export const DUMMY_DATA: DailyCollectionType[] = [
   {
@@ -101,8 +101,8 @@ export const DUMMY_DATA: DailyCollectionType[] = [
     flights: "AA987",
     carrier: "AA",
   },
-];
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

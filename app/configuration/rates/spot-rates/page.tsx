@@ -1,23 +1,24 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import {
-  DUMMY_SELECT_OPTIONS,
-  DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/k360/organize/masters/components/dummySelectOptions";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
-import { DataTable } from "@/components/data-table/data-table";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
+} from "@/app/k360/organize/masters/components/columnItem"
+import {
+  DUMMY_SELECT_OPTIONS,
+  DUMMY_SELECT_OPTIONS_STATUS,
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterSpotRatePage() {
   const columns: ColumnDef<any>[] = [
@@ -121,7 +122,7 @@ export default function MasterSpotRatePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -174,7 +175,7 @@ export default function MasterSpotRatePage() {
       createdAt: "2021-09-02",
       updatedAt: "2021-09-02",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -247,9 +248,9 @@ export default function MasterSpotRatePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -258,7 +259,7 @@ export default function MasterSpotRatePage() {
       formFields={filterFormFields}
       className="max-h-none"
       customDialogContent={
-        <div className="flex flex-col gap-4 mt-4">
+        <div className="mt-4 flex flex-col gap-4">
           <div className="max-w-96">
             <FilterActions />
           </div>
@@ -268,5 +269,5 @@ export default function MasterSpotRatePage() {
         </div>
       }
     />
-  );
+  )
 }

@@ -1,15 +1,17 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { TFormTextField } from "@/components/form/FormTextField";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
-import { actionColumn } from "../../components/columnItem";
-import StatusBadge from "../../components/StatusBadge";
-import { useForm } from "react-hook-form";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterCutoffTimePage() {
   const columns: ColumnDef<any>[] = [
@@ -66,7 +68,7 @@ export default function MasterCutoffTimePage() {
             statusText="Active"
             severity={row.original.status === "Active" ? "default" : "error"}
           />
-        );
+        )
       },
     },
     {
@@ -78,7 +80,7 @@ export default function MasterCutoffTimePage() {
       header: "Destination Country",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -161,7 +163,7 @@ export default function MasterCutoffTimePage() {
       orginCountry: "USA",
       destinationCountry: "USA",
     },
-  ];
+  ]
 
   const formFields = [
     {
@@ -277,7 +279,7 @@ export default function MasterCutoffTimePage() {
       placeholder: "Flight Type",
       type: "text",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -361,10 +363,10 @@ export default function MasterCutoffTimePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const cutOffForm = useForm();
+  const filterForm = useForm()
+  const cutOffForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -377,5 +379,5 @@ export default function MasterCutoffTimePage() {
       filterHookForm={filterForm}
       filterFormFields={filterFormFields}
     />
-  );
+  )
 }

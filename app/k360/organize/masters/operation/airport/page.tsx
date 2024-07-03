@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import StatusBadge from "../../components/StatusBadge";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterAirportPage() {
   const columns: ColumnDef<any>[] = [
@@ -63,7 +65,7 @@ export default function MasterAirportPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -136,7 +138,7 @@ export default function MasterAirportPage() {
       updatedAt: "2023-08-20",
       action: "Edit",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -163,10 +165,10 @@ export default function MasterAirportPage() {
       type: "text",
       endIcon: <Search />,
     },
-  ];
+  ]
 
-  const airportForm = useForm();
-  const filterForm = useForm();
+  const airportForm = useForm()
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -179,5 +181,5 @@ export default function MasterAirportPage() {
       columns={columns}
       data={data}
     />
-  );
+  )
 }

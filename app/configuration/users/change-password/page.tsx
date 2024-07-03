@@ -1,12 +1,13 @@
-"use client";
+"use client"
 
-import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate";
-import { TFormTextField } from "@/components/form/FormTextField";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { TFormTextField } from "@/components/form/FormTextField"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate"
 
 export default function ChangePassword() {
   const formFields: TFormTextField[] = [
@@ -34,9 +35,9 @@ export default function ChangePassword() {
       required: true,
       type: "password",
     },
-  ];
+  ]
 
-  const changePasswordForm = useForm();
+  const changePasswordForm = useForm()
 
   return (
     <PageContainer className="flex flex-col gap-4">
@@ -46,11 +47,11 @@ export default function ChangePassword() {
         hookForm={changePasswordForm}
         formFields={formFields}
         customDialogContent={
-          <Button className="bg-button-primary text-white hover:bg-button-primary/80 mt-4">
+          <Button className="mt-4 bg-button-primary text-white hover:bg-button-primary/80">
             Change Password
           </Button>
         }
       />
     </PageContainer>
-  );
+  )
 }

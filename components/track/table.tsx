@@ -1,21 +1,6 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
+import * as React from "react"
 import {
   Table,
   TableBody,
@@ -24,28 +9,42 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@components/ui/table";
-import { DataTablePagination } from "./table-pagination";
+} from "@components/ui/table"
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table"
 
+import { DataTablePagination } from "./table-pagination"
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
   onClickRow?: (row: any) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  onClickRow
+  onClickRow,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  )
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -57,7 +56,6 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
     defaultColumn: {
-
       size: 100, //starting column size
       minSize: 60, //enforced during column resizing
       maxSize: 300, //
@@ -74,14 +72,12 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-  });
+  })
 
   return (
     <div className="space-y-4">
-
       <div className="rounded-md border">
         <Table
-
           {...{
             style: {
               width: table.getCenterTotalSize(),
@@ -90,47 +86,47 @@ export function DataTable<TData, TValue>({
         >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}>
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}
+                    <TableHead
+                      key={header.id}
                       style={{ width: `${header.getSize()}` }}
                       className="truncate border-zinc-800 font-bold tracking-tight text-white"
-                      colSpan={header.colSpan}>
+                      colSpan={header.colSpan}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className=" leading-6 text-zinc-400">
+          <TableBody className="leading-6 text-zinc-400">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   onClick={() => {
-
                     if (onClickRow) {
                       table.toggleAllPageRowsSelected(false)
                       onClickRow(row.original)
                       row.toggleSelected(!row.getIsSelected())
                     }
-
                   }}
                   key={row.id}
-                  className="border-zinc-800 transition-colors duration-150 ease-in-out hover:bg-zinc-800 hover:cursor-pointer"
+                  className="border-zinc-800 transition-colors duration-150 ease-in-out hover:cursor-pointer hover:bg-zinc-800"
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       style={{ width: `${cell.column.getSize()}` }}
-                      key={cell.id}>
+                      key={cell.id}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -151,10 +147,15 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
           <TableFooter>
-            {table.getFooterGroups().map(footerGroup => (
+            {table.getFooterGroups().map((footerGroup) => (
               <tr key={footerGroup.id}>
-                {footerGroup.headers.map(header => (
-                  <td key={header.id}>{flexRender(header.column.columnDef.footer, header.getContext())}</td>
+                {footerGroup.headers.map((header) => (
+                  <td key={header.id}>
+                    {flexRender(
+                      header.column.columnDef.footer,
+                      header.getContext()
+                    )}
+                  </td>
                 ))}
               </tr>
             ))}
@@ -163,5 +164,5 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

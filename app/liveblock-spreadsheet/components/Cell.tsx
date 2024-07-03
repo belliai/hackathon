@@ -1,152 +1,154 @@
-"use client";
+"use client"
 
-import { useGesture } from "@use-gesture/react";
-import { cn } from "@/lib/utils";
 import {
-  AnimationPlaybackControls,
-  animate,
-  motion,
-  useMotionValue,
-} from "framer-motion";
-import {
-  type CSSProperties,
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
-  type FormEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from "react";
-import { COLORS } from "../constants";
-import { useHistory, useSelf } from "@liveblocks/react";
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  type CSSProperties,
+  type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react"
+import { useHistory, useSelf } from "@liveblocks/react"
+import { useGesture } from "@use-gesture/react"
+import {
+  animate,
+  AnimationPlaybackControls,
+  motion,
+  useMotionValue,
+} from "framer-motion"
+
+import { cn } from "@/lib/utils"
+
+import { COLORS } from "../constants"
 import tokenizer, {
   SyntaxKind,
   tokenToString,
-} from "../spreadsheet/interpreter/tokenizer";
-import { EXPRESSION_ERROR } from "../spreadsheet/interpreter/utils";
-import type { UserInfo } from "../types";
-import { appendUnit } from "../utils/appendUnit";
-import { removeGlobalCursor, setGlobalCursor } from "../utils/globalCursor";
-import { isNumerical } from "../utils/isNumerical";
-import { shuffle } from "../utils/shuffle";
-import { useInitialRender } from "../utils/useInitialRender";
-import styles from "./Cell.module.css";
+} from "../spreadsheet/interpreter/tokenizer"
+import { EXPRESSION_ERROR } from "../spreadsheet/interpreter/utils"
+import type { UserInfo } from "../types"
+import { appendUnit } from "../utils/appendUnit"
+import { removeGlobalCursor, setGlobalCursor } from "../utils/globalCursor"
+import { isNumerical } from "../utils/isNumerical"
+import { shuffle } from "../utils/shuffle"
+import { useInitialRender } from "../utils/useInitialRender"
+import styles from "./Cell.module.css"
 
 export interface Props extends Omit<ComponentProps<"td">, "onSelect"> {
-  cellId: string;
-  expression: string;
-  height: number;
-  isEditing?: boolean;
-  isSelected?: boolean;
-  onCommit: (value: string, direction?: "down") => void;
-  onEndEditing: () => void;
-  onSelect: () => void;
-  onStartEditing: () => void;
-  other?: UserInfo;
-  value: string;
-  width: number;
+  cellId: string
+  expression: string
+  height: number
+  isEditing?: boolean
+  isSelected?: boolean
+  onCommit: (value: string, direction?: "down") => void
+  onEndEditing: () => void
+  onSelect: () => void
+  onStartEditing: () => void
+  other?: UserInfo
+  value: string
+  width: number
 }
 
 export interface EditingCellProps extends ComponentPropsWithoutRef<"div"> {
-  cellId: string;
-  expression: string;
-  onCommit: (value: string, direction?: "down") => void;
-  onEndEditing: () => void;
+  cellId: string
+  expression: string
+  onCommit: (value: string, direction?: "down") => void
+  onEndEditing: () => void
 }
 
 export interface DisplayCellProps extends ComponentProps<"div"> {
-  expression?: string;
-  isSelected?: boolean;
-  onCommit?: (value: string, direction?: "down") => void;
-  value: string;
+  expression?: string
+  isSelected?: boolean
+  onCommit?: (value: string, direction?: "down") => void
+  value: string
 }
 
 export interface ScrubbableValueTypeProps extends ComponentProps<"div"> {
-  expression: string;
-  onCommit: (value: string, direction?: "down") => void;
+  expression: string
+  onCommit: (value: string, direction?: "down") => void
 }
 
-type ExpressionType = "alphabetical" | "empty" | "functional" | "numerical";
+type ExpressionType = "alphabetical" | "empty" | "functional" | "numerical"
 
 export function formatValue(value: string) {
   return value
     .replace(/(\r|\n)/g, "")
     .replace(/\s/g, value.startsWith("=") ? "" : " ")
-    .replace(/([A-Za-z]\d)/g, (cell) => cell.toUpperCase());
+    .replace(/([A-Za-z]\d)/g, (cell) => cell.toUpperCase())
 }
 
 export function formatHtml(value: string) {
-  return value.replaceAll(" ", "&nbsp;");
+  return value.replaceAll(" ", "&nbsp;")
 }
 
 function getCaretPosition(element: HTMLElement | Node) {
-  const selection = window.getSelection();
+  const selection = window.getSelection()
 
   if (selection !== null && selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    const prefix = range.cloneRange();
-    prefix.selectNodeContents(element);
-    prefix.setEnd(range.endContainer, range.endOffset);
+    const range = selection.getRangeAt(0)
+    const prefix = range.cloneRange()
+    prefix.selectNodeContents(element)
+    prefix.setEnd(range.endContainer, range.endOffset)
 
-    return prefix.toString().length;
+    return prefix.toString().length
   }
 }
 
 function setCaretPosition(element: HTMLElement | Node, position: number) {
   for (const node of element.childNodes) {
     if (node.nodeType == Node.TEXT_NODE) {
-      const length = node.nodeValue?.length ?? 0;
+      const length = node.nodeValue?.length ?? 0
 
       if (length >= position) {
-        const range = document.createRange();
-        const selection = window.getSelection();
+        const range = document.createRange()
+        const selection = window.getSelection()
 
-        range.setStart(node, position);
-        range.collapse(true);
-        selection?.removeAllRanges();
-        selection?.addRange(range);
+        range.setStart(node, position)
+        range.collapse(true)
+        selection?.removeAllRanges()
+        selection?.addRange(range)
 
-        return -1;
+        return -1
       } else {
-        position = position - length;
+        position = position - length
       }
     } else {
-      position = setCaretPosition(node, position);
+      position = setCaretPosition(node, position)
 
       if (position < 0) {
-        return position;
+        return position
       }
     }
   }
 
-  return position;
+  return position
 }
 
 function scrollCaretIntoView() {
-  const selection = window.getSelection();
+  const selection = window.getSelection()
 
   if (!selection?.rangeCount) {
-    return;
+    return
   }
 
-  const range = selection.getRangeAt(0);
+  const range = selection.getRangeAt(0)
 
   if (range.commonAncestorContainer === document) {
-    return;
+    return
   }
 
-  const element = document.createElement("br");
-  element.style.scrollMarginRight = "100px";
-  range.insertNode(element);
+  const element = document.createElement("br")
+  element.style.scrollMarginRight = "100px"
+  range.insertNode(element)
 
   element.scrollIntoView({
     block: "end",
-  });
+  })
 
-  element.remove();
+  element.remove()
 }
 
 function ScrubbableValueType({
@@ -155,24 +157,24 @@ function ScrubbableValueType({
   className,
   ...props
 }: ScrubbableValueTypeProps) {
-  const history = useHistory();
-  const initialValue = useRef<number>();
+  const history = useHistory()
+  const initialValue = useRef<number>()
 
   const bindScrubEvents = useGesture(
     {
       onDragStart: () => {
-        initialValue.current = Number.parseFloat(expression ?? "");
-        history.pause();
-        setGlobalCursor("scrubbing");
+        initialValue.current = Number.parseFloat(expression ?? "")
+        history.pause()
+        setGlobalCursor("scrubbing")
       },
       onDrag: ({ movement: [x], tap }) => {
         if (!tap) {
-          onCommit(String((initialValue.current ?? 0) + Math.round(x / 20)));
+          onCommit(String((initialValue.current ?? 0) + Math.round(x / 20)))
         }
       },
       onDragEnd: () => {
-        history.resume();
-        removeGlobalCursor("scrubbing");
+        history.resume()
+        removeGlobalCursor("scrubbing")
       },
     },
     {
@@ -181,7 +183,7 @@ function ScrubbableValueType({
         filterTaps: true,
       },
     }
-  );
+  )
 
   return (
     <div
@@ -191,7 +193,7 @@ function ScrubbableValueType({
     >
       123
     </div>
-  );
+  )
 }
 
 export function EditingCell({
@@ -202,80 +204,80 @@ export function EditingCell({
   className,
   ...props
 }: EditingCellProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInitialRender = useInitialRender();
-  const [draft, setDraft] = useState<string>(() => expression);
+  const ref = useRef<HTMLDivElement>(null)
+  const isInitialRender = useInitialRender()
+  const [draft, setDraft] = useState<string>(() => expression)
   const stringToTokenizedHtml = useCallback(
     (value: string) => {
-      const colors = shuffle(COLORS, cellId);
-      let cellIndex = 0;
+      const colors = shuffle(COLORS, cellId)
+      let cellIndex = 0
 
       try {
-        const tokens = tokenizer(value);
+        const tokens = tokenizer(value)
         const html = tokens
           .map((token) => {
-            const value = tokenToString(token);
+            const value = tokenToString(token)
 
             if (token.kind === SyntaxKind.CellToken) {
-              const color = colors[cellIndex % colors.length];
-              cellIndex += 1;
+              const color = colors[cellIndex % colors.length]
+              cellIndex += 1
 
-              return `<span class="token ${token.kind}" style="--token-color: ${color};">${value}</span>`;
+              return `<span class="token ${token.kind}" style="--token-color: ${color};">${value}</span>`
             } else {
-              return `<span class="token ${token.kind}">${value}</span>`;
+              return `<span class="token ${token.kind}">${value}</span>`
             }
           })
-          .join("");
+          .join("")
 
-        return html;
+        return html
       } catch {
-        return `<span>${formatHtml(value)}</span>`;
+        return `<span>${formatHtml(value)}</span>`
       }
     },
     [cellId]
-  );
+  )
 
   const handleInput = useCallback((event: FormEvent<HTMLDivElement>) => {
-    const value = event.currentTarget.innerText;
+    const value = event.currentTarget.innerText
 
-    setDraft(formatValue(value));
-  }, []);
+    setDraft(formatValue(value))
+  }, [])
 
   const handleBlur = useCallback(() => {
-    onCommit(draft);
-  }, [draft, onCommit]);
+    onCommit(draft)
+  }, [draft, onCommit])
 
   const handleKeyDown = useCallback(
     (event: ReactKeyboardEvent<HTMLDivElement>) => {
       if (event.key === "Escape") {
-        event.preventDefault();
+        event.preventDefault()
 
-        onEndEditing();
+        onEndEditing()
       } else if (event.key === "Enter") {
-        event.preventDefault();
+        event.preventDefault()
 
-        onCommit(draft, "down");
+        onCommit(draft, "down")
       }
     },
     [draft, onCommit, onEndEditing]
-  );
+  )
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) return
 
-    const position = getCaretPosition(ref.current);
+    const position = getCaretPosition(ref.current)
 
-    ref.current.innerHTML = stringToTokenizedHtml(draft);
+    ref.current.innerHTML = stringToTokenizedHtml(draft)
 
     if (isInitialRender) {
-      setCaretPosition(ref.current, draft.length);
-      scrollCaretIntoView();
+      setCaretPosition(ref.current, draft.length)
+      scrollCaretIntoView()
     } else {
-      setCaretPosition(ref.current, position ?? draft.length);
+      setCaretPosition(ref.current, position ?? draft.length)
     }
 
-    ref.current.focus();
-  }, [draft, stringToTokenizedHtml]);
+    ref.current.focus()
+  }, [draft, stringToTokenizedHtml])
 
   return (
     <div
@@ -288,7 +290,7 @@ export function EditingCell({
       spellCheck={false}
       {...props}
     />
-  );
+  )
 }
 
 export function DisplayCell({
@@ -299,39 +301,39 @@ export function DisplayCell({
   onCommit,
   ...props
 }: DisplayCellProps) {
-  const highlightOpacity = useMotionValue(0);
-  const highlightAnimationControls = useRef<AnimationPlaybackControls>();
-  const isInitialRender = useInitialRender();
-  const isError = useMemo(() => value === EXPRESSION_ERROR, [value]);
-  const isNumericalValue = useMemo(() => isNumerical(value), [value]);
+  const highlightOpacity = useMotionValue(0)
+  const highlightAnimationControls = useRef<AnimationPlaybackControls>()
+  const isInitialRender = useInitialRender()
+  const isError = useMemo(() => value === EXPRESSION_ERROR, [value])
+  const isNumericalValue = useMemo(() => isNumerical(value), [value])
   const isAlphabeticalValue = useMemo(() => {
-    return !isNumericalValue && !value?.startsWith("=");
-  }, [value, isNumericalValue]);
+    return !isNumericalValue && !value?.startsWith("=")
+  }, [value, isNumericalValue])
   const expressionType: ExpressionType = useMemo(() => {
     if (!expression) {
-      return "empty";
+      return "empty"
     } else if (expression?.startsWith("=")) {
-      return "functional";
+      return "functional"
     } else if (isNumerical(expression)) {
-      return "numerical";
+      return "numerical"
     } else {
-      return "alphabetical";
+      return "alphabetical"
     }
-  }, [expression]);
+  }, [expression])
 
   useEffect(() => {
-    if (isInitialRender) return;
+    if (isInitialRender) return
 
     if (highlightAnimationControls.current) {
-      highlightAnimationControls.current.stop();
+      highlightAnimationControls.current.stop()
     }
 
-    highlightOpacity.set(1);
+    highlightOpacity.set(1)
     highlightAnimationControls.current = animate(highlightOpacity, 0, {
       ease: "easeOut",
       duration: 0.6,
-    });
-  }, [value, highlightOpacity]);
+    })
+  }, [value, highlightOpacity])
 
   return isError ? (
     <div className={cn(className, styles.error)} {...props}>
@@ -374,7 +376,7 @@ export function DisplayCell({
         </motion.span>
       )}
     </div>
-  );
+  )
 }
 
 export function Cell({
@@ -394,15 +396,15 @@ export function Cell({
   style,
   ...props
 }: Props) {
-  const self = useSelf();
+  const self = useSelf()
 
   const handleClick = useCallback(() => {
     if (isSelected) {
-      onStartEditing();
+      onStartEditing()
     } else {
-      onSelect();
+      onSelect()
     }
-  }, [onSelect, onStartEditing, isSelected]);
+  }, [onSelect, onStartEditing, isSelected])
 
   return (
     <td
@@ -452,5 +454,5 @@ export function Cell({
         )}
       </div>
     </td>
-  );
+  )
 }

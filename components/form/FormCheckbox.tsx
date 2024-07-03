@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form"
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
 
 interface FormCheckboxProps {
-  label: string;
-  form: UseFormReturn<any>;
+  label: string
+  form: UseFormReturn<any>
 }
 
 export function FormCheckbox({ label, form }: FormCheckboxProps) {
@@ -33,5 +33,5 @@ export function FormCheckbox({ label, form }: FormCheckboxProps) {
         </FormItem>
       )}
     />
-  );
+  )
 }

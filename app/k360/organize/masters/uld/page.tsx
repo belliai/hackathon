@@ -1,17 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { actionColumn, selectColumn } from "../components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
+import Link from "next/link"
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../components/dummySelectOptions";
-import MastersPageTemplate from "../components/MastersPageTemplate";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+} from "../components/dummySelectOptions"
+import MastersPageTemplate from "../components/MastersPageTemplate"
 
 export default function MasterUldPage() {
   const columns: ColumnDef<any>[] = [
@@ -57,7 +59,7 @@ export default function MasterUldPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -96,7 +98,7 @@ export default function MasterUldPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -246,7 +248,7 @@ export default function MasterUldPage() {
       placeholder: "Remarks",
       type: "text",
     },
-  ];
+  ]
 
   const data = [
     {
@@ -309,10 +311,10 @@ export default function MasterUldPage() {
       createdAt: "2023-05-01",
       updatedAt: "2023-05-10",
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
-  const hookForm = useForm();
+  const filterHookForm = useForm()
+  const hookForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -326,7 +328,7 @@ export default function MasterUldPage() {
       hookForm={hookForm}
       pageActions={
         <Button
-          className="bg-button-primary hover:bg-button-primary/80 text-white"
+          className="bg-button-primary text-white hover:bg-button-primary/80"
           asChild
         >
           <Link href="/organize/masters/uld/movement-history">
@@ -335,5 +337,5 @@ export default function MasterUldPage() {
         </Button>
       }
     />
-  );
+  )
 }

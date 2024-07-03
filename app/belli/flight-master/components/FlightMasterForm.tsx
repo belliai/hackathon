@@ -1,27 +1,35 @@
-"use client";
+"use client"
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { UseFormReturn } from "react-hook-form";
-import FormTextField from "@/components/form/FormTextField";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useLocations } from "@/lib/hooks/locations";
-import { useUnits } from "@/lib/hooks/units/units";
-import { useEnums } from "@/lib/hooks/enums";
-import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+import { UseFormReturn } from "react-hook-form"
+
+import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
+import { useEnums } from "@/lib/hooks/enums"
+import { useLocations } from "@/lib/hooks/locations"
+import { useUnits } from "@/lib/hooks/units/units"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import FormTextField from "@/components/form/FormTextField"
 
 interface FlightMasterFormType {
-  hookForm: UseFormReturn<any>;
+  hookForm: UseFormReturn<any>
 }
 
 interface TailNoType {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
 type LocationListType = {
-  ID: string;
-  name: string;
+  ID: string
+  name: string
 }
 
 const frequencyItems = [
@@ -53,67 +61,72 @@ const frequencyItems = [
     id: "sun",
     label: "Sunday",
   },
-];
+]
 
-export default function FlightMasterForm({
-  hookForm,
-}: FlightMasterFormType) {
-  const [tailNoOptions, setTailNoOptions] = useState<Array<TailNoType>>([]);
-  const formData = hookForm.watch();
+export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
+  const [tailNoOptions, setTailNoOptions] = useState<Array<TailNoType>>([])
+  const formData = hookForm.watch()
 
-  const { data: locations } = useLocations();
+  const { data: locations } = useLocations()
   const { data: units } = useUnits({
     category: "weight",
-  });
+  })
   const { data: flightSectorList } = useEnums({
     category: "flight_sector",
-  });
+  })
   const { data: flightStatusList } = useEnums({
     category: "flight_status",
-  });
+  })
   const { data: flightTypeList } = useEnums({
     category: "flight_type",
-  });
-  const { data: aircraftTypeList } = useAircraftTypes();
+  })
+  const { data: aircraftTypeList } = useAircraftTypes()
 
-  const formattedLocation = locations?.map((locationList: LocationListType) => ({ label: locationList.name, value: locationList.ID })) || [];
+  const formattedLocation =
+    locations?.map((locationList: LocationListType) => ({
+      label: locationList.name,
+      value: locationList.ID,
+    })) || []
 
   const weightUnitsOptions = units?.map((unit) => ({
     value: String(unit.ID),
     label: `${unit.Name} - ${unit.Symbol}`,
-  }));
+  }))
 
   const flightSectorOptions = flightSectorList?.map((list) => ({
     value: String(list.ID),
     label: list.value,
-  }));
+  }))
 
   const flightStatusOptions = flightStatusList?.map((list) => ({
     value: String(list.ID),
     label: list.value,
-  }));
+  }))
 
   const flightTypeOptions = flightTypeList?.map((list) => ({
     value: String(list.ID),
     label: list.value,
-  }));
+  }))
 
   const aircraftTypeOptions = aircraftTypeList?.map((list) => ({
     value: String(list.id),
     label: list.aircraft_type,
-  }));
+  }))
 
   useEffect(() => {
-    const selectedAircraftType = aircraftTypeList?.find((item: any) => item.id === formData.aircraftType);
-    const tailNo = selectedAircraftType && selectedAircraftType.aircraft_tail_numbers?.map((list) => ({
-      value: String(list.id),
-      label: list.tail_number,
-    }));
-    
-    setTailNoOptions(tailNo || []);
-    
-  }, [formData.aircraftType]);
-  
+    const selectedAircraftType = aircraftTypeList?.find(
+      (item: any) => item.id === formData.aircraftType
+    )
+    const tailNo =
+      selectedAircraftType &&
+      selectedAircraftType.aircraft_tail_numbers?.map((list) => ({
+        value: String(list.id),
+        label: list.tail_number,
+      }))
+
+    setTailNoOptions(tailNo || [])
+  }, [formData.aircraftType])
+
   return (
     <div className="flex flex-col gap-4">
       <Form {...hookForm}>
@@ -155,7 +168,7 @@ export default function FlightMasterForm({
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
-          <FormLabel className="text-sm">Dept Time (D H M)</FormLabel>
+            <FormLabel className="text-sm">Dept Time (D H M)</FormLabel>
             <div className="grid grid-cols-3 gap-1">
               <FormTextField
                 name="deptTime.deptDay"
@@ -205,14 +218,14 @@ export default function FlightMasterForm({
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-2 my-2">
+        <div className="my-2 flex flex-col gap-2">
           <FormField
             control={hookForm.control}
             name="frequencyItems"
             render={() => (
               <FormItem className="flex flex-col">
                 <FormLabel className="text-sm">Frequency</FormLabel>
-                <div className="flex gap-3 w-full space-y-0">
+                <div className="flex w-full gap-3 space-y-0">
                   {frequencyItems.map((item) => (
                     <FormField
                       key={item.id}
@@ -306,5 +319,5 @@ export default function FlightMasterForm({
         </div>
       </Form>
     </div>
-  );
+  )
 }

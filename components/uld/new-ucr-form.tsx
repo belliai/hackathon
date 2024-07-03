@@ -1,12 +1,19 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import React, { useState } from "react"
+import { CalendarIcon } from "@radix-ui/react-icons"
+import { format } from "date-fns"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -15,10 +22,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/ui/select"
 import {
   Table,
   TableBody,
@@ -28,9 +32,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
+import { Textarea } from "@/components/ui/textarea"
 
-export function DatePicker({ date, setDate, placeholder }: { date: any, setDate: any, placeholder: string }) {
+export function DatePicker({
+  date,
+  setDate,
+  placeholder,
+}: {
+  date: any
+  setDate: any
+  placeholder: string
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -54,10 +67,16 @@ export function DatePicker({ date, setDate, placeholder }: { date: any, setDate:
         />
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
-export function SelectField({ options, placeholder }: { options: any[], placeholder: string }) {
+export function SelectField({
+  options,
+  placeholder,
+}: {
+  options: any[]
+  placeholder: string
+}) {
   return (
     <Select>
       <SelectTrigger className="w-full">
@@ -73,37 +92,37 @@ export function SelectField({ options, placeholder }: { options: any[], placehol
         </SelectGroup>
       </SelectContent>
     </Select>
-  );
+  )
 }
 
 export default function NewUcrForm() {
-  const [transferDate, setTransferDate] = useState();
-  const [actTraDate, setActTraDate] = useState();
-  const [actRecDate, setActRecDate] = useState();
+  const [transferDate, setTransferDate] = useState()
+  const [actTraDate, setActTraDate] = useState()
+  const [actRecDate, setActRecDate] = useState()
 
   const locationOptions = [
     { value: "select", label: "Select" },
     { value: "kul", label: "KUL" },
     // Add more options as needed
-  ];
+  ]
 
   const finalLocationOptions = [
     { value: "select", label: "Select" },
     // Add more options as needed
-  ];
+  ]
 
   const uldConditionOptions = [
     { value: "missing", label: "Missing" },
     { value: "serviceable", label: "Serviceable" },
     { value: "unserviceable", label: "Unserviceable" },
-  ];
+  ]
 
   const accessoryStatuses = [
     { status: "Released", nets: 0, doors: 0, straps: 0, fittings: 0 },
     { status: "Returned", nets: 0, doors: 0, straps: 0, fittings: 0 },
     { status: "Damaged", nets: 0, doors: 0, straps: 0, fittings: 0 },
     { status: "Yet To Arrive", nets: 0, doors: 0, straps: 0, fittings: 0 },
-  ];
+  ]
 
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
@@ -132,13 +151,25 @@ export default function NewUcrForm() {
       <Textarea />
 
       <label>Transfer Date*</label>
-      <DatePicker date={transferDate} setDate={setTransferDate} placeholder="21/05/2024" />
+      <DatePicker
+        date={transferDate}
+        setDate={setTransferDate}
+        placeholder="21/05/2024"
+      />
 
       <label>Act Tra Date</label>
-      <DatePicker date={actTraDate} setDate={setActTraDate} placeholder="21/05/2024" />
+      <DatePicker
+        date={actTraDate}
+        setDate={setActTraDate}
+        placeholder="21/05/2024"
+      />
 
       <label>Act Rec Date</label>
-      <DatePicker date={actRecDate} setDate={setActRecDate} placeholder="21/05/2024" />
+      <DatePicker
+        date={actRecDate}
+        setDate={setActRecDate}
+        placeholder="21/05/2024"
+      />
 
       <label>Final Location*</label>
       <div className="flex gap-4">
@@ -181,7 +212,7 @@ export default function NewUcrForm() {
       <label>ULD ODLN</label>
       <Input type="text" />
 
-      <div className="col-span-2 flex justify-end gap-4 mt-4">
+      <div className="col-span-2 mt-4 flex justify-end gap-4">
         <Button button-variant="primary">Add ULD</Button>
       </div>
 
@@ -209,7 +240,7 @@ export default function NewUcrForm() {
         </TableBody>
       </Table>
 
-      <div className="col-span-2 flex justify-end gap-4 mt-4">
+      <div className="col-span-2 mt-4 flex justify-end gap-4">
         <Button button-variant="primary">Save</Button>
         <Button variant="secondary">Print</Button>
         <Button variant="secondary">Clear</Button>
@@ -217,5 +248,5 @@ export default function NewUcrForm() {
         <Button button-variant="primary">Send LUC</Button>
       </div>
     </div>
-  );
+  )
 }

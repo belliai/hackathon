@@ -1,39 +1,37 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import React, { useEffect } from "react"
+import { Customer } from "@/schemas/customer"
+import { ListIcon, SearchIcon } from "lucide-react"
+import { useFormContext } from "react-hook-form"
+
+import { useCommodityCodes } from "@/lib/hooks/commodity-codes"
+import { useCustomers } from "@/lib/hooks/customers"
+import { useLocations } from "@/lib/hooks/locations"
+import { usePaymentModes } from "@/lib/hooks/payment-modes"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import React, { useEffect } from "react";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ListIcon, SearchIcon } from "lucide-react";
-import { useFormContext } from "react-hook-form";
-import { usePaymentModes } from "@/lib/hooks/payment-modes"
-import { useLocations } from "@/lib/hooks/locations";
-import { useCustomers } from "@/lib/hooks/customers";
-import { useCommodityCodes } from "@/lib/hooks/commodity-codes";
-import { Customer } from "@/schemas/customer";
+} from "@/components/ui/select"
 
 const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
   (_, ref) => {
+    const form = useFormContext()
 
-
-
-    const form = useFormContext();
-
-    const formValues = form.watch();
+    const formValues = form.watch()
 
     const { commodity_code_id, customer_id, bill_to_id } = formValues
 
@@ -42,31 +40,40 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
     const { data: commodityCodes } = useCommodityCodes()
     const { data: customers } = useCustomers()
 
-    const commodity = commodity_code_id && commodityCodes && commodityCodes.find((item: any) => item.ID === commodity_code_id)
-    const customer = customer_id && customers && customers.data.find((item: Customer) => item.ID === customer_id)
-    const bill = bill_to_id && customers && customers.data.find((item: any) => item.ID === bill_to_id)
-
+    const commodity =
+      commodity_code_id &&
+      commodityCodes &&
+      commodityCodes.find((item: any) => item.ID === commodity_code_id)
+    const customer =
+      customer_id &&
+      customers &&
+      customers.data.find((item: Customer) => item.ID === customer_id)
+    const bill =
+      bill_to_id &&
+      customers &&
+      customers.data.find((item: any) => item.ID === bill_to_id)
 
     return (
-      <Card className="p-4 grid grid-cols-2 gap-y-2 gap-x-3" ref={ref}>
+      <Card className="grid grid-cols-2 gap-x-3 gap-y-2 p-4" ref={ref}>
         <FormField
           control={form.control}
           name="origin_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel info="booking type info here">Origin</FormLabel>
-              <Select
-                onValueChange={field.onChange} defaultValue={field.value}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
                     <SelectValue />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {locations && locations.map((location: any) =>
-                    <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
-                  )}
+                  {locations &&
+                    locations.map((location: any) => (
+                      <SelectItem value={location.ID} key={location.ID}>
+                        {location.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -81,18 +88,19 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
               <FormLabel info="hellow world!, this is info">
                 Destination
               </FormLabel>
-              <Select
-                onValueChange={field.onChange} defaultValue={field.value}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
                     <SelectValue />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {locations && locations.map((location: any) =>
-                    <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
-                  )}
+                  {locations &&
+                    locations.map((location: any) => (
+                      <SelectItem value={location.ID} key={location.ID}>
+                        {location.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -107,18 +115,22 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
               <FormLabel info="hellow world!, this is info">
                 Commodity Code *
               </FormLabel>
-              <Select
-                onValueChange={field.onChange} defaultValue={field.value}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
                     <SelectValue />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {commodityCodes && commodityCodes.map((commodityCode: any) =>
-                    <SelectItem value={commodityCode.ID} key={commodityCode.ID} >{commodityCode.name}</SelectItem>
-                  )}
+                  {commodityCodes &&
+                    commodityCodes.map((commodityCode: any) => (
+                      <SelectItem
+                        value={commodityCode.ID}
+                        key={commodityCode.ID}
+                      >
+                        {commodityCode.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -134,7 +146,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                 Commodity Description
               </FormLabel>
               <FormControl>
-                <Input readOnly defaultValue={commodity && commodity.description} {...field} className="border-2 border-foreground/30" />
+                <Input
+                  readOnly
+                  defaultValue={commodity && commodity.description}
+                  {...field}
+                  className="border-2 border-foreground/30"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -155,9 +172,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {paymentModes && paymentModes.map((paymentMode: any) =>
-                    <SelectItem value={paymentMode.ID} key={paymentMode.ID} >{paymentMode.name}</SelectItem>
-                  )}
+                  {paymentModes &&
+                    paymentModes.map((paymentMode: any) => (
+                      <SelectItem value={paymentMode.ID} key={paymentMode.ID}>
+                        {paymentMode.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -177,9 +197,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
-                  )}
+                  {customers &&
+                    customers.data.map((customer: any) => (
+                      <SelectItem value={customer.ID} key={customer.ID}>
+                        {customer.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -208,7 +231,11 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                 Bill To Name
               </FormLabel>
               <FormControl>
-                <Input defaultValue={bill && bill.name} {...field} className="border-2 border-foreground/30" />
+                <Input
+                  defaultValue={bill && bill.name}
+                  {...field}
+                  className="border-2 border-foreground/30"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -227,9 +254,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
-                  )}
+                  {customers &&
+                    customers.data.map((customer: any) => (
+                      <SelectItem value={customer.ID} key={customer.ID}>
+                        {customer.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -251,9 +281,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
-                  )}
+                  {customers &&
+                    customers.data.map((customer: any) => (
+                      <SelectItem value={customer.ID} key={customer.ID}>
+                        {customer.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -273,9 +306,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.ID} key={customer.ID} >{customer.code}</SelectItem>
-                  )}
+                  {customers &&
+                    customers.data.map((customer: any) => (
+                      <SelectItem value={customer.ID} key={customer.ID}>
+                        {customer.code}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -289,7 +325,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
             <FormItem>
               <FormLabel info="booking type info here">Customer Name</FormLabel>
               <FormControl>
-                <Input readOnly defaultValue={customer && customer.name} {...field} className="border-2 border-foreground/30" />
+                <Input
+                  readOnly
+                  defaultValue={customer && customer.name}
+                  {...field}
+                  className="border-2 border-foreground/30"
+                />
               </FormControl>
               <FormMessage />
               <FormMessage />
@@ -329,8 +370,8 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
               <FormControl>
                 <div className="relative h-fit">
                   <Input {...field} className="border-2 border-foreground/30" />
-                  <div className="absolute h-full top-0 right-0 inline-flex items-center justify-center px-3 ">
-                    <ListIcon className="w-3 h-3" />
+                  <div className="absolute right-0 top-0 inline-flex h-full items-center justify-center px-3">
+                    <ListIcon className="h-3 w-3" />
                   </div>
                 </div>
               </FormControl>
@@ -353,9 +394,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
-                  )}
+                  {customers &&
+                    customers.data.map((customer: any) => (
+                      <SelectItem value={customer.ID} key={customer.ID}>
+                        {customer.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -375,9 +419,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {customers && customers.data.map((customer: any) =>
-                    <SelectItem value={customer.ID} key={customer.ID} >{customer.name}</SelectItem>
-                  )}
+                  {customers &&
+                    customers.data.map((customer: any) => (
+                      <SelectItem value={customer.ID} key={customer.ID}>
+                        {customer.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -385,10 +432,10 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           )}
         />
       </Card>
-    );
+    )
   }
-);
+)
 
-ConsignmentDetailsForm.displayName = "ConsignmentDetailsForm";
+ConsignmentDetailsForm.displayName = "ConsignmentDetailsForm"
 
-export default ConsignmentDetailsForm;
+export default ConsignmentDetailsForm

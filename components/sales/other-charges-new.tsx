@@ -1,25 +1,18 @@
-import React, { useState } from "react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHeader,
-    TableRow,
-    TableHead,
-    TableCaption,
-    TableFooter
-} from "@/components/ui/table";
-import { Button } from "@components/ui/button";
-import { Input } from "@/components/ui/input";
+import React, { useState } from "react"
+import { Button } from "@components/ui/button"
+import { CalendarIcon } from "@radix-ui/react-icons"
+import { format } from "date-fns"
+
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger,SelectValue } from "@/components/ui/select";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 export default function OtherChargesNew() {

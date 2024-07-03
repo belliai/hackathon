@@ -1,34 +1,35 @@
-import { FieldValues, Path, useFormContext } from "react-hook-form";
+import { ListIcon, SearchIcon } from "lucide-react"
+import { FieldValues, Path, useFormContext } from "react-hook-form"
+
+import { Button } from "../ui/button"
+import { Checkbox } from "../ui/checkbox"
+import DateInput from "../ui/date-input"
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "../ui/form"
+import { Input, InputProps } from "../ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import DateInput from "../ui/date-input";
-import { Input, InputProps } from "../ui/input";
-import { ListIcon, SearchIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+} from "../ui/select"
 
 export default function InputSwitch<DataType extends FieldValues>(
   props: InputProps & {
-    type: "select" | "date" | "search" | "text" | "checkbox";
-    name: Path<DataType>;
-    label: string;
-    selectOptions?: { value: string; label: string }[];
-    withDialog?: boolean;
+    type: "select" | "date" | "search" | "text" | "checkbox"
+    name: Path<DataType>
+    label: string
+    selectOptions?: { value: string; label: string }[]
+    withDialog?: boolean
   }
 ) {
-  const form = useFormContext<DataType>();
+  const form = useFormContext<DataType>()
   const input = () => {
     switch (props.type) {
       case "select":
@@ -38,7 +39,7 @@ export default function InputSwitch<DataType extends FieldValues>(
             control={form.control}
             name={props.name}
             render={({ field }) => (
-              <FormItem className="space-y-1 flex-grow">
+              <FormItem className="flex-grow space-y-1">
                 <FormLabel className="text-xs font-semibold text-muted-foreground">
                   {props.label}
                 </FormLabel>
@@ -63,7 +64,7 @@ export default function InputSwitch<DataType extends FieldValues>(
               </FormItem>
             )}
           />
-        );
+        )
       case "date":
         return (
           <FormField
@@ -71,7 +72,7 @@ export default function InputSwitch<DataType extends FieldValues>(
             control={form.control}
             name={props.name}
             render={({ field }) => (
-              <FormItem className="space-y-1 flex-grow">
+              <FormItem className="flex-grow space-y-1">
                 <FormLabel className="text-xs font-semibold text-muted-foreground">
                   {props.label}
                 </FormLabel>
@@ -80,7 +81,7 @@ export default function InputSwitch<DataType extends FieldValues>(
               </FormItem>
             )}
           />
-        );
+        )
       case "search":
         return (
           <FormField
@@ -88,7 +89,7 @@ export default function InputSwitch<DataType extends FieldValues>(
             control={form.control}
             name={props.name}
             render={({ field }) => (
-              <FormItem className="space-y-1 flex-grow">
+              <FormItem className="flex-grow space-y-1">
                 <FormLabel className="text-xs font-semibold text-muted-foreground">
                   {props.label}
                 </FormLabel>
@@ -96,7 +97,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                   <Input
                     {...field}
                     rightIcon={
-                      <SearchIcon className="size-4 text-muted-foreground min-w-10" />
+                      <SearchIcon className="size-4 min-w-10 text-muted-foreground" />
                     }
                   />
                 </FormControl>
@@ -104,7 +105,7 @@ export default function InputSwitch<DataType extends FieldValues>(
               </FormItem>
             )}
           />
-        );
+        )
       case "checkbox":
         return (
           <FormField
@@ -124,7 +125,7 @@ export default function InputSwitch<DataType extends FieldValues>(
               </FormItem>
             )}
           />
-        );
+        )
       default:
         return (
           <FormField
@@ -132,7 +133,7 @@ export default function InputSwitch<DataType extends FieldValues>(
             control={form.control}
             name={props.name}
             render={({ field }) => (
-              <FormItem className="space-y-1 flex-grow">
+              <FormItem className="flex-grow space-y-1">
                 <FormLabel className="text-xs font-semibold text-muted-foreground">
                   {props.label}
                 </FormLabel>
@@ -143,9 +144,9 @@ export default function InputSwitch<DataType extends FieldValues>(
               </FormItem>
             )}
           />
-        );
+        )
     }
-  };
+  }
   if (props.withDialog) {
     return (
       <div className="flex w-full flex-row gap-2">
@@ -154,12 +155,12 @@ export default function InputSwitch<DataType extends FieldValues>(
           type="button"
           variant={"ghost"}
           size={"icon"}
-          className="h-9 w-9 mt-7"
+          className="mt-7 h-9 w-9"
         >
           <ListIcon className="size-4" />
         </Button>
       </div>
-    );
+    )
   }
-  return input();
+  return input()
 }

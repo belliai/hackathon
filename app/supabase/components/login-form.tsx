@@ -1,53 +1,53 @@
-"use client";
+"use client"
 
-import Link from "next/link";
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/utils/supabase/client"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createClient } from "@/lib/utils/supabase/client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "@/components/ui/use-toast";
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast } from "@/components/ui/use-toast"
 
 export function LoginForm() {
   const [loginMode, setLoginMode] = useState<"password" | "magic-link">(
     "password"
-  );
+  )
 
-  const router = useRouter();
+  const router = useRouter()
 
-  const supabase = createClient();
+  const supabase = createClient()
 
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      router.refresh();
-    });
+      router.refresh()
+    })
 
     return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+      subscription.unsubscribe()
+    }
+  }, [])
 
   const loginFormSchema = z.object({
     email: z.string().email(),
     password: z.string().optional(),
-  });
+  })
 
-  type LoginFormValues = z.infer<typeof loginFormSchema>;
+  type LoginFormValues = z.infer<typeof loginFormSchema>
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -55,36 +55,36 @@ export function LoginForm() {
       email: "",
       password: "",
     },
-  });
+  })
 
   async function handleLoginPassword(data: LoginFormValues) {
     if (!data.password || data.password.length <= 6) {
       loginForm.setError("password", {
         type: "manual",
         message: "Password is required with at least 6 characters.",
-      });
+      })
 
-      return;
+      return
     }
 
     const { data: authData, error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password!,
-    });
+    })
 
     if (error) {
       toast({
         title: "Error",
         description: error.message,
-      });
+      })
     } else {
       toast({
         title: "Success",
         description: "Logged in successfully",
-      });
+      })
     }
 
-    router.refresh();
+    router.refresh()
   }
 
   async function handleLoginWithGithub() {
@@ -93,52 +93,52 @@ export function LoginForm() {
       options: {
         redirectTo: window.location.origin + "/supabase",
       },
-    });
+    })
 
     if (error) {
       toast({
         title: "Error",
         description: error.message,
-      });
+      })
     } else {
-      console.log("data", data);
+      console.log("data", data)
 
       toast({
         title: "Success",
-      });
+      })
     }
   }
 
   async function handleLoginMagicLink(data: LoginFormValues) {
-    const origin = window.location.origin;
+    const origin = window.location.origin
 
     const { data: authData, error } = await supabase.auth.signInWithOtp({
       email: data.email,
       options: {
         emailRedirectTo: origin + "/supabase",
       },
-    });
+    })
 
     if (error) {
       toast({
         title: "Error",
         description: error.message,
-      });
+      })
     } else {
       toast({
         title: "Success",
         description: "Magic link sent to " + data.email,
-      });
+      })
     }
 
-    router.refresh();
+    router.refresh()
   }
 
   async function handleSubmitLogin(data: LoginFormValues) {
     if (loginMode === "magic-link") {
-      await handleLoginMagicLink(data);
+      await handleLoginMagicLink(data)
     } else {
-      await handleLoginPassword(data);
+      await handleLoginPassword(data)
     }
   }
 
@@ -179,7 +179,7 @@ export function LoginForm() {
                 placeholder="m@example.com"
               />
               {loginForm.formState.errors.email && (
-                <p className="text-red-500 text-sm">
+                <p className="text-sm text-red-500">
                   {loginForm.formState.errors.email.message}
                 </p>
               )}
@@ -202,7 +202,7 @@ export function LoginForm() {
                     {...loginForm.register("password")}
                   />
                   {loginForm.formState.errors.password && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {loginForm.formState.errors.password.message}
                     </p>
                   )}
@@ -234,5 +234,5 @@ export function LoginForm() {
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }

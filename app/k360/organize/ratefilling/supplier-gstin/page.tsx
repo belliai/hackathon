@@ -1,17 +1,16 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import { TFormTextField } from "@/components/form/FormTextField";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../masters/components/dummySelectOptions";
-import { useForm } from "react-hook-form";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
+} from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
 
 export default function MasterSupplierGstinPage() {
   const columns: ColumnDef<any>[] = [
@@ -62,7 +61,7 @@ export default function MasterSupplierGstinPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -104,7 +103,7 @@ export default function MasterSupplierGstinPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -161,10 +160,10 @@ export default function MasterSupplierGstinPage() {
       placeholder: "Pincode",
       type: "text",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   const data = [
     {
@@ -297,7 +296,7 @@ export default function MasterSupplierGstinPage() {
       createdAt: "2024-04-28 10:20:40",
       updatedAt: "2024-05-19 14:45:33",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -310,5 +309,5 @@ export default function MasterSupplierGstinPage() {
       formFields={formFields}
       hookForm={form}
     />
-  );
+  )
 }

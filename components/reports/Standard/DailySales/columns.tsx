@@ -1,28 +1,28 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type DailySalesType = {
-  awb_no: string;
-  from_date: string;
-  to_date: string;
-  origin: string;
-  destination: string;
-  carrier: string;
-  dsr_type: string;
-  flights: string;
-  shipper: string;
-  shc: string;
-  commodity: string;
-  agent: string;
-  total_sales: string;
-  total_weight: string;
-  total_pieces: string;
-  total_revenue: string;
-  total_cost: string;
-  net_profit: string;
-  updated_on: string;
-};
+  awb_no: string
+  from_date: string
+  to_date: string
+  origin: string
+  destination: string
+  carrier: string
+  dsr_type: string
+  flights: string
+  shipper: string
+  shc: string
+  commodity: string
+  agent: string
+  total_sales: string
+  total_weight: string
+  total_pieces: string
+  total_revenue: string
+  total_cost: string
+  net_profit: string
+  updated_on: string
+}
 
 export const columns: ColumnDef<DailySalesType>[] = [
   {
@@ -101,4 +101,4 @@ export const columns: ColumnDef<DailySalesType>[] = [
     header: "Updated On",
     accessorKey: "updated_on",
   },
-];
+]

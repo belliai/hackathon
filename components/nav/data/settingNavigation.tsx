@@ -1,10 +1,12 @@
-import { TSidebarItem } from "@/components/nav/SidebarItem";
-import { CubeIcon } from "@radix-ui/react-icons";
-import { 
-  ListBulletIcon, 
-  PlusCircleIcon, 
+import {
+  ListBulletIcon,
+  PlusCircleIcon,
   UserIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/outline"
+import { CubeIcon } from "@radix-ui/react-icons"
+
+import { TSidebarItem } from "@/components/nav/SidebarItem"
+
 export const settingNavigation: TSidebarItem[] = [
   {
     name: "Configuration",
@@ -463,8 +465,18 @@ export const settingNavigation: TSidebarItem[] = [
         icon: UserIcon,
         current: false,
         children: [
-          { name: "List", href: "/configuration/partner", icon: ListBulletIcon, current: false },
-          { name: "New", href: "/configuration/partner/new", icon: PlusCircleIcon, current: false },
+          {
+            name: "List",
+            href: "/configuration/partner",
+            icon: ListBulletIcon,
+            current: false,
+          },
+          {
+            name: "New",
+            href: "/configuration/partner/new",
+            icon: PlusCircleIcon,
+            current: false,
+          },
         ],
       },
       {
@@ -519,14 +531,26 @@ export const settingNavigation: TSidebarItem[] = [
         name: "Upload Master",
         href: "#",
         current: false,
-        children: [{ name: "Upload Master", href: "/configuration/upload", current: false }],
+        children: [
+          {
+            name: "Upload Master",
+            href: "/configuration/upload",
+            current: false,
+          },
+        ],
       },
       {
         name: "Notification",
         href: "#",
         current: false,
-        children: [{ name: "Notification", href: "/configuration/notification", current: false }],
+        children: [
+          {
+            name: "Notification",
+            href: "/configuration/notification",
+            current: false,
+          },
+        ],
       },
     ],
   },
-];
+]

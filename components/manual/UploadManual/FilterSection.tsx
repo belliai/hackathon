@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { MagnifyingGlassIcon, ReloadIcon } from "@radix-ui/react-icons";
-import CreateDialog from "./CreateDialog";
+import { MagnifyingGlassIcon, ReloadIcon } from "@radix-ui/react-icons"
+
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -8,7 +8,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
+
+import CreateDialog from "./CreateDialog"
 
 const MODULE_LIST = [
   { id: 1, label: "AH1" },
@@ -23,15 +25,15 @@ const MODULE_LIST = [
   { id: 10, label: "ATQ" },
   { id: 11, label: "AUA" },
   { id: 12, label: "AYJ" },
-];
+]
 
 export default function FilterSection() {
   return (
-    <div className="flex flex-col mt-10 gap-4">
+    <div className="mt-10 flex flex-col gap-4">
       <div className="flex justify-between">
         <h1 className="text-xl font-semibold">Manual Section</h1>
         <div className="flex gap-4">
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+          <Button className="bg-zinc-800 text-white hover:bg-zinc-700">
             <span className="mr-1 h-4 w-4">
               <ReloadIcon />
             </span>
@@ -42,23 +44,25 @@ export default function FilterSection() {
       </div>
 
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-zinc-700 p-5">
-        <div className="text-white text-base font-semibold">Filter</div>
+        <div className="text-base font-semibold text-white">Filter</div>
         <div className="flex gap-4">
           <div className="w-2/6">
             <Select>
-              <SelectTrigger className="border-zinc-500 w-full">
+              <SelectTrigger className="w-full border-zinc-500">
                 <SelectValue placeholder="Module Name" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {MODULE_LIST.map((stationList) => (
-                    <SelectItem key ={stationList.id} value={stationList.label}>{stationList.label}</SelectItem>
+                    <SelectItem key={stationList.id} value={stationList.label}>
+                      {stationList.label}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+          <Button className="bg-zinc-800 text-white hover:bg-zinc-700">
             <span className="mr-1 h-4 w-4">
               <MagnifyingGlassIcon />
             </span>
@@ -66,7 +70,6 @@ export default function FilterSection() {
           </Button>
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

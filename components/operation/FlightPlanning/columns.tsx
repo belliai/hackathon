@@ -1,68 +1,69 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type Unassigned = {
-  awb_number?: string;
-  org?: string;
-  dest?: string;
-  pieces?: string;
-  weight?: string;
-  unit?: string;
-  rem_pcs?: string;
-  rem_wt?: string;
-  priority?: string;
-  uom?: string;
-  comm_desc?: string;
-  shipper_name?: string;
-  product_type?: string;
-  shc?: string;
-  flt_date?: string;
-  scr?: string;
-  remarks?: string;
-};
+  awb_number?: string
+  org?: string
+  dest?: string
+  pieces?: string
+  weight?: string
+  unit?: string
+  rem_pcs?: string
+  rem_wt?: string
+  priority?: string
+  uom?: string
+  comm_desc?: string
+  shipper_name?: string
+  product_type?: string
+  shc?: string
+  flt_date?: string
+  scr?: string
+  remarks?: string
+}
 
 export type Assigned = {
-  awb_number?: string;
-  accepted_pcs?: string;
-  bulk_wt?: string;
-  uom?: string;
-  cart?: string;
-  uld?: string;
-  unid?: string;
-  comm_description?: string;
-  product_type?: string;
-  scr_status?: string;
-  transit?: string;
-  shc?: string;
-};
+  awb_number?: string
+  accepted_pcs?: string
+  bulk_wt?: string
+  uom?: string
+  cart?: string
+  uld?: string
+  unid?: string
+  comm_description?: string
+  product_type?: string
+  scr_status?: string
+  transit?: string
+  shc?: string
+}
 
 export type Cart = {
-  cart?: string;
-  scale_wt?: string;
-  weight?: string;
-  loading_priority?: string;
-  builder_name?: string;
-  pol?: string;
-  pou?: string;
-  unid?: string;
-};
+  cart?: string
+  scale_wt?: string
+  weight?: string
+  loading_priority?: string
+  builder_name?: string
+  pol?: string
+  pou?: string
+  unid?: string
+}
 
 export type Uld = {
-  uld?: string;
-  pol?: string;
-  pou?: string;
-  unid?: string;
-  scale_wt?: string;
-  loading_priority?: string;
-  uld_status?: string;
-  awb_wt?: string;
-  builder_name?: string;
-  uom?: string;
-  flt_stat?: string;
-  remarks?: string;
-};
+  uld?: string
+  pol?: string
+  pou?: string
+  unid?: string
+  scale_wt?: string
+  loading_priority?: string
+  uld_status?: string
+  awb_wt?: string
+  builder_name?: string
+  uom?: string
+  flt_stat?: string
+  remarks?: string
+}
 
 export const unassignedColumn: ColumnDef<Unassigned>[] = [
   {
@@ -157,7 +158,7 @@ export const unassignedColumn: ColumnDef<Unassigned>[] = [
     accessorKey: "remarks",
     header: "Remarks",
   },
-];
+]
 
 export const assignedColumn: ColumnDef<Assigned>[] = [
   {
@@ -232,7 +233,7 @@ export const assignedColumn: ColumnDef<Assigned>[] = [
     accessorKey: "shc",
     header: "SHC",
   },
-];
+]
 
 export const cartColumn: ColumnDef<Cart>[] = [
   {
@@ -291,7 +292,7 @@ export const cartColumn: ColumnDef<Cart>[] = [
     accessorKey: "unid",
     header: "UNID",
   },
-];
+]
 
 export const uldColumn: ColumnDef<Uld>[] = [
   {
@@ -366,4 +367,4 @@ export const uldColumn: ColumnDef<Uld>[] = [
     accessorKey: "remarks",
     header: "Remarks",
   },
-];
+]

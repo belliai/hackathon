@@ -1,12 +1,15 @@
-"use client";
+"use client"
 
-import DataTableFilterForm, { FormFieldOption } from "@/components/data-table/data-table-filter-form";
-import { FlightMasterDataType } from "./column";
+import DataTableFilterForm, {
+  FormFieldOption,
+} from "@/components/data-table/data-table-filter-form"
+
+import { FlightMasterDataType } from "./column"
 
 export type FilterDataType = Partial<FlightMasterDataType> & {
-  date_from?: string;
-  date_to?: string;
-};
+  date_from?: string
+  date_to?: string
+}
 
 export const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -91,4 +94,4 @@ export const formFilters: FormFieldOption<FilterDataType>[] = [
     ],
     placeholder: "Select Status",
   },
-];
+]

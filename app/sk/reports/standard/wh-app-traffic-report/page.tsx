@@ -1,10 +1,11 @@
-import FilterSection from "@/components/reports/Standard/WhAppTrafficReport/FilterSection";
-import { DataTable } from "@components/data-table/data-table";
-import { columns } from "@/components/reports/Standard/WhAppTrafficReport/columns";
-import { getData } from "@/lib/reports/Standard/WhAppTrafficReport/data";
+import { DataTable } from "@components/data-table/data-table"
+
+import { getData } from "@/lib/reports/Standard/WhAppTrafficReport/data"
+import { columns } from "@/components/reports/Standard/WhAppTrafficReport/columns"
+import FilterSection from "@/components/reports/Standard/WhAppTrafficReport/FilterSection"
 
 export default async function WhAppTrafficReport() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +15,6 @@ export default async function WhAppTrafficReport() {
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

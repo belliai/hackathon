@@ -1,28 +1,29 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 
 export type CtmInType = {
-  ctm?: string;
-  awb?: string;
-  carrier_code?: string;
-  to_carrier_code?: string;
-  flt_origin?: string;
-  flt_destination?: string;
-  origin?: string;
-  destination?: string;
-  ship_details?: string;
-};
+  ctm?: string
+  awb?: string
+  carrier_code?: string
+  to_carrier_code?: string
+  flt_origin?: string
+  flt_destination?: string
+  origin?: string
+  destination?: string
+  ship_details?: string
+}
 
 export const columns: ColumnDef<CtmInType>[] = [
   {
@@ -61,4 +62,4 @@ export const columns: ColumnDef<CtmInType>[] = [
     accessorKey: "ship_details",
     header: "Ship Details",
   },
-];
+]

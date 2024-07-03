@@ -1,10 +1,10 @@
-import FilterSection from "@/components/operation/MotherBag/FilterSection";
-import { DataTable } from "@/components/dashboard/dashtable";
-import { columns } from "@/components/operation/MotherBag/columns";
-import { getData } from "@/lib/operation/MotherBag/data";
+import { getData } from "@/lib/operation/MotherBag/data"
+import { DataTable } from "@/components/dashboard/dashtable"
+import { columns } from "@/components/operation/MotherBag/columns"
+import FilterSection from "@/components/operation/MotherBag/FilterSection"
 
 export default async function MotherBag() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-5">
@@ -13,5 +13,5 @@ export default async function MotherBag() {
         <DataTable columns={columns} data={data} />
       </div>
     </div>
-  );
+  )
 }

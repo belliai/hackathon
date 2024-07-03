@@ -1,14 +1,16 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions"
 import MastersPageTemplate, {
   SectionedFormFields,
-} from "../masters/components/MastersPageTemplate";
-import { actionColumn, selectColumn } from "../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions";
-import { useForm } from "react-hook-form";
-import { Search } from "lucide-react";
+} from "../masters/components/MastersPageTemplate"
 
 export default function MessageConfiguration() {
   const columns: ColumnDef<any>[] = [
@@ -70,7 +72,7 @@ export default function MessageConfiguration() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -137,7 +139,7 @@ export default function MessageConfiguration() {
       createdAt: "2021-08-01",
       updatedAt: "2021-08-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -164,7 +166,7 @@ export default function MessageConfiguration() {
       type: "text",
       endIcon: <Search />,
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -250,10 +252,10 @@ export default function MessageConfiguration() {
         },
       ],
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const sectionedForm = useForm();
+  const filterForm = useForm()
+  const sectionedForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -266,5 +268,5 @@ export default function MessageConfiguration() {
       sectionedFormFields={sectionedFormFields}
       hookForm={sectionedForm}
     />
-  );
+  )
 }
