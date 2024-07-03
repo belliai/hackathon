@@ -30,15 +30,6 @@ import {
     TableCaption,
     TableFooter
 } from "@/components/ui/table";
-import { Button } from "@components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox"
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger,SelectValue } from "@/components/ui/select";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
 
 export default function OtherChargesList() {
 
