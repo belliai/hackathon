@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function Dashboard() {
+export default function Home() {
   const data = getData();
   const { selectedBooking, setSelectedBooking } = useBookingContext();
   const [modalOpen, setModalOpen] = useState(false);

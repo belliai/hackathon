@@ -65,7 +65,7 @@ export default function SideBar() {
               className="flex items-center gap-x-2 cursor-pointer"
               onClick={() => {
                 setNavigationType(SIDEBAR_TYPE.DEFAULT);
-                router.push("/belli/dashboard");
+                router.push("/belli/home");
               }}
             >
               <ChevronLeftIcon
@@ -85,7 +85,7 @@ export default function SideBar() {
                     <Button
                       variant="ghost"
                       onClick={() => setDialogOpen(true)}
-                      className="px-2 w-full h-8 justify-start mb-5 text-[13px] text-white bg-button-primary/60 hover:bg-button-primary/100 rounded-sm"
+                      className="px-2 w-full h-8 justify-start mb-5 text-[13px] text-white bg-button-primary hover:bg-button-primary/80 rounded-sm"
                     >
                       <PlusSquare className="mr-2.5 h-4 w-4" />
                       New Order

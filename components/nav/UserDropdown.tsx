@@ -82,7 +82,7 @@ export default function UserDropdown({
       separator: true,
     },
     {
-      route: "/organize/masters/finance/cart",
+      route: "/k360/organize/masters/finance/cart",
       label: "Settings",
       changeNavigation: true,
     },

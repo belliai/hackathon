@@ -124,7 +124,7 @@ export default function MastersPageTemplate({
           </>
         }
       />
-      <div className="p-4 border rounded-md">
+      {/* <div className="p-4 border rounded-md">
         <Form {...filterHookForm}>
           <form
             className={cn("grid sm:grid-cols-2 gap-4 items-end w-full", {
@@ -168,7 +168,7 @@ export default function MastersPageTemplate({
             )}
           </form>
         </Form>
-      </div>
+      </div> */}
       {customComponent}
       <DataTable
         columns={columns}

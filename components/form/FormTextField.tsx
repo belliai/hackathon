@@ -186,7 +186,7 @@ export default function FormTextField({
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="text-zinc-500 border-zinc-700 bg-zinc-800">
+                  <SelectContent className="">
                     {options?.map((option) => {
                       return (
                         <SelectItem key={option.value} value={option.value}>

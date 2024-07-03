@@ -54,7 +54,7 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         button: {
-          primary: "#575BC7",
+          primary: "#FC5104",
           secondary: "#009BA5",
         },
       },

@@ -18,7 +18,6 @@ import CrudCommodityCode from "./commodity-code";
 export default function Page() {
   return (
     <PageContainer className="gap-6">
-      <PageHeader title="Booking Modal Configuration" />
       <CrudBookingType />
       <CrudPartnerPrefix />
       <CrudPartnerCode />

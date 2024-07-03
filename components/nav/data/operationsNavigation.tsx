@@ -9,7 +9,7 @@ export const operationsNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Home",
-        href: "/belli/dashboard",
+        href: "/belli/home",
         icon: CubeIcon,
         current: false,
       },

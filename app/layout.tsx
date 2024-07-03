@@ -25,6 +25,7 @@ import {
 import { dark } from "@clerk/themes";
 import { PHProvider } from "@/components/posthog-provider";
 import dynamic from "next/dynamic";
+import { operationsNavigation } from "@/components/nav/data/operationsNavigation";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export async function generateMetadata() {
       ...k360Navigation,
       ...settingNavigation,
       ...accountNavigation,
+      ...operationsNavigation,
     ],
     pathname
   );

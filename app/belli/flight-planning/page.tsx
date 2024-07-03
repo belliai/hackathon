@@ -1,4 +1,3 @@
-import FilterSection from "@/components/operation/FlightPlanning/FilterSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RightSection from "@/components/operation/FlightPlanning/RightSection";
 import UnassinedSection from "@/components/operation/FlightPlanning/UnassignedSection";
@@ -9,8 +8,7 @@ import UldLoadSection from "@/components/operation/FlightPlanning/UldLoadSection
 export default async function FlightPlanning() {
   return (
     <div>
-      <FilterSection />
-      <div className="flex gap-5 py-5">
+      <div className="flex gap-5">
         <div className="w-3/4">
           <Tabs defaultValue="unassined-section" className="w-full">
             <TabsList>
