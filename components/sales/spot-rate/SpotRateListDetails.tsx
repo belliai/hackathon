@@ -1,6 +1,6 @@
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table";
 
-const SpotRateDetails = () => {
+const SpotRateListDetails = () => {
   const rates = [
     {
       AWBNumber: '807-22439185',
@@ -59,7 +59,7 @@ const SpotRateDetails = () => {
             <TableHead>FlightNo</TableHead>
             <TableHead>FlightDate</TableHead>
             <TableHead>Origin</TableHead>
-            <TableHead>Destination</TableHead>
+            <TableHead>Dest</TableHead>
             <TableHead>Spot Rate</TableHead>
             <TableHead>ALL In</TableHead>
             <TableHead>Currency</TableHead>
@@ -110,4 +110,4 @@ const SpotRateDetails = () => {
   );
 };
 
-export default SpotRateDetails;
+export default SpotRateListDetails;

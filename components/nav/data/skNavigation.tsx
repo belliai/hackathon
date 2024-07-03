@@ -96,7 +96,7 @@ export const skNavigation: TSidebarItem[] = [
             children: [
               { name: "List", href: "/sk/sales/spot-rate/list", current: false },
               { name: "New", href: "#", current: false },
-              { name: "Approval", href: "#", current: false },
+              { name: "Approval", href: "/sk/sales/spot-rate/approval", current: false },
             ],
           },
         ],
