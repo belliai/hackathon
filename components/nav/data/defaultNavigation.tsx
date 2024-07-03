@@ -748,4 +748,10 @@ export const defaultNavigation: TSidebarItem[] = [
     icon: CubeIcon,
     current: false,
   },
+  {
+    name: "Charts",
+    href: "/charts", 
+    icon: CubeIcon,
+    current: false,
+    }
 ];

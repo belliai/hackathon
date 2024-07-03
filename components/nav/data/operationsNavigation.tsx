@@ -1,5 +1,23 @@
 import { TSidebarItem } from "@/components/nav/SidebarItem";
-import { CubeIcon } from "@radix-ui/react-icons";
+import { CubeIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
+import {
+  HomeIcon,
+  CalendarIcon,
+  GlobeAmericasIcon,
+  HandThumbUpIcon,
+  PresentationChartLineIcon,
+  ServerStackIcon,
+  CurrencyDollarIcon,
+  ReceiptPercentIcon,
+  CircleStackIcon,
+  BanknotesIcon,
+  BoltIcon,
+  ChartBarIcon,
+  CursorArrowRippleIcon, 
+  ClipboardIcon
+} from "@heroicons/react/24/outline";
+import { PlaneIcon } from "lucide-react";
+
 
 export const operationsNavigation: TSidebarItem[] = [
   {
@@ -10,31 +28,31 @@ export const operationsNavigation: TSidebarItem[] = [
       {
         name: "Home",
         href: "/dashboard",
-        icon: CubeIcon,
+        icon: HomeIcon,
         current: false,
       },
       {
         name: "Flight Planning",
         href: "/operations/flight-planning",
-        icon: CubeIcon,
+        icon: ClipboardIcon,
         current: false,
       },
       {
         name: "Flight Master",
         href: "/operations/flight-master",
-        icon: CubeIcon,
+        icon: PaperPlaneIcon,
         current: false,
       },
       {
         name: "Booking Modal",
         href: "/operations/booking-modal",
-        icon: CubeIcon,
+        icon: CursorArrowRippleIcon,
         current: false,
       },
       {
         name: "Aircraft",
         href: "/operations/aircraft",
-        icon: CubeIcon,
+        icon: PlaneIcon,
         current: false,
       },
     ],
@@ -42,3 +60,15 @@ export const operationsNavigation: TSidebarItem[] = [
 
   //
 ];
+
+export const getIconByHref = (href: string): React.ElementType | null => {
+  for (const section of operationsNavigation) {
+    if (section.children) {
+      const foundItem = section.children.find((item) => item.href === href);
+      if (foundItem) {
+        return foundItem.icon;
+      }
+    }
+  }
+  return null; // Return null if href is not found
+};

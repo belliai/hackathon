@@ -38,6 +38,7 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { getIconByHref } from "../data/operationsNavigation";
 
 export default function FavoritesMenu() {
   const {
@@ -296,6 +297,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({
   }
 
   if (isPath(item)) {
+    const itemIcon =  getIconByHref(item.href)
     return (
       <div
         ref={setNodeRef}
@@ -306,7 +308,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({
       >
         <GripVerticalIcon className="size-4 opacity-0 text-muted transition-opacity group-hover:opacity-100 absolute -left-4 top-1/2 -translate-y-1/2" />
         <SidebarItem
-          item={{ ...item, icon: item.icon ?? StarIcon }}
+          item={{ ...item, icon: itemIcon ?? StarIcon }}
           active={false}
           disabled={isDragging}
         />
