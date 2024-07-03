@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   flightMasterFormSchema,
   FlightMasterFormValue,
 } from "@/schemas/flight-master/flight-master"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { PaginationState } from "@tanstack/react-table"
 import {
   PackageIcon,
   PlaneIcon,
@@ -35,13 +36,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
-import BalanceCard from "@/components/dashboard/balance-card"
-import DimensionsCard from "@/components/dashboard/dimensions-card"
 import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal"
-import OrderSummaryCard from "@/components/dashboard/order-summary-card"
 import { DataTable } from "@/components/data-table/data-table"
 import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 import { columns } from "./components/column"
 import FlightMasterForm from "./components/FlightMasterForm"
@@ -101,14 +102,25 @@ const formDefaultValues = {
 export default function Page() {
   const [openModal, setOpenModal] = useState<string | boolean>(false)
   const [deleteConfirm, setDeleteConfirm] = useState<Flight | null>(null)
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const paginationDetails = useMemo(
+    () => ({
+      page: pagination.pageIndex === 0 ? 1 : pagination.pageIndex + 1,
+      page_size: pagination.pageSize,
+    }),
+    [pagination]
+  )
+
+  const { data: flightData, isLoading } = useFlightList(paginationDetails)
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
   const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
     useUpdateFlight()
-  const { data: flightData, isLoading } = useFlightList({
-    page: 1,
-    page_size: 10,
-  })
+
   const { data: aircraftTypeList } = useAircraftTypes()
   const { mutateAsync: deleteFlight } = useDeleteFlight()
 
@@ -116,33 +128,6 @@ export default function Page() {
     defaultValues: formDefaultValues,
     resolver: zodResolver(flightMasterFormSchema),
   })
-
-  const sectionedFormFields = [
-    {
-      label: "Booking Details",
-      value: "booking-details",
-      icon: <SquarePenIcon />,
-      content: <FlightMasterForm hookForm={sectionedHookForm} />,
-    },
-    {
-      label: "Consignment Details",
-      value: "consignment-details",
-      icon: <PlaneIcon />,
-      FormFields: [],
-    },
-    {
-      label: "Shipper Details",
-      value: "shipper-details",
-      icon: <UserIcon />,
-      formFields: [],
-    },
-    {
-      label: "Process Rates",
-      value: "process-rates",
-      icon: <PackageIcon />,
-      formFields: [],
-    },
-  ]
 
   const findDays = (data: string[], key: string): boolean => {
     return data.includes(key)
@@ -301,22 +286,48 @@ export default function Page() {
     setDeleteConfirm(data)
   }
 
+  const tableState = useCallback(async ({ pagination }: any) => {
+    console.log(pagination)
+    setPagination(pagination)
+  }, [])
+
   return (
     <>
       <PageContainer className="gap-6">
-        <DataTable
-          columns={columns(openDetailFlight, onShowDelete)}
-          data={flightData ? flightData.data : []}
-          onRowClick={openDetailFlight}
-          extraToolbarButtons={[
-            {
-              label: "Create New Flight",
-              icon: Plus,
-              variant: "button-primary",
-              onClick: () => setOpenModal(true),
-            },
-          ]}
-        />
+        <PageHeader title="Flight Master" />
+        <Tabs defaultValue="list-view" className="w-full">
+          <TabsList>
+            <TabsTrigger value="list-view">List View</TabsTrigger>
+            <TabsTrigger value="calendar-view">Calendar View</TabsTrigger>
+            <TabsTrigger value="create-recurring-flight">
+              Create Recurring Flight
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="list-view">
+            <div className="mt-4">
+              <DataTable
+                columns={columns(openDetailFlight, onShowDelete)}
+                data={isLoading ? [] : (flightData && flightData.data) || []}
+                onRowClick={openDetailFlight}
+                extraToolbarButtons={[
+                  {
+                    label: "Create New Flight",
+                    icon: Plus,
+                    variant: "button-primary",
+                    onClick: () => setOpenModal(true),
+                  },
+                ]}
+                pageCount={
+                  isLoading ? 1 : (flightData && flightData.total_pages) || 1
+                }
+                manualPagination={true}
+                tableState={tableState}
+              />
+            </div>
+          </TabsContent>
+          <TabsContent value="calendar-view"></TabsContent>
+          <TabsContent value="create-recurring-flight"></TabsContent>
+        </Tabs>
       </PageContainer>
 
       <CreateEditModal
@@ -338,41 +349,23 @@ export default function Page() {
             setOpenModal(false)
           }
         }}
-        tabItems={sectionedFormFields}
-        rightComponent={
-          // This is a dummy component, will replace once there is a use for this
-          <>
-            <div className="space-y-4">
-              <OrderSummaryCard
-                bookingType="37ce1cdf-cd24-4a6a-895e-5e513b175ce6"
-                partnerPrefix="d3139164-9222-4a76-b1fe-c076314d5542"
-                axb="112233"
-                origin="9bb940c1-0bc2-417a-a975-6811d5c0b7ea"
-                destination="5de641cd-f699-4fcd-9efc-ea9f6db039a2"
-                commodityCode="5ec17d70-3da8-4c32-ac15-8b2eaeae162f"
-              />
-              <DimensionsCard />
-              <BalanceCard />
-            </div>
-            <div className="space-y-4">
-              <Button
-                type="button"
-                variant={"button-secondary"}
-                className="w-full"
-              >
-                <ScrollTextIcon className="mr-2 h-4 w-4" />
-                View Invoice
-              </Button>
+        tabItems={[]}
+        content={
+          <Card className="mt-4 pt-4">
+            <CardContent>
+              <FlightMasterForm hookForm={sectionedHookForm} />
+            </CardContent>
+            <CardFooter className="flex flex-col items-end">
               <Button
                 isLoading={isPending}
                 variant={"button-primary"}
-                className="w-full"
+                className="w-40"
                 type="submit"
               >
-                Save Reservation
+                Save Flight
               </Button>
-            </div>
-          </>
+            </CardFooter>
+          </Card>
         }
       />
 

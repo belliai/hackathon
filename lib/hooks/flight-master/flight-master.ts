@@ -14,7 +14,7 @@ export const fetchFlightList = async (params: PaginationParams) => {
 
 export const useFlightList = (params: PaginationParams) => {
   return useQuery({
-    queryKey: [route],
+    queryKey: [route, params],
     queryFn: async () => await fetchFlightList(params),
   })
 }
