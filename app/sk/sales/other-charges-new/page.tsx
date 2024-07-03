@@ -3,7 +3,7 @@
 import { Order, columns } from "@/components/dashboard/columns";
 import { getData } from "@/lib/data";
 import PageContainer from "@/components/layout/PageContainer";
-import OtherChargesNew from "@/components/sales/rate-line-new";
+import OtherChargesNew from "@/components/sales/other-charges-new";
 
 export default function OtherChargesnew() {
 

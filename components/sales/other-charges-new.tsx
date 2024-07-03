@@ -22,541 +22,345 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-
 export default function OtherChargesNew() {
-
     return (
         <div>
-        <div className="other-charges-form">
-            <Select>
-            <SelectTrigger>
-                <SelectValue placeholder="Rate Card Name" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                <SelectItem value="IATA">IATA</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-            </Select>
-            <Select>
-            <SelectTrigger>
-                <SelectValue placeholder="Origin" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                <SelectItem value="airport">Airport</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-            </Select>
-            <Select>
-            <SelectTrigger>
-                <SelectValue placeholder="Destination" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                <SelectItem value="airport">Airport</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-            </Select>
-            <Select>
-            <SelectTrigger>
-                <SelectValue placeholder="Rating Basis" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                <SelectItem value="weightBr">Weight Br</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-            </Select>
-            
-            <Input placeholder="Contr Ref" />
-            <Input placeholder="Agent Comm %" />
-            <Input placeholder="Max Discount %" />
-            <label>Heavy Applicable</label>
-            <Checkbox/>
-            <label>All-In Rate</label>
-            <Checkbox/>
-            <label>Is Prime</label>
-            <Checkbox/>
-            <label>TACT Rate</label>
-            <Checkbox/>
-            <Button>Save</Button>
-        </div>
-        <Table>
-            <TableHeader>
-            <TableRow>
-                <TableHead></TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Weight</TableHead>
-                <TableHead>Charge/Rate</TableHead>
-                <TableHead>Cost</TableHead>
-            </TableRow>
-            </TableHeader>
-            <TableBody>
-            <TableRow>
-                <TableCell><Checkbox/></TableCell>
-                <TableCell>
+            <div className="other-charges-form grid grid-cols-4 gap-4">
+                <div>
+                    <label>Charge</label>
                     <Select>
                         <SelectTrigger>
-                            <SelectValue placeholder="" />
+                            <SelectValue placeholder="Normal" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                            <SelectItem value="M">M</SelectItem>
-                            <SelectItem value="N">N</SelectItem>
-                            <SelectItem value="Q">Q</SelectItem>
-                            <SelectItem value="F">F</SelectItem>
+                                <SelectItem value="normal">Normal</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                </TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell>
+                </div>
+                <div>
+                    <label>Start Date</label>
+                    <DatePicker />
+                </div>
+                <div>
+                    <label>End Date</label>
+                    <DatePicker />
+                </div>
+                <div>
+                    <label>Currency</label>
                     <Select>
                         <SelectTrigger>
-                            <SelectValue placeholder="" />
+                            <SelectValue placeholder="MYR-Malaysia" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
+                                <SelectItem value="MYR-Malaysia">MYR-Malaysia</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                </TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell><Checkbox/></TableCell>
-                <TableCell>
+                </div>
+                <div>
+                    <label>Level</label>
                     <Select>
                         <SelectTrigger>
-                            <SelectValue placeholder="" />
+                            <SelectValue placeholder="Airport" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                            <SelectItem value="M">M</SelectItem>
-                            <SelectItem value="N">N</SelectItem>
-                            <SelectItem value="Q">Q</SelectItem>
-                            <SelectItem value="F">F</SelectItem>
+                                <SelectItem value="airport">Airport</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                </TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell>
+                </div>
+                <div>
+                    <label>Location</label>
+                    <Input placeholder="Location" />
+                </div>
+                <div>
+                    <label>Payment Type</label>
                     <Select>
                         <SelectTrigger>
-                            <SelectValue placeholder="" />
+                            <SelectValue placeholder="ALL" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                            <SelectItem value="select">Select</SelectItem>
+                                <SelectItem value="ALL">ALL</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                </TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell><Checkbox/></TableCell>
-                <TableCell>
+                </div>
+                <div>
+                    <label>Charge Type</label>
                     <Select>
                         <SelectTrigger>
-                            <SelectValue placeholder="" />
+                            <SelectValue placeholder="Due Carrier" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                            <SelectItem value="M">M</SelectItem>
-                            <SelectItem value="N">N</SelectItem>
-                            <SelectItem value="Q">Q</SelectItem>
-                            <SelectItem value="F">F</SelectItem>
+                                <SelectItem value="Due Carrier">Due Carrier</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                </TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell>
+                </div>
+                <div>
+                    <label>Due Carrier</label>
+                    <Input placeholder="Due Carrier" />
+                </div>
+                <div>
+                    <label>Origin Level</label>
                     <Select>
                         <SelectTrigger>
-                            <SelectValue placeholder="" />
+                            <SelectValue placeholder="Airport" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                            <SelectItem value="select">Select</SelectItem>
+                                <SelectItem value="airport">Airport</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                </TableCell>
-            </TableRow>
-            </TableBody>
-        </Table>
-        <div>
-            <Button>Add</Button>
-            <Button>Delete</Button>
-        </div>
-        <Table>
-            <TableHeader>
-            <TableRow>
-                <TableHead>ULDType</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Weight</TableHead>
-                <TableHead>Charge/Rate</TableHead>
-                <TableHead>Cost</TableHead>
-            </TableRow>
-            </TableHeader>
-            <TableBody>
-            <TableRow>
-                <TableCell><Checkbox/></TableCell>
-                <TableCell><Select><SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger></Select></TableCell>
-                <TableCell><Select><SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger></Select></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-                <TableCell><Input placeholder="0" /></TableCell>
-            </TableRow>
-            </TableBody>
-        </Table>
-        <div>
-            <Button>Add</Button>
-            <Button>Delete</Button>
-        </div>
-        <ParameterForm/>
-        <div>
-            <Textarea placeholder="Type your remarks here." />
-        </div>
-        <div>
-            <Button>Add Another</Button>
-            <Button>Save</Button>
-            <Button>Cancel</Button>
-            <Button variant="secondary">Impact Analysis</Button>
-        </div>
-        </div>
-    );
-};
-
-export function ParameterForm() {
-    return (
-        <div>
+                </div>
+                <div>
+                    <label>Origin</label>
+                    <Input placeholder="Origin" />
+                </div>
+                <div>
+                    <label>Destination Level</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Airport" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="airport">Airport</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>Destination</label>
+                    <Input placeholder="Destination" />
+                </div>
+                <div>
+                    <label>UOM</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="ALL" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="ALL">ALL</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>Status</label>
+                    <Checkbox/>
+                </div>
+                <div>
+                    <label>Misc. Charges</label>
+                    <Checkbox />
+                </div>
+                <div>
+                    <label>GL Account Code</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="select">Select</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>Circuitry Type</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="ALL" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="ALL">ALL</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>Part of</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="ALL" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="ALL">ALL</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>Manual Edit</label>
+                    <Checkbox />
+                </div>
+                <div>
+                    <label>Charge Head Basis</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Flat Charge" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="Flat Charge">Flat Charge</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>Minimum</label>
+                    <Input placeholder="0" />
+                </div>
+                <div>
+                    <label>Charge</label>
+                    <Input placeholder="0" />
+                </div>
+                <div>
+                    <label>Maximum</label>
+                    <Input placeholder="0" />
+                </div>
+                <div>
+                    <label>Applied On</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Freight" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="Freight">Freight</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>BaseRate</label>
+                    <Input placeholder="0" />
+                </div>
+                <div>
+                    <label>Charged At</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="At Departure" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="At Departure">At Departure</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label>Via Station</label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="select">Select</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
             <Table>
-                <TableHeader>Paramter</TableHeader>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>ULDType</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Weight</TableHead>
+                        <TableHead>Charge/Rate</TableHead>
+                    </TableRow>
+                </TableHeader>
                 <TableBody>
-                <TableRow>
-                    <TableCell><label>Flight Carrier</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Issuing Carrier</label></TableCell>
-                    <TableCell><Input placeholder="AK" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Proration %</label></TableCell>
-                    <TableCell><Input placeholder="AK" /></TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>SPA Markup%</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Flight Number</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Days of the Week</label></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="mon">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="mon" id="r1" />
-                                <Label htmlFor="r1">Mon</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="tue" id="r2" />
-                                <Label htmlFor="r2">Tue</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="wed" id="r2" />
-                                <Label htmlFor="r2">Wed</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="thu" id="r2" />
-                                <Label htmlFor="r2">Thu</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="fri" id="r2" />
-                                <Label htmlFor="r2">Fri</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="sat" id="r2" />
-                                <Label htmlFor="r2">Sat</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="Sun" id="r2" />
-                                <Label htmlFor="r2">Sun</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Dep Interval</label></TableCell>
-                    <TableCell>
-                        <label>From</label>
-                        <Input placeholder="" />
-                        <label>To</label>
-                        <Input placeholder="" />
-                    </TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Transit Station</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Shipping Agent Code</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Shipper Code</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>IATA Comm.Code</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Product Type</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>SPL Handling Code</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Equipment Type</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Billing Agent Code</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Service Taker</label></TableCell>
-                    <TableCell><Input placeholder="" /></TableCell>
-                    <TableCell>
-                        <RadioGroup>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell><label>Flight Type</label></TableCell>
-                    <TableCell><Input/></TableCell>
-                    <TableCell>
-                        <RadioGroup className="" defaultValue="exclude">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="exclude" id="r1" />
-                                <Label htmlFor="r1">Exclude</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="include" id="r2" />
-                                <Label htmlFor="r2">Include</Label>
-                            </div>
-                        </RadioGroup>
-                    </TableCell>
-                </TableRow>
+                    <TableRow>
+                        <TableCell><Checkbox /></TableCell>
+                        <TableCell>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="M">M</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </TableCell>
+                        <TableCell><Input placeholder="0" /></TableCell>
+                        <TableCell><Input placeholder="0" /></TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell><Checkbox /></TableCell>
+                        <TableCell>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="M">M</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </TableCell>
+                        <TableCell><Input placeholder="0" /></TableCell>
+                        <TableCell><Input placeholder="0" /></TableCell>
+                    </TableRow>
                 </TableBody>
             </Table>
+            <div className="buttons flex space-x-2 mt-4">
+                <Button>Add</Button>
+                <Button>Delete</Button>
+            </div>
+            <div>
+                <Textarea placeholder="Type your remarks here." />
+            </div>
+            <div className="buttons flex space-x-2 mt-4">
+                <Button>Add Another</Button>
+                <Button>Save</Button>
+                <Button>Cancel</Button>
+            </div>
         </div>
-    )
-}
-export function DatePicker() {
-    const [date, setDate] = React.useState<Date>()
- 
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-  )
+    );
 }
 
+export function DatePicker() {
+    const [date, setDate] = React.useState<Date>()
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                    )}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                />
+            </PopoverContent>
+        </Popover>
+    )
+}

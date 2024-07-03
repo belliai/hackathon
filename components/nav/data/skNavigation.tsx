@@ -84,8 +84,8 @@ export const skNavigation: TSidebarItem[] = [
             icon: ReceiptPercentIcon,
             current: false,
             children: [
-              { name: "List", href: "#", current: false },
-              { name: "New", href: "#", current: false },
+              { name: "List", href: "/sk/sales/other-charges-list", current: false },
+              { name: "New", href: "/sk/sales/other-charges-new", current: false },
             ],
           },
           {
