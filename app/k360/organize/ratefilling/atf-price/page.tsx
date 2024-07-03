@@ -1,16 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import StatusBadge from "../../masters/components/StatusBadge";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../masters/components/dummySelectOptions";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
+import StatusBadge from "../../masters/components/StatusBadge"
 
 export default function MasterAtfPricePage() {
   const columns: ColumnDef<any>[] = [
@@ -50,7 +49,7 @@ export default function MasterAtfPricePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -71,7 +70,7 @@ export default function MasterAtfPricePage() {
       createdAt: "2021-01-01",
       updatedAt: "2021-01-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -108,10 +107,10 @@ export default function MasterAtfPricePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -124,5 +123,5 @@ export default function MasterAtfPricePage() {
       formFields={filterFormFields}
       hookForm={form}
     />
-  );
+  )
 }

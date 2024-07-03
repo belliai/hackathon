@@ -1,34 +1,34 @@
-"use client";
-import { Fragment, Suspense, useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import { CollaborativeApp } from "@/app/CollaborativeApp";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
-import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import SideBar from "@/components/nav/sidebar";
+"use client"
+
+import { Fragment, Suspense, useEffect, useState } from "react"
+import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { Dialog, Menu, Transition } from "@headlessui/react"
+import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid"
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline"
+
+import { fetchTooltips } from "@/lib/contentful"
+import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import SideBar from "@/components/nav/sidebar"
+import { CollaborativeApp } from "@/app/CollaborativeApp"
+
+import { Room } from "../liveblocks/room"
+import BreadCrumbSection from "../nav/breadcrumb-section"
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "./resizable";
-import BreadCrumbSection from "../nav/breadcrumb-section";
-import { Room } from "../liveblocks/room";
-import { usePathname } from "next/navigation";
-import { fetchTooltips } from "@/lib/contentful";
+} from "./resizable"
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
   { name: "Sign out", href: "#" },
-];
+]
 
 export default function UIWrapper({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     fetchTooltips()
@@ -99,20 +99,20 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
           <ResizablePanel
             defaultSize={20}
             minSize={12}
-            className="hidden sm:grid overflow-y-auto custom-scrollbar min-h-[100dvh] h-1"
+            className="custom-scrollbar hidden h-1 min-h-[100dvh] overflow-y-auto sm:grid"
           >
             <SideBar />
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={80} minSize={33}>
-            <main className="relative overflow-y-auto custom-scrollbar w-full min-h-[100dvh] h-1">
+            <main className="custom-scrollbar relative h-1 min-h-[100dvh] w-full overflow-y-auto">
               <BreadCrumbSection />
-              <div className="px-4 py-4 ">{children}</div>
+              <div className="px-4 py-4">{children}</div>
             </main>
           </ResizablePanel>
         </ResizablePanelGroup>
         {/* Static sidebar for desktop */}
       </div>
     </Suspense>
-  );
+  )
 }

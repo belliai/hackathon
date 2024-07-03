@@ -1,12 +1,13 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
 
 export default function VolExemptionNew() {
-  const form = useForm();
+  const form = useForm()
 
   const formFields: TFormTextField[] = [
     {
@@ -32,7 +33,7 @@ export default function VolExemptionNew() {
       label: "Active",
       type: "checkbox",
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -45,5 +46,5 @@ export default function VolExemptionNew() {
         </Button>
       }
     />
-  );
+  )
 }

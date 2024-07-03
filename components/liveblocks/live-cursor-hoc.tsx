@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { useMyPresence, useOthers } from "@liveblocks/react/suspense";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react"
+import { useMyPresence, useOthers } from "@liveblocks/react/suspense"
 
 const COLORS = [
   "#E57373",
@@ -12,7 +12,7 @@ const COLORS = [
   "#FF8A65",
   "#F06292",
   "#7986CB",
-];
+]
 
 export default function LiveCursorHoc({ children }: PropsWithChildren) {
   /**
@@ -21,15 +21,15 @@ export default function LiveCursorHoc({ children }: PropsWithChildren) {
    * You don't need to pass the full presence object to update it.
    * See https://liveblocks.io/docs/api-reference/liveblocks-react#useMyPresence for more information
    */
-  const [{ cursor }, updateMyPresence] = useMyPresence();
+  const [{ cursor }, updateMyPresence] = useMyPresence()
 
   /**
    * Return all the other users in the room and their presence (a cursor position in this case)
    */
-  const others = useOthers();
+  const others = useOthers()
 
   useEffect(() => {
-    const mainElement = document.getElementById("main");
+    const mainElement = document.getElementById("main")
 
     const moveCursor = (event: PointerEvent) => {
       updateMyPresence({
@@ -37,37 +37,37 @@ export default function LiveCursorHoc({ children }: PropsWithChildren) {
           x: Math.round(event.clientX),
           y: Math.round(event.clientY),
         },
-      });
-    };
+      })
+    }
 
     const removeCursor = () => {
       updateMyPresence({
         cursor: null,
-      });
-    };
+      })
+    }
 
     if (mainElement) {
-      mainElement.addEventListener("pointermove", moveCursor);
-      mainElement.addEventListener("pointerleave", removeCursor);
+      mainElement.addEventListener("pointermove", moveCursor)
+      mainElement.addEventListener("pointerleave", removeCursor)
     }
 
     return () => {
-      mainElement?.removeEventListener("pointermove", moveCursor);
-      mainElement?.removeEventListener("pointerleave", removeCursor);
-    };
-  }, []);
+      mainElement?.removeEventListener("pointermove", moveCursor)
+      mainElement?.removeEventListener("pointerleave", removeCursor)
+    }
+  }, [])
 
   return (
     <>
       {children}
-      <div className="fixed w-screen h-screen inset-0 pointer-events-none">
+      <div className="pointer-events-none fixed inset-0 h-screen w-screen">
         {
           /**
            * Iterate over other users and display a cursor based on their presence
            */
           others.map(({ connectionId, presence, info }) => {
             if (presence.cursor === null) {
-              return null;
+              return null
             }
 
             return (
@@ -79,22 +79,22 @@ export default function LiveCursorHoc({ children }: PropsWithChildren) {
                 x={presence.cursor.x}
                 y={presence.cursor.y}
               />
-            );
+            )
           })
         }
       </div>
     </>
-  );
+  )
 }
 
 type CursorProps = {
-  color: string;
-  x?: number;
-  y?: number;
-};
+  color: string
+  x?: number
+  y?: number
+}
 
 function Cursor({ color, x, y }: CursorProps) {
-  if (!x || !y) return null;
+  if (!x || !y) return null
   return (
     <svg
       style={{
@@ -114,5 +114,5 @@ function Cursor({ color, x, y }: CursorProps) {
         fill={color}
       />
     </svg>
-  );
+  )
 }

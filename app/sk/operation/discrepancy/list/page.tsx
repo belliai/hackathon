@@ -1,10 +1,11 @@
-import FilterSection from "@/components/operation/Discrepancy/List/FilterSection";
-import { DataTable } from "@components/data-table/data-table";
-import { columns } from "@/components/operation/Discrepancy/List/columns";
-import { getData } from "@/lib/operation/Discrepancy/List/data";
+import { DataTable } from "@components/data-table/data-table"
+
+import { getData } from "@/lib/operation/Discrepancy/List/data"
+import { columns } from "@/components/operation/Discrepancy/List/columns"
+import FilterSection from "@/components/operation/Discrepancy/List/FilterSection"
 
 export default async function List() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +15,6 @@ export default async function List() {
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

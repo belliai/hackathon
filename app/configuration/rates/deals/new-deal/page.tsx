@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
-import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function NewDealPage() {
   const excludeIncludeOptions = [
@@ -16,7 +17,7 @@ export default function NewDealPage() {
       label: "Include",
       value: "include",
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -506,9 +507,9 @@ export default function NewDealPage() {
         },
       ],
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -517,12 +518,12 @@ export default function NewDealPage() {
       hookForm={form}
       className="max-h-none"
       customDialogContent={
-        <div className="flex gap-2 mt-4">
+        <div className="mt-4 flex gap-2">
           <Button variant="button-primary">Save</Button>
           <Button variant="button-primary">Clear</Button>
           <Button variant="button-primary">Add Another</Button>
         </div>
       }
     />
-  );
+  )
 }

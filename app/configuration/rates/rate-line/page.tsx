@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useFieldArray, useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DataTable } from "@/components/data-table/data-table";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function MasterRateLinePage() {
   const columns: ColumnDef<any>[] = [
@@ -66,7 +67,7 @@ export default function MasterRateLinePage() {
       header: "Status",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -209,7 +210,7 @@ export default function MasterRateLinePage() {
       type: "Air",
       status: "Inactive",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -357,9 +358,9 @@ export default function MasterRateLinePage() {
       type: "checkbox",
       label: "Is Prime",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -369,7 +370,7 @@ export default function MasterRateLinePage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -377,5 +378,5 @@ export default function MasterRateLinePage() {
         </div>
       }
     />
-  );
+  )
 }

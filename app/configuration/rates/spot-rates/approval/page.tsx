@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/k360/organize/masters/components/dummySelectOptions";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
-import { DataTable } from "@/components/data-table/data-table";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterSpotRateApprovalPage() {
   const columns: ColumnDef<any>[] = [
@@ -109,7 +110,7 @@ export default function MasterSpotRateApprovalPage() {
       header: "Info",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -162,7 +163,7 @@ export default function MasterSpotRateApprovalPage() {
       createdAt: "2021-09-02",
       updatedAt: "2021-09-02",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -235,9 +236,9 @@ export default function MasterSpotRateApprovalPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -246,7 +247,7 @@ export default function MasterSpotRateApprovalPage() {
       formFields={filterFormFields}
       className="max-h-none"
       customDialogContent={
-        <div className="flex flex-col gap-4 mt-4">
+        <div className="mt-4 flex flex-col gap-4">
           <div className="max-w-96">
             <FilterActions />
           </div>
@@ -256,5 +257,5 @@ export default function MasterSpotRateApprovalPage() {
         </div>
       }
     />
-  );
+  )
 }

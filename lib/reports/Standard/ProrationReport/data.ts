@@ -1,4 +1,4 @@
-import { ProrationReportType } from "@/components/reports/Standard/ProrationReport/columns";
+import { ProrationReportType } from "@/components/reports/Standard/ProrationReport/columns"
 
 export const DUMMY_DATA: ProrationReportType[] = [
   {
@@ -171,8 +171,8 @@ export const DUMMY_DATA: ProrationReportType[] = [
     proration_factor: "0.357",
     updated_on: "2024-06-29",
   },
-];
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

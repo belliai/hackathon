@@ -1,11 +1,13 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterPartnerPage() {
   const columns: ColumnDef<any>[] = [
@@ -59,7 +61,7 @@ export default function MasterPartnerPage() {
       header: "Reg",
     },
     actionColumn,
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -83,7 +85,7 @@ export default function MasterPartnerPage() {
       placeholder: "Partner Code",
       type: "text",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -273,10 +275,10 @@ export default function MasterPartnerPage() {
       placeholder: "Email ID",
       type: "email",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const partnerForm = useForm();
+  const filterForm = useForm()
+  const partnerForm = useForm()
 
   const data = [
     {
@@ -349,7 +351,7 @@ export default function MasterPartnerPage() {
       settlementMethod: "IATA Clearing House",
       reg: "Active",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -362,5 +364,5 @@ export default function MasterPartnerPage() {
       filterHookForm={filterForm}
       hookForm={partnerForm}
     />
-  );
+  )
 }

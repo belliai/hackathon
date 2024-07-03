@@ -1,20 +1,22 @@
-"use client";
+"use client"
 
-import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation"
+import { ChevronRight } from "lucide-react"
+
+import { findActiveItem } from "@/lib/utils/nav-utils"
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../ui/accordion";
-import SidebarItem, { TSidebarItem } from "./SidebarItem";
-import { ChevronRight } from "lucide-react";
-import { findActiveItem } from "@/lib/utils/nav-utils";
+} from "../ui/accordion"
+import SidebarItem, { TSidebarItem } from "./SidebarItem"
 
 interface SidebarMenuProps {
-  items: TSidebarItem[];
-  collapsible?: boolean;
-  sectionTitle?: string;
+  items: TSidebarItem[]
+  collapsible?: boolean
+  sectionTitle?: string
 }
 
 export default function SidebarMenu({
@@ -22,18 +24,18 @@ export default function SidebarMenu({
   collapsible,
   sectionTitle,
 }: SidebarMenuProps) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
-  const activeItem = findActiveItem(items, pathname);
+  const activeItem = findActiveItem(items, pathname)
 
   if (items.length === 0) {
     return (
-      <div className="py-8 px-8">
-        <p className="text-center text-zinc-500 text-xs">
+      <div className="px-8 py-8">
+        <p className="text-center text-xs text-zinc-500">
           No navigation items found. Please check your configuration.
         </p>
       </div>
-    );
+    )
   }
 
   const menu = (
@@ -52,10 +54,10 @@ export default function SidebarMenu({
               (activeItem?.parent?.name ?? activeItem?.item.name) === item.name
             }
           />
-        );
+        )
       })}
     </Accordion>
-  );
+  )
 
   if (collapsible && sectionTitle) {
     return (
@@ -63,9 +65,9 @@ export default function SidebarMenu({
         <AccordionItem className="border-b-0" value={sectionTitle}>
           <AccordionTrigger
             customarrow={
-              <ChevronRight className="h-3 w-3 shrink-0 transition-transform duration-200 text-muted-foreground" />
+              <ChevronRight className="h-3 w-3 shrink-0 text-muted-foreground transition-transform duration-200" />
             }
-            className="border-b-0 py-2 px-[5px] text-xs text-muted-foreground hover:no-underline justify-start gap-2 [&[data-state=open]>svg]:rotate-90 "
+            className="justify-start gap-2 border-b-0 px-[5px] py-2 text-xs text-muted-foreground hover:no-underline [&[data-state=open]>svg]:rotate-90"
           >
             <div className="inline-flex items-center gap-2">
               <span>{sectionTitle}</span>
@@ -74,8 +76,8 @@ export default function SidebarMenu({
           <AccordionContent className="pb-0">{menu}</AccordionContent>
         </AccordionItem>
       </Accordion>
-    );
+    )
   }
 
-  return menu;
+  return menu
 }

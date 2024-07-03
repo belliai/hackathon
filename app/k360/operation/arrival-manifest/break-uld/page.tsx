@@ -1,7 +1,7 @@
-import FilterSection from "@/components/operation/ArrivalManifest/BreakUld/FilterSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AwbSection from "@/components/operation/ArrivalManifest/BreakUld/AwbSection";
-import UldSection from "@/components/operation/ArrivalManifest/BreakUld/UldSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import AwbSection from "@/components/operation/ArrivalManifest/BreakUld/AwbSection"
+import FilterSection from "@/components/operation/ArrivalManifest/BreakUld/FilterSection"
+import UldSection from "@/components/operation/ArrivalManifest/BreakUld/UldSection"
 
 export default async function BreakUld() {
   return (
@@ -24,5 +24,5 @@ export default async function BreakUld() {
         </div>
       </div>
     </div>
-  );
+  )
 }

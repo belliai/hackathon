@@ -1,5 +1,19 @@
-"use client";
-import React, { SetStateAction, Dispatch, useEffect } from "react";
+"use client"
+
+import React, { Dispatch, SetStateAction, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import {
+  ClerkLoading,
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  useAuth,
+  useOrganization,
+  useOrganizationList,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs"
+import { Check, ChevronDownIcon, User } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -11,67 +25,55 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Check, ChevronDownIcon, User } from "lucide-react";
-import { useRouter } from "next/navigation";
-import {
-  ClerkLoading,
-  SignOutButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-  useAuth,
-  useOrganization,
-  useOrganizationList,
-  useUser,
-} from "@clerk/nextjs";
-import { Skeleton } from "../ui/skeleton";
+} from "@/components/ui/dropdown-menu"
+
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { Skeleton } from "../ui/skeleton"
 
 export type UserDropdownItem = {
-  icon?: React.ReactNode;
-  shortcut?: string;
-  route: string;
-  label: string;
-  separator?: boolean;
-  changeNavigation?: boolean;
-};
+  icon?: React.ReactNode
+  shortcut?: string
+  route: string
+  label: string
+  separator?: boolean
+  changeNavigation?: boolean
+}
 
 interface UserDropdownProps {
-  doChangeNavigation: Dispatch<SetStateAction<number>>;
+  doChangeNavigation: Dispatch<SetStateAction<number>>
 }
 
 export default function UserDropdown({
   doChangeNavigation = () => {},
 }: UserDropdownProps) {
-  const router = useRouter();
+  const router = useRouter()
 
-  const auth = useAuth();
-  const userSession = useUser();
+  const auth = useAuth()
+  const userSession = useUser()
 
-  const hasActiveOrg = !!auth.orgId;
+  const hasActiveOrg = !!auth.orgId
 
   const { isLoaded, setActive, userMemberships } = useOrganizationList({
     userMemberships: {
       infinite: true,
     },
-  });
+  })
 
-  const org = useOrganization();
+  const org = useOrganization()
 
   useEffect(() => {
     // Force active org if none is selected
     if (!hasActiveOrg && isLoaded) {
-      const orgs = userMemberships.data;
+      const orgs = userMemberships.data
 
       // Set first org as default
-      const firstOrg = orgs[0];
+      const firstOrg = orgs[0]
 
       setActive({
         organization: firstOrg?.organization.id,
-      });
+      })
     }
-  }, [hasActiveOrg, isLoaded, userMemberships.data]);
+  }, [hasActiveOrg, isLoaded, userMemberships.data])
 
   const ITEMS: UserDropdownItem[] = [
     {
@@ -86,16 +88,16 @@ export default function UserDropdown({
       label: "Settings",
       changeNavigation: true,
     },
-  ];
+  ]
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center gap-x-2 cursor-pointer">
+          <div className="flex cursor-pointer items-center gap-x-2">
             <ClerkLoading>
-              <Skeleton className="rounded-md w-6 h-6" />
-              <Skeleton className="rounded-md w-12 h-2" />
+              <Skeleton className="h-6 w-6 rounded-md" />
+              <Skeleton className="h-2 w-12 rounded-md" />
             </ClerkLoading>
             <SignedIn>
               <UserButton
@@ -118,9 +120,9 @@ export default function UserDropdown({
               />
             </SignedIn>
             <SignedOut>
-              <Avatar className="rounded-md w-6 h-6">
+              <Avatar className="h-6 w-6 rounded-md">
                 <AvatarImage src="/jeff.webp" />
-                <AvatarFallback className="rounded-md w-6 h-6">
+                <AvatarFallback className="h-6 w-6 rounded-md">
                   B
                 </AvatarFallback>
               </Avatar>
@@ -133,7 +135,7 @@ export default function UserDropdown({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="bg-zinc-950 rounded-xl"
+          className="rounded-xl bg-zinc-950"
           align="start"
           sideOffset={8}
         >
@@ -143,20 +145,20 @@ export default function UserDropdown({
             // Only show when the user is a member of more than one org
             userMemberships.data.length > 1 && (
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="px-3.5 py-2 min-w-40 rounded-lg cursor-pointer">
+                <DropdownMenuSubTrigger className="min-w-40 cursor-pointer rounded-lg px-3.5 py-2">
                   Change Organization
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
                   {userMemberships.data.map((orgmem) => {
-                    const organization = orgmem.organization;
-                    const isActive = organization.id === auth.orgId;
+                    const organization = orgmem.organization
+                    const isActive = organization.id === auth.orgId
 
                     return (
                       <DropdownMenuItem disabled={isActive} key={orgmem.id}>
                         {organization.name}{" "}
                         {isActive && <Check size={14} className="ml-1" />}
                       </DropdownMenuItem>
-                    );
+                    )
                   })}
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
@@ -166,10 +168,10 @@ export default function UserDropdown({
             return (
               <React.Fragment key={index}>
                 <DropdownMenuItem
-                  className="px-3.5 py-2 min-w-40 rounded-lg cursor-pointer"
+                  className="min-w-40 cursor-pointer rounded-lg px-3.5 py-2"
                   onClick={() => {
-                    if (item.changeNavigation) doChangeNavigation(2);
-                    router.push(item.route);
+                    if (item.changeNavigation) doChangeNavigation(2)
+                    router.push(item.route)
                   }}
                 >
                   {/* {item.icon} */}
@@ -180,11 +182,11 @@ export default function UserDropdown({
                 </DropdownMenuItem>
                 {item.separator && <DropdownMenuSeparator />}
               </React.Fragment>
-            );
+            )
           })}
           <SignedIn>
             <SignOutButton>
-              <DropdownMenuItem className="px-3.5 py-2 min-w-40 rounded-lg cursor-pointer">
+              <DropdownMenuItem className="min-w-40 cursor-pointer rounded-lg px-3.5 py-2">
                 Logout
               </DropdownMenuItem>
             </SignOutButton>
@@ -192,5 +194,5 @@ export default function UserDropdown({
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
+  )
 }

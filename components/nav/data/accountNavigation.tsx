@@ -1,4 +1,4 @@
-import { TSidebarItem } from "@/components/nav/SidebarItem";
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const accountNavigation: TSidebarItem[] = [
   {
@@ -20,4 +20,4 @@ export const accountNavigation: TSidebarItem[] = [
     href: "/setting/notifications",
     current: false,
   },
-];
+]

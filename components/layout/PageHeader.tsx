@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 interface PageHeaderProps {
-  title: string;
-  actions?: React.ReactNode | React.ReactNode[];
-  className?: string;
+  title: string
+  actions?: React.ReactNode | React.ReactNode[]
+  className?: string
 }
 
 export default function PageHeader({
@@ -11,7 +11,5 @@ export default function PageHeader({
   actions,
   className,
 }: PageHeaderProps) {
-  return (
-    <div className="flex gap-2 items-center">{actions}</div>
-  );
+  return <div className="flex items-center gap-2">{actions}</div>
 }

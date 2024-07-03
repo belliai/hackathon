@@ -1,27 +1,29 @@
+import { forwardRef, type ReactNode } from "react"
 import {
   Content,
-  type DropdownMenuContentProps,
-  type DropdownMenuItemProps,
-  type DropdownMenuProps,
-  type DropdownMenuSeparatorProps,
   Item,
   Portal,
   Root,
   Separator,
   Trigger,
-} from "@radix-ui/react-dropdown-menu";
-import { cn } from "@/lib/utils";
-import { type ReactNode, forwardRef } from "react";
-import styles from "./DropdownMenu.module.css";
+  type DropdownMenuContentProps,
+  type DropdownMenuItemProps,
+  type DropdownMenuProps,
+  type DropdownMenuSeparatorProps,
+} from "@radix-ui/react-dropdown-menu"
+
+import { cn } from "@/lib/utils"
+
+import styles from "./DropdownMenu.module.css"
 
 export interface Props
   extends Omit<DropdownMenuProps & DropdownMenuContentProps, "content"> {
-  content: DropdownMenuContentProps["children"];
+  content: DropdownMenuContentProps["children"]
 }
 
 export interface ItemProps extends DropdownMenuItemProps {
-  icon?: ReactNode;
-  label: string;
+  icon?: ReactNode
+  label: string
 }
 
 export const DropdownMenu = forwardRef<HTMLDivElement, Props>(
@@ -58,10 +60,10 @@ export const DropdownMenu = forwardRef<HTMLDivElement, Props>(
           </Content>
         </Portal>
       </Root>
-    );
+    )
   }
-);
-DropdownMenu.displayName = "DropdownMenu";
+)
+DropdownMenu.displayName = "DropdownMenu"
 
 export const DropdownMenuItem = forwardRef<HTMLDivElement, ItemProps>(
   ({ label, icon, children, className, ...props }, ref) => {
@@ -76,10 +78,10 @@ export const DropdownMenuItem = forwardRef<HTMLDivElement, ItemProps>(
         {label}
         {children}
       </Item>
-    );
+    )
   }
-);
-DropdownMenuItem.displayName = "DropdownMenuItem";
+)
+DropdownMenuItem.displayName = "DropdownMenuItem"
 
 export const DropdownMenuSeparator = forwardRef<
   HTMLDivElement,
@@ -91,12 +93,12 @@ export const DropdownMenuSeparator = forwardRef<
       ref={ref}
       {...props}
     />
-  );
-});
-DropdownMenuSeparator.displayName = "DropdownMenuSeparator";
+  )
+})
+DropdownMenuSeparator.displayName = "DropdownMenuSeparator"
 
 export {
   Label as DropdownMenuLabel,
   Group as DropdownMenuGroup,
   Item as DropdownMenuCustomItem,
-} from "@radix-ui/react-dropdown-menu";
+} from "@radix-ui/react-dropdown-menu"

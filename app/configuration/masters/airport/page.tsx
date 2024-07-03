@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
-import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { Button } from "@/components/ui/button";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterAirportPage() {
   const columns: ColumnDef<any>[] = [
@@ -68,7 +69,7 @@ export default function MasterAirportPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -141,7 +142,7 @@ export default function MasterAirportPage() {
       updatedAt: "2023-08-20",
       action: "Edit",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -166,7 +167,7 @@ export default function MasterAirportPage() {
       type: "text",
       endIcon: <Search />,
     },
-  ];
+  ]
 
   const airportForm = useForm({
     defaultValues: {
@@ -180,11 +181,11 @@ export default function MasterAirportPage() {
         { day: "Sunday", from: "", to: "", closed: false },
       ],
     },
-  });
+  })
   const airportFieldArray = useFieldArray<any>({
     control: airportForm.control,
     name: "hoursOfOperation",
-  });
+  })
 
   return (
     <CreateFormPageTemplate
@@ -468,12 +469,12 @@ export default function MasterAirportPage() {
         },
       ]}
       customDialogContent={
-        <div className="flex gap-2 mt-12">
+        <div className="mt-12 flex gap-2">
           <Button variant="button-primary">Save</Button>
           <Button variant="button-primary">List</Button>
           <Button variant="button-primary">Clear</Button>
         </div>
       }
     />
-  );
+  )
 }

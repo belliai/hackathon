@@ -1,25 +1,26 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
 import {
   FormTextFieldProps,
   TFormTextField,
-} from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { DataTable } from "@/components/data-table/data-table";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/k360/organize/masters/components/dummySelectOptions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function MasterVendorPage() {
   const columns: ColumnDef<any>[] = [
@@ -101,7 +102,7 @@ export default function MasterVendorPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -146,7 +147,7 @@ export default function MasterVendorPage() {
       created_at: "2022-02-01",
       updated_at: "2022-02-02",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -190,9 +191,9 @@ export default function MasterVendorPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -201,7 +202,7 @@ export default function MasterVendorPage() {
       hookForm={filterForm}
       className="max-h-none"
       customDialogContent={
-        <div className="flex flex-col gap-4 mt-8">
+        <div className="mt-8 flex flex-col gap-4">
           <div className="flex max-w-96">
             <FilterActions />
           </div>
@@ -210,5 +211,5 @@ export default function MasterVendorPage() {
         </div>
       }
     />
-  );
+  )
 }

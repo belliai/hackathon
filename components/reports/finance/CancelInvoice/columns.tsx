@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type CancelInvoiceType = {
-  awb_number?: string;
-  agent_code?: string;
-  awb_date?: string;
-  invoice_number?: string;
-  invoice_date?: string;
-  invoice_amount?: string;
-  cancel_by?: string;
-  cancel_date?: string;
-};
+  awb_number?: string
+  agent_code?: string
+  awb_date?: string
+  invoice_number?: string
+  invoice_date?: string
+  invoice_amount?: string
+  cancel_by?: string
+  cancel_date?: string
+}
 
 export const columns: ColumnDef<CancelInvoiceType>[] = [
   {
@@ -46,4 +46,4 @@ export const columns: ColumnDef<CancelInvoiceType>[] = [
     accessorKey: "cancel_date",
     header: "Cancel Date",
   },
-];
+]

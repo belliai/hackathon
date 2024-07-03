@@ -15,6 +15,6 @@ const nextConfig = {
     ],
     dangerouslyAllowSVG: true,
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

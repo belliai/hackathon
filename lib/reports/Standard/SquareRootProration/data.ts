@@ -1,4 +1,4 @@
-import { SquareRootProrationType } from "@/components/reports/Standard/SquareRootProration/columns";
+import { SquareRootProrationType } from "@/components/reports/Standard/SquareRootProration/columns"
 
 export const DUMMY_DATA: SquareRootProrationType[] = [
   {
@@ -160,9 +160,9 @@ export const DUMMY_DATA: SquareRootProrationType[] = [
     cost: "4800",
     net_profit: "1600",
     updated_on: "14/06/2024",
-  }
-];
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

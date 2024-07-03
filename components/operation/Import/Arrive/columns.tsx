@@ -1,54 +1,55 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type AwbType = {
-  awb_number?: string;
-  origin?: string;
-  dest?: string;
-  mft_pcs?: string;
-  mft_wt?: string;
-  arr_pcs?: string;
-  arr_wt?: string;
-  rem_pcs?: string;
-  rem_wt?: string;
-  priority?: string;
-  discrepancy?: string;
-  comm_code?: string;
-  shipper?: string;
-  consignee?: string;
-  remarks?: string;
-  handling_instruction?: string;
-  flt?: string;
-  flt_date?: string;
-  arrival_time?: string;
-  next_flt?: string;
-  pol?: string;
-  uom?: string;
-  acc_pcs?: string;
-  acc_wt?: string;
-  security_check?: string;
-};
+  awb_number?: string
+  origin?: string
+  dest?: string
+  mft_pcs?: string
+  mft_wt?: string
+  arr_pcs?: string
+  arr_wt?: string
+  rem_pcs?: string
+  rem_wt?: string
+  priority?: string
+  discrepancy?: string
+  comm_code?: string
+  shipper?: string
+  consignee?: string
+  remarks?: string
+  handling_instruction?: string
+  flt?: string
+  flt_date?: string
+  arrival_time?: string
+  next_flt?: string
+  pol?: string
+  uom?: string
+  acc_pcs?: string
+  acc_wt?: string
+  security_check?: string
+}
 
 export type UldType = {
-  uld?: string;
-  origin?: string;
-  dest?: string;
-  uld_wt?: string;
-  scale_wt?: string;
-  awb_ct?: string;
-  awb_pcs?: string;
-  awb_wt?: string;
-  priority?: string;
-  arrived?: string;
-  flt?: string;
-  flt_date?: string;
-  pol?: string;
-  uom?: string;
-  handling_instruction?: string;
-  remark?: string;
-};
+  uld?: string
+  origin?: string
+  dest?: string
+  uld_wt?: string
+  scale_wt?: string
+  awb_ct?: string
+  awb_pcs?: string
+  awb_wt?: string
+  priority?: string
+  arrived?: string
+  flt?: string
+  flt_date?: string
+  pol?: string
+  uom?: string
+  handling_instruction?: string
+  remark?: string
+}
 
 export const awbColumn: ColumnDef<AwbType>[] = [
   {
@@ -175,7 +176,7 @@ export const awbColumn: ColumnDef<AwbType>[] = [
     accessorKey: "security_check",
     header: "Security Check",
   },
-];
+]
 
 export const uldColumn: ColumnDef<UldType>[] = [
   {
@@ -266,4 +267,4 @@ export const uldColumn: ColumnDef<UldType>[] = [
     accessorKey: "remark",
     header: "Remark",
   },
-];
+]

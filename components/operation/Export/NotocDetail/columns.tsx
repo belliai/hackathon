@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type NotocDetailType = {
-  item_no: string;
-  description: string;
-  quantity: string;
-  weight: string;
-  volume: string;
-  location: string;
-  handling_info: string;
-  special_instructions: string;
-  hazard_class: string;
-  un_number: string;
-};
+  item_no: string
+  description: string
+  quantity: string
+  weight: string
+  volume: string
+  location: string
+  handling_info: string
+  special_instructions: string
+  hazard_class: string
+  un_number: string
+}
 
 export const columns: ColumnDef<NotocDetailType>[] = [
   {
@@ -56,4 +56,4 @@ export const columns: ColumnDef<NotocDetailType>[] = [
     header: "UN Number",
     accessorKey: "un_number",
   },
-];
+]

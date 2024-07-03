@@ -1,23 +1,24 @@
-"use client";
+"use client"
 
-import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate";
-import MastersPageTemplate, {
-  SectionedFormFields,
-} from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem"
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/k360/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate, {
+  SectionedFormFields,
+} from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterAircraftPage() {
   const columns: ColumnDef<any>[] = [
@@ -103,7 +104,7 @@ export default function MasterAircraftPage() {
       header: "Container Type",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -216,7 +217,7 @@ export default function MasterAircraftPage() {
       maxContainers: 8,
       containerType: "Type A",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -234,7 +235,7 @@ export default function MasterAircraftPage() {
       label: "Version",
       type: "text",
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -555,10 +556,10 @@ export default function MasterAircraftPage() {
         },
       ],
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
-  const sectionedHookForm = useForm();
+  const filterHookForm = useForm()
+  const sectionedHookForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -581,5 +582,5 @@ export default function MasterAircraftPage() {
         />
       }
     />
-  );
+  )
 }

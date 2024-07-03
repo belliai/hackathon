@@ -1,13 +1,18 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { DownloadIcon, MagnifyingGlassIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { CalendarDaysIcon } from "@heroicons/react/24/solid"
+import {
+  DownloadIcon,
+  MagnifyingGlassIcon,
+  ReloadIcon,
+} from "@radix-ui/react-icons"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Input } from "@/components/ui/input"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarDaysIcon } from "@heroicons/react/24/solid";
-import { Calendar } from "@/components/ui/calendar";
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -15,142 +20,142 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
 
 const PREFIX_LIST = [
   {
     id: 1,
-    label: '775',
+    label: "775",
   },
   {
     id: 2,
-    label: '776',
+    label: "776",
   },
   {
     id: 3,
-    label: '777',
+    label: "777",
   },
-];
+]
 
 const AIRPORT_TYPE_LIST = [
   {
     id: 1,
-    label: 'All',
+    label: "All",
   },
   {
     id: 2,
-    label: 'Airport',
+    label: "Airport",
   },
   {
     id: 3,
-    label: 'Warehouse',
+    label: "Warehouse",
   },
-];
+]
 
 const DOCUMENT_TYPE_LIST = [
   {
     id: 1,
-    label: 'All',
+    label: "All",
   },
   {
     id: 2,
-    label: 'Door Delivered',
+    label: "Door Delivered",
   },
   {
     id: 3,
-    label: 'Door Picked',
+    label: "Door Picked",
   },
   {
     id: 4,
-    label: 'Invoice',
+    label: "Invoice",
   },
   {
     id: 5,
-    label: 'Packing List',
+    label: "Packing List",
   },
   {
     id: 6,
-    label: 'Others',
+    label: "Others",
   },
   {
     id: 7,
-    label: 'DG_Non DG Declaration',
+    label: "DG_Non DG Declaration",
   },
   {
     id: 8,
-    label: 'MAWB',
+    label: "MAWB",
   },
   {
     id: 9,
-    label: 'Manifest',
+    label: "Manifest",
   },
   {
     id: 10,
-    label: 'Proof of Delivery',
+    label: "Proof of Delivery",
   },
   {
     id: 11,
-    label: 'Scanned DO',
+    label: "Scanned DO",
   },
   {
     id: 12,
-    label: 'Customer Invoice Copy Pickup',
+    label: "Customer Invoice Copy Pickup",
   },
   {
     id: 13,
-    label: 'Customer Invoice Copy Delivery',
+    label: "Customer Invoice Copy Delivery",
   },
   {
     id: 14,
-    label: 'Permit Form',
+    label: "Permit Form",
   },
   {
     id: 15,
-    label: 'AXB Copy For Pickup',
+    label: "AXB Copy For Pickup",
   },
   {
     id: 16,
-    label: 'AXB Copy For Delivery',
+    label: "AXB Copy For Delivery",
   },
   {
     id: 17,
-    label: 'MSDS',
+    label: "MSDS",
   },
   {
     id: 18,
-    label: 'Finance',
+    label: "Finance",
   },
   {
     id: 20,
-    label: 'HAWB',
+    label: "HAWB",
   },
   {
     id: 21,
-    label: 'AWB',
+    label: "AWB",
   },
   {
     id: 22,
-    label: 'Scan POD Upload',
+    label: "Scan POD Upload",
   },
   {
     id: 23,
-    label: 'Additional',
+    label: "Additional",
   },
-];
+]
 
 export default function FilterSection() {
   return (
-    <div className="flex flex-col mt-10 gap-4">
+    <div className="mt-10 flex flex-col gap-4">
       <div className="flex justify-between">
         <h1 className="text-xl font-semibold">User Performance</h1>
         <div className="flex gap-4">
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+          <Button className="bg-zinc-800 text-white hover:bg-zinc-700">
             <span className="mr-1 h-4 w-4">
               <ReloadIcon />
             </span>
             Refresh
           </Button>
-          <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+          <Button className="bg-button-primary text-white hover:bg-button-primary/80">
             <span className="mr-1 h-4 w-4">
               <DownloadIcon />
             </span>
@@ -160,7 +165,7 @@ export default function FilterSection() {
       </div>
 
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-zinc-700 p-5">
-        <div className="text-white text-base font-semibold">Filter</div>
+        <div className="text-base font-semibold text-white">Filter</div>
         <div className="flex gap-4">
           <div className="w-1/6">
             <Input className="border-zinc-500" placeholder="AWB No" />
@@ -170,7 +175,7 @@ export default function FilterSection() {
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className={`flex justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3 w-1/6`}
+                className={`flex w-1/6 justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3`}
               >
                 <span>From Date</span>
                 <CalendarDaysIcon className="h-4 w-4 text-zinc-400" />
@@ -191,7 +196,7 @@ export default function FilterSection() {
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className={`flex justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3 w-1/6`}
+                className={`flex w-1/6 justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3`}
               >
                 <span>To Date</span>
                 <CalendarDaysIcon className="h-4 w-4 text-zinc-400" />
@@ -208,7 +213,7 @@ export default function FilterSection() {
             </PopoverContent>
           </Popover>
 
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+          <Button className="bg-zinc-800 text-white hover:bg-zinc-700">
             <span className="mr-1 h-4 w-4">
               <MagnifyingGlassIcon />
             </span>
@@ -216,7 +221,6 @@ export default function FilterSection() {
           </Button>
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

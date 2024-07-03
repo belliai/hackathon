@@ -1,15 +1,17 @@
-"use client";
+"use client"
 
-import { useFieldArray, useForm } from "react-hook-form";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import FormTextField, { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions";
-import { ColumnDef } from "@tanstack/react-table";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Download, Plus, Trash, Upload } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo } from "react"
+import { ColumnDef } from "@tanstack/react-table"
+import { Download, Plus, Trash, Upload } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
+import FormTextField, { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterPincodePage() {
   const pinCodeForm = useForm({
@@ -27,12 +29,12 @@ export default function MasterPincodePage() {
         },
       ],
     },
-  });
+  })
 
   const pincodeFieldArray = useFieldArray({
     control: pinCodeForm.control,
     name: "pincodes",
-  });
+  })
 
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
@@ -47,7 +49,7 @@ export default function MasterPincodePage() {
               form={pinCodeForm}
               type="text"
             />
-          );
+          )
         },
       },
       {
@@ -60,7 +62,7 @@ export default function MasterPincodePage() {
               form={pinCodeForm}
               type="text"
             />
-          );
+          )
         },
       },
       {
@@ -74,7 +76,7 @@ export default function MasterPincodePage() {
               type="select"
               options={DUMMY_SELECT_OPTIONS}
             />
-          );
+          )
         },
       },
       {
@@ -88,7 +90,7 @@ export default function MasterPincodePage() {
               type="select"
               options={DUMMY_SELECT_OPTIONS}
             />
-          );
+          )
         },
       },
       {
@@ -101,7 +103,7 @@ export default function MasterPincodePage() {
               form={pinCodeForm}
               type="text"
             />
-          );
+          )
         },
       },
       {
@@ -115,7 +117,7 @@ export default function MasterPincodePage() {
               type="select"
               options={DUMMY_SELECT_OPTIONS}
             />
-          );
+          )
         },
       },
       {
@@ -128,7 +130,7 @@ export default function MasterPincodePage() {
               form={pinCodeForm}
               type="text"
             />
-          );
+          )
         },
       },
       {
@@ -141,21 +143,21 @@ export default function MasterPincodePage() {
               form={pinCodeForm}
               type="text"
             />
-          );
+          )
         },
       },
       {
         accessorKey: "createdAt",
         header: "Created At",
         cell: ({ row }) => {
-          return "23 July 2021 12:00:00 PM";
+          return "23 July 2021 12:00:00 PM"
         },
       },
       {
         accessorKey: "updatedAt",
         header: "Updated At",
         cell: ({ row }) => {
-          return "23 July 2021 12:00:00 PM";
+          return "23 July 2021 12:00:00 PM"
         },
       },
       {
@@ -167,19 +169,19 @@ export default function MasterPincodePage() {
               size="icon"
               variant="destructive"
               onClick={() => {
-                console.log("delete", row.index);
+                console.log("delete", row.index)
 
-                pincodeFieldArray.remove(row.index);
+                pincodeFieldArray.remove(row.index)
               }}
             >
               <Trash size={18} />
             </Button>
-          );
+          )
         },
       },
     ],
     []
-  );
+  )
 
   const filterForm: TFormTextField[] = [
     {
@@ -209,9 +211,9 @@ export default function MasterPincodePage() {
       placeholder: "Airport Type",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
+  const filterHookForm = useForm()
 
   return (
     <Form {...pinCodeForm}>
@@ -226,16 +228,16 @@ export default function MasterPincodePage() {
         canCreate={false}
         pageActions={
           <>
-            <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+            <Button className="bg-button-primary text-white hover:bg-button-primary/80">
               <Download className="mr-2" size={16} />
               Backup CSV
             </Button>
-            <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+            <Button className="bg-button-primary text-white hover:bg-button-primary/80">
               <Upload className="mr-2" size={16} />
               Upload CSV
             </Button>
             <Button
-              className="bg-button-primary hover:bg-button-primary/80 text-white"
+              className="bg-button-primary text-white hover:bg-button-primary/80"
               onClick={() => {
                 pincodeFieldArray.append({
                   pincode: "",
@@ -246,7 +248,7 @@ export default function MasterPincodePage() {
                   airportCode: "",
                   latitude: "",
                   longitude: "",
-                });
+                })
               }}
             >
               <Plus size={16} className="mr-2" />
@@ -256,5 +258,5 @@ export default function MasterPincodePage() {
         }
       />
     </Form>
-  );
+  )
 }

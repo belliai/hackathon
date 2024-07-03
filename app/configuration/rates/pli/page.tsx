@@ -1,15 +1,16 @@
-"use client";
+"use client"
 
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/k360/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function PliNewPage() {
   const filterFormFields: TFormTextField[] = [
@@ -78,9 +79,9 @@ export default function PliNewPage() {
       options: DUMMY_SELECT_OPTIONS_STATUS,
       orientation: "horizontal",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -90,7 +91,7 @@ export default function PliNewPage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -105,5 +106,5 @@ export default function PliNewPage() {
         </div>
       }
     />
-  );
+  )
 }

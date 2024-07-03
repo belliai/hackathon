@@ -1,10 +1,11 @@
-import FilterSection from "@/components/operation/Transfer/List/FilterSection";
-import { DataTable } from "@components/data-table/data-table";
-import { columns } from "@/components/operation/Transfer/List/columns";
-import { getData } from "@/lib/operation/Transfer/List/data";
+import { DataTable } from "@components/data-table/data-table"
+
+import { getData } from "@/lib/operation/Transfer/List/data"
+import { columns } from "@/components/operation/Transfer/List/columns"
+import FilterSection from "@/components/operation/Transfer/List/FilterSection"
 
 export default async function List() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +15,6 @@ export default async function List() {
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

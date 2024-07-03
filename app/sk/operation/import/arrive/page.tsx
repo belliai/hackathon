@@ -1,9 +1,9 @@
-import FilterSection from "@/components/operation/Import/Arrive/FilterSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RightSection from "@/components/operation/Import/Arrive/RightSection";
-import AwbSection from "@/components/operation/Import/Arrive/AwbSection";
-import UldSection from "@/components/operation/Import/Arrive/UldSection";
-import ActionSection from "@/components/operation/Import/Arrive/ActionSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ActionSection from "@/components/operation/Import/Arrive/ActionSection"
+import AwbSection from "@/components/operation/Import/Arrive/AwbSection"
+import FilterSection from "@/components/operation/Import/Arrive/FilterSection"
+import RightSection from "@/components/operation/Import/Arrive/RightSection"
+import UldSection from "@/components/operation/Import/Arrive/UldSection"
 
 export default async function Arrive() {
   return (
@@ -30,5 +30,5 @@ export default async function Arrive() {
         </div>
       </div>
     </div>
-  );
+  )
 }

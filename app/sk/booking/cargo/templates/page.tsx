@@ -1,27 +1,28 @@
-"use client";
+"use client"
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTable } from "@/components/data-table/data-table";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
 import DataTableFilterForm, {
   FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/components/data-table/data-table-filter-form"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 type DataType = {
-  flight: string;
-  comm_code: string;
-  origin: string;
-  destination: string;
-  user: string;
-  shipper_code: string;
-  template_id: string;
-  agent_code: string;
-};
+  flight: string
+  comm_code: string
+  origin: string
+  destination: string
+  user: string
+  shipper_code: string
+  template_id: string
+  agent_code: string
+}
 
 const columns: ColumnDef<DataType>[] = [
   {
@@ -68,7 +69,7 @@ const columns: ColumnDef<DataType>[] = [
     header: "Action",
     cell: ({ row }) => <DataTableRowActions />,
   },
-];
+]
 
 const data: DataType[] = [
   {
@@ -101,9 +102,9 @@ const data: DataType[] = [
     template_id: "MK0232",
     agent_code: "AG-887",
   },
-];
+]
 
-type FilterDataType = DataType;
+type FilterDataType = DataType
 
 const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -166,10 +167,10 @@ const formFilters: FormFieldOption<FilterDataType>[] = [
     label: "Agent Code",
     placeholder: "Enter agent code",
   },
-];
+]
 
 export default function Page() {
-  const form = useForm<DataType>();
+  const form = useForm<DataType>()
   return (
     <PageContainer className="gap-4">
       <PageHeader title="Templates List" />
@@ -183,5 +184,5 @@ export default function Page() {
         data={data}
       />
     </PageContainer>
-  );
+  )
 }

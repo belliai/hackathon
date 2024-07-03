@@ -1,15 +1,14 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS } from "../../masters/components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
 
 export default function OrganizeExchangeRatePage() {
   const columns: ColumnDef<any>[] = [
@@ -43,7 +42,7 @@ export default function OrganizeExchangeRatePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -136,7 +135,7 @@ export default function OrganizeExchangeRatePage() {
       createdAt: "2023-12-01",
       updatedAt: "2023-12-10",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -161,7 +160,7 @@ export default function OrganizeExchangeRatePage() {
       type: "date",
       placeholder: "To Date",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -195,10 +194,10 @@ export default function OrganizeExchangeRatePage() {
       type: "date",
       placeholder: "To Date",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -211,5 +210,5 @@ export default function OrganizeExchangeRatePage() {
       hookForm={form}
       formFields={formFields}
     />
-  );
+  )
 }

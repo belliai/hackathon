@@ -1,4 +1,7 @@
-import { AwbType, UldType } from "@/components/operation/Import/BreakUld/columns";
+import {
+  AwbType,
+  UldType,
+} from "@/components/operation/Import/BreakUld/columns"
 
 export const DUMMY_DATA_ULD: UldType[] = [
   {
@@ -7,7 +10,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "50",
     weight: "1000",
     uom: "kg",
-    location: "JFK"
+    location: "JFK",
   },
   {
     uld: "ULD002",
@@ -15,7 +18,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "40",
     weight: "800",
     uom: "kg",
-    location: "ORD"
+    location: "ORD",
   },
   {
     uld: "ULD003",
@@ -23,7 +26,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "60",
     weight: "1200",
     uom: "kg",
-    location: "ATL"
+    location: "ATL",
   },
   {
     uld: "ULD004",
@@ -31,7 +34,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "70",
     weight: "1400",
     uom: "kg",
-    location: "DFW"
+    location: "DFW",
   },
   {
     uld: "ULD005",
@@ -39,7 +42,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "80",
     weight: "1600",
     uom: "kg",
-    location: "LAX"
+    location: "LAX",
   },
   {
     uld: "ULD006",
@@ -47,7 +50,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "90",
     weight: "1800",
     uom: "kg",
-    location: "SFO"
+    location: "SFO",
   },
   {
     uld: "ULD007",
@@ -55,7 +58,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "100",
     weight: "2000",
     uom: "kg",
-    location: "SEA"
+    location: "SEA",
   },
   {
     uld: "ULD008",
@@ -63,7 +66,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "110",
     weight: "2200",
     uom: "kg",
-    location: "MIA"
+    location: "MIA",
   },
   {
     uld: "ULD009",
@@ -71,7 +74,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "120",
     weight: "2400",
     uom: "kg",
-    location: "BOS"
+    location: "BOS",
   },
   {
     uld: "ULD010",
@@ -79,9 +82,9 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pieces: "130",
     weight: "2600",
     uom: "kg",
-    location: "DEN"
-  }
-];
+    location: "DEN",
+  },
+]
 
 export const DUMMY_DATA_AWB: AwbType[] = [
   {
@@ -96,7 +99,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     arr_pcs: "10",
     arr_wt: "500",
     flight_no: "FL123",
-    flight_date: "2024-06-01"
+    flight_date: "2024-06-01",
   },
   {
     awb: "123-45678902",
@@ -110,7 +113,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     arr_pcs: "8",
     arr_wt: "320",
     flight_no: "FL124",
-    flight_date: "2024-06-02"
+    flight_date: "2024-06-02",
   },
   {
     awb: "123-45678903",
@@ -124,7 +127,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     arr_pcs: "15",
     arr_wt: "750",
     flight_no: "FL125",
-    flight_date: "2024-06-03"
+    flight_date: "2024-06-03",
   },
   {
     awb: "123-45678904",
@@ -138,14 +141,14 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     arr_pcs: "12",
     arr_wt: "600",
     flight_no: "FL126",
-    flight_date: "2024-06-04"
-  }
-];
+    flight_date: "2024-06-04",
+  },
+]
 
 export const getDataUld = () => {
-  return DUMMY_DATA_ULD;
+  return DUMMY_DATA_ULD
 }
 
 export const getDataAwb = () => {
-  return DUMMY_DATA_AWB;
+  return DUMMY_DATA_AWB
 }

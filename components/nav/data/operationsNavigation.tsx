@@ -1,5 +1,6 @@
-import { TSidebarItem } from "@/components/nav/SidebarItem";
-import { CubeIcon } from "@radix-ui/react-icons";
+import { CubeIcon } from "@radix-ui/react-icons"
+
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const operationsNavigation: TSidebarItem[] = [
   {
@@ -39,4 +40,4 @@ export const operationsNavigation: TSidebarItem[] = [
       },
     ],
   },
-];
+]

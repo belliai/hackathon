@@ -1,6 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 const statusBadgeVariants = cva("", {
   variants: {
@@ -10,11 +11,11 @@ const statusBadgeVariants = cva("", {
       error: "bg-red-700/80 text-white hover:bg-red-600",
     },
   },
-});
+})
 
 interface StatusBadgeProps extends VariantProps<typeof statusBadgeVariants> {
-  statusText: string;
-  className?: string;
+  statusText: string
+  className?: string
 }
 
 export default function StatusBadge({
@@ -26,5 +27,5 @@ export default function StatusBadge({
     <Badge className={cn(statusBadgeVariants({ severity }), className)}>
       {statusText}
     </Badge>
-  );
+  )
 }

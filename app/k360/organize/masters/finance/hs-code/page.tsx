@@ -1,14 +1,16 @@
-"use client";
+"use client"
 
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions";
-import { ColumnDef } from "@tanstack/react-table";
-import { selectColumn } from "../../components/columnItem";
-import { Badge } from "@/components/ui/badge";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import { selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterHsCodePage() {
   const formFields: Omit<FormTextFieldProps, "form">[] = [
@@ -30,7 +32,7 @@ export default function MasterHsCodePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     { ...selectColumn },
@@ -64,10 +66,10 @@ export default function MasterHsCodePage() {
       header: "Actions",
       cell: ({ row }) => <DataTableRowActions row={row} />,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const hsCodeForm = useForm();
+  const filterForm = useForm()
+  const hsCodeForm = useForm()
 
   const data = [
     {
@@ -86,7 +88,7 @@ export default function MasterHsCodePage() {
       updated_at: "2021-10-10",
       actions: "Actions 2",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -99,5 +101,5 @@ export default function MasterHsCodePage() {
       data={data}
       filterFormFields={formFields}
     />
-  );
+  )
 }

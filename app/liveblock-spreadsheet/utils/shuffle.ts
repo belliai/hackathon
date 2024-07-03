@@ -1,7 +1,7 @@
-import seedrandom from "seedrandom";
+import seedrandom from "seedrandom"
 
 export function shuffle<T>(array: T[], seed: string) {
-  const random = seedrandom(seed);
+  const random = seedrandom(seed)
 
-  return [...array].sort(() => random() * 2 - 1);
+  return [...array].sort(() => random() * 2 - 1)
 }

@@ -1,4 +1,4 @@
-import { DiscrepancyListType } from "@/components/operation/Discrepancy/List/columns";
+import { DiscrepancyListType } from "@/components/operation/Discrepancy/List/columns"
 
 export const DUMMY_DATA: DiscrepancyListType[] = [
   {
@@ -15,7 +15,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "2",
     flight_number: "AA123",
     flight_date: "2024-06-01",
-    remarks: "Weight discrepancy due to repackaging"
+    remarks: "Weight discrepancy due to repackaging",
   },
   {
     awb_number: "AWB002",
@@ -31,7 +31,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "0",
     flight_number: "UA456",
     flight_date: "2024-06-02",
-    remarks: "Minor weight discrepancy"
+    remarks: "Minor weight discrepancy",
   },
   {
     awb_number: "AWB003",
@@ -47,7 +47,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "1",
     flight_number: "DL789",
     flight_date: "2024-06-03",
-    remarks: "Weight and pieces discrepancy"
+    remarks: "Weight and pieces discrepancy",
   },
   {
     awb_number: "AWB004",
@@ -63,7 +63,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "1",
     flight_number: "AS321",
     flight_date: "2024-06-04",
-    remarks: "Weight discrepancy due to packaging"
+    remarks: "Weight discrepancy due to packaging",
   },
   {
     awb_number: "AWB005",
@@ -79,7 +79,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "1",
     flight_number: "AA654",
     flight_date: "2024-06-05",
-    remarks: "Weight discrepancy due to different scales"
+    remarks: "Weight discrepancy due to different scales",
   },
   {
     awb_number: "AWB006",
@@ -95,7 +95,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "2",
     flight_number: "AS987",
     flight_date: "2024-06-06",
-    remarks: "Weight discrepancy due to remeasurement"
+    remarks: "Weight discrepancy due to remeasurement",
   },
   {
     awb_number: "AWB007",
@@ -111,7 +111,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "1",
     flight_number: "DL654",
     flight_date: "2024-06-07",
-    remarks: "Weight discrepancy due to repacking"
+    remarks: "Weight discrepancy due to repacking",
   },
   {
     awb_number: "AWB008",
@@ -127,7 +127,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "0",
     flight_number: "UA321",
     flight_date: "2024-06-08",
-    remarks: "Minor weight discrepancy"
+    remarks: "Minor weight discrepancy",
   },
   {
     awb_number: "AWB009",
@@ -143,7 +143,7 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "1",
     flight_number: "AA123",
     flight_date: "2024-06-09",
-    remarks: "Weight discrepancy due to reweighing"
+    remarks: "Weight discrepancy due to reweighing",
   },
   {
     awb_number: "AWB010",
@@ -159,10 +159,10 @@ export const DUMMY_DATA: DiscrepancyListType[] = [
     pieces_discrepancy: "1",
     flight_number: "AA456",
     flight_date: "2024-06-10",
-    remarks: "Weight discrepancy due to measurement error"
-  }
-];
+    remarks: "Weight discrepancy due to measurement error",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

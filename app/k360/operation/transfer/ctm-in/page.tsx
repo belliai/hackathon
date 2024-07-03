@@ -1,6 +1,13 @@
-import FilterSection from "@/components/operation/Transfer/CtmIn/FilterSection";
-import { DataTable } from "@/components/dashboard/dashtable";
-import { columns } from "@/components/operation/Transfer/CtmIn/columns";
+import { CalendarDaysIcon } from "@heroicons/react/24/solid"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -8,31 +15,25 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarDaysIcon } from "@heroicons/react/24/solid";
-import { Calendar } from "@/components/ui/calendar";
+} from "@/components/ui/select"
+import { DataTable } from "@/components/dashboard/dashtable"
+import { columns } from "@/components/operation/Transfer/CtmIn/columns"
+import FilterSection from "@/components/operation/Transfer/CtmIn/FilterSection"
 
 const STATUS_LIST = [
   {
     id: 1,
-    label: '775',
+    label: "775",
   },
   {
     id: 2,
-    label: '776',
+    label: "776",
   },
   {
     id: 3,
-    label: '777',
+    label: "777",
   },
-];
+]
 
 export default async function FlightEpouch() {
   return (
@@ -49,7 +50,7 @@ export default async function FlightEpouch() {
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className={`flex justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3 w-2/12`}
+                className={`flex w-2/12 justify-between border-zinc-500 bg-zinc-900 pl-3 pr-3`}
               >
                 <span>Flight Date</span>
                 <CalendarDaysIcon className="h-4 w-4 text-zinc-400" />
@@ -68,13 +69,15 @@ export default async function FlightEpouch() {
 
           <div className="w-2/12">
             <Select>
-              <SelectTrigger className="border-zinc-500 w-full">
+              <SelectTrigger className="w-full border-zinc-500">
                 <SelectValue placeholder="Flight No" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {STATUS_LIST.map((statusList) => (
-                    <SelectItem key ={statusList.id} value={statusList.label}>{statusList.label}</SelectItem>
+                    <SelectItem key={statusList.id} value={statusList.label}>
+                      {statusList.label}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
@@ -87,21 +90,20 @@ export default async function FlightEpouch() {
         </div>
 
         <div className="flex gap-4">
-          <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+          <Button className="bg-button-primary text-white hover:bg-button-primary/80">
             Submit
           </Button>
-          <Button className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button className="bg-button-secondary text-white hover:bg-button-secondary/80">
             Execute
           </Button>
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+          <Button className="bg-zinc-800 text-white hover:bg-zinc-700">
             Print
           </Button>
-          <Button className="bg-destructive hover:bg-destructive/80 text-white">
+          <Button className="bg-destructive text-white hover:bg-destructive/80">
             Cancel
           </Button>
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

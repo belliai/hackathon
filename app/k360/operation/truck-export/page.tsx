@@ -1,8 +1,8 @@
-import FilterSection from "@/components/operation/TruckExport/FilterSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PlannedSection from "@/components/operation/TruckExport/PlannedSection";
-import UnplannedSection from "@/components/operation/TruckExport/UnplannedSection";
-import RightSection from "@/components/operation/TruckExport/RightSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import FilterSection from "@/components/operation/TruckExport/FilterSection"
+import PlannedSection from "@/components/operation/TruckExport/PlannedSection"
+import RightSection from "@/components/operation/TruckExport/RightSection"
+import UnplannedSection from "@/components/operation/TruckExport/UnplannedSection"
 
 export default async function TruckList() {
   return (
@@ -28,5 +28,5 @@ export default async function TruckList() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,9 +1,11 @@
-"use client";
+"use client"
 
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { useState } from "react"
+import { PlusIcon, Search, SearchIcon } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -11,24 +13,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
+  Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
-  Form,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
 import {
   Table,
   TableBody,
@@ -36,25 +38,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { PlusIcon, Search, SearchIcon } from "lucide-react";
-import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "@/components/ui/table"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
-type FilterDataType = { partner_code: string; awb: string };
+type FilterDataType = { partner_code: string; awb: string }
 
 type DataType = {
-  document_name: string;
-  uploaded: boolean;
-  file_uploaded: string;
-};
+  document_name: string
+  uploaded: boolean
+  file_uploaded: string
+}
 
 export default function Page() {
-  const filterForm = useForm<FilterDataType>();
+  const filterForm = useForm<FilterDataType>()
 
-  const newDocumentForm = useForm<{ document_name: string }>();
+  const newDocumentForm = useForm<{ document_name: string }>()
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const form = useForm<{ documents: DataType[] }>({
     defaultValues: {
@@ -77,16 +78,16 @@ export default function Page() {
         },
       ],
     },
-  });
+  })
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "documents",
-  });
+  })
 
   return (
     <PageContainer className="gap-6">
       <PageHeader title="ePouch" />
-      <Card className="p-4 rounded-md transition-all">
+      <Card className="rounded-md p-4 transition-all">
         <Form {...filterForm}>
           <form className="flex flex-row gap-3">
             <FormField
@@ -137,11 +138,11 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            <div className="inline-flex gap-3 mt-7">
+            <div className="mt-7 inline-flex gap-3">
               <Button
                 size="icon"
                 type="button"
-                className="bg-button-primary  text-white hover:bg-button-primary/80 size-9"
+                className="size-9 bg-button-primary text-white hover:bg-button-primary/80"
               >
                 <Search size={16} />
               </Button>
@@ -150,7 +151,7 @@ export default function Page() {
                   <Button
                     size="icon"
                     type="button"
-                    className="bg-button-secondary  text-white hover:bg-button-secondary/80 size-9"
+                    className="size-9 bg-button-secondary text-white hover:bg-button-secondary/80"
                   >
                     <PlusIcon size={16} />
                   </Button>
@@ -165,8 +166,8 @@ export default function Page() {
                             document_name,
                             file_uploaded: "-",
                             uploaded: false,
-                          });
-                          setDialogOpen(false);
+                          })
+                          setDialogOpen(false)
                         }
                       )}
                     >
@@ -178,7 +179,7 @@ export default function Page() {
                           control={newDocumentForm.control}
                           name={"document_name"}
                           render={({ field }) => (
-                            <FormItem className="space-y-1 min-w-16">
+                            <FormItem className="min-w-16 space-y-1">
                               <FormLabel>Document Type</FormLabel>
                               <FormControl>
                                 <Input {...field} />
@@ -210,7 +211,7 @@ export default function Page() {
       </Card>
       <Form {...form}>
         <RadioGroup>
-          <div className="rounded-md border ">
+          <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -235,26 +236,26 @@ export default function Page() {
               <TableBody>
                 {fields.map((field, index) => (
                   <TableRow className="hover:bg-background" key={field.id}>
-                    <TableCell className="whitespace-nowrap px-4 ">
+                    <TableCell className="whitespace-nowrap px-4">
                       <RadioGroupItem value={field.id} />
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-4 ">
+                    <TableCell className="whitespace-nowrap px-4">
                       {field.document_name}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-4 ">
+                    <TableCell className="whitespace-nowrap px-4">
                       {field.uploaded ? "Yes" : "No"}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-4 ">
+                    <TableCell className="whitespace-nowrap px-4">
                       {field.file_uploaded}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-4 ">
+                    <TableCell className="whitespace-nowrap px-4">
                       <Input
                         type="file"
                         {...field}
-                        className="py-0 px-0 h-8 overflow-clip file:transition-colors file:h-full file:mr-5 file:py-1 file:px-3 file:text-xs file:font-medium file:bg-muted file:text-foreground hover:file:cursor-pointer hover:file:bg-muted/50"
+                        className="h-8 overflow-clip px-0 py-0 file:mr-5 file:h-full file:bg-muted file:px-3 file:py-1 file:text-xs file:font-medium file:text-foreground file:transition-colors hover:file:cursor-pointer hover:file:bg-muted/50"
                       />
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-4 ">
+                    <TableCell className="whitespace-nowrap px-4">
                       <div className="inline-flex gap-2">
                         <Button size={"sm"} variant={"button-secondary"}>
                           Save
@@ -272,5 +273,5 @@ export default function Page() {
         </RadioGroup>
       </Form>
     </PageContainer>
-  );
+  )
 }

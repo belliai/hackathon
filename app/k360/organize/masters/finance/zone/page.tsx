@@ -1,16 +1,18 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { actionColumn, selectColumn } from "../../components/columnItem";
-import StatusBadge from "../../components/StatusBadge";
-import { TFormTextField } from "@/components/form/FormTextField";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../components/dummySelectOptions";
-import { useForm } from "react-hook-form";
-import { Search } from "lucide-react";
+} from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
+import StatusBadge from "../../components/StatusBadge"
 
 export default function MasterZonePage() {
   const columns: ColumnDef<any>[] = [
@@ -37,8 +39,8 @@ export default function MasterZonePage() {
         />
       ),
     },
-    actionColumn
-  ];
+    actionColumn,
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -65,10 +67,10 @@ export default function MasterZonePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const zoneForm = useForm();
-  const filterForm = useForm();
+  const zoneForm = useForm()
+  const filterForm = useForm()
 
   const data = [
     {
@@ -83,7 +85,7 @@ export default function MasterZonePage() {
       location: "Location 2",
       status: "Inactive",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -96,5 +98,5 @@ export default function MasterZonePage() {
       formFields={formFields}
       data={data}
     />
-  );
+  )
 }

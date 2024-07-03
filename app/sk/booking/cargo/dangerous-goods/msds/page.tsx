@@ -1,59 +1,60 @@
-"use client";
+"use client"
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTable } from "@/components/data-table/data-table";
+import { useState } from "react"
+import { DialogTitle } from "@radix-ui/react-dialog"
+import { ColumnDef } from "@tanstack/react-table"
+import { PlusCircle, SaveIcon, ShieldCheck, ShieldX } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
 import DataTableFilterForm, {
   FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import InputSwitch from "@/components/form/InputSwitch";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { ColumnDef } from "@tanstack/react-table";
-import { PlusCircle, SaveIcon, ShieldCheck, ShieldX } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+} from "@/components/data-table/data-table-filter-form"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import InputSwitch from "@/components/form/InputSwitch"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 interface MSDSApplication {
-  applicationRefNo?: string;
-  pointOfOrigin?: string;
-  pointOfDestination: string;
-  routeDetails?: string;
-  commodityDescription: string;
-  carriers?: string;
-  totalWeight: string;
-  totalPieces: string;
-  dimension?: string;
-  applicationSubmittedDate: string;
-  agentCode?: string;
-  applicantFullName: string;
-  applicantPhone?: string;
-  applicantMobile: string;
-  applicantEmail: string;
-  applicantFax?: string;
-  applicantAddress?: string;
-  unNumber: string;
-  dgClassDiv: string;
-  formOfChemical: string;
-  remark?: string;
-  agentName: string;
-  materialSafetyDataSheet: boolean;
-  imageOfPackage: boolean;
-  productListOrInvoice: boolean;
-  dateApproved: string;
-  dateExpiry?: string;
-  approvalPeriodDays?: number;
-  applicationApprovedOrRejectDate: string;
-  applicationStatus: string;
-  approvedOrRejectedBy: string;
-  disclaimer?: string;
-  requirements?: string;
+  applicationRefNo?: string
+  pointOfOrigin?: string
+  pointOfDestination: string
+  routeDetails?: string
+  commodityDescription: string
+  carriers?: string
+  totalWeight: string
+  totalPieces: string
+  dimension?: string
+  applicationSubmittedDate: string
+  agentCode?: string
+  applicantFullName: string
+  applicantPhone?: string
+  applicantMobile: string
+  applicantEmail: string
+  applicantFax?: string
+  applicantAddress?: string
+  unNumber: string
+  dgClassDiv: string
+  formOfChemical: string
+  remark?: string
+  agentName: string
+  materialSafetyDataSheet: boolean
+  imageOfPackage: boolean
+  productListOrInvoice: boolean
+  dateApproved: string
+  dateExpiry?: string
+  approvalPeriodDays?: number
+  applicationApprovedOrRejectDate: string
+  applicationStatus: string
+  approvedOrRejectedBy: string
+  disclaimer?: string
+  requirements?: string
 }
 
 const columns: ColumnDef<Partial<MSDSApplication>>[] = [
@@ -110,7 +111,7 @@ const columns: ColumnDef<Partial<MSDSApplication>>[] = [
     header: "Action",
     cell: ({ row }) => <DataTableRowActions />,
   },
-];
+]
 
 const data: Partial<MSDSApplication>[] = [
   {
@@ -179,10 +180,10 @@ const data: Partial<MSDSApplication>[] = [
     applicationApprovedOrRejectDate: "2024-05-27",
     approvedOrRejectedBy: "Admin",
   },
-];
+]
 
 export default function Page() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
     <PageContainer className="gap-4">
       <PageHeader title="MSDS" />
@@ -199,18 +200,18 @@ export default function Page() {
         data={data}
       />
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-[830px] max-w-3xl p-0 space-y-0 gap-0">
+        <DialogContent className="w-[830px] max-w-3xl gap-0 space-y-0 p-0">
           <DialogHeader className="p-4">
             <DialogTitle>MSDS Application</DialogTitle>
           </DialogHeader>
           <Separator />
-          <div className="h-[85dvh] overflow-y-auto custom-scrollbar p-4">
+          <div className="custom-scrollbar h-[85dvh] overflow-y-auto p-4">
             <ApplicationForm />
           </div>
         </DialogContent>
       </Dialog>
     </PageContainer>
-  );
+  )
 }
 
 function ApplicationForm() {
@@ -233,14 +234,14 @@ function ApplicationForm() {
       applicationStatus: "In-Progress",
       approvedOrRejectedBy: "johnny",
     },
-  });
+  })
 
   return (
     <Form {...form}>
       <form action="" className="space-y-4">
         <div className="space-y-2">
           <span className="font-semibold">MSDS Details</span>
-          <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             <InputSwitch<MSDSApplication>
               name="pointOfOrigin"
               label="Point of Origin"
@@ -300,7 +301,7 @@ function ApplicationForm() {
 
         <div className="space-y-2">
           <span className="font-semibold">Additional Details</span>
-          <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             <InputSwitch<MSDSApplication>
               name="unNumber"
               label="UN Number"
@@ -331,7 +332,7 @@ function ApplicationForm() {
 
         <div className="space-y-2">
           <span className="font-semibold">Applicant Details</span>
-          <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             <InputSwitch<MSDSApplication>
               name="applicantFullName"
               label="Applicant Full Name"
@@ -367,7 +368,7 @@ function ApplicationForm() {
 
         <div className="space-y-2">
           <span className="font-semibold">Mandatory Document Check List</span>
-          <div className="grid grid-cols-1 gap-y-2 gap-x-4">
+          <div className="grid grid-cols-1 gap-x-4 gap-y-2">
             <InputSwitch<MSDSApplication>
               name="materialSafetyDataSheet"
               label="Material Safety Data Sheet"
@@ -388,7 +389,7 @@ function ApplicationForm() {
 
         <div className="space-y-2">
           <span className="font-semibold">MSDS Approval</span>
-          <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             <InputSwitch<MSDSApplication>
               name="dateApproved"
               label="Date Approved"
@@ -449,11 +450,11 @@ function ApplicationForm() {
             Clear
           </Button>
           <Button type="submit" variant={"button-primary"}>
-            <SaveIcon className="size-4 mr-2" />
+            <SaveIcon className="mr-2 size-4" />
             Submit
           </Button>
         </div>
       </form>
     </Form>
-  );
+  )
 }

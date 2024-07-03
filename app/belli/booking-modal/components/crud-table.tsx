@@ -1,21 +1,22 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { PropsWithChildren, useState } from "react"
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { EditIcon, PlusCircleIcon, SaveIcon, TrashIcon } from "lucide-react";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+} from "@tanstack/react-table"
+import { EditIcon, PlusCircleIcon, SaveIcon, TrashIcon } from "lucide-react"
 import {
   DefaultValues,
   FieldValues,
   Path,
   useForm,
   useFormContext,
-} from "react-hook-form";
+} from "react-hook-form"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -23,8 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { PropsWithChildren, useState } from "react";
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -32,36 +32,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 
 type CrudTableProps<T extends FieldValues> = {
-  title: string;
-  data: T[];
-  columns: ColumnDef<T>[];
+  title: string
+  data: T[]
+  columns: ColumnDef<T>[]
   form: {
-    name: Path<T>;
-    label?: string;
-    type: "text" | "select" | "hidden";
-    selectOptions?: { label: string; value: string }[];
-  }[];
-  onSave: (data: T) => void;
-  onDelete: (data: T) => void;
-};
+    name: Path<T>
+    label?: string
+    type: "text" | "select" | "hidden"
+    selectOptions?: { label: string; value: string }[]
+  }[]
+  onSave: (data: T) => void
+  onDelete: (data: T) => void
+}
 
 function InputSwitch<T extends FieldValues>(props: {
-  formField: CrudTableProps<T>["form"][0];
+  formField: CrudTableProps<T>["form"][0]
 }) {
-  const form = useFormContext<T>();
-  const { label, name, type, selectOptions } = props.formField;
+  const form = useFormContext<T>()
+  const { label, name, type, selectOptions } = props.formField
   switch (type) {
     case "select":
       return (
@@ -92,7 +93,7 @@ function InputSwitch<T extends FieldValues>(props: {
             </FormItem>
           )}
         />
-      );
+      )
     case "hidden":
       return (
         <FormField
@@ -101,7 +102,7 @@ function InputSwitch<T extends FieldValues>(props: {
           name={name}
           render={({ field }) => <Input {...field} type="hidden" />}
         />
-      );
+      )
     default:
       return (
         <FormField
@@ -120,28 +121,28 @@ function InputSwitch<T extends FieldValues>(props: {
             </FormItem>
           )}
         />
-      );
+      )
   }
 }
 
 const FormDialog = <T extends FieldValues>(
   props: PropsWithChildren & {
-    form: CrudTableProps<T>["form"];
-    onSave: CrudTableProps<T>["onSave"];
-    data?: DefaultValues<T>;
-    title: string;
+    form: CrudTableProps<T>["form"]
+    onSave: CrudTableProps<T>["onSave"]
+    data?: DefaultValues<T>
+    title: string
   }
 ) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const form = useForm<T>({
     defaultValues: props.data,
-  });
+  })
 
   const onSubmit = (data: T) => {
-    props.onSave(data);
-    setOpen(false);
-    form.reset();
-  };
+    props.onSave(data)
+    setOpen(false)
+    form.reset()
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -164,8 +165,8 @@ const FormDialog = <T extends FieldValues>(
             <DialogFooter>
               <Button
                 onClick={() => {
-                  form.reset();
-                  setOpen(false);
+                  form.reset()
+                  setOpen(false)
                 }}
                 type="button"
                 variant={"secondary"}
@@ -181,13 +182,13 @@ const FormDialog = <T extends FieldValues>(
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
 export default function CrudTable<T extends FieldValues>(
   props: CrudTableProps<T>
 ) {
-  const { data, title } = props;
+  const { data, title } = props
 
   const columns: ColumnDef<T>[] = [
     {
@@ -202,7 +203,7 @@ export default function CrudTable<T extends FieldValues>(
       accessorKey: "action",
       header: "Action",
       cell: ({ row }) => (
-        <div className="flex flex-row items-center justify-end w-full">
+        <div className="flex w-full flex-row items-center justify-end">
           <FormDialog
             title={title}
             form={props.form}
@@ -210,7 +211,7 @@ export default function CrudTable<T extends FieldValues>(
             data={row.original as DefaultValues<T>}
           >
             <Button variant={"ghost"} size={"sm"}>
-              <EditIcon className="size-4 mr-2" />
+              <EditIcon className="mr-2 size-4" />
               Edit
             </Button>
           </FormDialog>
@@ -219,23 +220,23 @@ export default function CrudTable<T extends FieldValues>(
             variant={"ghost"}
             size={"sm"}
           >
-            <TrashIcon className="size-4 mr-2" />
+            <TrashIcon className="mr-2 size-4" />
             Delete
           </Button>
         </div>
       ),
     },
-  ];
+  ]
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  });
+  })
 
   return (
-    <Card className="rounded-md overflow-clip">
-      <CardHeader className="flex flex-row space-y-0 items-center justify-between py-2  px-4 bg-card">
+    <Card className="overflow-clip rounded-md">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-card px-4 py-2">
         <CardTitle className="text-lg font-bold">{title}</CardTitle>
         <FormDialog title={title} form={props.form} onSave={props.onSave}>
           <Button className="rounded-sm" variant={"button-primary"} size={"sm"}>
@@ -247,7 +248,7 @@ export default function CrudTable<T extends FieldValues>(
       <Separator />
       <CardContent className="p-0">
         <Table>
-          <TableBody className=" leading-6 text-zinc-400">
+          <TableBody className="leading-6 text-zinc-400">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -282,5 +283,5 @@ export default function CrudTable<T extends FieldValues>(
         </Table>
       </CardContent>
     </Card>
-  );
+  )
 }

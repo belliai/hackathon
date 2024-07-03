@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { selectColumn } from "../../components/columnItem";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { useForm } from "react-hook-form";
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import { selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterVendorPage() {
   const columns: ColumnDef<any>[] = [
@@ -95,7 +97,7 @@ export default function MasterVendorPage() {
       header: "Action",
       cell: ({ row }) => <DataTableRowActions />,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -140,7 +142,7 @@ export default function MasterVendorPage() {
       created_at: "2022-02-01",
       updated_at: "2022-02-02",
     },
-  ];
+  ]
 
   const filterFormFields: Omit<FormTextFieldProps, "form">[] = [
     {
@@ -161,232 +163,232 @@ export default function MasterVendorPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-const vendorFormFields: Omit<FormTextFieldProps, "form">[] = [
+  const vendorFormFields: Omit<FormTextFieldProps, "form">[] = [
     {
-        name: "vendor_code",
-        placeholder: "Vendor Code",
-        type: "text",
-        required: true,
-        label: "Vendor Code",
-        hideTooltip: true,
+      name: "vendor_code",
+      placeholder: "Vendor Code",
+      type: "text",
+      required: true,
+      label: "Vendor Code",
+      hideTooltip: true,
     },
     {
-        name: "vendor_name",
-        placeholder: "Vendor Name",
-        type: "text",
-        required: true,
-        label: "Vendor Name",
-        hideTooltip: true,
+      name: "vendor_name",
+      placeholder: "Vendor Name",
+      type: "text",
+      required: true,
+      label: "Vendor Name",
+      hideTooltip: true,
     },
     {
-        name: "valid_from",
-        placeholder: "Valid From",
-        type: "date",
-        required: true,
-        hideTooltip: true,
+      name: "valid_from",
+      placeholder: "Valid From",
+      type: "date",
+      required: true,
+      hideTooltip: true,
     },
     {
-        name: "valid_to",
-        placeholder: "Valid To",
-        type: "date",
-        required: true,
-        hideTooltip: true,
+      name: "valid_to",
+      placeholder: "Valid To",
+      type: "date",
+      required: true,
+      hideTooltip: true,
     },
     {
-        name: "status",
-        placeholder: "Status",
-        type: "select",
-        options: DUMMY_SELECT_OPTIONS_STATUS,
-        required: true,
-        label: "Status",
-        hideTooltip: true,
+      name: "status",
+      placeholder: "Status",
+      type: "select",
+      options: DUMMY_SELECT_OPTIONS_STATUS,
+      required: true,
+      label: "Status",
+      hideTooltip: true,
     },
     {
-        name: "credit_account_no",
-        placeholder: "Credit Account No.",
-        type: "text",
-        label: "Credit Account No.",
-        hideTooltip: true,
+      name: "credit_account_no",
+      placeholder: "Credit Account No.",
+      type: "text",
+      label: "Credit Account No.",
+      hideTooltip: true,
     },
     {
-        name: "address_1",
-        placeholder: "Address 1",
-        type: "text",
-        required: true,
-        label: "Address 1",
-        hideTooltip: true,
+      name: "address_1",
+      placeholder: "Address 1",
+      type: "text",
+      required: true,
+      label: "Address 1",
+      hideTooltip: true,
     },
     {
-        name: "address_2",
-        placeholder: "Address 2",
-        type: "text",
-        label: "Address 2",
-        hideTooltip: true,
+      name: "address_2",
+      placeholder: "Address 2",
+      type: "text",
+      label: "Address 2",
+      hideTooltip: true,
     },
     {
-        name: "city",
-        placeholder: "City",
-        type: "text",
-        required: true,
-        label: "City",
-        hideTooltip: true,
+      name: "city",
+      placeholder: "City",
+      type: "text",
+      required: true,
+      label: "City",
+      hideTooltip: true,
     },
     {
-        name: "country",
-        placeholder: "Country",
-        type: "text",
-        required: true,
-        label: "Country",
-        hideTooltip: true,
+      name: "country",
+      placeholder: "Country",
+      type: "text",
+      required: true,
+      label: "Country",
+      hideTooltip: true,
     },
     {
-        name: "state",
-        placeholder: "State",
-        type: "text",
-        label: "State",
-        hideTooltip: true,
+      name: "state",
+      placeholder: "State",
+      type: "text",
+      label: "State",
+      hideTooltip: true,
     },
     {
-        name: "pincode",
-        placeholder: "Pincode",
-        type: "text",
-        label: "Pincode",
-        hideTooltip: true,
+      name: "pincode",
+      placeholder: "Pincode",
+      type: "text",
+      label: "Pincode",
+      hideTooltip: true,
     },
     {
-        name: "mobile_no",
-        placeholder: "Mobile No.",
-        type: "text",
-        label: "Mobile No.",
-        hideTooltip: true,
+      name: "mobile_no",
+      placeholder: "Mobile No.",
+      type: "text",
+      label: "Mobile No.",
+      hideTooltip: true,
     },
     {
-        name: "phone_no",
-        placeholder: "Phone No.",
-        type: "text",
-        required: true,
-        label: "Phone No.",
-        hideTooltip: true,
+      name: "phone_no",
+      placeholder: "Phone No.",
+      type: "text",
+      required: true,
+      label: "Phone No.",
+      hideTooltip: true,
     },
     {
-        name: "fax",
-        placeholder: "Fax",
-        type: "text",
-        label: "Fax",
-        hideTooltip: true,
+      name: "fax",
+      placeholder: "Fax",
+      type: "text",
+      label: "Fax",
+      hideTooltip: true,
     },
     {
-        name: "iata_account_no",
-        placeholder: "IATA Account No.",
-        type: "text",
-        label: "IATA Account No.",
-        hideTooltip: true,
+      name: "iata_account_no",
+      placeholder: "IATA Account No.",
+      type: "text",
+      label: "IATA Account No.",
+      hideTooltip: true,
     },
     {
-        name: "tin",
-        placeholder: "TIN",
-        type: "text",
-        label: "TIN",
-        hideTooltip: true,
+      name: "tin",
+      placeholder: "TIN",
+      type: "text",
+      label: "TIN",
+      hideTooltip: true,
     },
     {
-        name: "contact_person",
-        placeholder: "Contact Person",
-        type: "text",
-        label: "Contact Person",
-        hideTooltip: true,
+      name: "contact_person",
+      placeholder: "Contact Person",
+      type: "text",
+      label: "Contact Person",
+      hideTooltip: true,
     },
     {
-        name: "email",
-        placeholder: "Email",
-        type: "text",
-        label: "Email",
-        hideTooltip: true,
+      name: "email",
+      placeholder: "Email",
+      type: "text",
+      label: "Email",
+      hideTooltip: true,
     },
     {
-        name: "billing_address_same",
-        placeholder: "Billing Address Same as Mailing Address",
-        type: "checkbox",
-        label: "Billing Address Same as Mailing Address",
-        hideTooltip: true,
+      name: "billing_address_same",
+      placeholder: "Billing Address Same as Mailing Address",
+      type: "checkbox",
+      label: "Billing Address Same as Mailing Address",
+      hideTooltip: true,
     },
     {
-        name: "billing_address_1",
-        placeholder: "Billing Address 1",
-        type: "text",
-        label: "Billing Address 1",
-        hideTooltip: true,
+      name: "billing_address_1",
+      placeholder: "Billing Address 1",
+      type: "text",
+      label: "Billing Address 1",
+      hideTooltip: true,
     },
     {
-        name: "billing_address_2",
-        placeholder: "Billing Address 2",
-        type: "text",
-        label: "Billing Address 2",
-        hideTooltip: true,
+      name: "billing_address_2",
+      placeholder: "Billing Address 2",
+      type: "text",
+      label: "Billing Address 2",
+      hideTooltip: true,
     },
     {
-        name: "billing_city",
-        placeholder: "Billing City",
-        type: "text",
-        label: "Billing City",
-        hideTooltip: true,
+      name: "billing_city",
+      placeholder: "Billing City",
+      type: "text",
+      label: "Billing City",
+      hideTooltip: true,
     },
     {
-        name: "billing_state",
-        placeholder: "Billing State",
-        type: "text",
-        label: "Billing State",
-        hideTooltip: true,
+      name: "billing_state",
+      placeholder: "Billing State",
+      type: "text",
+      label: "Billing State",
+      hideTooltip: true,
     },
     {
-        name: "billing_country",
-        placeholder: "Billing Country",
-        type: "text",
-        label: "Billing Country",
-        hideTooltip: true,
+      name: "billing_country",
+      placeholder: "Billing Country",
+      type: "text",
+      label: "Billing Country",
+      hideTooltip: true,
     },
     {
-        name: "billing_pincode",
-        placeholder: "Billing Pincode",
-        type: "text",
-        label: "Billing Pincode",
-        hideTooltip: true,
+      name: "billing_pincode",
+      placeholder: "Billing Pincode",
+      type: "text",
+      label: "Billing Pincode",
+      hideTooltip: true,
     },
     {
-        name: "billing_contact_person",
-        placeholder: "Billing Contact Person",
-        type: "text",
-        label: "Billing Contact Person",
-        hideTooltip: true,
+      name: "billing_contact_person",
+      placeholder: "Billing Contact Person",
+      type: "text",
+      label: "Billing Contact Person",
+      hideTooltip: true,
     },
     {
-        name: "billing_phone_no",
-        placeholder: "Billing Phone No.",
-        type: "text",
-        label: "Billing Phone No.",
-        hideTooltip: true,
+      name: "billing_phone_no",
+      placeholder: "Billing Phone No.",
+      type: "text",
+      label: "Billing Phone No.",
+      hideTooltip: true,
     },
     {
-        name: "remarks",
-        placeholder: "Remarks",
-        type: "text",
-        label: "Remarks",
-        hideTooltip: true,
+      name: "remarks",
+      placeholder: "Remarks",
+      type: "text",
+      label: "Remarks",
+      hideTooltip: true,
     },
     {
-        name: "remark",
-        placeholder: "Remark",
-        type: "text",
-        required: true,
-        label: "Remark",
-        hideTooltip: true,
+      name: "remark",
+      placeholder: "Remark",
+      type: "text",
+      required: true,
+      label: "Remark",
+      hideTooltip: true,
     },
-];
+  ]
 
-  const filterForm = useForm();
-  const vendorForm = useForm();
+  const filterForm = useForm()
+  const vendorForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -399,5 +401,5 @@ const vendorFormFields: Omit<FormTextFieldProps, "form">[] = [
       data={data}
       columns={columns}
     />
-  );
+  )
 }

@@ -1,31 +1,46 @@
-"use client";
+"use client"
 
-import { Download, Search } from "lucide-react";
-import MastersPageTemplate, {
-  SectionedFormFields,
-} from "../masters/components/MastersPageTemplate";
-import createActionColumn, { actionColumn, selectColumn } from "../masters/components/columnItem";
+import { useEffect, useState } from "react"
+import { Customer, customerSchema } from "@/schemas/customer"
+import { getDefaults } from "@/schemas/utils"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Download, Search } from "lucide-react"
+import { FieldValues, useForm } from "react-hook-form"
+
+import {
+  useAddCustomer,
+  useCustomers,
+  useRemoveCustomer,
+  useUpdateCustomer,
+} from "@/lib/hooks/customers"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { toast } from "@/components/ui/use-toast"
+
+import createActionColumn, {
+  actionColumn,
+  selectColumn,
+} from "../masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../masters/components/dummySelectOptions";
-import { FieldValues, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Customer, customerSchema } from "@/schemas/customer";
-import { useEffect, useState } from "react";
-import { toast } from "@/components/ui/use-toast";
-import { useAddCustomer, useCustomers, useRemoveCustomer, useUpdateCustomer } from "@/lib/hooks/customers";
-import { getDefaults } from "@/schemas/utils";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+} from "../masters/components/dummySelectOptions"
+import MastersPageTemplate, {
+  SectionedFormFields,
+} from "../masters/components/MastersPageTemplate"
 
-
-
-const defaulValues = getDefaults(customerSchema);
+const defaulValues = getDefaults(customerSchema)
 
 export default function MasterCustomerPage() {
-
-
   const filterFormFields = [
     {
       name: "customerCode",
@@ -63,7 +78,7 @@ export default function MasterCustomerPage() {
       type: "text",
       endIcon: <Search />,
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -470,7 +485,7 @@ export default function MasterCustomerPage() {
         },
       ],
     },
-  ];
+  ]
 
   const { isLoading, isPending, error, data: customersData } = useCustomers()
   const add = useAddCustomer()
@@ -481,41 +496,38 @@ export default function MasterCustomerPage() {
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [selectedData, setSelectedData] = useState<Customer>()
 
-  const schema = customerSchema
-    .partial()
-    .required({
-      account_email: true,
-      code: true,
-      name: true,
-      shipper_type: true,
-      address1: true,
-      city: true,
-      country: true,
-      base_vol_rate: true,
-      // participation_type: true,
-      // stock_controller: true,
-      // bill_type: true,
-      // credit_controller: true,
-      // credit_controller_code: true,
-      // currency_id: true,
-      // agent_type: true,
-      // invoice_due: true,
-      // is_active: true,
-      // rateline_preference: true
+  const schema = customerSchema.partial().required({
+    account_email: true,
+    code: true,
+    name: true,
+    shipper_type: true,
+    address1: true,
+    city: true,
+    country: true,
+    base_vol_rate: true,
+    // participation_type: true,
+    // stock_controller: true,
+    // bill_type: true,
+    // credit_controller: true,
+    // credit_controller_code: true,
+    // currency_id: true,
+    // agent_type: true,
+    // invoice_due: true,
+    // is_active: true,
+    // rateline_preference: true
+  })
 
-    })
-
-  const filterForm = useForm();
+  const filterForm = useForm()
   const hookForm = useForm({
     defaultValues: getDefaults(schema),
-    resolver: zodResolver(schema)
-  });
+    resolver: zodResolver(schema),
+  })
 
   const onRowClick = (data: any) => {
     setSelectedData(data)
     const filteredCustomer = Object.entries(data)
       .filter(([key, value]) => value !== null)
-      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Customer);
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Customer)
     setOpenForm(true)
     hookForm.reset(filteredCustomer)
   }
@@ -526,8 +538,7 @@ export default function MasterCustomerPage() {
   }
 
   const onDelete = (data: any) => {
-    if (data.ID)
-      remove.mutate({ id: data.ID })
+    if (data.ID) remove.mutate({ id: data.ID })
     setSelectedData(undefined)
   }
 
@@ -583,41 +594,39 @@ export default function MasterCustomerPage() {
           label: "Edit",
           value: "edit",
           fn: onRowClick,
-
         },
         {
           label: "Delete",
           value: "delete",
           fn: onShowDelete,
-          shortcut: "⌘⌫"
-        }
-      ]
+          shortcut: "⌘⌫",
+        },
+      ],
     }),
-  ];
+  ]
 
   const onSave = () => {
-    hookForm.handleSubmit(data => {
+    hookForm.handleSubmit((data) => {
       let actionText = "created"
       try {
-        if (!data.ID)
-          add.mutate(data as Customer)
+        if (!data.ID) add.mutate(data as Customer)
         else {
           actionText = "updated"
-          update.mutate({ ...data as Customer, id: data.ID })
+          update.mutate({ ...(data as Customer), id: data.ID })
         }
         setOpenForm(false)
         setSelectedData(undefined)
         toast({
           title: "Success!",
           description: "Customer has been " + actionText,
-        });
+        })
 
-        hookForm.reset(defaulValues);
+        hookForm.reset(defaulValues)
       } catch (e) {
         toast({
           title: "Failed!",
           description: "Customer fail to be " + actionText,
-        });
+        })
       }
     })()
   }
@@ -657,12 +666,16 @@ export default function MasterCustomerPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will delete {selectedData && `[${selectedData.code}]` + " " + selectedData.name}
+                This will delete{" "}
+                {selectedData &&
+                  `[${selectedData.code}]` + " " + selectedData.name}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onDelete(selectedData)}>Continue</AlertDialogAction>
+              <AlertDialogAction onClick={() => onDelete(selectedData)}>
+                Continue
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -673,5 +686,5 @@ export default function MasterCustomerPage() {
       onRowClick={onRowClick}
       activeData={selectedData}
     />
-  );
+  )
 }

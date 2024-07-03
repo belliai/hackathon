@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
-import { DataTable, DataTableProps } from "@/components/data-table/data-table";
-import FormTextField, { TFormTextField } from "@/components/form/FormTextField";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table"
+import { Download, Plus, RefreshCcw, Search } from "lucide-react"
+import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -12,47 +13,48 @@ import {
   DialogFooter,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
-import { ColumnDef } from "@tanstack/react-table";
-import { Download, Plus, RefreshCcw, Search } from "lucide-react";
-import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
-import { cn } from "@/lib/utils";
-import CreateFormTemplate from "./CreateFormTemplate";
-import { DataTableToolbarProps } from "@/components/data-table/data-table-toolbar";
+} from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import { DataTable, DataTableProps } from "@/components/data-table/data-table"
+import { DataTableToolbarProps } from "@/components/data-table/data-table-toolbar"
+import FormTextField, { TFormTextField } from "@/components/form/FormTextField"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
+
+import CreateFormTemplate from "./CreateFormTemplate"
 
 export type FieldArrayProps = {
-  fieldArray: UseFieldArrayReturn<any>;
-  fields: TFormTextField[];
-  fieldArrayName?: string;
-};
+  fieldArray: UseFieldArrayReturn<any>
+  fields: TFormTextField[]
+  fieldArrayName?: string
+}
 
 export type SectionedFormFields = {
-  sectionName?: string;
-  fields?: TFormTextField[];
-  fieldArray?: FieldArrayProps;
-  hookForm?: UseFormReturn<any>;
-  showRemoveButton?: boolean;
-  additionalColumns?: ColumnDef<any>[];
-};
+  sectionName?: string
+  fields?: TFormTextField[]
+  fieldArray?: FieldArrayProps
+  hookForm?: UseFormReturn<any>
+  showRemoveButton?: boolean
+  additionalColumns?: ColumnDef<any>[]
+}
 
 interface MastersPageTemplateProps extends DataTableProps<any, any> {
-  heading: string;
-  buttonText?: string;
-  hookForm?: UseFormReturn<any>;
-  filterHookForm: UseFormReturn<any>;
-  formFields?: TFormTextField[];
-  sectionedFormFields?: SectionedFormFields[];
-  filterFormFields: TFormTextField[];
-  pageActions?: React.ReactNode;
-  canCreate?: boolean;
-  customDialogContent?: React.ReactNode;
-  sectionsType?: "normal" | "tabs";
-  customFilterButtons?: React.ReactNode;
-  customComponent?: React.ReactNode;
-  bottomCustomComponent?: React.ReactNode;
-  extraTableToolbarButtons?: DataTableToolbarProps<any>["extraButtons"];
-  onSave?: () => void,
+  heading: string
+  buttonText?: string
+  hookForm?: UseFormReturn<any>
+  filterHookForm: UseFormReturn<any>
+  formFields?: TFormTextField[]
+  sectionedFormFields?: SectionedFormFields[]
+  filterFormFields: TFormTextField[]
+  pageActions?: React.ReactNode
+  canCreate?: boolean
+  customDialogContent?: React.ReactNode
+  sectionsType?: "normal" | "tabs"
+  customFilterButtons?: React.ReactNode
+  customComponent?: React.ReactNode
+  bottomCustomComponent?: React.ReactNode
+  extraTableToolbarButtons?: DataTableToolbarProps<any>["extraButtons"]
+  onSave?: () => void
   setOpenForm?: React.Dispatch<React.SetStateAction<boolean>>
   openForm?: boolean
   activeData?: any
@@ -80,7 +82,7 @@ export default function MastersPageTemplate({
   onSave,
   setOpenForm,
   openForm,
-  activeData
+  activeData,
 }: MastersPageTemplateProps) {
   return (
     <PageContainer className="gap-6">
@@ -90,16 +92,18 @@ export default function MastersPageTemplate({
           <>
             {pageActions}
             {canCreate && hookForm && (
-              <Dialog open={openForm}  onOpenChange={setOpenForm}>
+              <Dialog open={openForm} onOpenChange={setOpenForm}>
                 <DialogTrigger asChild>
-                  <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+                  <Button className="bg-button-primary text-white hover:bg-button-primary/80">
                     <Plus size={16} className="mr-2" />
                     <span className="hidden md:block">{buttonText}</span>
                     <span className="block md:hidden">Create</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="w-full max-w-3xl">
-                  <DialogTitle>{activeData ? "Update" : "Create"} {heading}</DialogTitle>
+                  <DialogTitle>
+                    {activeData ? "Update" : "Create"} {heading}
+                  </DialogTitle>
                   <CreateFormTemplate
                     hookForm={hookForm}
                     formFields={formFields}
@@ -111,12 +115,14 @@ export default function MastersPageTemplate({
                     <DialogClose asChild>
                       <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                      <Button onClick={() => {
+                    <Button
+                      onClick={() => {
                         onSave && onSave()
-                      }} className="bg-button-primary hover:bg-button-primary/80 text-white">
-                        {activeData ? "Update":"Create"}
-                      </Button>
-
+                      }}
+                      className="bg-button-primary text-white hover:bg-button-primary/80"
+                    >
+                      {activeData ? "Update" : "Create"}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -178,5 +184,5 @@ export default function MastersPageTemplate({
       />
       {bottomCustomComponent}
     </PageContainer>
-  );
+  )
 }

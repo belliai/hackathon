@@ -1,8 +1,8 @@
-import FilterSection from "@/components/operation/Delivery/DeliveryCargo/FilterSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RightSection from "@/components/operation/Delivery/DeliveryCargo/RightSection";
-import AwbSection from "@/components/operation/Delivery/DeliveryCargo/AwbSection";
-import UldSection from "@/components/operation/Delivery/DeliveryCargo/UldSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import AwbSection from "@/components/operation/Delivery/DeliveryCargo/AwbSection"
+import FilterSection from "@/components/operation/Delivery/DeliveryCargo/FilterSection"
+import RightSection from "@/components/operation/Delivery/DeliveryCargo/RightSection"
+import UldSection from "@/components/operation/Delivery/DeliveryCargo/UldSection"
 
 export default async function DeliveryCargo() {
   return (
@@ -28,5 +28,5 @@ export default async function DeliveryCargo() {
         </div>
       </div>
     </div>
-  );
+  )
 }

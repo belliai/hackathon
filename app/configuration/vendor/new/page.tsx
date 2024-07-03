@@ -1,11 +1,12 @@
-"use client";
+"use client"
 
-import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function VendorNewPage() {
   const vendorFormFields: TFormTextField[] = [
@@ -228,9 +229,9 @@ export default function VendorNewPage() {
       label: "Remark",
       orientation: "horizontal",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -243,5 +244,5 @@ export default function VendorNewPage() {
         </Button>
       }
     />
-  );
+  )
 }

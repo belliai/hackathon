@@ -1,12 +1,9 @@
-
-import Contents from "./contents";
+import Contents from "./contents"
 
 export default async function Page() {
   const props = {
-    title: "Charge Correction Advise (CCA)"
+    title: "Charge Correction Advise (CCA)",
   }
 
-  return (
-    <Contents  {...props} />
-  );
+  return <Contents {...props} />
 }

@@ -1,7 +1,12 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
+import { useEffect, useState } from "react"
+import {
+  aircraftFormSchema,
+  AircraftFormValues,
+} from "@/schemas/aircraft/aircraft"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { ColumnDef } from "@tanstack/react-table"
 import {
   Box,
   Calculator,
@@ -10,42 +15,18 @@ import {
   Plus,
   ScrollTextIcon,
   Search,
-} from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import MastersPageTemplate, {
-  SectionedFormFields,
-} from "@/app/k360/organize/masters/components/MastersPageTemplate";
+} from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
 
-import {
-  DUMMY_SELECT_OPTIONS,
-  DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/k360/organize/masters/components/dummySelectOptions";
-import createActionColumn, {
-  actionColumn,
-  selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
-import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal";
-import { useEffect, useState } from "react";
-import MastersPageFieldArrayForm from "@/app/k360/organize/masters/components/MastersPageFieldArrayForm";
-import DimensionsCard from "@/components/dashboard/dimensions-card";
-import BalanceCard from "@/components/dashboard/balance-card";
-import { Button } from "@/components/ui/button";
+import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
+import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
   useAircrafts,
   useCreateAircraft,
   useDeleteAircraft,
   useUpdateAircraft,
-} from "@/lib/hooks/aircrafts/aircrafts";
-import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type";
-import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses";
-import { useUnits } from "@/lib/hooks/units/units";
-import {
-  AircraftFormValues,
-  aircraftFormSchema,
-} from "@/schemas/aircraft/aircraft";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/components/ui/use-toast";
+} from "@/lib/hooks/aircrafts/aircrafts"
+import { useUnits } from "@/lib/hooks/units/units"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,65 +36,84 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
+import BalanceCard from "@/components/dashboard/balance-card"
+import DimensionsCard from "@/components/dashboard/dimensions-card"
+import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal"
+import { TFormTextField } from "@/components/form/FormTextField"
+import createActionColumn, {
+  actionColumn,
+  selectColumn,
+} from "@/app/k360/organize/masters/components/columnItem"
+import {
+  DUMMY_SELECT_OPTIONS,
+  DUMMY_SELECT_OPTIONS_STATUS,
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageFieldArrayForm from "@/app/k360/organize/masters/components/MastersPageFieldArrayForm"
+import MastersPageTemplate, {
+  SectionedFormFields,
+} from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterAircraftPage() {
-  const [deleteConfirm, setDeleteConfirm] = useState<Aircraft | null>(null);
-  const [openModal, setOpenModal] = useState<string | boolean>(false); // When the state is a string, it means the modal is in edit mode
+  const [deleteConfirm, setDeleteConfirm] = useState<Aircraft | null>(null)
+  const [openModal, setOpenModal] = useState<string | boolean>(false) // When the state is a string, it means the modal is in edit mode
 
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   const { data: aircraftBodyTypes, isLoading: isLoadingAircraftBodyTypes } =
-    useAircraftBodyTypes();
+    useAircraftBodyTypes()
 
   const { data: aircraftStatuses, isLoading: isLoadingAircraftStatuses } =
-    useAircraftStatuses();
+    useAircraftStatuses()
 
   const { data: units, isLoading: isLoadingUnits } = useUnits({
     category: "weight",
-  });
+  })
 
   const { data: unitsVol, isLoading: isLoadingUnitsVol } = useUnits({
     category: "volume",
-  });
+  })
 
   const { data: unitsLen, isLoading: isLoadingUnitsLen } = useUnits({
     category: "length",
-  });
+  })
 
   const aircraftStatusOptions = aircraftStatuses?.map((status) => ({
     value: String(status.ID),
     label: status.Name,
-  }));
+  }))
 
   const aircraftBodyTypesOptions = aircraftBodyTypes?.map((bodyType) => ({
     value: String(bodyType.ID),
     label: bodyType.Name,
-  }));
+  }))
 
   const weightUnitsOptions = units?.map((unit) => ({
     value: String(unit.ID),
     label: `${unit.Name} - ${unit.Symbol}`,
-  }));
+  }))
 
   const volumeUnitsOptions = unitsVol?.map((unit) => ({
     value: String(unit.ID),
     label: `${unit.Name} - ${unit.Symbol}`,
-  }));
+  }))
 
   const lengthUnitsOptions = units?.map((unit) => ({
     value: String(unit.ID),
     label: `${unit.Name} - ${unit.Symbol}`,
-  }));
+  }))
 
   const { data: aircrafts, isLoading } = useAircrafts({
     page: 1,
     page_size: 1000,
-  });
+  })
 
-  const aircraftsData = aircrafts?.data;
+  const aircraftsData = aircrafts?.data
 
-  const filterHookForm = useForm();
+  const filterHookForm = useForm()
 
   const formDefaultValues: AircraftFormValues = {
     aft_h: "",
@@ -163,17 +163,17 @@ export default function MasterAircraftPage() {
     status_id: "",
     uld_position: "",
     version: "",
-  };
+  }
 
   const sectionedHookForm = useForm<AircraftFormValues>({
     resolver: zodResolver(aircraftFormSchema),
     defaultValues: formDefaultValues,
-  });
+  })
 
   const fieldArray = useFieldArray<any>({
     name: "aircraft_tail_numbers",
     control: sectionedHookForm.control,
-  });
+  })
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -404,7 +404,7 @@ export default function MasterAircraftPage() {
         },
       ],
     },
-  ];
+  ]
   const filterFormFields: TFormTextField[] = [
     {
       name: "manufacturer",
@@ -442,10 +442,10 @@ export default function MasterAircraftPage() {
       type: "date",
       hideTooltip: true,
     },
-  ];
+  ]
 
   function handleRowClick(data: Aircraft) {
-    setOpenModal(data.ID);
+    setOpenModal(data.ID)
 
     sectionedHookForm.reset({
       ...data,
@@ -475,12 +475,12 @@ export default function MasterAircraftPage() {
         data.restricted_weight_piece_unit.ID
       ),
       count: String(data.count),
-    });
+    })
   }
 
   const onShowDelete = (data: Aircraft) => {
-    setDeleteConfirm(data);
-  };
+    setDeleteConfirm(data)
+  }
 
   const columns: ColumnDef<Aircraft>[] = [
     selectColumn as ColumnDef<Aircraft>,
@@ -549,12 +549,12 @@ export default function MasterAircraftPage() {
         },
       ],
     }) as ColumnDef<Aircraft>,
-  ];
+  ]
 
-  const { mutateAsync, isPending } = useCreateAircraft();
+  const { mutateAsync, isPending } = useCreateAircraft()
   const { mutateAsync: updateMutateAsync, isPending: isPendingUpdate } =
-    useUpdateAircraft();
-  const { mutateAsync: deleteMutateAsync } = useDeleteAircraft();
+    useUpdateAircraft()
+  const { mutateAsync: deleteMutateAsync } = useDeleteAircraft()
 
   async function onDelete(data: Aircraft) {
     if (data) {
@@ -562,22 +562,22 @@ export default function MasterAircraftPage() {
         { id: data.ID },
         {
           onError: (error) => {
-            console.error(error);
+            console.error(error)
             toast({
               title: "Error!",
               description: "An error occurred while deleting aircraft",
-            });
+            })
           },
           onSuccess: (data) => {
-            setDeleteConfirm(null);
-            console.log("res data", data);
+            setDeleteConfirm(null)
+            console.log("res data", data)
             toast({
               title: "Success!",
               description: "Aircraft deleted successfully",
-            });
+            })
           },
         }
-      );
+      )
     }
   }
 
@@ -590,7 +590,7 @@ export default function MasterAircraftPage() {
         ...tailNumber,
         id: tailNumber.id || undefined,
       })),
-    };
+    }
 
     if (typeof openModal === "string") {
       // Update aircraft
@@ -598,40 +598,40 @@ export default function MasterAircraftPage() {
         { id: openModal, ...payload },
         {
           onError: (error) => {
-            console.error(error);
+            console.error(error)
             toast({
               title: "Error!",
               description: "An error occurred while updating aircraft",
-            });
+            })
           },
           onSuccess: (data) => {
-            setOpenModal(false);
-            console.log("res data", data);
+            setOpenModal(false)
+            console.log("res data", data)
             toast({
               title: "Success!",
               description: "Aircraft updated successfully",
-            });
+            })
           },
         }
-      );
+      )
     } else {
       await mutateAsync(payload, {
         onError: (error) => {
-          console.error(error);
+          console.error(error)
           toast({
             title: "Error!",
             description: "An error occurred while creating aircraft",
-          });
+          })
         },
         onSuccess: (data) => {
-          setOpenModal(false);
-          console.log("res data", data);
+          setOpenModal(false)
+          console.log("res data", data)
           toast({
             title: "Success!",
             description: "Aircraft created successfully",
-          });
+          })
         },
-      });
+      })
     }
   }
 
@@ -661,9 +661,9 @@ export default function MasterAircraftPage() {
             open={deleteConfirm !== null}
             onOpenChange={(open) => {
               if (!open) {
-                setDeleteConfirm(null);
+                setDeleteConfirm(null)
               } else {
-                setDeleteConfirm(deleteConfirm);
+                setDeleteConfirm(deleteConfirm)
               }
             }}
           >
@@ -696,20 +696,20 @@ export default function MasterAircraftPage() {
           typeof openModal === "string"
             ? "Edit Aircraft"
             : openModal
-            ? "Create Aircraft"
-            : ""
+              ? "Create Aircraft"
+              : ""
         }
         open={openModal !== false}
         form={sectionedHookForm}
         onSubmit={handleSubmitAircraft}
         setOpen={(open) => {
           if (open) {
-            setOpenModal(openModal);
+            setOpenModal(openModal)
           } else {
             if (typeof openModal === "string") {
-              sectionedHookForm.reset(formDefaultValues);
+              sectionedHookForm.reset(formDefaultValues)
             }
-            setOpenModal(false);
+            setOpenModal(false)
           }
         }}
         tabItems={[
@@ -773,7 +773,7 @@ export default function MasterAircraftPage() {
                 variant={"button-secondary"}
                 className="w-full"
               >
-                <ScrollTextIcon className="w-4 h-4 mr-2" />
+                <ScrollTextIcon className="mr-2 h-4 w-4" />
                 View Invoice
               </Button>
               <Button
@@ -789,5 +789,5 @@ export default function MasterAircraftPage() {
         }
       />
     </>
-  );
+  )
 }

@@ -1,15 +1,17 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions"
 import MastersPageTemplate, {
   SectionedFormFields,
-} from "../masters/components/MastersPageTemplate";
-import { Search } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { ColumnDef } from "@tanstack/react-table";
-import StatusBadge from "../masters/components/StatusBadge";
-import { actionColumn, selectColumn } from "../masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "../masters/components/dummySelectOptions";
+} from "../masters/components/MastersPageTemplate"
+import StatusBadge from "../masters/components/StatusBadge"
 
 export default function MastersPage() {
   const filterFields: TFormTextField[] = [
@@ -25,7 +27,7 @@ export default function MastersPage() {
       type: "text",
       endIcon: <Search />,
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -64,7 +66,7 @@ export default function MastersPage() {
       header: "Valid To",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -157,27 +159,27 @@ export default function MastersPage() {
       validFrom: "20-10-2023",
       validTo: "19-10-2024",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
   const form = useForm({
     defaultValues: {
       credits: [],
       registrationNumbers: [],
     },
-  });
+  })
 
   const fieldArray = useFieldArray<any>({
     name: "credits",
     control: form.control,
-  });
+  })
 
   const fieldArray2 = useFieldArray<any>({
     name: "registrationNumbers",
     control: form.control,
-  });
+  })
 
-  console.log(form.watch());
+  console.log(form.watch())
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -400,7 +402,7 @@ export default function MastersPage() {
         ],
       },
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -414,5 +416,5 @@ export default function MastersPage() {
       sectionsType="tabs"
       hookForm={form}
     />
-  );
+  )
 }

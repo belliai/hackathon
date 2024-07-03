@@ -1,21 +1,23 @@
-"use client";
+"use client"
 
-import { Order, columns } from "@/components/dashboard/columns";
-import { getData } from "@/lib/data";
-import PageContainer from "@/components/layout/PageContainer";
-import { Button } from "@/components/ui/button";
-import SpotRateFilters from "@/components/sales/spot-rate/SpotRateFilters";
-import SpotRateDetailsApproval from "@/components/sales/spot-rate/SpotRateApprovalDetails";
+import { getData } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { columns, Order } from "@/components/dashboard/columns"
+import PageContainer from "@/components/layout/PageContainer"
+import SpotRateDetailsApproval from "@/components/sales/spot-rate/SpotRateApprovalDetails"
+import SpotRateFilters from "@/components/sales/spot-rate/SpotRateFilters"
 
 export default function SpotRateApproval() {
   return (
-    <PageContainer className="py-8 gap-6">
+    <PageContainer className="gap-6 py-8">
       <div>
-        <h2 className="text-xl font-semibold mb-2">Spot Rate Approval/Rejection</h2>
+        <h2 className="mb-2 text-xl font-semibold">
+          Spot Rate Approval/Rejection
+        </h2>
         <SpotRateFilters />
       </div>
 
       <SpotRateDetailsApproval />
     </PageContainer>
-  );
+  )
 }

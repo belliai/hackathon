@@ -1,14 +1,16 @@
-"use client";
+"use client"
 
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions";
-import { Search } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
-import { selectColumn } from "../../components/columnItem";
-import { Badge } from "@/components/ui/badge";
-import { useForm } from "react-hook-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import { selectColumn } from "../../components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../components/dummySelectOptions"
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterPriorityPage() {
   const formFields: Omit<FormTextFieldProps, "form">[] = [
@@ -29,7 +31,7 @@ export default function MasterPriorityPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     {
@@ -57,7 +59,7 @@ export default function MasterPriorityPage() {
       header: "Actions",
       cell: ({ row }) => <DataTableRowActions row={row} />,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -71,10 +73,10 @@ export default function MasterPriorityPage() {
       status: "Inactive",
     },
     { priority: "Low", description: "Dummy description 3", status: "Active" },
-  ];
+  ]
 
-  const priorityForm = useForm();
-  const filterForm = useForm();
+  const priorityForm = useForm()
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -87,5 +89,5 @@ export default function MasterPriorityPage() {
       columns={columns}
       data={data}
     />
-  );
+  )
 }

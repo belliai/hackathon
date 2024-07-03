@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useForm } from "react-hook-form";
-import { Search } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MassterSpecialHandlingCodePage() {
   const columns: ColumnDef<any>[] = [
@@ -47,7 +48,7 @@ export default function MassterSpecialHandlingCodePage() {
       header: "isPreAlert",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -100,7 +101,7 @@ export default function MassterSpecialHandlingCodePage() {
       createdAt: "2023-05-25",
       updatedAt: "2023-08-20",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -129,9 +130,9 @@ export default function MassterSpecialHandlingCodePage() {
       label: "Active",
       type: "checkbox",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -143,5 +144,5 @@ export default function MassterSpecialHandlingCodePage() {
       filterHookForm={filterForm}
       customFilterButtons={<FilterActions />}
     />
-  );
+  )
 }

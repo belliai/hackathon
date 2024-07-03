@@ -1,43 +1,39 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse, type NextRequest } from "next/server"
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 
 const isProtectedRoute = createRouteMatcher([
-  '/(.*)', // Match all routes
-]);
-
-const isPublicRoute = createRouteMatcher([
-  '/login'
+  "/(.*)", // Match all routes
 ])
 
+const isPublicRoute = createRouteMatcher(["/login"])
+
 const isAdminRoute = createRouteMatcher([
-  '/admin/(.*)', // Match all admin routes
-]);
+  "/admin/(.*)", // Match all admin routes
+])
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
-  const pathname = req.nextUrl.pathname;
+  const pathname = req.nextUrl.pathname
 
-  if (isProtectedRoute(req) && !isPublicRoute(req)) auth().protect();
+  if (isProtectedRoute(req) && !isPublicRoute(req)) auth().protect()
 
   const { orgSlug } = auth()
 
   // Protect admin pages
-  if (orgSlug !== 'admin' && isAdminRoute(req)) {
+  if (orgSlug !== "admin" && isAdminRoute(req)) {
     const origin = req.nextUrl.origin
 
-    return NextResponse.redirect(
-      origin
-    )
+    return NextResponse.redirect(origin)
   }
 
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("x-pathname", pathname);
+  const requestHeaders = new Headers(req.headers)
+  requestHeaders.set("x-pathname", pathname)
 
   return NextResponse.next({
     request: {
       headers: requestHeaders,
     },
-  });
-});
+  })
+})
 
 export const config = {
   matcher: [
@@ -51,4 +47,4 @@ export const config = {
      */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-};
+}

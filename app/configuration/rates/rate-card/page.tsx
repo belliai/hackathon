@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterRatesCardPage() {
   const columns: ColumnDef<any>[] = [
@@ -44,7 +45,7 @@ export default function MasterRatesCardPage() {
       ),
     },
     selectColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -61,7 +62,7 @@ export default function MasterRatesCardPage() {
       endDate: "31/12/2021",
       status: "Active",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -78,9 +79,9 @@ export default function MasterRatesCardPage() {
       type: "date",
       orientation: "horizontal",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -90,7 +91,7 @@ export default function MasterRatesCardPage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -98,5 +99,5 @@ export default function MasterRatesCardPage() {
         </div>
       }
     />
-  );
+  )
 }

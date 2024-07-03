@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
+
 import {
   Select,
   SelectContent,
@@ -7,24 +8,30 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
 
-export default function SummaryBar({ onTypeChange, onDateButtonClick }: { onTypeChange: (type: string) => void, onDateButtonClick: (fromDate: string, toDate: string) => void }) {
-  const [selectedType, setSelectedType] = useState("");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+export default function SummaryBar({
+  onTypeChange,
+  onDateButtonClick,
+}: {
+  onTypeChange: (type: string) => void
+  onDateButtonClick: (fromDate: string, toDate: string) => void
+}) {
+  const [selectedType, setSelectedType] = useState("")
+  const [fromDate, setFromDate] = useState("")
+  const [toDate, setToDate] = useState("")
 
   const handleTypeChange = (type: string) => {
-    setSelectedType(type);
-    onTypeChange(type);
-  };
+    setSelectedType(type)
+    onTypeChange(type)
+  }
 
   const handleDateButtonClick = () => {
-    onDateButtonClick(fromDate, toDate);
-  };
+    onDateButtonClick(fromDate, toDate)
+  }
 
   return (
-    <div className="flex items-center justify-between text-white bg-black p-4">
+    <div className="flex items-center justify-between bg-black p-4 text-white">
       <div>
         <Select value={selectedType} onValueChange={handleTypeChange}>
           <SelectTrigger className="w-[180px]">
@@ -33,8 +40,18 @@ export default function SummaryBar({ onTypeChange, onDateButtonClick }: { onType
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Summary Type</SelectLabel>
-              <SelectItem value="Inbound" onClick={() => handleTypeChange("Inbound")}>Inbound</SelectItem>
-              <SelectItem value="Outbound" onClick={() => handleTypeChange("Outbound")}>Outbound</SelectItem>
+              <SelectItem
+                value="Inbound"
+                onClick={() => handleTypeChange("Inbound")}
+              >
+                Inbound
+              </SelectItem>
+              <SelectItem
+                value="Outbound"
+                onClick={() => handleTypeChange("Outbound")}
+              >
+                Outbound
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -48,7 +65,9 @@ export default function SummaryBar({ onTypeChange, onDateButtonClick }: { onType
           onChange={(e) => setFromDate(e.target.value)}
           className="ml-2 bg-black text-white"
         />
-        <label htmlFor="toDate" className="ml-2">To:</label>
+        <label htmlFor="toDate" className="ml-2">
+          To:
+        </label>
         <input
           type="date"
           id="toDate"
@@ -61,5 +80,5 @@ export default function SummaryBar({ onTypeChange, onDateButtonClick }: { onType
         </button>
       </div>
     </div>
-  );
+  )
 }

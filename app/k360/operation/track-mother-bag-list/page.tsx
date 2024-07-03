@@ -1,10 +1,10 @@
-import FilterSection from "@/components/operation/TrackMotherBagList/FilterSection";
-import { DataTable } from "@/components/dashboard/dashtable";
-import { columns } from "@/components/operation/TrackMotherBagList/columns";
-import { getData } from "@/lib/operation/TrackMotherBagList/data";
+import { getData } from "@/lib/operation/TrackMotherBagList/data"
+import { DataTable } from "@/components/dashboard/dashtable"
+import { columns } from "@/components/operation/TrackMotherBagList/columns"
+import FilterSection from "@/components/operation/TrackMotherBagList/FilterSection"
 
 export default async function TrackMotherBagList() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -13,5 +13,5 @@ export default async function TrackMotherBagList() {
         <DataTable columns={columns} data={data} />
       </div>
     </div>
-  );
+  )
 }

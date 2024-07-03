@@ -1,7 +1,10 @@
-import SpotRateDropDown from "@/components/sales/spot-rate/SpotRateDropDown";
-import { Input } from "@/components/ui/input";
-import { SpotRateDateIcon, SpotRateDatePicker } from "@/components/sales/spot-rate/SpotRateDatePicker";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  SpotRateDateIcon,
+  SpotRateDatePicker,
+} from "@/components/sales/spot-rate/SpotRateDatePicker"
+import SpotRateDropDown from "@/components/sales/spot-rate/SpotRateDropDown"
 
 const SpotRateFilters = () => {
   return (
@@ -73,14 +76,14 @@ const SpotRateFilters = () => {
         </div>
       </div>
 
-    {/* Buttons */}
+      {/* Buttons */}
       <div className="flex items-center gap-4">
         <Button> List</Button>
         <Button>Clear</Button>
         <Button>Export</Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SpotRateFilters;
+export default SpotRateFilters

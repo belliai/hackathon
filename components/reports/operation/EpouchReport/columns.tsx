@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type EpouchReportType = {
-  awb_number?: string;
-  agent_code?: string;
-  agent_name?: string;
-  airport_type?: string;
-  origin?: string;
-  destination?: string;
-  doc?: string;
-};
+  awb_number?: string
+  agent_code?: string
+  agent_name?: string
+  airport_type?: string
+  origin?: string
+  destination?: string
+  doc?: string
+}
 
 export const columns: ColumnDef<EpouchReportType>[] = [
   {
@@ -37,4 +37,4 @@ export const columns: ColumnDef<EpouchReportType>[] = [
     accessorKey: "doc",
     header: "DOC# in E-Pouch",
   },
-];
+]

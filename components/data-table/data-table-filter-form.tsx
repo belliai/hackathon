@@ -1,7 +1,12 @@
-"use client";
+"use client"
 
-import { FieldValues, Path, UseFormReturn } from "react-hook-form";
-import { Card } from "../ui/card";
+import { useState } from "react"
+import { Download, Search, SearchIcon, SlidersHorizontal } from "lucide-react"
+import { FieldValues, Path, UseFormReturn } from "react-hook-form"
+
+import { Button } from "../ui/button"
+import { Card } from "../ui/card"
+import DateInput from "../ui/date-input"
 import {
   Form,
   FormControl,
@@ -9,49 +14,45 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Button } from "../ui/button";
-import { Download, Search, SearchIcon, SlidersHorizontal } from "lucide-react";
+} from "../ui/form"
+import { Input } from "../ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import DateInput from "../ui/date-input";
-import { Input } from "../ui/input";
-import { useState } from "react";
+} from "../ui/select"
 
 export type FormFieldOption<T> = {
-  key: Path<T>;
-  type: "text" | "select" | "date";
-  selectOptions?: { value: string; label: string }[];
-  label: string;
-  placeholder?: string;
-};
+  key: Path<T>
+  type: "text" | "select" | "date"
+  selectOptions?: { value: string; label: string }[]
+  label: string
+  placeholder?: string
+}
 
 type DataTableFilterFormProps<T extends FieldValues> = {
-  form: UseFormReturn<T>;
-  formFilters: FormFieldOption<T>[];
-};
+  form: UseFormReturn<T>
+  formFilters: FormFieldOption<T>[]
+}
 
 export default function DataTableFilterForm<T extends FieldValues>(
   props: DataTableFilterFormProps<T>
 ) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
 
-  const toggleExpand = () => setIsExpanded((prev) => !prev);
+  const toggleExpand = () => setIsExpanded((prev) => !prev)
 
   const filters = !isExpanded
     ? [...props.formFilters].slice(0, 4)
-    : [...props.formFilters];
+    : [...props.formFilters]
 
   return (
-    <Card className="p-4 rounded-md transition-all">
+    <Card className="rounded-md p-4 transition-all">
       <Form {...props.form}>
         <form className="flex flex-row gap-3">
-          <div className="flex-grow grid grid-cols-4 gap-3">
+          <div className="grid flex-grow grid-cols-4 gap-3">
             {filters.map((filterField) => {
               switch (filterField.type) {
                 case "select":
@@ -89,7 +90,7 @@ export default function DataTableFilterForm<T extends FieldValues>(
                         </FormItem>
                       )}
                     />
-                  );
+                  )
                 case "date":
                   return (
                     <FormField
@@ -106,7 +107,7 @@ export default function DataTableFilterForm<T extends FieldValues>(
                         </FormItem>
                       )}
                     />
-                  );
+                  )
                 default:
                   return (
                     <FormField
@@ -130,16 +131,16 @@ export default function DataTableFilterForm<T extends FieldValues>(
                         </FormItem>
                       )}
                     />
-                  );
+                  )
               }
             })}
           </div>
-          <div className="inline-flex gap-3 mt-7">
+          <div className="mt-7 inline-flex gap-3">
             {props.formFilters.length > 4 && (
               <Button
                 size="icon"
                 type="button"
-                className="bg-button-primary  text-white hover:bg-button-primary/80 size-9"
+                className="size-9 bg-button-primary text-white hover:bg-button-primary/80"
                 onClick={toggleExpand}
               >
                 <SlidersHorizontal size={16} />
@@ -148,14 +149,14 @@ export default function DataTableFilterForm<T extends FieldValues>(
             <Button
               size="icon"
               type="button"
-              className="bg-button-primary  text-white hover:bg-button-primary/80 size-9"
+              className="size-9 bg-button-primary text-white hover:bg-button-primary/80"
             >
               <Search size={16} />
             </Button>
             <Button
               size="icon"
               type="button"
-              className="bg-button-secondary  text-white hover:bg-button-secondary/80 size-9"
+              className="size-9 bg-button-secondary text-white hover:bg-button-secondary/80"
             >
               <Download size={16} />
             </Button>
@@ -163,5 +164,5 @@ export default function DataTableFilterForm<T extends FieldValues>(
         </form>
       </Form>
     </Card>
-  );
+  )
 }

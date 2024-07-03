@@ -1,10 +1,11 @@
-import FilterSection from "@/components/reports/Standard/Screening/FilterSection";
-import { DataTable } from "@components/data-table/data-table";
-import { columns } from "@/components/reports/Standard/Screening/columns";
-import { getData } from "@/lib/reports/Standard/Screening/data";
+import { DataTable } from "@components/data-table/data-table"
+
+import { getData } from "@/lib/reports/Standard/Screening/data"
+import { columns } from "@/components/reports/Standard/Screening/columns"
+import FilterSection from "@/components/reports/Standard/Screening/FilterSection"
 
 export default async function Screening() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +15,6 @@ export default async function Screening() {
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

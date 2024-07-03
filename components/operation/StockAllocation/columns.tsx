@@ -1,43 +1,44 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 export type List = {
-  level?: string;
-  awb_prefix?: string;
-  from?: string;
-  to?: string;
-  status?: string;
-  allocation_time?: string;
-  allocated_by?: string;
-  available_awb?: string;
-  last_allocated?: string;
-  cnote_type?: string;
-  stock_type?: string;
-  awb_type?: string;
-  allocated?: string;
-  job_status?: string;
-  duration?: string;
-};
+  level?: string
+  awb_prefix?: string
+  from?: string
+  to?: string
+  status?: string
+  allocation_time?: string
+  allocated_by?: string
+  available_awb?: string
+  last_allocated?: string
+  cnote_type?: string
+  stock_type?: string
+  awb_type?: string
+  allocated?: string
+  job_status?: string
+  duration?: string
+}
 
 export type History = {
-  level?: string;
-  from?: string;
-  to?: string;
-  status?: string;
-  allocation_time?: string;
-  allocated_by?: string;
-  available_awb?: string;
-};
+  level?: string
+  from?: string
+  to?: string
+  status?: string
+  allocation_time?: string
+  allocated_by?: string
+  available_awb?: string
+}
 
 export const stockListColumn: ColumnDef<List>[] = [
   {
@@ -106,23 +107,24 @@ export const stockListColumn: ColumnDef<List>[] = [
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button
+            size="icon"
+            className="bg-button-secondary text-white hover:bg-button-secondary/80"
+          >
             <span className="h-4 w-4">
               <DotsHorizontalIcon />
             </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            Delete
-          </DropdownMenuItem>
+          <DropdownMenuItem>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
     enableSorting: false,
     enableHiding: false,
   },
-];
+]
 
 export const stockAllocationColumn: ColumnDef<List>[] = [
   {
@@ -215,32 +217,27 @@ export const stockAllocationColumn: ColumnDef<List>[] = [
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button
+            size="icon"
+            className="bg-button-secondary text-white hover:bg-button-secondary/80"
+          >
             <span className="h-4 w-4">
               <DotsHorizontalIcon />
             </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            Allocate
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Blacklist
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Return
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Revoke
-          </DropdownMenuItem>
+          <DropdownMenuItem>Allocate</DropdownMenuItem>
+          <DropdownMenuItem>Blacklist</DropdownMenuItem>
+          <DropdownMenuItem>Return</DropdownMenuItem>
+          <DropdownMenuItem>Revoke</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
     enableSorting: false,
     enableHiding: false,
   },
-];
+]
 
 export const historyColumn: ColumnDef<List>[] = [
   {
@@ -281,20 +278,21 @@ export const historyColumn: ColumnDef<List>[] = [
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button
+            size="icon"
+            className="bg-button-secondary text-white hover:bg-button-secondary/80"
+          >
             <span className="h-4 w-4">
               <DotsHorizontalIcon />
             </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            Delete
-          </DropdownMenuItem>
+          <DropdownMenuItem>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
     enableSorting: false,
     enableHiding: false,
   },
-];
+]

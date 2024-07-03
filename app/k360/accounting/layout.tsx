@@ -1,13 +1,7 @@
 export default async function TrackLayout({
-    children
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode
 }) {
-
-    return ( 
-        <div className="py-10 flex flex-col w-full">
-            {children}
-        </div>
-    )
-
+  return <div className="flex w-full flex-col py-10">{children}</div>
 }

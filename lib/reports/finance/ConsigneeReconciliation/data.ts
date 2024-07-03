@@ -1,4 +1,4 @@
-import { ConsigneeReconciliationType } from "@/components/reports/finance/ConsigneeReconciliation/columns";
+import { ConsigneeReconciliationType } from "@/components/reports/finance/ConsigneeReconciliation/columns"
 
 export const DUMMY_DATA: ConsigneeReconciliationType[] = [
   {
@@ -13,7 +13,7 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "500.00",
     awb_status: "Delivered",
     transaction_date: "2023-05-10",
-    remarks: "On time"
+    remarks: "On time",
   },
   {
     agent_code: "AGENT002",
@@ -27,7 +27,7 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "200.00",
     awb_status: "In Transit",
     transaction_date: "2023-05-11",
-    remarks: "Delayed"
+    remarks: "Delayed",
   },
   {
     agent_code: "AGENT003",
@@ -41,7 +41,7 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "700.00",
     awb_status: "Delivered",
     transaction_date: "2023-05-12",
-    remarks: "On time"
+    remarks: "On time",
   },
   {
     agent_code: "AGENT004",
@@ -55,7 +55,7 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "250.00",
     awb_status: "In Transit",
     transaction_date: "2023-05-13",
-    remarks: "Delayed"
+    remarks: "Delayed",
   },
   {
     agent_code: "AGENT005",
@@ -69,7 +69,7 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "800.00",
     awb_status: "Delivered",
     transaction_date: "2023-05-14",
-    remarks: "On time"
+    remarks: "On time",
   },
   {
     agent_code: "AGENT006",
@@ -83,7 +83,7 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "400.00",
     awb_status: "In Transit",
     transaction_date: "2023-05-15",
-    remarks: "Delayed"
+    remarks: "Delayed",
   },
   {
     agent_code: "AGENT007",
@@ -97,7 +97,7 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "900.00",
     awb_status: "Delivered",
     transaction_date: "2023-05-16",
-    remarks: "On time"
+    remarks: "On time",
   },
   {
     agent_code: "AGENT008",
@@ -111,10 +111,10 @@ export const DUMMY_DATA: ConsigneeReconciliationType[] = [
     balance: "150.00",
     awb_status: "In Transit",
     transaction_date: "2023-05-17",
-    remarks: "Delayed"
-  }
-];
+    remarks: "Delayed",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

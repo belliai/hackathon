@@ -1,17 +1,16 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "../../masters/components/dummySelectOptions"
 import MastersPageTemplate, {
   SectionedFormFields,
-} from "../../masters/components/MastersPageTemplate";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS } from "../../masters/components/dummySelectOptions";
-import { Search } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "../../masters/components/MastersPageTemplate"
 
 export default function MastersCapacityAllocationPage() {
   const columns: ColumnDef<any>[] = [
@@ -65,7 +64,7 @@ export default function MastersCapacityAllocationPage() {
       header: "Parameters",
     },
     actionColumn,
-  ];
+  ]
   const data = [
     {
       allotmentId: 1,
@@ -109,7 +108,7 @@ export default function MastersCapacityAllocationPage() {
       allocatedVolume: "100",
       parameters: "100",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -164,14 +163,14 @@ export default function MastersCapacityAllocationPage() {
       type: "text",
       endIcon: <Search />,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const hookForm = useForm();
+  const filterForm = useForm()
+  const hookForm = useForm()
   const fieldArray = useFieldArray<any>({
     control: hookForm.control,
     name: "allocations",
-  });
+  })
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -297,7 +296,7 @@ export default function MastersCapacityAllocationPage() {
         },
       ],
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -310,5 +309,5 @@ export default function MastersCapacityAllocationPage() {
       sectionedFormFields={sectionedFormFields}
       hookForm={hookForm}
     />
-  );
+  )
 }

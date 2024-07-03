@@ -1,15 +1,16 @@
-"use client";
+"use client"
 
-import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterAirlineRoutePage() {
   const columns: ColumnDef<any>[] = [
@@ -41,7 +42,7 @@ export default function MasterAirlineRoutePage() {
       ),
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -58,7 +59,7 @@ export default function MasterAirlineRoutePage() {
       halt: "1",
       status: "Active",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -78,9 +79,9 @@ export default function MasterAirlineRoutePage() {
       label: "isActive",
       type: "checkbox",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -91,5 +92,5 @@ export default function MasterAirlineRoutePage() {
       filterHookForm={filterForm}
       customFilterButtons={<FilterActions />}
     />
-  );
+  )
 }

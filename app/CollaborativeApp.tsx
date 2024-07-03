@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { useOthers } from "@/liveblocks.config";
+import { useOthers } from "@/liveblocks.config"
 
 export function CollaborativeApp() {
-  const others = useOthers();
-  const userCount = others.length;
+  const others = useOthers()
+  const userCount = others.length
   return (
     <div className="flex">
       <div className="flex flex-row items-center">
@@ -12,5 +12,5 @@ export function CollaborativeApp() {
         <p className="ml-2">Active Users: {userCount}</p>
       </div>
     </div>
-  );
+  )
 }

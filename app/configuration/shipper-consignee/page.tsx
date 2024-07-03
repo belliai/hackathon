@@ -1,20 +1,21 @@
-"use client";
+"use client"
 
-import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate";
-import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/k360/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function ShipperConsignee() {
   const sectionedFormFields: SectionedFormFields[] = [
@@ -274,7 +275,7 @@ export default function ShipperConsignee() {
         },
       ],
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -363,7 +364,7 @@ export default function ShipperConsignee() {
       header: "Station",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -435,9 +436,9 @@ export default function ShipperConsignee() {
       isKnownValidUpto: "2026-03-15",
       station: "ORD",
     },
-  ];
+  ]
 
-  [
+  ;[
     {
       accountCode: "AC12345",
       accountName: "Tech Solutions Inc.",
@@ -507,9 +508,9 @@ export default function ShipperConsignee() {
       isKnownValidUpto: "2026-03-15",
       station: "ORD",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -518,7 +519,7 @@ export default function ShipperConsignee() {
       hookForm={form}
       className="max-h-none"
       customDialogContent={
-        <div className="flex flex-col gap-4 mt-8">
+        <div className="mt-8 flex flex-col gap-4">
           <div className="max-w-96">
             <FilterActions />
           </div>
@@ -527,13 +528,13 @@ export default function ShipperConsignee() {
           <CreateFormTemplate
             formFields={sectionedFormFields[1].fields}
             hookForm={form}
-            className="max-h-none mt-8"
+            className="mt-8 max-h-none"
           />
-          <div className="flex gap-2 mt-4">
+          <div className="mt-4 flex gap-2">
             <Button variant="button-primary">Save</Button>
           </div>
         </div>
       }
     />
-  );
+  )
 }

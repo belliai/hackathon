@@ -1,23 +1,7 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  ColumnPinningState,
-  PaginationState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
+import * as React from "react"
+import { useEffect } from "react"
 import {
   Table,
   TableBody,
@@ -25,26 +9,42 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@components/ui/table";
+} from "@components/ui/table"
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  ColumnPinningState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  PaginationState,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table"
 
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar";
-import { cn } from "@/lib/utils";
-import { ButtonProps } from "../ui/button";
-import { useEffect } from "react";
+import { cn } from "@/lib/utils"
+
+import { ButtonProps } from "../ui/button"
+import { DataTablePagination } from "./data-table-pagination"
+import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar"
 
 export interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  hideToolbar?: boolean;
-  hidePagination?: boolean;
-  className?: string;
-  extraToolbarButtons?: DataTableToolbarProps<TData>["extraButtons"];
-  toolbarButtonVariant?: ButtonProps["variant"];
-  onRowClick?: (data: TData) => void;
-  initialPinning?: ColumnPinningState;
-  manualPagination?: boolean,
-  tableState?: (prop: any) => void,
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  hideToolbar?: boolean
+  hidePagination?: boolean
+  className?: string
+  extraToolbarButtons?: DataTableToolbarProps<TData>["extraButtons"]
+  toolbarButtonVariant?: ButtonProps["variant"]
+  onRowClick?: (data: TData) => void
+  initialPinning?: ColumnPinningState
+  manualPagination?: boolean
+  tableState?: (prop: any) => void
   pageCount?: number
 }
 
@@ -60,19 +60,18 @@ export function DataTable<TData, TValue>({
   onRowClick,
   manualPagination,
   tableState,
-  pageCount
-
+  pageCount,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  )
+  const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnPinning, setColumnPinnig] = React.useState<ColumnPinningState>(
     initialPinning ?? { left: [], right: [] }
-  );
+  )
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -89,7 +88,7 @@ export function DataTable<TData, TValue>({
       rowSelection,
       columnFilters,
       columnPinning,
-      pagination
+      pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -103,15 +102,15 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange: setPagination,
-    manualPagination: manualPagination ?? false
-  });
+    manualPagination: manualPagination ?? false,
+  })
 
   useEffect(() => {
     tableState && tableState({ pagination })
   }, [pagination])
 
   return (
-    <div className="space-y-4 ">
+    <div className="space-y-4">
       {!hideToolbar && (
         <DataTableToolbar
           table={table}
@@ -119,7 +118,7 @@ export function DataTable<TData, TValue>({
           buttonVariant={toolbarButtonVariant}
         />
       )}
-      <div className={cn("rounded-md border ", className)}>
+      <div className={cn("rounded-md border", className)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -134,11 +133,11 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -182,5 +181,5 @@ export function DataTable<TData, TValue>({
       </div>
       {!hidePagination && <DataTablePagination table={table} />}
     </div>
-  );
+  )
 }

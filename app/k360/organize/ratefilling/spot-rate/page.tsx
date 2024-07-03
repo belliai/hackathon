@@ -1,19 +1,18 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import StatusBadge from "../../masters/components/StatusBadge";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "../../masters/components/dummySelectOptions";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
+import StatusBadge from "../../masters/components/StatusBadge"
 
 export default function MasterSpotRatePage() {
   const columns: ColumnDef<any>[] = [
@@ -117,7 +116,7 @@ export default function MasterSpotRatePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -170,7 +169,7 @@ export default function MasterSpotRatePage() {
       createdAt: "2021-09-02",
       updatedAt: "2021-09-02",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -232,14 +231,14 @@ export default function MasterSpotRatePage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
   const fieldArray = useFieldArray<any>({
     control: form.control,
     name: "rateDetails",
-  });
+  })
 
   return (
     <MastersPageTemplate
@@ -447,5 +446,5 @@ export default function MasterSpotRatePage() {
         },
       ]}
     />
-  );
+  )
 }

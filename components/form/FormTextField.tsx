@@ -1,4 +1,3 @@
-import { UseFormReturn } from "react-hook-form";
 import {
   FormControl,
   FormDescription,
@@ -6,54 +5,57 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@components/ui/form";
-import { Input } from "../ui/input";
-import { CalendarIcon, Info } from "lucide-react";
+} from "@components/ui/form"
+import { ListBulletIcon } from "@heroicons/react/24/outline"
+import { format } from "date-fns"
+import { CalendarIcon, Info } from "lucide-react"
+import { UseFormReturn } from "react-hook-form"
+
+import { cn } from "@/lib/utils"
+
+import { Button } from "../ui/button"
+import { Calendar } from "../ui/calendar"
+import { Checkbox } from "../ui/checkbox"
+import { Input } from "../ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+} from "../ui/select"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
-import { Checkbox } from "../ui/checkbox";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { format } from "date-fns";
-import { Calendar } from "../ui/calendar";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+} from "../ui/tooltip"
 
 type SelectOption = {
-  label: string;
-  value: string;
-};
+  label: string
+  value: string
+}
 
-export type TFormTextField = Omit<FormTextFieldProps, "form">;
+export type TFormTextField = Omit<FormTextFieldProps, "form">
 
 export interface FormTextFieldProps {
-  name: string;
-  type: string;
-  label?: string;
-  description?: string;
-  form: UseFormReturn<any>;
-  required?: boolean;
-  options?: SelectOption[];
-  endIcon?: React.ReactNode;
-  hasList?: boolean;
-  toolTipContent?: string;
-  hideTooltip?: boolean;
-  placeholder?: string;
-  disabled?: boolean;
-  orientation?: "horizontal" | "vertical";
-  hideErrorMessage?: boolean;
+  name: string
+  type: string
+  label?: string
+  description?: string
+  form: UseFormReturn<any>
+  required?: boolean
+  options?: SelectOption[]
+  endIcon?: React.ReactNode
+  hasList?: boolean
+  toolTipContent?: string
+  hideTooltip?: boolean
+  placeholder?: string
+  disabled?: boolean
+  orientation?: "horizontal" | "vertical"
+  hideErrorMessage?: boolean
 }
 
 export default function FormTextField({
@@ -78,7 +80,7 @@ export default function FormTextField({
     {
       "pr-8": endIcon,
     }
-  );
+  )
 
   return (
     <FormField
@@ -121,7 +123,7 @@ export default function FormTextField({
                     />
                   </PopoverContent>
                 </Popover>
-              );
+              )
 
             case "radio":
               return (
@@ -129,7 +131,7 @@ export default function FormTextField({
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="flex my-2"
+                    className="my-2 flex"
                     disabled={disabled}
                   >
                     {options?.map((option) => {
@@ -145,15 +147,15 @@ export default function FormTextField({
                             {option.label}
                           </FormLabel>
                         </FormItem>
-                      );
+                      )
                     })}
                   </RadioGroup>
                 </FormControl>
-              );
+              )
 
             case "checkbox":
               return (
-                <div className="flex gap-4 items-center my-2">
+                <div className="my-2 flex items-center gap-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
@@ -168,7 +170,7 @@ export default function FormTextField({
                     <FormDescription>{description}</FormDescription>
                   </div>
                 </div>
-              );
+              )
 
             case "select":
               return (
@@ -192,15 +194,15 @@ export default function FormTextField({
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}
                         </SelectItem>
-                      );
+                      )
                     })}
                   </SelectContent>
                 </Select>
-              );
+              )
             default:
               return (
                 <FormControl>
-                  <div className="flex gap-1 items-center">
+                  <div className="flex items-center gap-1">
                     <div className="relative w-full">
                       <Input
                         {...field}
@@ -209,7 +211,7 @@ export default function FormTextField({
                         className={cn(fieldClassName, "file:text-white")}
                         placeholder={placeholder}
                       />
-                      <span className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-zinc-400">
+                      <span className="absolute right-2 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-zinc-400">
                         {endIcon}
                       </span>
                     </div>
@@ -219,24 +221,24 @@ export default function FormTextField({
                         type="button"
                         className="text-zinc-400"
                       >
-                        <ListBulletIcon className="w-6 h-6" />
+                        <ListBulletIcon className="h-6 w-6" />
                       </Button>
                     )}
                   </div>
                 </FormControl>
-              );
+              )
           }
         }
         return (
           <FormItem
-            className={cn("w-full space-y-2 flex flex-col", {
+            className={cn("flex w-full flex-col space-y-2", {
               "md:flex-row": orientation === "horizontal",
             })}
           >
             {label && type !== "checkbox" && (
               <div
                 className={cn("flex items-center gap-1 text-zinc-50", {
-                  "max-w-48 w-full": orientation === "horizontal",
+                  "w-full max-w-48": orientation === "horizontal",
                 })}
               >
                 <FormLabel className="text-sm" htmlFor={name}>
@@ -260,14 +262,16 @@ export default function FormTextField({
                 )}
               </div>
             )}
-            <div className="flex flex-col w-full relative">
+            <div className="relative flex w-full flex-col">
               {conditionalRender()}
               {description && <FormDescription>{description}</FormDescription>}
-              {!hideErrorMessage && <FormMessage className="top-10 text-[10px]" />}
+              {!hideErrorMessage && (
+                <FormMessage className="top-10 text-[10px]" />
+              )}
             </div>
           </FormItem>
-        );
+        )
       }}
     />
-  );
+  )
 }

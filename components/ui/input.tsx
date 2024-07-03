@@ -1,19 +1,19 @@
-import * as React from "react";
+import * as React from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  leftIcon?: any;
-  rightIcon?: any;
+  leftIcon?: any
+  rightIcon?: any
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, leftIcon, rightIcon, ...props }, ref) => {
     return (
-      <div className="w-full relative">
+      <div className="relative w-full">
         {leftIcon && (
-          <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
+          <div className="absolute left-1.5 top-1/2 -translate-y-1/2 transform">
             {leftIcon}
           </div>
         )}
@@ -29,14 +29,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {rightIcon && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 transform">
             {rightIcon}
           </div>
         )}
       </div>
-    );
+    )
   }
-);
-Input.displayName = "Input";
+)
+Input.displayName = "Input"
 
-export { Input };
+export { Input }

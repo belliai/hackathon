@@ -1,37 +1,38 @@
-"use client";
+"use client"
 
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTable } from "@/components/data-table/data-table";
+import { ColumnDef } from "@tanstack/react-table"
+import { PlaneIcon } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
 import DataTableFilterForm, {
   FormFieldOption,
-} from "@/components/data-table/data-table-filter-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { PlaneIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+} from "@/components/data-table/data-table-filter-form"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
 
 type CargoLoadplanDataType = {
-  awb_no: string;
-  origin: string;
-  dest: string;
-  pieces: number;
-  weight: number;
-  declared_vol: number;
-  planned_pcs: number;
-  planned_wt: number;
-  load_vol: number;
-  shc: string;
-  commodity: string;
-  remarks: string;
-  priority: string;
-  handling_info: string;
-};
+  awb_no: string
+  origin: string
+  dest: string
+  pieces: number
+  weight: number
+  declared_vol: number
+  planned_pcs: number
+  planned_wt: number
+  load_vol: number
+  shc: string
+  commodity: string
+  remarks: string
+  priority: string
+  handling_info: string
+}
 
 const columns: ColumnDef<CargoLoadplanDataType>[] = [
   {
@@ -102,7 +103,7 @@ const columns: ColumnDef<CargoLoadplanDataType>[] = [
     header: "Action",
     cell: ({ row }) => <DataTableRowActions />,
   },
-];
+]
 
 const data: CargoLoadplanDataType[] = [
   {
@@ -153,14 +154,14 @@ const data: CargoLoadplanDataType[] = [
     priority: "High",
     handling_info: "Handle with caution",
   },
-];
+]
 
 type FilterDataType = Partial<{
-  partner_code: string;
-  flight_no: string;
-  flight_date: string;
-  dep_airport: string;
-}>;
+  partner_code: string
+  flight_no: string
+  flight_date: string
+  dep_airport: string
+}>
 
 const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -188,20 +189,20 @@ const formFilters: FormFieldOption<FilterDataType>[] = [
     type: "text",
     label: "Dept. Airport",
   },
-];
+]
 
 export default function Page() {
-  const form = useForm();
+  const form = useForm()
   return (
     <PageContainer className="gap-6">
       <PageHeader title="Cargo Loadplan" />
       <DataTableFilterForm form={form} formFilters={formFilters} />
-      <div className="flex flex-row gap-6 max-h-full">
-        <Card className="p-3 space-y-3 rounded-md">
-          <div className="w-full flex justify-center items-center">
-            <PlaneIcon className="size-6 my-1" />
+      <div className="flex max-h-full flex-row gap-6">
+        <Card className="space-y-3 rounded-md p-3">
+          <div className="flex w-full items-center justify-center">
+            <PlaneIcon className="my-1 size-6" />
           </div>
-          <div className="bg-green-600 h-60 w-24 rounded-sm border flex items-center justify-center">
+          <div className="flex h-60 w-24 items-center justify-center rounded-sm border bg-green-600">
             <span className="font-semibold">BULK</span>
           </div>
         </Card>
@@ -210,7 +211,7 @@ export default function Page() {
         </div>
       </div>
       <Card className="rounded-sm">
-        <CardHeader className="p-4 space-y-0 flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
           <h3 className="text-lg font-semibold">Cargo Loadplan</h3>
           <div className="flex flex-row gap-3">
             <Button variant={"button-primary"}>Save</Button>
@@ -222,13 +223,13 @@ export default function Page() {
         </CardHeader>
         <Separator />
         <CardContent className="px-4 py-4">
-          <div className="w-full flex items-center justify-center text-muted-foreground py-4">
+          <div className="flex w-full items-center justify-center py-4 text-muted-foreground">
             No Items
           </div>
         </CardContent>
       </Card>
       <Card className="rounded-sm">
-        <CardHeader className="p-4 space-y-0 flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
           <h3 className="text-lg font-semibold">Assigned AWBs</h3>
           <div className="flex flex-row gap-3">
             <Button variant={"button-primary"}>Unnasign AWB</Button>
@@ -236,11 +237,11 @@ export default function Page() {
         </CardHeader>
         <Separator />
         <CardContent className="px-4 py-4">
-          <div className="w-full flex items-center justify-center text-muted-foreground py-4">
+          <div className="flex w-full items-center justify-center py-4 text-muted-foreground">
             No Items
           </div>
         </CardContent>
       </Card>
     </PageContainer>
-  );
+  )
 }

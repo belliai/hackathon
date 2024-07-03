@@ -1,19 +1,21 @@
+import { forwardRef, type ReactNode } from "react"
 import {
   Arrow,
   Content,
   Portal,
   Root,
+  Trigger,
   type TooltipContentProps,
   type TooltipProps,
-  Trigger,
-} from "@radix-ui/react-tooltip";
-import { cn } from "@/lib/utils";
-import { type ReactNode, forwardRef } from "react";
-import styles from "./Tooltip.module.css";
+} from "@radix-ui/react-tooltip"
+
+import { cn } from "@/lib/utils"
+
+import styles from "./Tooltip.module.css"
 
 export interface Props
   extends Omit<TooltipProps & TooltipContentProps, "content"> {
-  content: ReactNode;
+  content: ReactNode
 }
 
 export const Tooltip = forwardRef<HTMLDivElement, Props>(
@@ -62,7 +64,7 @@ export const Tooltip = forwardRef<HTMLDivElement, Props>(
           </Content>
         </Portal>
       </Root>
-    );
+    )
   }
-);
-Tooltip.displayName = "Tooltip";
+)
+Tooltip.displayName = "Tooltip"

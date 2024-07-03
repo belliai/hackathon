@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import DataTableFilterForm, { FormFieldOption } from "@/components/data-table/data-table-filter-form";
+import DataTableFilterForm, {
+  FormFieldOption,
+} from "@/components/data-table/data-table-filter-form"
 
 export type FilterDataType = {
-  agent?: string;
-  as_of?: string;
-  entity?: string;
-  invoice_number?: string;
-};
+  agent?: string
+  as_of?: string
+  entity?: string
+  invoice_number?: string
+}
 
 export const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -48,4 +50,4 @@ export const formFilters: FormFieldOption<FilterDataType>[] = [
     label: "Invoice Number",
     placeholder: "",
   },
-];
+]

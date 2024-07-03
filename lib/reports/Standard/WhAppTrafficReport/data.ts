@@ -1,4 +1,4 @@
-import { WHAppTrafficReportType } from "@/components/reports/Standard/WhAppTrafficReport/columns";
+import { WHAppTrafficReportType } from "@/components/reports/Standard/WhAppTrafficReport/columns"
 
 export const DUMMY_DATA: WHAppTrafficReportType[] = [
   {
@@ -160,9 +160,9 @@ export const DUMMY_DATA: WHAppTrafficReportType[] = [
     status: "Completed",
     station: "Station S",
     updated_on: "2024-06-01 19:05",
-  }
-];
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

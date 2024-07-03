@@ -1,5 +1,10 @@
-import { PlannedManifestType } from "@/components/operation/ExportManifest/ExportManifest/columns";
-import { Unassigned, Assigned, Cart, Uld } from "@/components/operation/FlightPlanning/columns";
+import { PlannedManifestType } from "@/components/operation/ExportManifest/ExportManifest/columns"
+import {
+  Assigned,
+  Cart,
+  Uld,
+  Unassigned,
+} from "@/components/operation/FlightPlanning/columns"
 
 export const DUMMY_DATA_UNASSIGNED: Unassigned[] = [
   {
@@ -19,7 +24,7 @@ export const DUMMY_DATA_UNASSIGNED: Unassigned[] = [
     shc: "GEN",
     flt_date: "2024-06-01",
     scr: "1234",
-    remarks: "Handle with care"
+    remarks: "Handle with care",
   },
   {
     awb_number: "123-45678902",
@@ -38,7 +43,7 @@ export const DUMMY_DATA_UNASSIGNED: Unassigned[] = [
     shc: "HEA",
     flt_date: "2024-06-02",
     scr: "5678",
-    remarks: "Fragile items"
+    remarks: "Fragile items",
   },
   {
     awb_number: "123-45678903",
@@ -57,7 +62,7 @@ export const DUMMY_DATA_UNASSIGNED: Unassigned[] = [
     shc: "TXT",
     flt_date: "2024-06-03",
     scr: "9101",
-    remarks: "Keep dry"
+    remarks: "Keep dry",
   },
   {
     awb_number: "123-45678904",
@@ -76,7 +81,7 @@ export const DUMMY_DATA_UNASSIGNED: Unassigned[] = [
     shc: "MAC",
     flt_date: "2024-06-04",
     scr: "2345",
-    remarks: "Handle with care"
+    remarks: "Handle with care",
   },
   {
     awb_number: "123-45678905",
@@ -95,9 +100,9 @@ export const DUMMY_DATA_UNASSIGNED: Unassigned[] = [
     shc: "PER",
     flt_date: "2024-06-05",
     scr: "6789",
-    remarks: "Refrigerated"
+    remarks: "Refrigerated",
   },
-];
+]
 
 export const DUMMY_DATA_ASSIGNED: Assigned[] = [
   {
@@ -112,7 +117,7 @@ export const DUMMY_DATA_ASSIGNED: Assigned[] = [
     product_type: "General",
     scr_status: "Accepted",
     transit: "Direct",
-    shc: "GEN"
+    shc: "GEN",
   },
   {
     awb_number: "789-12345679",
@@ -126,7 +131,7 @@ export const DUMMY_DATA_ASSIGNED: Assigned[] = [
     product_type: "Heavy",
     scr_status: "In Transit",
     transit: "Via Hub",
-    shc: "MAC"
+    shc: "MAC",
   },
   {
     awb_number: "789-12345680",
@@ -140,9 +145,9 @@ export const DUMMY_DATA_ASSIGNED: Assigned[] = [
     product_type: "Perishable",
     scr_status: "Pending",
     transit: "Direct",
-    shc: "PER"
+    shc: "PER",
   },
-];
+]
 
 export const DUMMY_DATA_CART: Cart[] = [
   {
@@ -153,7 +158,7 @@ export const DUMMY_DATA_CART: Cart[] = [
     builder_name: "John Doe",
     pol: "JFK",
     pou: "LAX",
-    unid: "UN1234"
+    unid: "UN1234",
   },
   {
     cart: "CART002",
@@ -163,7 +168,7 @@ export const DUMMY_DATA_CART: Cart[] = [
     builder_name: "Jane Smith",
     pol: "ORD",
     pou: "MIA",
-    unid: "UN1235"
+    unid: "UN1235",
   },
   {
     cart: "CART003",
@@ -173,7 +178,7 @@ export const DUMMY_DATA_CART: Cart[] = [
     builder_name: "Mike Johnson",
     pol: "ATL",
     pou: "SEA",
-    unid: "UN1236"
+    unid: "UN1236",
   },
   {
     cart: "CART004",
@@ -183,9 +188,9 @@ export const DUMMY_DATA_CART: Cart[] = [
     builder_name: "Emily Brown",
     pol: "DFW",
     pou: "SFO",
-    unid: "UN1237"
-  }
-];
+    unid: "UN1237",
+  },
+]
 
 export const DUMMY_DATA_ULD: Uld[] = [
   {
@@ -200,7 +205,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "John Doe",
     uom: "kg",
     flt_stat: "Loaded",
-    remarks: "Fragile items"
+    remarks: "Fragile items",
   },
   {
     uld: "ULD002",
@@ -214,7 +219,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "Jane Smith",
     uom: "kg",
     flt_stat: "Unloaded",
-    remarks: "Handle with care"
+    remarks: "Handle with care",
   },
   {
     uld: "ULD003",
@@ -228,7 +233,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "Mike Johnson",
     uom: "kg",
     flt_stat: "Transit",
-    remarks: "Handle with care"
+    remarks: "Handle with care",
   },
   {
     uld: "ULD004",
@@ -242,7 +247,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "Emily Brown",
     uom: "kg",
     flt_stat: "Loaded",
-    remarks: "Fragile items"
+    remarks: "Fragile items",
   },
   {
     uld: "ULD005",
@@ -256,7 +261,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "David Lee",
     uom: "kg",
     flt_stat: "Unloaded",
-    remarks: "Handle with care"
+    remarks: "Handle with care",
   },
   {
     uld: "ULD006",
@@ -270,7 +275,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "Sarah Wilson",
     uom: "kg",
     flt_stat: "Transit",
-    remarks: "Handle with care"
+    remarks: "Handle with care",
   },
   {
     uld: "ULD007",
@@ -284,7 +289,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "Michael Brown",
     uom: "kg",
     flt_stat: "Loaded",
-    remarks: "Fragile items"
+    remarks: "Fragile items",
   },
   {
     uld: "ULD008",
@@ -298,9 +303,9 @@ export const DUMMY_DATA_ULD: Uld[] = [
     builder_name: "Emma Johnson",
     uom: "kg",
     flt_stat: "Unloaded",
-    remarks: "Handle with care"
-  }
-];
+    remarks: "Handle with care",
+  },
+]
 
 export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
   {
@@ -321,7 +326,7 @@ export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
     dest: "USA",
     bonded: "Yes",
     remarks: "Handle with care",
-    loading_priority: "High"
+    loading_priority: "High",
   },
   {
     uld: "ULD002",
@@ -341,7 +346,7 @@ export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
     dest: "USA",
     bonded: "No",
     remarks: "Fragile items",
-    loading_priority: "Medium"
+    loading_priority: "Medium",
   },
   {
     uld: "ULD003",
@@ -361,7 +366,7 @@ export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
     dest: "USA",
     bonded: "Yes",
     remarks: "Keep dry",
-    loading_priority: "Low"
+    loading_priority: "Low",
   },
   {
     uld: "ULD004",
@@ -381,7 +386,7 @@ export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
     dest: "USA",
     bonded: "No",
     remarks: "Handle with care",
-    loading_priority: "Medium"
+    loading_priority: "Medium",
   },
   {
     uld: "ULD005",
@@ -401,7 +406,7 @@ export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
     dest: "USA",
     bonded: "Yes",
     remarks: "Refrigerated",
-    loading_priority: "High"
+    loading_priority: "High",
   },
   {
     uld: "ULD006",
@@ -421,7 +426,7 @@ export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
     dest: "USA",
     bonded: "No",
     remarks: "Handle with care",
-    loading_priority: "Medium"
+    loading_priority: "Medium",
   },
   {
     uld: "ULD007",
@@ -441,19 +446,19 @@ export const DUMMY_DATA_PLANNED: PlannedManifestType[] = [
     dest: "USA",
     bonded: "Yes",
     remarks: "Keep dry",
-    loading_priority: "Low"
-  }
-];
+    loading_priority: "Low",
+  },
+]
 
-export async function getData(param = 'unassigned') {
+export async function getData(param = "unassigned") {
   switch (param) {
-    case 'planned':
-      return DUMMY_DATA_PLANNED;
-    case 'cart':
-      return DUMMY_DATA_CART;
-    case 'uld':
-      return DUMMY_DATA_ULD;
+    case "planned":
+      return DUMMY_DATA_PLANNED
+    case "cart":
+      return DUMMY_DATA_CART
+    case "uld":
+      return DUMMY_DATA_ULD
     default:
-      return DUMMY_DATA_UNASSIGNED;
+      return DUMMY_DATA_UNASSIGNED
   }
 }

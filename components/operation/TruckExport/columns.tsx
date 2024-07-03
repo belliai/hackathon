@@ -1,49 +1,50 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type Planned = {
-  uld?: string;
-  cart_no?: string;
-  awb_no?: string;
-  pol?: string;
-  pou?: string;
-  dest?: string;
-  next_flight?: string;
-  acc_pcs?: string;
-  acc_wt?: string;
-  mft_pcs?: string;
-  mft_wt?: string;
-  uom?: string;
-  scc?: string;
-  comm_desc?: string;
-  origin?: string;
-  bonded?: string;
-  remarks?: string;
-  loading_priority?: string;
-};
+  uld?: string
+  cart_no?: string
+  awb_no?: string
+  pol?: string
+  pou?: string
+  dest?: string
+  next_flight?: string
+  acc_pcs?: string
+  acc_wt?: string
+  mft_pcs?: string
+  mft_wt?: string
+  uom?: string
+  scc?: string
+  comm_desc?: string
+  origin?: string
+  bonded?: string
+  remarks?: string
+  loading_priority?: string
+}
 
 export type Uld = {
-  uld_no?: string;
-  awb_ct?: string;
-  awb_pcs?: string;
-  wt?: string;
-  uom?: string;
-  fltflag?: string;
-};
+  uld_no?: string
+  awb_ct?: string
+  awb_pcs?: string
+  wt?: string
+  uom?: string
+  fltflag?: string
+}
 
 export type Awb = {
-  cart_no?: string;
-  awb?: string;
-  rem_pcs?: string;
-  rem_wt?: string;
-  acc_pcs?: string;
-  acc_wt?: string;
-  uom?: string;
-  unid?: string;
-  next_flight?: string;
-};
+  cart_no?: string
+  awb?: string
+  rem_pcs?: string
+  rem_wt?: string
+  acc_pcs?: string
+  acc_wt?: string
+  uom?: string
+  unid?: string
+  next_flight?: string
+}
 
 export const plannedColumn: ColumnDef<Planned>[] = [
   {
@@ -146,7 +147,7 @@ export const plannedColumn: ColumnDef<Planned>[] = [
     accessorKey: "loading_priority",
     header: "Loading Priority",
   },
-];
+]
 
 export const uldColumn: ColumnDef<Uld>[] = [
   {
@@ -197,7 +198,7 @@ export const uldColumn: ColumnDef<Uld>[] = [
     accessorKey: "fltflag",
     header: "FLTFLAG",
   },
-];
+]
 
 export const awbColumn: ColumnDef<Awb>[] = [
   {
@@ -260,4 +261,4 @@ export const awbColumn: ColumnDef<Awb>[] = [
     accessorKey: "next_flight",
     header: "Next Flight",
   },
-];
+]

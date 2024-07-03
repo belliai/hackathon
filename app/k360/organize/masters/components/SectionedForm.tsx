@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import { Separator } from "@/components/ui/separator";
-import { SectionedFormFields } from "./MastersPageTemplate";
-import MastersPageForm from "./MastersPageForm";
-import MastersPageFieldArrayForm from "./MastersPageFieldArrayForm";
+import { Separator } from "@/components/ui/separator"
+
+import MastersPageFieldArrayForm from "./MastersPageFieldArrayForm"
+import MastersPageForm from "./MastersPageForm"
+import { SectionedFormFields } from "./MastersPageTemplate"
 
 export default function SectionedForm({
   sectionName,
@@ -34,5 +35,5 @@ export default function SectionedForm({
         />
       )}
     </div>
-  );
+  )
 }

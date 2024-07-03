@@ -1,31 +1,24 @@
+import Link from "next/link"
 
-import { Button } from "@/components/ui/button";
-import Contents from "./contents";
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+import Contents from "./contents"
 
 export default async function Page() {
-
-
   const Actions = () => {
     return (
-      <div className="flex space-x-2 items-center"> 
-          <p className="text-xs w-full text-right">Reference no</p>
-          <Input  />
-          <Button variant="button-secondary">
-            Clear
-          </Button>
-
+      <div className="flex items-center space-x-2">
+        <p className="w-full text-right text-xs">Reference no</p>
+        <Input />
+        <Button variant="button-secondary">Clear</Button>
       </div>
     )
   }
   const props = {
     title: "Create Charter",
-    actions: <Actions />
+    actions: <Actions />,
   }
 
-
-  return (
-    <Contents  {...props} />
-  );
+  return <Contents {...props} />
 }

@@ -1,3 +1,13 @@
+import Link from "next/link"
+import { ChevronRight } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,29 +17,20 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/dropdown-menu"
 
 export type TSidebarItem = {
-  name: string;
-  icon?: any;
-  href: string;
-  current?: boolean;
-  children?: TSidebarItem[];
-};
+  name: string
+  icon?: any
+  href: string
+  current?: boolean
+  children?: TSidebarItem[]
+}
 
 interface SidebarItemProps {
-  item: TSidebarItem;
-  active: boolean;
-  disabled?: boolean;
+  item: TSidebarItem
+  active: boolean
+  disabled?: boolean
 }
 
 export default function SidebarItem({
@@ -44,9 +45,9 @@ export default function SidebarItem({
         "text-white bg-zinc-900 [&_svg]:text-button-primary [&_span]:bg-button-primary/25":
           currentActive,
       }
-    );
+    )
 
-    return className;
+    return className
   }
 
   return (
@@ -58,12 +59,12 @@ export default function SidebarItem({
             "[&[data-state=open]>svg]:rotate-90"
           )}
           customarrow={
-            <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 !text-[#949496]" />
+            <ChevronRight className="h-4 w-4 shrink-0 !text-[#949496] transition-transform duration-200" />
           }
         >
           <div className="flex items-center gap-x-[7px]">
             {item.icon && (
-              <span className="flex items-center justify-center p-0.5 rounded-sm transition-colors duration-200">
+              <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
                 <item.icon
                   className="h-[18px] w-[18px] shrink-0"
                   aria-hidden="true"
@@ -83,7 +84,7 @@ export default function SidebarItem({
         >
           <div className="flex items-center gap-x-[7px]">
             {item.icon && (
-              <span className="flex items-center justify-center p-0.5 rounded-sm transition-colors duration-200">
+              <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
                 <item.icon
                   className="h-[18px] w-[18px] shrink-0"
                   aria-hidden="true"
@@ -112,7 +113,7 @@ export default function SidebarItem({
                       "[&[data-state=open]>svg]:rotate-90"
                     )}
                     customarrow={
-                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200 text-white/60" />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-white/60 transition-transform duration-200" />
                     }
                   >
                     <div className="flex items-center gap-x-2.5">
@@ -126,7 +127,7 @@ export default function SidebarItem({
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="relative pb-0 pl-[46px]">
-                    <span className="top-0 left-8 w-[1px] my-0.5 h-full bg-border absolute" />
+                    <span className="absolute left-8 top-0 my-0.5 h-full w-[1px] bg-border" />
                     {childMenu.children.map((submenu) => (
                       <Link
                         key={submenu.name}
@@ -139,7 +140,7 @@ export default function SidebarItem({
                               <div className="flex items-center justify-between gap-x-3 text-[13px]">
                                 {submenu.name}
                                 <ChevronRight
-                                  className="h-4 w-4 "
+                                  className="h-4 w-4"
                                   aria-hidden="true"
                                 />
                               </div>
@@ -159,7 +160,7 @@ export default function SidebarItem({
                                               return (
                                                 <DropdownMenuItem
                                                   key={subsubsubmenu.name}
-                                                  className="cursor-pointer text-[13px] leading-normal h-7 py-1"
+                                                  className="h-7 cursor-pointer py-1 text-[13px] leading-normal"
                                                   asChild
                                                 >
                                                   <Link
@@ -168,26 +169,26 @@ export default function SidebarItem({
                                                     {subsubsubmenu.name}
                                                   </Link>
                                                 </DropdownMenuItem>
-                                              );
+                                              )
                                             }
                                           )}
                                         </DropdownMenuSubContent>
                                       </DropdownMenuPortal>
                                     </DropdownMenuSub>
-                                  );
+                                  )
                                 }
 
                                 return (
                                   <DropdownMenuItem
                                     key={subsubmenu.name}
-                                    className="cursor-pointer text-[13px] leading-normal h-7 py-1"
+                                    className="h-7 cursor-pointer py-1 text-[13px] leading-normal"
                                     asChild
                                   >
                                     <Link href={subsubmenu.href}>
                                       {subsubmenu.name}
                                     </Link>
                                   </DropdownMenuItem>
-                                );
+                                )
                               })}
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -201,7 +202,7 @@ export default function SidebarItem({
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            );
+            )
           }
 
           return (
@@ -210,7 +211,7 @@ export default function SidebarItem({
               href={childMenu.href}
               className={cn(
                 getBaseItemClassName(!!childMenu.current),
-                "pl-6 gap-2.5"
+                "gap-2.5 pl-6"
               )}
             >
               {childMenu.icon && (
@@ -221,9 +222,9 @@ export default function SidebarItem({
               )}
               <div className="flex items-center gap-x-3">{childMenu.name}</div>
             </Link>
-          );
+          )
         })}
       </AccordionContent>
     </AccordionItem>
-  );
+  )
 }

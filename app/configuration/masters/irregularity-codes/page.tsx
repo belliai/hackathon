@@ -1,11 +1,12 @@
-"use client";
+"use client"
 
-import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function MasterIrregularityCodes() {
   const formFields: TFormTextField[] = [
@@ -61,9 +62,9 @@ export default function MasterIrregularityCodes() {
       type: "checkbox",
       label: "Active",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -72,11 +73,11 @@ export default function MasterIrregularityCodes() {
       hookForm={form}
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
         </div>
       }
     />
-  );
+  )
 }

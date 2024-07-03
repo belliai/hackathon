@@ -1,20 +1,22 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
-import { UseFormReturn } from "react-hook-form";
-import { SectionedFormFields } from "./MastersPageTemplate";
-import { cn } from "@/lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SectionedForm from "./SectionedForm";
-import MastersPageForm from "./MastersPageForm";
+import { UseFormReturn } from "react-hook-form"
+
+import { cn } from "@/lib/utils"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import MastersPageForm from "./MastersPageForm"
+import { SectionedFormFields } from "./MastersPageTemplate"
+import SectionedForm from "./SectionedForm"
 
 export interface CreateFormTemplateProps {
-  hookForm: UseFormReturn<any>;
-  formFields?: TFormTextField[];
-  sectionedFormFields?: SectionedFormFields[];
-  customDialogContent?: React.ReactNode;
-  sectionsType?: "normal" | "tabs";
-  className?: string;
+  hookForm: UseFormReturn<any>
+  formFields?: TFormTextField[]
+  sectionedFormFields?: SectionedFormFields[]
+  customDialogContent?: React.ReactNode
+  sectionsType?: "normal" | "tabs"
+  className?: string
 }
 
 export default function CreateFormTemplate({
@@ -28,7 +30,7 @@ export default function CreateFormTemplate({
   return (
     <div
       className={cn(
-        "max-h-[75dvh]  overflow-auto pr-2",
+        "max-h-[75dvh] overflow-auto pr-2",
         {
           "h-[75dvh]": sectionsType === "tabs",
         },
@@ -50,7 +52,7 @@ export default function CreateFormTemplate({
                   >
                     {section.sectionName}
                   </TabsTrigger>
-                );
+                )
               })}
             </TabsList>
             {sectionedFormFields.map((section, index) => {
@@ -67,7 +69,7 @@ export default function CreateFormTemplate({
                     showRemoveButton={section.showRemoveButton}
                   />
                 </TabsContent>
-              );
+              )
             })}
           </Tabs>
         ) : (
@@ -82,7 +84,7 @@ export default function CreateFormTemplate({
                   showRemoveButton={section.showRemoveButton}
                 />
               </div>
-            );
+            )
           })
         )
       ) : (
@@ -90,5 +92,5 @@ export default function CreateFormTemplate({
       )}
       {customDialogContent && customDialogContent}
     </div>
-  );
+  )
 }

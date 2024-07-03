@@ -1,4 +1,4 @@
-import { DailySalesType } from "@/components/reports/Standard/DailySales/columns";
+import { DailySalesType } from "@/components/reports/Standard/DailySales/columns"
 
 export const DUMMY_DATA: DailySalesType[] = [
   {
@@ -211,8 +211,8 @@ export const DUMMY_DATA: DailySalesType[] = [
     net_profit: "1800",
     updated_on: "2024-06-02",
   },
-];
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

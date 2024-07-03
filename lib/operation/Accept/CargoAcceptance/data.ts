@@ -1,4 +1,4 @@
-import { CargoAcceptanceType } from "@/components/operation/Accept/CargoAcceptance/columns";
+import { CargoAcceptanceType } from "@/components/operation/Accept/CargoAcceptance/columns"
 
 export const DUMMY_DATA: CargoAcceptanceType[] = [
   {
@@ -13,7 +13,7 @@ export const DUMMY_DATA: CargoAcceptanceType[] = [
     known_shipper: "Yes",
     dimension: "120x80x60cm",
     is_accepted: "Yes",
-    acceptance_method: "Manual"
+    acceptance_method: "Manual",
   },
   {
     awb: "0987654321",
@@ -27,7 +27,7 @@ export const DUMMY_DATA: CargoAcceptanceType[] = [
     known_shipper: "No",
     dimension: "100x60x40cm",
     is_accepted: "No",
-    acceptance_method: "Automated"
+    acceptance_method: "Automated",
   },
   {
     awb: "1122334455",
@@ -41,7 +41,7 @@ export const DUMMY_DATA: CargoAcceptanceType[] = [
     known_shipper: "Yes",
     dimension: "50x40x30cm",
     is_accepted: "Yes",
-    acceptance_method: "Manual"
+    acceptance_method: "Manual",
   },
   {
     awb: "5566778899",
@@ -55,7 +55,7 @@ export const DUMMY_DATA: CargoAcceptanceType[] = [
     known_shipper: "No",
     dimension: "200x100x80cm",
     is_accepted: "Yes",
-    acceptance_method: "Automated"
+    acceptance_method: "Automated",
   },
   {
     awb: "6677889900",
@@ -69,10 +69,10 @@ export const DUMMY_DATA: CargoAcceptanceType[] = [
     known_shipper: "Yes",
     dimension: "70x50x40cm",
     is_accepted: "No",
-    acceptance_method: "Manual"
-  }
-];
+    acceptance_method: "Manual",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

@@ -1,12 +1,19 @@
-import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 const SpotRateDetailsApproval = () => {
-  const rates: any[] = []; //no data yet
+  const rates: any[] = [] //no data yet
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold mb-2">Spot Rate Details</h2>
-      <Table className="w-full mt-4">
+      <h2 className="mb-2 text-xl font-semibold">Spot Rate Details</h2>
+      <Table className="mt-4 w-full">
         <TableHeader>
           <TableRow>
             <TableHead>
@@ -66,7 +73,7 @@ const SpotRateDetailsApproval = () => {
         </TableBody>
       </Table>
     </div>
-  );
-};
+  )
+}
 
-export default SpotRateDetailsApproval;
+export default SpotRateDetailsApproval

@@ -1,16 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import StatusBadge from "../../masters/components/StatusBadge";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../masters/components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
+import StatusBadge from "../../masters/components/StatusBadge"
 
 export default function MasterProrateFactor() {
   const columns: ColumnDef<any>[] = [
@@ -54,7 +53,7 @@ export default function MasterProrateFactor() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -77,7 +76,7 @@ export default function MasterProrateFactor() {
       updatedAt: "2021-10-01",
       createdAt: "2021-10-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -114,7 +113,7 @@ export default function MasterProrateFactor() {
       placeholder: "To Date",
       type: "date",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -153,10 +152,10 @@ export default function MasterProrateFactor() {
       placeholder: "Status",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -169,5 +168,5 @@ export default function MasterProrateFactor() {
       filterHookForm={filterForm}
       hookForm={form}
     />
-  );
+  )
 }

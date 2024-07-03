@@ -1,65 +1,65 @@
-"use client";
+"use client"
 
-import React, { ForwardedRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
+import React, { ForwardedRef, useEffect } from "react"
+import { Order } from "@/schemas/order/order"
+import { RotateCcwIcon, SearchIcon } from "lucide-react"
+import { useFormContext } from "react-hook-form"
+
+import { fetchTooltips } from "@/lib/contentful"
+import { useBookingTypes } from "@/lib/hooks/booking-types"
+import { usePartnerCodes } from "@/lib/hooks/partner-codes"
+import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
+import { useStatuses } from "@/lib/hooks/statuses"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { RotateCcwIcon, SearchIcon } from "lucide-react";
-import { useFormContext } from "react-hook-form";
-
-
+} from "@/components/ui/select"
 
 const generateAWBNumbers = (start: number, length: number) => {
   return Array.from({ length }, (_, i) => {
-    const awbNumber = start + i;
+    const awbNumber = start + i
     const formattedAwb = `${awbNumber.toString().slice(0, 3)}-${awbNumber
       .toString()
-      .slice(3)}`;
-    return formattedAwb;
-  });
-};
-import { useBookingTypes } from "@/lib/hooks/booking-types"
-import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
-import { usePartnerCodes } from "@/lib/hooks/partner-codes"
-import { useStatuses } from "@/lib/hooks/statuses";
-import { Order } from "@/schemas/order/order";
-import { fetchTooltips } from "@/lib/contentful";
+      .slice(3)}`
+    return formattedAwb
+  })
+}
 
 const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
-
-  const form = useFormContext();
-  const awb = generateAWBNumbers(7752000270, 20);
+  const form = useFormContext()
+  const awb = generateAWBNumbers(7752000270, 20)
   const { data: bookingTypes } = useBookingTypes()
   const { data: partnerPrefixes } = usePartnerPrefixes()
   const { data: partnerCodes } = usePartnerCodes()
   const { data: statuses } = useStatuses()
-  
-  useEffect(()=>{},[form.formState])
-  
+
+  useEffect(() => {}, [form.formState])
+
   return (
-    <Card className="p-4 space-y-2" ref={ref}>
+    <Card className="space-y-2 p-4" ref={ref}>
       <div className="grid grid-cols-4 gap-2">
         <FormField
           control={form.control}
           name="booking_type_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel tooltipId="new-orders-booking-type">Booking Type</FormLabel>
+              <FormLabel tooltipId="new-orders-booking-type">
+                Booking Type
+              </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border-2 border-foreground/30">
@@ -67,9 +67,12 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {bookingTypes && bookingTypes.map((bookingType: any) =>
-                    <SelectItem value={bookingType.ID} key={bookingType.ID} >{bookingType.name}</SelectItem>
-                  )}
+                  {bookingTypes &&
+                    bookingTypes.map((bookingType: any) => (
+                      <SelectItem value={bookingType.ID} key={bookingType.ID}>
+                        {bookingType.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -91,9 +94,15 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {partnerPrefixes && partnerPrefixes.map((partnerPrefix: any) =>
-                    <SelectItem value={partnerPrefix.ID} key={partnerPrefix.ID} >{partnerPrefix.name}</SelectItem>
-                  )}
+                  {partnerPrefixes &&
+                    partnerPrefixes.map((partnerPrefix: any) => (
+                      <SelectItem
+                        value={partnerPrefix.ID}
+                        key={partnerPrefix.ID}
+                      >
+                        {partnerPrefix.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -128,9 +137,12 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {partnerCodes && partnerCodes.map((partnerCode: any) =>
-                    <SelectItem value={partnerCode.ID} key={partnerCode.ID} >{partnerCode.name}</SelectItem>
-                  )}
+                  {partnerCodes &&
+                    partnerCodes.map((partnerCode: any) => (
+                      <SelectItem value={partnerCode.ID} key={partnerCode.ID}>
+                        {partnerCode.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -138,7 +150,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           )}
         />
       </div>
-      <div className="w-full flex flex-row items-center justify-between">
+      <div className="flex w-full flex-row items-center justify-between">
         <FormField
           control={form.control}
           name="is_physical"
@@ -179,9 +191,12 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {statuses && statuses.map((status: any) =>
-                  <SelectItem value={status.ID} key={status.ID} >{status.name}</SelectItem>
-                )}
+                {statuses &&
+                  statuses.map((status: any) => (
+                    <SelectItem value={status.ID} key={status.ID}>
+                      {status.name}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
             <FormMessage />
@@ -189,9 +204,9 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         )}
       />
     </Card>
-  );
-});
+  )
+})
 
-CreateBookingForm.displayName = "CreateBookingForm";
+CreateBookingForm.displayName = "CreateBookingForm"
 
-export default CreateBookingForm;
+export default CreateBookingForm

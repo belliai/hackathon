@@ -1,39 +1,39 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import DateInput from "@/components/ui/date-input";
+import React, { useEffect, useState } from "react"
+import { Order } from "@/schemas/order/order"
+import { PlusIcon, PlusSquareIcon, SearchIcon, TrashIcon } from "lucide-react"
+import { useFieldArray, useFormContext } from "react-hook-form"
+
+import { useLocations } from "@/lib/hooks/locations"
+import { usePartnerCodes } from "@/lib/hooks/partner-codes"
+import { usePartnerTypes } from "@/lib/hooks/partner-types"
+import { useStatuses } from "@/lib/hooks/statuses"
+import { useTransportMethods } from "@/lib/hooks/transport-method"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import DateInput from "@/components/ui/date-input"
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
-import { TabsList } from "@/components/ui/vertical-tabs";
-import { cn } from "@/lib/utils";
-import { PlusIcon, PlusSquareIcon, SearchIcon, TrashIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import React from "react";
-import { usePartnerCodes } from "@/lib/hooks/partner-codes";
-import { useStatuses } from "@/lib/hooks/statuses";
-import { usePartnerTypes } from "@/lib/hooks/partner-types";
-import { useLocations } from "@/lib/hooks/locations";
-import { useTransportMethods } from "@/lib/hooks/transport-method";
-import { Order } from "@/schemas/order/order";
+} from "@/components/ui/select"
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs"
+import { TabsList } from "@/components/ui/vertical-tabs"
 
 const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
-  const form = useFormContext();
+  const form = useFormContext()
   const { data: partnerCodes } = usePartnerCodes()
   const { data: statuses } = useStatuses()
   const { data: partnerTypes } = usePartnerTypes()
@@ -42,18 +42,19 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     { control: form.control, name: "shipper_details" }
-  );
+  )
 
-  const [tabValue, setTabValue] = useState(fields.length && fields[0].id || "0");
+  const [tabValue, setTabValue] = useState(
+    (fields.length && fields[0].id) || "0"
+  )
 
   const appendField = () => {
-    append({});
-  };
+    append({})
+  }
 
   useEffect(() => {
-    setTabValue(fields[fields.length - 1]?.id ?? "");
-
-  }, [fields]);
+    setTabValue(fields[fields.length - 1]?.id ?? "")
+  }, [fields])
 
   return (
     <Tabs
@@ -62,14 +63,14 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
       className="flex flex-col"
       ref={ref}
     >
-      <TabsList className="flex flex-row justify-start items-center p-0 bg-transparent transition-all">
+      <TabsList className="flex flex-row items-center justify-start bg-transparent p-0 transition-all">
         {fields.map((field, index) => {
-          const isFirst = index === 0;
-          const isLast = index === fields.length - 1;
+          const isFirst = index === 0
+          const isLast = index === fields.length - 1
           return (
             <TabsTrigger
               className={cn(
-                "border-y border-r rounded-none text-xs py-2 px-4 font-normal",
+                "rounded-none border-y border-r px-4 py-2 text-xs font-normal",
                 isFirst && "rounded-tl-md border-l",
                 isLast && "rounded-tr-md"
               )}
@@ -78,36 +79,36 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
             >
               Route {index + 1}
             </TabsTrigger>
-          );
+          )
         })}
         <Button
           size={"icon"}
           variant={"ghost"}
           onClick={appendField}
-          className="w-6 h-6 mx-2"
+          className="mx-2 h-6 w-6"
           type="button"
         >
-          <PlusIcon className="w-4 h-4" />
+          <PlusIcon className="h-4 w-4" />
         </Button>
       </TabsList>
-      <Card className="p-4 rounded-tl-none flex-grow ">
+      <Card className="flex-grow rounded-tl-none p-4">
         {fields.map((field, index) => {
           return (
             <TabsContent
               key={field.id}
               value={field.id}
-              className="mt-0 grid grid-cols-2 gap-y-2 gap-x-3"
+              className="mt-0 grid grid-cols-2 gap-x-3 gap-y-2"
             >
-              <FormField  
+              <FormField
                 name={`shipper_details[${index}].ID`}
                 render={({ field }) => (
                   <FormItem className="hidden">
-                      <Input
-                        type="hidden"
-                        {...field}
-                        defaultValue={field.value ?? undefined}
-                        className="border-2 border-foreground/30"
-                      />
+                    <Input
+                      type="hidden"
+                      {...field}
+                      defaultValue={field.value ?? undefined}
+                      className="border-2 border-foreground/30"
+                    />
                   </FormItem>
                 )}
               />
@@ -127,9 +128,15 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {transportMethods && transportMethods.map((transportMethod: any) =>
-                          <SelectItem value={transportMethod.ID} key={transportMethod.ID} >{transportMethod.name}</SelectItem>
-                        )}
+                        {transportMethods &&
+                          transportMethods.map((transportMethod: any) => (
+                            <SelectItem
+                              value={transportMethod.ID}
+                              key={transportMethod.ID}
+                            >
+                              {transportMethod.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -143,16 +150,21 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   <FormItem>
                     <FormLabel>Origin *</FormLabel>
                     <Select
-                      onValueChange={field.onChange} defaultValue={field.value}>
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="border-2 border-foreground/30">
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {locations && locations.map((location: any) =>
-                          <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
-                        )}
+                        {locations &&
+                          locations.map((location: any) => (
+                            <SelectItem value={location.ID} key={location.ID}>
+                              {location.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -166,7 +178,8 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   <FormItem>
                     <FormLabel>Destination *</FormLabel>
                     <Select
-                       onValueChange={field.onChange} defaultValue={field.value}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="border-2 border-foreground/30">
@@ -174,9 +187,12 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {locations && locations.map((location: any) =>
-                          <SelectItem value={location.ID} key={location.ID} >{location.name}</SelectItem>
-                        )}
+                        {locations &&
+                          locations.map((location: any) => (
+                            <SelectItem value={location.ID} key={location.ID}>
+                              {location.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -199,9 +215,15 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {partnerTypes && partnerTypes.map((partnerType: any) =>
-                          <SelectItem value={partnerType.ID} key={partnerType.ID} >{partnerType.name}</SelectItem>
-                        )}
+                        {partnerTypes &&
+                          partnerTypes.map((partnerType: any) => (
+                            <SelectItem
+                              value={partnerType.ID}
+                              key={partnerType.ID}
+                            >
+                              {partnerType.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -224,9 +246,15 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {partnerCodes && partnerCodes.map((partnerCode: any) =>
-                          <SelectItem value={partnerCode.ID} key={partnerCode.ID} >{partnerCode.name}</SelectItem>
-                        )}
+                        {partnerCodes &&
+                          partnerCodes.map((partnerCode: any) => (
+                            <SelectItem
+                              value={partnerCode.ID}
+                              key={partnerCode.ID}
+                            >
+                              {partnerCode.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -295,23 +323,26 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {statuses && statuses.map((status: any) =>
-                          <SelectItem value={status.ID} key={status.ID} >{status.name}</SelectItem>
-                        )}
+                        {statuses &&
+                          statuses.map((status: any) => (
+                            <SelectItem value={status.ID} key={status.ID}>
+                              {status.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="col-span-2 inline-flex items-center mt-3 gap-3">
+              <div className="col-span-2 mt-3 inline-flex items-center gap-3">
                 <Button
                   onClick={appendField}
                   variant={"button-secondary"}
                   className="flex-1"
                   type="button"
                 >
-                  <PlusSquareIcon className="w-4 h-4 mr-2" />
+                  <PlusSquareIcon className="mr-2 h-4 w-4" />
                   New Route
                 </Button>
                 <Button
@@ -320,17 +351,17 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   variant={"destructive"}
                   type="button"
                 >
-                  <TrashIcon className="w-4 h-4" />
+                  <TrashIcon className="h-4 w-4" />
                 </Button>
               </div>
             </TabsContent>
-          );
+          )
         })}
       </Card>
     </Tabs>
-  );
-});
+  )
+})
 
-ShipperDetailsForm.displayName = "ShipperDetailsForm";
+ShipperDetailsForm.displayName = "ShipperDetailsForm"
 
-export default ShipperDetailsForm;
+export default ShipperDetailsForm

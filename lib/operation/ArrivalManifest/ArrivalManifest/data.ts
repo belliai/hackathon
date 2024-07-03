@@ -1,4 +1,7 @@
-import { AwbType, UldType } from "@/components/operation/ArrivalManifest/ArrivalManifest/columns";
+import {
+  AwbType,
+  UldType,
+} from "@/components/operation/ArrivalManifest/ArrivalManifest/columns"
 
 export const DUMMY_DATA_AWB: AwbType[] = [
   {
@@ -26,7 +29,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     uom: "kg",
     acc_pcs: "10",
     acc_wt: "500",
-    security_check: "Passed"
+    security_check: "Passed",
   },
   {
     awb_number: "123-45678902",
@@ -53,7 +56,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     uom: "kg",
     acc_pcs: "8",
     acc_wt: "320",
-    security_check: "Passed"
+    security_check: "Passed",
   },
   {
     awb_number: "123-45678903",
@@ -80,7 +83,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     uom: "kg",
     acc_pcs: "15",
     acc_wt: "750",
-    security_check: "Passed"
+    security_check: "Passed",
   },
   {
     awb_number: "123-45678904",
@@ -107,7 +110,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     uom: "kg",
     acc_pcs: "12",
     acc_wt: "600",
-    security_check: "Passed"
+    security_check: "Passed",
   },
   {
     awb_number: "123-45678905",
@@ -134,9 +137,9 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     uom: "kg",
     acc_pcs: "20",
     acc_wt: "1000",
-    security_check: "Passed"
-  }
-];
+    security_check: "Passed",
+  },
+]
 
 export const DUMMY_DATA_ULD: UldType[] = [
   {
@@ -155,7 +158,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "JFK",
     uom: "kg",
     handling_instruction: "Fragile",
-    remark: "Handle with care"
+    remark: "Handle with care",
   },
   {
     uld: "ULD002",
@@ -173,7 +176,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "ORD",
     uom: "kg",
     handling_instruction: "Handle with care",
-    remark: "Fragile items"
+    remark: "Fragile items",
   },
   {
     uld: "ULD003",
@@ -191,7 +194,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "ATL",
     uom: "kg",
     handling_instruction: "Do not wet",
-    remark: "Keep dry"
+    remark: "Keep dry",
   },
   {
     uld: "ULD004",
@@ -209,7 +212,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "DFW",
     uom: "kg",
     handling_instruction: "Fragile",
-    remark: "Handle with care"
+    remark: "Handle with care",
   },
   {
     uld: "ULD005",
@@ -227,7 +230,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "LAX",
     uom: "kg",
     handling_instruction: "Keep cold",
-    remark: "Refrigerated"
+    remark: "Refrigerated",
   },
   {
     uld: "ULD006",
@@ -245,7 +248,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "JFK",
     uom: "kg",
     handling_instruction: "Handle with care",
-    remark: "Fragile items"
+    remark: "Fragile items",
   },
   {
     uld: "ULD007",
@@ -263,7 +266,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "ORD",
     uom: "kg",
     handling_instruction: "Keep dry",
-    remark: "Do not wet"
+    remark: "Do not wet",
   },
   {
     uld: "ULD008",
@@ -281,15 +284,15 @@ export const DUMMY_DATA_ULD: UldType[] = [
     pol: "ATL",
     uom: "kg",
     handling_instruction: "Handle with care",
-    remark: "Fragile items"
-  }
-];
+    remark: "Fragile items",
+  },
+]
 
-export async function getData(param = 'awb') {
+export async function getData(param = "awb") {
   switch (param) {
-    case 'uld':
-      return DUMMY_DATA_ULD;
+    case "uld":
+      return DUMMY_DATA_ULD
     default:
-      return DUMMY_DATA_AWB;
+      return DUMMY_DATA_AWB
   }
 }

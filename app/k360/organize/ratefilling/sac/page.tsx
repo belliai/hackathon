@@ -1,14 +1,13 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../masters/components/MastersPageTemplate";
-import {
-  actionColumn,
-  selectColumn,
-} from "../../masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { DUMMY_SELECT_OPTIONS_STATUS } from "../../masters/components/dummySelectOptions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import { actionColumn, selectColumn } from "../../masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS_STATUS } from "../../masters/components/dummySelectOptions"
+import MastersPageTemplate from "../../masters/components/MastersPageTemplate"
 
 export default function MasterSacPage() {
   const columns: ColumnDef<any>[] = [
@@ -34,7 +33,7 @@ export default function MasterSacPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -53,7 +52,7 @@ export default function MasterSacPage() {
       createdAt: "2021-09-01",
       updatedAt: "2021-09-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -67,7 +66,7 @@ export default function MasterSacPage() {
       placeholder: "Status",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -86,10 +85,10 @@ export default function MasterSacPage() {
       placeholder: "Status",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -102,5 +101,5 @@ export default function MasterSacPage() {
       formFields={formFields}
       hookForm={form}
     />
-  );
+  )
 }

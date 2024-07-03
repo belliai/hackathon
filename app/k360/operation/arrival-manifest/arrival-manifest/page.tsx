@@ -1,8 +1,8 @@
-import FilterSection from "@/components/operation/ArrivalManifest/ArrivalManifest/FilterSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RightSection from "@/components/operation/ArrivalManifest/ArrivalManifest/RightSection";
-import AwbSection from "@/components/operation/ArrivalManifest/ArrivalManifest/AwbSection";
-import UldSection from "@/components/operation/ArrivalManifest/ArrivalManifest/UldSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import AwbSection from "@/components/operation/ArrivalManifest/ArrivalManifest/AwbSection"
+import FilterSection from "@/components/operation/ArrivalManifest/ArrivalManifest/FilterSection"
+import RightSection from "@/components/operation/ArrivalManifest/ArrivalManifest/RightSection"
+import UldSection from "@/components/operation/ArrivalManifest/ArrivalManifest/UldSection"
 
 export default async function ArrivalManifest() {
   return (
@@ -28,5 +28,5 @@ export default async function ArrivalManifest() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,10 +1,11 @@
-import FilterSection from "@/components/operation/Export/ExportSummary/FilterSection";
-import { DataTable } from "@components/data-table/data-table";
-import { columns } from "@/components/operation/Export/ExportSummary/columns";
-import { getData } from "@/lib/operation/Export/ExportSummary/data";
+import { DataTable } from "@components/data-table/data-table"
+
+import { getData } from "@/lib/operation/Export/ExportSummary/data"
+import { columns } from "@/components/operation/Export/ExportSummary/columns"
+import FilterSection from "@/components/operation/Export/ExportSummary/FilterSection"
 
 export default async function ExportSummary() {
-  const data = await getData();
+  const data = await getData()
 
   return (
     <div className="flex flex-col gap-4">
@@ -14,7 +15,6 @@ export default async function ExportSummary() {
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       </div>
-      
     </div>
-  );
+  )
 }

@@ -1,16 +1,17 @@
-"use client";
+"use client"
 
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 const cartFormFields: Omit<FormTextFieldProps, "form">[] = [
   {
@@ -43,7 +44,7 @@ const cartFormFields: Omit<FormTextFieldProps, "form">[] = [
       { label: "Inactive", value: "inactive" },
     ],
   },
-];
+]
 
 export default function CartPage() {
   const columns: ColumnDef<any>[] = [
@@ -74,7 +75,7 @@ export default function CartPage() {
           <Badge className="bg-green-700/80 text-white hover:bg-green-600">
             {row.original.status}
           </Badge>
-        );
+        )
       },
     },
     {
@@ -103,7 +104,7 @@ export default function CartPage() {
         />
       ),
     },
-  ];
+  ]
 
   const data = [
     {
@@ -162,9 +163,9 @@ export default function CartPage() {
       created_at: "2021-09-01",
       updated_at: "2021-09-01",
     },
-  ];
+  ]
 
-  const cartForm = useForm();
+  const cartForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -177,5 +178,5 @@ export default function CartPage() {
       filterFormFields={cartFormFields}
       filterHookForm={cartForm}
     />
-  );
+  )
 }

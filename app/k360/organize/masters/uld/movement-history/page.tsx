@@ -1,12 +1,14 @@
-"use client";
+"use client"
 
-import { TFormTextField } from "@/components/form/FormTextField";
-import { ColumnDef } from "@tanstack/react-table";
-import MastersPageTemplate from "../../components/MastersPageTemplate";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import Link from "next/link"
+import { ColumnDef } from "@tanstack/react-table"
+import { ArrowLeft } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+
+import MastersPageTemplate from "../../components/MastersPageTemplate"
 
 export default function MasterMovementHistory() {
   const columns: ColumnDef<any>[] = [
@@ -46,7 +48,7 @@ export default function MasterMovementHistory() {
       accessorKey: "awbNumber",
       header: "AWB No.",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -96,7 +98,7 @@ export default function MasterMovementHistory() {
       placeholder: "AWB No.",
       type: "text",
     },
-  ];
+  ]
 
   const data = [
     {
@@ -154,9 +156,9 @@ export default function MasterMovementHistory() {
       awbPrefix: "567",
       awbNumber: "8901234",
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
+  const filterHookForm = useForm()
 
   return (
     <>
@@ -170,7 +172,7 @@ export default function MasterMovementHistory() {
       />
       <Button
         asChild
-        className="bg-button-primary hover:bg-button-primary/80 text-white"
+        className="bg-button-primary text-white hover:bg-button-primary/80"
       >
         <Link href="/organize/masters/uld">
           <ArrowLeft size={16} className="mr-2" />
@@ -178,5 +180,5 @@ export default function MasterMovementHistory() {
         </Link>
       </Button>
     </>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { NotocDetailType } from "@/components/operation/Export/NotocDetail/columns";
+import { NotocDetailType } from "@/components/operation/Export/NotocDetail/columns"
 
 export const DUMMY_DATA: NotocDetailType[] = [
   {
@@ -11,7 +11,7 @@ export const DUMMY_DATA: NotocDetailType[] = [
     handling_info: "Handle with care",
     special_instructions: "Do not stack",
     hazard_class: "9",
-    un_number: "UN3480"
+    un_number: "UN3480",
   },
   {
     item_no: "002",
@@ -23,7 +23,7 @@ export const DUMMY_DATA: NotocDetailType[] = [
     handling_info: "Keep away from heat",
     special_instructions: "Ventilated storage",
     hazard_class: "3",
-    un_number: "UN1263"
+    un_number: "UN1263",
   },
   {
     item_no: "003",
@@ -35,7 +35,7 @@ export const DUMMY_DATA: NotocDetailType[] = [
     handling_info: "Secure cylinders",
     special_instructions: "Avoid direct sunlight",
     hazard_class: "2.1",
-    un_number: "UN1950"
+    un_number: "UN1950",
   },
   {
     item_no: "004",
@@ -47,7 +47,7 @@ export const DUMMY_DATA: NotocDetailType[] = [
     handling_info: "Wear protective gear",
     special_instructions: "Separate from food",
     hazard_class: "8",
-    un_number: "UN1760"
+    un_number: "UN1760",
   },
   {
     item_no: "005",
@@ -59,10 +59,10 @@ export const DUMMY_DATA: NotocDetailType[] = [
     handling_info: "Use fume hood",
     special_instructions: "Emergency shower nearby",
     hazard_class: "6.1",
-    un_number: "UN2810"
-  }
-];
+    un_number: "UN2810",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type ExportInventoryType = {
-  warehouse_id: string;
-  cargo_id: string;
-  description: string;
-  quantity: string;
-  weight: string;
-  volume: string;
-  location: string;
-  arrival_date: string;
-  status: string;
-  owner: string;
-};
+  warehouse_id: string
+  cargo_id: string
+  description: string
+  quantity: string
+  weight: string
+  volume: string
+  location: string
+  arrival_date: string
+  status: string
+  owner: string
+}
 
 export const columns: ColumnDef<ExportInventoryType>[] = [
   {
@@ -56,4 +56,4 @@ export const columns: ColumnDef<ExportInventoryType>[] = [
     header: "Owner",
     accessorKey: "owner",
   },
-];
+]

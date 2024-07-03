@@ -1,4 +1,4 @@
-import type { List } from "@/components/operation/StockAllocation/columns";
+import type { List } from "@/components/operation/StockAllocation/columns"
 
 export const STOCK_LIST_DATA: List[] = [
   {
@@ -16,7 +16,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "All",
     allocated: "30",
     job_status: "Success",
-    duration: "2 hours"
+    duration: "2 hours",
   },
   {
     level: "Agent",
@@ -33,7 +33,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "Physical",
     allocated: "20",
     job_status: "Pending",
-    duration: "3 hours"
+    duration: "3 hours",
   },
   {
     level: "Subagent",
@@ -50,7 +50,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "Electronic",
     allocated: "35",
     job_status: "Failed",
-    duration: "4 hours"
+    duration: "4 hours",
   },
   {
     level: "HO",
@@ -67,7 +67,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "Neutral",
     allocated: "45",
     job_status: "Success",
-    duration: "1 hour"
+    duration: "1 hour",
   },
   {
     level: "Agent",
@@ -84,7 +84,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "All",
     allocated: "50",
     job_status: "Pending",
-    duration: "5 hours"
+    duration: "5 hours",
   },
   {
     level: "Subagent",
@@ -101,7 +101,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "Physical",
     allocated: "25",
     job_status: "Failed",
-    duration: "6 hours"
+    duration: "6 hours",
   },
   {
     level: "HO",
@@ -118,7 +118,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "Electronic",
     allocated: "55",
     job_status: "Success",
-    duration: "7 hours"
+    duration: "7 hours",
   },
   {
     level: "Agent",
@@ -135,7 +135,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "Neutral",
     allocated: "60",
     job_status: "Pending",
-    duration: "8 hours"
+    duration: "8 hours",
   },
   {
     level: "Subagent",
@@ -152,7 +152,7 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "All",
     allocated: "65",
     job_status: "Failed",
-    duration: "9 hours"
+    duration: "9 hours",
   },
   {
     level: "HO",
@@ -169,15 +169,15 @@ export const STOCK_LIST_DATA: List[] = [
     awb_type: "Physical",
     allocated: "70",
     job_status: "Success",
-    duration: "10 hours"
-  }
-];
+    duration: "10 hours",
+  },
+]
 
-export async function getData(param = 'stock-list') {
+export async function getData(param = "stock-list") {
   switch (param) {
-    case 'stock-allocation':
-      return STOCK_LIST_DATA;
+    case "stock-allocation":
+      return STOCK_LIST_DATA
     default:
-      return STOCK_LIST_DATA;
+      return STOCK_LIST_DATA
   }
 }
