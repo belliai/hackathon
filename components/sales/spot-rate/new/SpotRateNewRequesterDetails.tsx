@@ -1,102 +1,113 @@
-import React from "react";
-import { Info } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import SpotRateLabelAndInput from "@/components/sales/spot-rate/SpotRateLabelAndInput";
-import { SpotRateDateIcon } from "../SpotRateDatePicker";
-import SpotRateDropDown from "../SpotRateDropDown";
+import React from "react"
+import { Info } from "lucide-react"
 
-const SpotRateAndRequesterDetails = () => {
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  SpotRateLabelAndDropDown,
+  SpotRateLabelAndInput,
+} from "@/components/sales/spot-rate/SpotRateLabelAndInput"
+
+import { SpotRateDateIcon } from "../SpotRateDatePicker"
+import SpotRateDropDown from "../SpotRateDropDown"
+import {
+  SpotRateNewDataTable,
+  SpotRateNewDataTable2,
+} from "./SpotRateNewDataTable"
+
+const SpotRateNewRequesterDetails = () => {
   return (
     <div className="grid grid-cols-3 gap-4">
       {/* Left Column */}
-      <div className="col-span-2">
+      <div className="col-span-1">
         {/* Spot Rate Details Section */}
-        <div className="rounded-lg border p-4 mb-4">
-          <h2 className="mb-4 text-lg font-semibold">Spot Rate Details</h2>
+        <div className="mb-4 rounded-lg border p-4">
+          <h2 className="text-lg font-semibold">Spot Rate Details</h2>
+
           <div className="grid grid-cols-1 gap-4">
-            <SpotRateLabelAndInput label="Spot Category" required />
-            <SpotRateLabelAndInput label="Weight Category" required />
-            <SpotRateLabelAndInput label="Currency" required />
-            <SpotRateLabelAndInput label="Threshold Limit" required />
-            <SpotRateLabelAndInput label="Valid From" required />
-            <SpotRateLabelAndInput label="Valid To" required />
+            <SpotRateLabelAndDropDown label="Spot Category" required />
+
+            <SpotRateLabelAndDropDown label="Weight Category" required>
+              <input type="checkbox" />
+              <label>All In</label>
+            </SpotRateLabelAndDropDown>
+
+            <SpotRateLabelAndInput
+              label="Currency"
+              required
+              className="w-fit"
+            />
+
+            <SpotRateLabelAndInput
+              label="Threshold Limit"
+              required
+              className="w-fit"
+            />
+
+            <SpotRateLabelAndInput label="Valid From" required>
+              <SpotRateDateIcon />
+            </SpotRateLabelAndInput>
+
+            <SpotRateLabelAndInput label="Valid To" required>
+              <SpotRateDateIcon />
+            </SpotRateLabelAndInput>
+
+            <div className="flex items-center gap-2">
+              <RadioGroup className="" defaultValue="exclude">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="exclude" id="r1" />
+                  <Label htmlFor="r1">Commissionable</Label>
+
+                  <RadioGroupItem value="include" id="r2" />
+                  <Label htmlFor="r2">Non Commissionable</Label>
+                </div>
+              </RadioGroup>
+            </div>
           </div>
         </div>
 
         {/* Requester Details Section */}
         <div className="rounded-lg border p-4">
-          <h2 className="mb-4 text-lg font-semibold">Requester Details</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <h2 className="text-lg font-semibold">Requester Details</h2>
+
+          <div className="grid grid-cols-1 gap-4">
             <SpotRateLabelAndInput label="Requested By" required />
-            <SpotRateLabelAndInput label="Requested On" required />
+
+            <SpotRateLabelAndInput label="Requested On" required>
+              <SpotRateDateIcon />
+            </SpotRateLabelAndInput>
+
             <SpotRateLabelAndInput label="Station" required />
-            <SpotRateLabelAndInput label="Reason" required />
+
+            <div className="flex items-center gap-2">
+              <label className="whitespace-nowrap">Reason *</label>
+              <Textarea placeholder="Type your message here." />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Right Column */}
-      <div className="col-span-1">
-        <div className="rounded-lg border p-4 mb-4">
-          <h2 className="mb-4 text-lg font-semibold">Data Table 1</h2>
-          {/* Your Data Table 1 component here */}
-          <table className="min-w-full">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Weight/Count</th>
-                <th>Charge/Rate</th>
-                <th>Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Q</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              {/* Add more rows as needed */}
-            </tbody>
-          </table>
-          <div className="flex justify-end mt-2">
-            <button className="mr-2 bg-red-500 text-white px-2 py-1 rounded">Add</button>
-            <button className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
-          </div>
+      <div className="col-span-2">
+        {/* Data table 1 */}
+        <div className="flex justify-end gap-2">
+          <Button>Add</Button>
+          <Button>Delete</Button>
+        </div>
+        <SpotRateNewDataTable />
+
+        <div className="flex justify-end gap-2">
+          <Button>Add</Button>
+          <Button>Delete</Button>
         </div>
 
-        <div className="rounded-lg border p-4">
-          <h2 className="mb-4 text-lg font-semibold">Data Table 2</h2>
-          {/* Your Data Table 2 component here */}
-          <table className="min-w-full">
-            <thead>
-              <tr>
-                <th>ULD Type</th>
-                <th>Type</th>
-                <th>Weight</th>
-                <th>Charge/Rate</th>
-                <th>Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Select</td>
-                <td>F</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              {/* Add more rows as needed */}
-            </tbody>
-          </table>
-          <div className="flex justify-end mt-2">
-            <button className="mr-2 bg-red-500 text-white px-2 py-1 rounded">Add</button>
-            <button className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
-          </div>
-        </div>
+        <SpotRateNewDataTable2 />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SpotRateAndRequesterDetails;
+export default SpotRateNewRequesterDetails

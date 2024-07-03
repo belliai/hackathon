@@ -1,10 +1,9 @@
 "use client"
 
 import PageContainer from "@/components/layout/PageContainer"
-import SpotRateLabelAndInput from "@/components/sales/spot-rate/SpotRateLabelAndInput"
 import SpotRateNewHeader from "@/components/sales/spot-rate/new/SpotRateNewHeader"
-import SpotRateAndRequesterDetails from "@/components/sales/spot-rate/new/SpotRateNewRequesterDetails"
-import SpotRateShipmentDetails from "@/components/sales/spot-rate/new/SpotRateNewShipmentDetails"
+import SpotRateNewRequesterDetails from "@/components/sales/spot-rate/new/SpotRateNewRequesterDetails"
+import SpotRateNewShipmentDetails from "@/components/sales/spot-rate/new/SpotRateNewShipmentDetails"
 
 export default function SpotRateNew() {
   return (
@@ -14,13 +13,10 @@ export default function SpotRateNew() {
       <SpotRateNewHeader />
 
       {/* Shipment Details */}
-      <SpotRateShipmentDetails />
+      <SpotRateNewShipmentDetails />
 
       {/* Spot Rate Details and Requester Details */}
-      <SpotRateAndRequesterDetails />
-
-
-
+      <SpotRateNewRequesterDetails />
     </PageContainer>
   )
 }

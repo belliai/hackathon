@@ -1,13 +1,19 @@
-import React from "react"
+import { useState } from "react"
 import { Info } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
-import SpotRateLabelAndInput from "@/components/sales/spot-rate/SpotRateLabelAndInput"
+import { SpotRateLabelAndInput } from "@/components/sales/spot-rate/SpotRateLabelAndInput"
 
 import { SpotRateDateIcon } from "../SpotRateDatePicker"
 import SpotRateDropDown from "../SpotRateDropDown"
+import SpotRatePopup from "./SpotRatePopup"
 
-const SpotRateShipmentDetails = () => {
+const SpotRateNewShipmentDetails = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
+
   return (
     <div className="rounded-lg border p-4">
       <h2 className="mb-4 text-lg font-semibold">Shipment Details</h2>
@@ -44,7 +50,10 @@ const SpotRateShipmentDetails = () => {
 
         <div className="flex items-center gap-2">
           <label>Rate Details</label>
-          <Info />
+          <Info onClick={openModal} />
+
+          {/* Popup Modal */}
+          <SpotRatePopup isOpen={isModalOpen} onClose={closeModal} />
         </div>
 
         <SpotRateLabelAndInput label="Pieces" />
@@ -55,16 +64,14 @@ const SpotRateShipmentDetails = () => {
 
         <SpotRateLabelAndInput label="UOM" />
 
-        <SpotRateLabelAndInput label="MKT Rate" required/>
+        <SpotRateLabelAndInput label="MKT Rate" required />
 
-        <SpotRateLabelAndInput label="MSR Rate" required/>
+        <SpotRateLabelAndInput label="MSR Rate" required />
 
-        <SpotRateLabelAndInput label="MSR Currency" required/>
-
-
+        <SpotRateLabelAndInput label="MSR Currency" required />
       </div>
     </div>
   )
 }
 
-export default SpotRateShipmentDetails
+export default SpotRateNewShipmentDetails
