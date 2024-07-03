@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const SpotRateDetailsApproval = () => {
+const SpotRateApprovalDetails = () => {
   const rates: any[] = [] //no data yet
 
   return (
@@ -76,4 +76,4 @@ const SpotRateDetailsApproval = () => {
   )
 }
 
-export default SpotRateDetailsApproval
+export default SpotRateApprovalDetails
