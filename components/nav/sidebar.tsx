@@ -110,21 +110,7 @@ export default function SideBar() {
                 {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
                   <>
                     <FavoritesMenu />
-                    <SidebarMenu
-                      sectionTitle="Operations"
-                      items={operationsNavigation[0].children ?? []}
-                      collapsible
-                    />
-                    <SidebarMenu
-                      items={skNavigation[0].children ?? []}
-                      sectionTitle="SK"
-                      collapsible
-                    />
-                    <SidebarMenu
-                      items={k360Navigation[0].children ?? []}
-                      sectionTitle="K360"
-                      collapsible
-                    />
+                    <SidebarMenu items={operationsNavigation} collapsible />
                   </>
                 ) : (
                   <SidebarMenu items={settingNavigation[0].children ?? []} />
@@ -148,11 +134,21 @@ export default function SideBar() {
               )}
             </ul>
           </ul>
-          {isBelliAdmin && (
+          {/* {isBelliAdmin && (
             <Button className="mt-4" size="sm" variant="button-primary" asChild>
               <Link href="/admin/organization/organization-members">Admin</Link>
             </Button>
-          )}
+          )} */}
+          <SidebarMenu
+            items={skNavigation[0].children ?? []}
+            sectionTitle="SK"
+            collapsible
+          />
+          <SidebarMenu
+            items={k360Navigation[0].children ?? []}
+            sectionTitle="K360"
+            collapsible
+          />
         </nav>
       </div>
     </Suspense>
