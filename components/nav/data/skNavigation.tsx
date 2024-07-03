@@ -575,15 +575,15 @@ export const skNavigation: TSidebarItem[] = [
                     href: "/sk/accounting/agent/collection/invoice-collection",
                     current: false,
                   },
-                  { name: "List Card Transactions", href: "#", current: false },
+                  { name: "List Card Transactions", href: "/sk/accounting/agent/collection/card-transactions", current: false },
                   {
                     name: "Upload AWB collection File",
-                    href: "#",
+                    href: "/sk/accounting/agent/collection/upload-awb",
                     current: false,
                   },
                   {
                     name: "Upload Invoice Level Collection",
-                    href: "#",
+                    href: "/sk/accounting/agent/collection/upload-invoice-level",
                     current: false,
                   },
                 ],
