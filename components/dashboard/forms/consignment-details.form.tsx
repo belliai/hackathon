@@ -66,7 +66,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           options={locationsOptions}
           label="Origin"
           info="Select the origin location"
-          editLink="/belli/booking-modal/#location"
+          editLink="/belli/settings/#location"
         />
         <FormField
           control={form.control}

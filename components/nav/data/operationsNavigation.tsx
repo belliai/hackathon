@@ -50,8 +50,8 @@ export const operationsNavigation: TSidebarItem[] = [
         current: false,
       },
       {
-        name: "Booking Modal",
-        href: "/belli/booking-modal",
+        name: "Settings",
+        href: "/belli/settings",
         icon: CursorArrowRippleIcon,
         current: false,
       },

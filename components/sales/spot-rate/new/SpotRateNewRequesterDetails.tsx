@@ -32,7 +32,7 @@ const SpotRateNewRequesterDetails = () => {
 
             <SpotRateLabelAndDropDown label="Weight Category" required>
               <input type="checkbox" />
-              <label>All In</label>
+              <label className="whitespace-nowrap">All In</label>
             </SpotRateLabelAndDropDown>
 
             <SpotRateLabelAndInput
@@ -84,7 +84,7 @@ const SpotRateNewRequesterDetails = () => {
 
             <div className="flex items-center gap-2">
               <label className="whitespace-nowrap">Reason *</label>
-              <Textarea placeholder="Type your message here." />
+              <Textarea />
             </div>
           </div>
         </div>
