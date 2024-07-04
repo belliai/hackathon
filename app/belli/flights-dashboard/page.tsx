@@ -14,23 +14,16 @@ export default function FlightsDashboardPage() {
 
   const flightsData = flights?.data || []
 
-  const columnWithActions = [
-    ...columns(
-      (data) => {},
-      (data) => {}
-    ),
-    createActionColumn({
-      items: [],
-    }),
-  ]
-
   return (
     <DataTable
       initialPinning={{
         left: [],
         right: ["actions"],
       }}
-      columns={columnWithActions}
+      columns={columns(
+        (data) => {},
+        (data) => {}
+      )}
       data={flightsData}
       pageCount={isLoading ? 1 : flights?.total_pages || 1}
       manualPagination={true}
