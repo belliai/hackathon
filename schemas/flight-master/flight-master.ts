@@ -4,6 +4,12 @@ export const flightMasterFormSchema = z.object({
   flightNo: z.string().min(1, { message: "Flight Number is required" }),
   source: z.string().min(1, { message: "Source is required" }),
   destination: z.string().min(1, { message: "Destination is required" }),
+  rangeDate: z.object({
+    from: z.date(),
+    to : z.date(),
+    fromTime: z.string(),
+    toTime : z.string()
+  }).optional(),
   fromDate: z.date(),
   toDate: z.date(),
   frequencyItems: z

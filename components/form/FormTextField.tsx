@@ -124,6 +124,116 @@ export default function FormTextField({
                   </PopoverContent>
                 </Popover>
               )
+            case "date-range":
+              return (
+                <div className="flex flex-col gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          disabled={disabled}
+                          className={cn(
+                            fieldClassName,
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value?.from ? (
+                            field.value.to ? (
+                              <>
+                                {format(field.value.from, "LLL dd, y")}{" "}
+                                {form.watch(`${name}.fromTime`)} -{" "}
+                                {format(field.value.to, "LLL dd, y")}{" "}
+                                {form.watch(`${name}.toTime`)}
+                              </>
+                            ) : (
+                              format(field.value.from, "LLL dd, y")
+                            )
+                          ) : (
+                            <span>{placeholder ?? "Pick a date"}</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <div className="flex p-1">
+                        <Input
+                          type="text"
+                          value={
+                            field.value?.from &&
+                            format(field.value.from, "LLL dd, y")
+                          }
+                          onChange={(e) =>
+                            field.onChange({
+                              ...field.value,
+                              from: e.target.value,
+                            })
+                          }
+                          className={cn(fieldClassName, "w-40")}
+                          disabled={disabled}
+                        />
+                        <Input
+                          type="time"
+                          value={form.watch(`${name}.fromTime`)}
+                          onChange={(e) =>
+                            form.setValue(`${name}.fromTime`, e.target.value)
+                          }
+                          className={cn(fieldClassName, "w-20")}
+                          disabled={disabled}
+                        />
+                      </div>
+                      <div className="flex p-1">
+                        <Input
+                          type="text"
+                          value={
+                            field.value?.to &&
+                            format(field.value.to, "LLL dd, y")
+                          }
+                          onChange={(e) =>
+                            field.onChange({
+                              ...field.value,
+                              to: e.target.value,
+                            })
+                          }
+                          className={cn(fieldClassName, "w-40")}
+                          disabled={disabled}
+                        />
+                        <Input
+                          type="time"
+                          value={form.watch(`${name}.toTime`)}
+                          onChange={(e) =>
+                            form.setValue(`${name}.toTime`, e.target.value)
+                          }
+                          className={cn(fieldClassName, "w-20")}
+                          disabled={disabled}
+                        />
+                      </div>
+
+                      <Calendar
+                        mode="range"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                      <div className="flex justify-end p-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            field.onChange({ from: null, to: null });
+                            form.setValue(`${name}.fromTime`, "");
+                            form.setValue(`${name}.toTime`, "");
+                          }}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              );
 
             case "radio":
               return (
