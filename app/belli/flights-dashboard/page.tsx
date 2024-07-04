@@ -1,10 +1,8 @@
 "use client"
 
 import { useFlightList } from "@/lib/hooks/flight-master/flight-master"
-import { useOrders } from "@/lib/hooks/orders"
 import { DataTable } from "@/components/data-table/data-table"
 import { columns } from "@/app/belli/flight-master/components/column"
-import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
 
 export default function FlightsDashboardPage() {
   const { data: flights, isLoading } = useFlightList({
@@ -24,6 +22,12 @@ export default function FlightsDashboardPage() {
         (data) => {},
         (data) => {}
       )}
+      initialVisibility={{
+        updated_at: false,
+        updated_by: false,
+        created_at: false,
+        sector: false,
+      }}
       data={flightsData}
       pageCount={isLoading ? 1 : flights?.total_pages || 1}
       manualPagination={true}

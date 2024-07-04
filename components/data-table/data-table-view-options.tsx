@@ -22,7 +22,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { PopoverTrigger } from "@radix-ui/react-popover"
-import { Column, Table } from "@tanstack/react-table"
+import { Column, Table, VisibilityState } from "@tanstack/react-table"
 import { EyeIcon, EyeOffIcon, GripVerticalIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -41,6 +41,9 @@ interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   children: ReactNode
   buttonClassName?: HTMLDivElement["className"]
+  showHideAll?: boolean
+  showShowAll?: boolean
+  initialVisibility?: VisibilityState
 }
 
 export function DataTableViewOptions<TData>({
@@ -62,6 +65,23 @@ export function DataTableViewOptions<TData>({
     active: activeColumns,
     hidden: hiddenColumns,
   })
+
+  function resetColumnVisibility() {
+    table.setColumnVisibility(props.initialVisibility ?? {})
+
+    const defaultVisibleSections = columns.filter(
+      (column) => props.initialVisibility?.[column.id] !== false
+    )
+
+    const defaultHiddenSections = columns.filter(
+      (column) => props.initialVisibility?.[column.id] === false
+    )
+
+    setSections({
+      active: defaultVisibleSections,
+      hidden: defaultHiddenSections,
+    })
+  }
 
   const [activeColumnId, setActiveColumndId] = useState<null | string>(null)
 
@@ -249,13 +269,15 @@ export function DataTableViewOptions<TData>({
                     <span className="text-xs font-medium text-muted-foreground">
                       Active Columns
                     </span>
-                    <Button
-                      onClick={onHideAllColumn}
-                      variant={"link"}
-                      className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
-                    >
-                      Hide All
-                    </Button>
+                    {props.showHideAll && (
+                      <Button
+                        onClick={onHideAllColumn}
+                        variant={"link"}
+                        className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
+                      >
+                        Hide All
+                      </Button>
+                    )}
                   </div>
                   {sections.active.map((column) => (
                     <Draggable key={column.id} args={{ id: column.id }}>
@@ -296,13 +318,15 @@ export function DataTableViewOptions<TData>({
                     <span className="text-xs font-medium text-muted-foreground">
                       Hidden Columns
                     </span>
-                    <Button
-                      onClick={onShowAllColumn}
-                      variant={"link"}
-                      className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
-                    >
-                      Show All
-                    </Button>
+                    {props.showShowAll && (
+                      <Button
+                        onClick={onShowAllColumn}
+                        variant={"link"}
+                        className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
+                      >
+                        Show All
+                      </Button>
+                    )}
                   </div>
                   {sections.hidden.map((column) => (
                     <Draggable key={column.id} args={{ id: column.id }}>
@@ -328,7 +352,15 @@ export function DataTableViewOptions<TData>({
                       </CommandItem>
                     </Draggable>
                   ))}
-                  {sections.hidden.length === 0 && <div className="h-2"></div>}
+                  <div className="px-2 py-1">
+                    <Button
+                      variant={"link"}
+                      className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
+                      onClick={resetColumnVisibility}
+                    >
+                      Reset Columns to Default
+                    </Button>
+                  </div>
                 </CommandGroup>
               </SortableContext>
             </CommandList>

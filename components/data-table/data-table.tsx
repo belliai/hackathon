@@ -43,6 +43,7 @@ export interface DataTableProps<TData, TValue> {
   toolbarButtonVariant?: ButtonProps["variant"]
   onRowClick?: (data: TData) => void
   initialPinning?: ColumnPinningState
+  initialVisibility?: VisibilityState
   manualPagination?: boolean
   tableState?: (prop: any) => void
   pageCount?: number
@@ -57,6 +58,7 @@ export function DataTable<TData, TValue>({
   extraToolbarButtons,
   toolbarButtonVariant,
   initialPinning,
+  initialVisibility,
   onRowClick,
   manualPagination,
   tableState,
@@ -64,7 +66,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+    React.useState<VisibilityState>(initialVisibility ?? {})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -114,6 +116,7 @@ export function DataTable<TData, TValue>({
       {!hideToolbar && (
         <DataTableToolbar
           table={table}
+          initialVisibility={initialVisibility}
           extraButtons={extraToolbarButtons}
           buttonVariant={toolbarButtonVariant}
         />
