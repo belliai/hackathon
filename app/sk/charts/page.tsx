@@ -1,10 +1,11 @@
 "use client";
 
 import PageContainer from "@/components/layout/PageContainer";
-import { HeatmapGraph, HeatmapData } from "@/components/charts/heatmap-chart";
-import LineGraph, { LineGraphData } from "@/components/charts/curve-chart";
-import { RandomFacts } from "@/components/charts/random-facts-chart"; // Assuming correct import
+import HeatmapGraph from "@/components/charts/heatmap-chart";
+import LineGraph from "@/components/charts/curve-chart";
+import { RandomFacts } from "@/components/charts/random-facts-chart";
 import { RadarGraph, RadarGraphData } from "@/components/charts/radar-graph-chart";
+
 // Define ExerciseWithData type locally
 type ExerciseWithData = {
   id: number;
@@ -12,8 +13,21 @@ type ExerciseWithData = {
   data: { weightLifted: number; numberOfRepetitions: number; doneAt: string }[];
 };
 
+// Define HeatmapData type locally
+type Bin = {
+  weekIndex: number;
+  count: number;
+};
+
+type Day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+
+type HeatmapData = {
+  dayIndex: Day;
+  bins: Bin[];
+};
+
 // Mock data for the charts and random facts
-const mockData: HeatmapData[] = [
+const mockHeatmapData: HeatmapData[] = [
   {
     dayIndex: "monday",
     bins: [
@@ -38,33 +52,22 @@ const mockData: HeatmapData[] = [
   },
 ];
 
-const mockDataRadar: RadarGraphData[] = [
-    {
-        frequency: 100,
-        exerciseName: "cargo",
-    },
-    {
-        frequency: 50,
-        exerciseName: "flights",
-    },
-    {
-        frequency: 40,
-        exerciseName: "booking",
-    },
+const mockRadarData: RadarGraphData[] = [
+  {
+    frequency: 100,
+    exerciseName: "cargo",
+  },
+  {
+    frequency: 50,
+    exerciseName: "flights",
+  },
+  {
+    frequency: 40,
+    exerciseName: "booking",
+  },
 ];
 
-const lineGraphData: LineGraphData[] = [
-  {
-    weightLifted: 100,
-    numberOfRepetitions: 10,
-    doneAt: "2023-01-01T00:00:00Z",
-  },
-  {
-    weightLifted: 110,
-    numberOfRepetitions: 8,
-    doneAt: "2023-01-02T00:00:00Z",
-  },
-];
+
 
 const exercisesData: ExerciseWithData[] = [
   {
@@ -91,16 +94,16 @@ export default function Charts() {
       <h2 className="text-xl font-semibold mb-2">Charts</h2>
       <div className="flex-wrap grid grid-cols-2 grid-rows-2 gap-4">
         <div className="col-span-1">
-          <HeatmapGraph data={mockData} />
+          <HeatmapGraph/>
         </div>
         <div className="col-span-1">
-          <RadarGraph data={mockDataRadar} />
+          <RadarGraph data={mockRadarData} />
         </div>
         <div className="col-span-1 justify-content-center">
           <RandomFacts exercises={exercisesData} />
         </div>
         <div className="col-span-1">
-          <LineGraph data={lineGraphData} />
+          <LineGraph />
         </div>
       </div>
     </PageContainer>
