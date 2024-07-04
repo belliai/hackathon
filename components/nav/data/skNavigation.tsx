@@ -849,6 +849,13 @@ export const skNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
       },
+      {
+        name:"Charts",
+        href: "/sk/charts",
+        icon: CubeIcon,
+        current: false,
+      },
     ],
   },
+  
 ]
