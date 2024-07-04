@@ -13,12 +13,11 @@ const CommodityCode = () => {
   const add = useAddCommodityCode()
   const remove = useRemoveCommodityCode()
 
-  if (isPending) return "Loading..."
-
   if (error) return "An error has occurred: " + error.message
 
   return (
     <CrudTable
+      isLoading={isPending}
       title="Commodity Code"
       columns={[{ accessorKey: "name" }, { accessorKey: "description" }]}
       form={[
@@ -26,7 +25,7 @@ const CommodityCode = () => {
         { name: "name", type: "text", label: "Name" },
         { name: "description", type: "text", label: "Description" },
       ]}
-      data={data.map((item: any) => ({
+      data={data?.map((item: any) => ({
         name: item.name,
         description: item.description,
         id: item.ID,

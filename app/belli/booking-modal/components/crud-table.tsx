@@ -5,7 +5,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { EditIcon, PlusCircleIcon, SaveIcon, TrashIcon } from "lucide-react"
+import {
+  EditIcon,
+  Loader,
+  PlusCircleIcon,
+  SaveIcon,
+  TrashIcon,
+} from "lucide-react"
 import {
   DefaultValues,
   FieldValues,
@@ -47,6 +53,8 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 type CrudTableProps<T extends FieldValues> = {
   title: string
   data: T[]
+  id?: string
+  isLoading?: boolean
   columns: ColumnDef<T>[]
   form: {
     name: Path<T>
@@ -235,53 +243,65 @@ export default function CrudTable<T extends FieldValues>(
   })
 
   return (
-    <Card className="overflow-clip rounded-md">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-card px-4 py-2">
-        <CardTitle className="text-lg font-bold">{title}</CardTitle>
-        <FormDialog title={title} form={props.form} onSave={props.onSave}>
-          <Button className="rounded-sm" variant={"button-primary"} size={"sm"}>
-            <PlusCircleIcon className="mr-2 size-4" />
-            Add new
-          </Button>
-        </FormDialog>
-      </CardHeader>
-      <Separator />
-      <CardContent className="p-0">
-        <Table>
-          <TableBody className="leading-6 text-zinc-400">
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell, index) => (
-                    <TableCell
-                      className={cn("px-4 py-1", index === 0 && "w-10")}
-                      style={{ width: `${cell.column.getSize()}` }}
-                      key={cell.id}
+    <section id={props.id}>
+      <Card className="overflow-clip rounded-md">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-card px-4 py-2">
+          <CardTitle className="text-lg font-bold">{title}</CardTitle>
+          <FormDialog title={title} form={props.form} onSave={props.onSave}>
+            <Button
+              className="rounded-sm"
+              variant={"button-primary"}
+              size={"sm"}
+            >
+              <PlusCircleIcon className="mr-2 size-4" />
+              Add new
+            </Button>
+          </FormDialog>
+        </CardHeader>
+        <Separator />
+        <CardContent className="p-0">
+          {props.isLoading ? (
+            <div className="flex items-center justify-center py-24">
+              <Loader className="h-6 w-6 animate-spin text-zinc-600" />
+            </div>
+          ) : (
+            <Table>
+              <TableBody className="leading-6 text-zinc-400">
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {row.getVisibleCells().map((cell, index) => (
+                        <TableCell
+                          className={cn("px-4 py-1", index === 0 && "w-10")}
+                          style={{ width: `${cell.column.getSize()}` }}
+                          key={cell.id}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 px-4 py-1 text-center"
+                    >
+                      No results.
                     </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 px-4 py-1 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+    </section>
   )
 }

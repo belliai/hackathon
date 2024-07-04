@@ -13,19 +13,20 @@ const Location = () => {
   const add = useAddLocation()
   const remove = useRemoveLocation()
 
-  if (isPending) return "Loading..."
 
   if (error) return "An error has occurred: " + error.message
 
   return (
     <CrudTable
+      isLoading={isPending}
+      id="location"
       title="Location"
       columns={[{ accessorKey: "option" }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Location" },
       ]}
-      data={data.map((item: any) => ({ option: item.name, id: item.ID }))}
+      data={data?.map((item: any) => ({ option: item.name, id: item.ID }))}
       onSave={(data) => {
         // configure logic for add or edit, for edit the id will be zero
         const { id, option } = data
