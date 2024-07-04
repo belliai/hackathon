@@ -1,5 +1,4 @@
-import { CubeIcon, PaperPlaneIcon } from "@radix-ui/react-icons"
-
+import { CubeIcon, PaperPlaneIcon, DashboardIcon } from "@radix-ui/react-icons"
 import {
         HomeIcon,
         CalendarIcon,
@@ -16,9 +15,8 @@ import {
         CursorArrowRippleIcon, 
         ClipboardIcon
       } from "@heroicons/react/24/outline";
-      import { PlaneIcon } from "lucide-react";
+import { PlaneIcon } from "lucide-react";
       
-
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const operationsNavigation: TSidebarItem[] = [
@@ -28,8 +26,8 @@ export const operationsNavigation: TSidebarItem[] = [
     current: false,
     children: [
       {
-        name: "Home",
-        href: "/belli/home",
+        name: "Airway Bill Dashboard",
+        href: "/belli/airway-bill-dashboard",
         icon: HomeIcon,
         current: false,
       },
@@ -43,6 +41,12 @@ export const operationsNavigation: TSidebarItem[] = [
         name: "Flight Master",
         href: "/belli/flight-master",
         icon: PaperPlaneIcon,
+        current: false,
+      },
+      {
+        name: "Flights Dashboard",
+        href: "/belli/flights-dashboard",
+        icon: DashboardIcon,
         current: false,
       },
       {
