@@ -4,14 +4,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import KeyValueDisplay from "@/components/ui/key-value-display";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/ui/card"
+import KeyValueDisplay from "@/components/ui/key-value-display"
+import { Separator } from "@/components/ui/separator"
 
-export default function DimensionsCard(props : any) {
-  const {
-    volume_kg
-  } = props
+export default function DimensionsCard(props: any) {
+  const { volume_kg } = props
 
   return (
     <Card>
@@ -28,5 +26,5 @@ export default function DimensionsCard(props : any) {
         />
       </CardContent>
     </Card>
-  );
+  )
 }

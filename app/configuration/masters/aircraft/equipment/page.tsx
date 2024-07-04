@@ -1,22 +1,23 @@
-"use client";
+"use client"
 
-import CreateFormTemplate from "@/app/organize/masters/components/CreateFormTemplate";
-import MastersPageTemplate, {
-  SectionedFormFields,
-} from "@/app/organize/masters/components/MastersPageTemplate";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem"
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate, {
+  SectionedFormFields,
+} from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function AircraftEquipmentPage() {
   const columns: ColumnDef<any>[] = [
@@ -118,7 +119,7 @@ export default function AircraftEquipmentPage() {
       header: "GL Code",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -251,18 +252,18 @@ export default function AircraftEquipmentPage() {
       maxLBH: "75x85x95",
       glCode: "GL005",
     },
-  ];
+  ]
 
-  const filterHookForm = useForm();
+  const filterHookForm = useForm()
   const sectionedHookForm = useForm({
     defaultValues: {
       sectionedFields: [],
     },
-  });
+  })
   const fieldArray = useFieldArray<any>({
     control: sectionedHookForm.control,
     name: "sectionedFields",
-  });
+  })
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -282,7 +283,7 @@ export default function AircraftEquipmentPage() {
       label: "Tail No",
       type: "text",
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -644,7 +645,7 @@ export default function AircraftEquipmentPage() {
         },
       ],
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -667,5 +668,5 @@ export default function AircraftEquipmentPage() {
         />
       }
     />
-  );
+  )
 }

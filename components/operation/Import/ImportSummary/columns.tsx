@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type ImportSummaryType = {
-  cargo_id?: string;
-  shipper?: string;
-  consignee?: string;
-  origin?: string;
-  destination?: string;
-  pieces?: string;
-  weight?: string;
-  volume?: string;
-  commodity?: string;
-  chargeable_weight?: string;
-  freight_charges?: string;
-  other_charges?: string;
-  total_charges?: string;
-  currency?: string;
-  flight_number?: string;
-  flight_date?: string;
-  status?: string;
-};
+  cargo_id?: string
+  shipper?: string
+  consignee?: string
+  origin?: string
+  destination?: string
+  pieces?: string
+  weight?: string
+  volume?: string
+  commodity?: string
+  chargeable_weight?: string
+  freight_charges?: string
+  other_charges?: string
+  total_charges?: string
+  currency?: string
+  flight_number?: string
+  flight_date?: string
+  status?: string
+}
 
 export const columns: ColumnDef<ImportSummaryType>[] = [
   {
@@ -91,4 +91,4 @@ export const columns: ColumnDef<ImportSummaryType>[] = [
     header: "Status",
     accessorKey: "status",
   },
-];
+]

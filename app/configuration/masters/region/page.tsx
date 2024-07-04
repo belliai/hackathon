@@ -1,20 +1,21 @@
-"use client";
+"use client"
 
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
+import { Separator } from "@/components/ui/separator"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import FormTextField, { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import FormTextField, { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function MastersRegionPage() {
   const columns: ColumnDef<any>[] = [
@@ -49,7 +50,7 @@ export default function MastersRegionPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -68,7 +69,7 @@ export default function MastersRegionPage() {
       created_at: "2021-09-01",
       updated_at: "2021-09-01",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -96,9 +97,9 @@ export default function MastersRegionPage() {
       type: "checkbox",
       label: "isActive",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -110,7 +111,7 @@ export default function MastersRegionPage() {
       customFilterButtons={<FilterActions />}
       customComponent={
         <Form {...filterForm}>
-          <div className="grid grid-cols-4 w-full max-w-sm items-end gap-x-2 gap-4">
+          <div className="grid w-full max-w-sm grid-cols-4 items-end gap-4 gap-x-2">
             <div className="col-span-3">
               <FormTextField
                 name="operationalContact"
@@ -152,5 +153,5 @@ export default function MastersRegionPage() {
         </Form>
       }
     />
-  );
+  )
 }

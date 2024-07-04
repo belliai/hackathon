@@ -1,5 +1,3 @@
-import { TSidebarItem } from "@/components/nav/SidebarItem";
-import { CubeIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
 import {
   HomeIcon,
   CalendarIcon,
@@ -18,45 +16,49 @@ import {
 } from "@heroicons/react/24/outline";
 import { PlaneIcon } from "lucide-react";
 
+import { CubeIcon, PaperPlaneIcon } from "@radix-ui/react-icons"
+
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const operationsNavigation: TSidebarItem[] = [
   {
-    name: "Operations",
-    href: "/operations",
+    name: "Belli",
+    href: "/belli",
     current: false,
     children: [
       {
         name: "Home",
-        href: "/dashboard",
+        href: "/belli/home",
         icon: HomeIcon,
         current: false,
       },
       {
         name: "Flight Planning",
-        href: "/operations/flight-planning",
+        href: "/belli/flight-planning",
         icon: ClipboardIcon,
         current: false,
       },
       {
         name: "Flight Master",
-        href: "/operations/flight-master",
+        href: "/belli/flight-master",
         icon: PaperPlaneIcon,
         current: false,
       },
       {
         name: "Booking Modal",
-        href: "/operations/booking-modal",
+        href: "/belli/booking-modal",
         icon: CursorArrowRippleIcon,
         current: false,
       },
       {
         name: "Aircraft",
-        href: "/operations/aircraft",
+        href: "/belli/aircraft",
         icon: PlaneIcon,
         current: false,
       },
     ],
   },
+
 
   //
 ];
@@ -72,3 +74,4 @@ export const getIconByHref = (href: string): React.ElementType | null => {
   }
   return null; // Return null if href is not found
 };
+

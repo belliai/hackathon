@@ -1,20 +1,21 @@
-"use client";
+"use client"
 
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function ConfigLinePage() {
-  const hookForm = useForm();
+  const hookForm = useForm()
 
   const formFields: TFormTextField[] = [
     {
@@ -68,7 +69,7 @@ export default function ConfigLinePage() {
       orientation: "horizontal",
       type: "date",
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -105,7 +106,7 @@ export default function ConfigLinePage() {
       header: "To Date",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -128,7 +129,7 @@ export default function ConfigLinePage() {
       fromDate: "2021-01-01",
       toDate: "2021-12-31",
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -137,14 +138,14 @@ export default function ConfigLinePage() {
       formFields={formFields}
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="flex max-w-96 mt-8">
+          <div className="mt-8 flex max-w-96">
             <FilterActions />
           </div>
           <Separator />
-          <h2 className="font-semibold text-xl">Config Details</h2>
+          <h2 className="text-xl font-semibold">Config Details</h2>
           <DataTable hideToolbar columns={columns} data={data} />
         </div>
       }
     />
-  );
+  )
 }

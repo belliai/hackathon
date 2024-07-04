@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps } from "react"
 
 export function HandlerIcon(props: ComponentProps<"svg">) {
   return (
@@ -16,7 +16,7 @@ export function HandlerIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function EllipsisIcon(props: ComponentProps<"svg">) {
@@ -33,7 +33,7 @@ export function EllipsisIcon(props: ComponentProps<"svg">) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function UndoIcon(props: ComponentProps<"svg">) {
@@ -50,7 +50,7 @@ export function UndoIcon(props: ComponentProps<"svg">) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function RedoIcon(props: ComponentProps<"svg">) {
@@ -67,7 +67,7 @@ export function RedoIcon(props: ComponentProps<"svg">) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function TrashIcon(props: ComponentProps<"svg">) {
@@ -93,7 +93,7 @@ export function TrashIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function EraserIcon(props: ComponentProps<"svg">) {
@@ -119,7 +119,7 @@ export function EraserIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function ResetIcon(props: ComponentProps<"svg">) {
@@ -138,7 +138,7 @@ export function ResetIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function AddColumnBeforeIcon(props: ComponentProps<"svg">) {
@@ -162,7 +162,7 @@ export function AddColumnBeforeIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function AddColumnAfterIcon(props: ComponentProps<"svg">) {
@@ -186,7 +186,7 @@ export function AddColumnAfterIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function MoveColumnBeforeIcon(props: ComponentProps<"svg">) {
@@ -210,7 +210,7 @@ export function MoveColumnBeforeIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function MoveColumnAfterIcon(props: ComponentProps<"svg">) {
@@ -234,7 +234,7 @@ export function MoveColumnAfterIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function AddRowBeforeIcon(props: ComponentProps<"svg">) {
@@ -258,7 +258,7 @@ export function AddRowBeforeIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function AddRowAfterIcon(props: ComponentProps<"svg">) {
@@ -282,7 +282,7 @@ export function AddRowAfterIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function MoveRowBeforeIcon(props: ComponentProps<"svg">) {
@@ -306,7 +306,7 @@ export function MoveRowBeforeIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
 export function MoveRowAfterIcon(props: ComponentProps<"svg">) {
@@ -330,5 +330,5 @@ export function MoveRowAfterIcon(props: ComponentProps<"svg">) {
         fillRule="evenodd"
       />
     </svg>
-  );
+  )
 }

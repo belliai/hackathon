@@ -1,37 +1,38 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type DeliveryType = {
-  exp_row?: string;
-  do?: string;
-  collect?: string;
-  consignee?: string;
-  awb?: string;
-  hawb_no?: string;
-  origin?: string;
-  dest?: string;
-  arr_pcs?: string;
-  arr_wt?: string;
-  uom?: string;
-  rem_pcs?: string;
-  rem_wt?: string;
-  dlrd_pcs?: string;
-  dlrd_wt?: string;
-  flt?: string;
-  flt_dt?: string;
-  comm_desc?: string;
-  agent?: string;
-  accepted_pcs?: string;
-  payment_type?: string;
-  invoice?: string;
-  charges?: string;
-  tax?: string;
-  total?: string;
-  amt_due?: string;
-  updated_on?: string;
-};
+  exp_row?: string
+  do?: string
+  collect?: string
+  consignee?: string
+  awb?: string
+  hawb_no?: string
+  origin?: string
+  dest?: string
+  arr_pcs?: string
+  arr_wt?: string
+  uom?: string
+  rem_pcs?: string
+  rem_wt?: string
+  dlrd_pcs?: string
+  dlrd_wt?: string
+  flt?: string
+  flt_dt?: string
+  comm_desc?: string
+  agent?: string
+  accepted_pcs?: string
+  payment_type?: string
+  invoice?: string
+  charges?: string
+  tax?: string
+  total?: string
+  amt_due?: string
+  updated_on?: string
+}
 
 export const columns: ColumnDef<DeliveryType>[] = [
   {
@@ -166,4 +167,4 @@ export const columns: ColumnDef<DeliveryType>[] = [
     accessorKey: "updated_on",
     header: "Updated On",
   },
-];
+]

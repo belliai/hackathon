@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type DoInvoiceType = {
-  origin?: string;
-  destination?: string;
-  awb_number?: string;
-  agent_name?: string;
-  agent_code?: string;
-  invoice_no?: string;
-  chargeable_weight?: string;
-  payment_collected_mode?: string;
-  created_on?: string;
-};
+  origin?: string
+  destination?: string
+  awb_number?: string
+  agent_name?: string
+  agent_code?: string
+  invoice_no?: string
+  chargeable_weight?: string
+  payment_collected_mode?: string
+  created_on?: string
+}
 
 export const columns: ColumnDef<DoInvoiceType>[] = [
   {
@@ -51,4 +51,4 @@ export const columns: ColumnDef<DoInvoiceType>[] = [
     accessorKey: "created_on",
     header: "Created On",
   },
-];
+]

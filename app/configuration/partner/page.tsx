@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function PartnerListPage() {
   const columns: ColumnDef<any>[] = [
@@ -65,7 +66,7 @@ export default function PartnerListPage() {
       header: "Reg",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -138,9 +139,9 @@ export default function PartnerListPage() {
       settlementMethod: "IATA Clearing House",
       reg: "Active",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -192,7 +193,7 @@ export default function PartnerListPage() {
       label: "Valid To",
       orientation: "horizontal",
     },
-  ];
+  ]
   return (
     <CreateFormPageTemplate
       heading="List Partner"
@@ -201,7 +202,7 @@ export default function PartnerListPage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -209,5 +210,5 @@ export default function PartnerListPage() {
         </div>
       }
     />
-  );
+  )
 }

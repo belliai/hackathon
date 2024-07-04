@@ -1,39 +1,40 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 export type Order = {
-  mb_number?: string; // mb number
-  piece?: string; // piece per mb
-  axb?: string; // axb number
-  origin?: string; // origin
-  destination?: string; // destination
-  weight?: string; // weight
-  mwb?: string;  // mwb number
-  created_at?: string; // created at
-  updated_at?: string; // updated at
-};
+  mb_number?: string // mb number
+  piece?: string // piece per mb
+  axb?: string // axb number
+  origin?: string // origin
+  destination?: string // destination
+  weight?: string // weight
+  mwb?: string // mwb number
+  created_at?: string // created at
+  updated_at?: string // updated at
+}
 
 export type CreateDialog = {
-  truck_no?: string;
-  truck_date?: string;
-  axb?: string;
-  comm_code?: string;
-  comm_desc?: string;
-  rem_pcs?: string;
-  rem_wt?: string;
-  acc_pcs?: string;
-  acc_wt?: string;
-};
+  truck_no?: string
+  truck_date?: string
+  axb?: string
+  comm_code?: string
+  comm_desc?: string
+  rem_pcs?: string
+  rem_wt?: string
+  acc_pcs?: string
+  acc_wt?: string
+}
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -102,23 +103,24 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button
+            size="icon"
+            className="bg-button-secondary text-white hover:bg-button-secondary/80"
+          >
             <span className="h-4 w-4">
               <DotsHorizontalIcon />
             </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            View Mother Bag
-          </DropdownMenuItem>
+          <DropdownMenuItem>View Mother Bag</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
     enableSorting: false,
     enableHiding: false,
   },
-];
+]
 
 export const createDialogColumn: ColumnDef<CreateDialog>[] = [
   {
@@ -181,4 +183,4 @@ export const createDialogColumn: ColumnDef<CreateDialog>[] = [
     accessorKey: "acc_wt",
     header: "Acc Wt",
   },
-];
+]

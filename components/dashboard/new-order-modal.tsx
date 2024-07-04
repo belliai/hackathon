@@ -1,8 +1,12 @@
-"use client";
+"use client"
 
-import { useMemo, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { PropsWithChildren, useEffect, useMemo, useRef, useState } from "react"
+import { Customer } from "@/schemas/customer"
+import { Order, orderSchema } from "@/schemas/order/order"
+import { getDefaults } from "@/schemas/utils"
+import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { format } from "date-fns"
 import {
   HistoryIcon,
   PackageIcon,
@@ -10,7 +14,14 @@ import {
   ScrollTextIcon,
   SquarePenIcon,
   UserIcon,
-} from "lucide-react";
+} from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { useUpdateCustomer } from "@/lib/hooks/customers"
+import { useAddOrder, useUpdateOrder } from "@/lib/hooks/orders"
+import { mapJsonToSchema, mapSchemaToJson } from "@/lib/mapper/order"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -18,66 +29,50 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import { Separator } from "@/components/ui/separator"
+import { toast } from "@/components/ui/use-toast"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/vertical-tabs";
-import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PropsWithChildren, useEffect, useState } from "react";
-import { Separator } from "@/components/ui/separator";
-import OrderSummaryCard from "./order-summary-card";
-import BalanceCard from "./balance-card";
-import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
-import CreateBookingForm from "./forms/create-booking-form";
-import ConsignmentDetailsForm from "./forms/consignment-details.form";
-import ShipperDetailsForm from "./forms/shipper-details-form";
-import ProcessRatesForm from "./forms/process-rates-form";
-import { toast } from "@/components/ui/use-toast";
-import DimensionsCard from "./dimensions-card";
-import { useBookingContext } from "@/components/dashboard/BookingContext";
-import ActivityLog from "./activity-log";
-import { Order, orderSchema } from "@/schemas/order/order";
-import { getDefaults } from "@/schemas/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAddOrder, useUpdateOrder } from "@/lib/hooks/orders";
-import { mapJsonToSchema, mapSchemaToJson } from "@/lib/mapper/order";
+} from "@/components/ui/vertical-tabs"
+import { useBookingContext } from "@/components/dashboard/BookingContext"
 
-import { format } from "date-fns";
-import { useUpdateCustomer } from "@/lib/hooks/customers";
-import { Customer } from "@/schemas/customer";
-
+import ActivityLog from "./activity-log"
+import BalanceCard from "./balance-card"
+import DimensionsCard from "./dimensions-card"
+import ConsignmentDetailsForm from "./forms/consignment-details.form"
+import CreateBookingForm from "./forms/create-booking-form"
+import ProcessRatesForm from "./forms/process-rates-form"
+import ShipperDetailsForm from "./forms/shipper-details-form"
+import OrderSummaryCard from "./order-summary-card"
 
 type NewOrderModalProps = PropsWithChildren & {
-  onOpenChange?: (open: boolean) => void;
-  open?: boolean;
-  mode?: "edit" | "create";
-};
-
+  onOpenChange?: (open: boolean) => void
+  open?: boolean
+  mode?: "edit" | "create"
+}
 
 const schemas = orderSchema.omit({ activity_logs: true })
-const initialValues = getDefaults(schemas);
+const initialValues = getDefaults(schemas)
 
 export default function NewOrderModal(props: NewOrderModalProps) {
-  const { children, onOpenChange, mode = "create" } = props;
-  const { selectedBooking, setSelectedBooking } = useBookingContext();
-  const [open, setOpen] = useState(props.open ?? false);
-  const [isFullScreen, setFullScreen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { children, onOpenChange, mode = "create" } = props
+  const { selectedBooking, setSelectedBooking } = useBookingContext()
+  const [open, setOpen] = useState(props.open ?? false)
+  const [isFullScreen, setFullScreen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const add = useAddOrder()
   const update = useUpdateOrder()
   const updateCustomer = useUpdateCustomer()
 
-
-
-
   useEffect(() => {
-    onOpenChange && onOpenChange(open);
-  }, [open, onOpenChange]);
+    onOpenChange && onOpenChange(open)
+  }, [open, onOpenChange])
 
   const defaultValues = useMemo(
     () => ({
@@ -85,55 +80,54 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       ...(selectedBooking && { ...mapJsonToSchema(selectedBooking) }),
     }),
     [selectedBooking]
-  );
+  )
 
   useEffect(() => {
-    setOpen(props.open ?? false);
+    setOpen(props.open ?? false)
     if (!props.open && mode === "edit") {
-      setSelectedBooking(initialValues);
+      setSelectedBooking(initialValues)
     }
-  }, [props.open]);
+  }, [props.open])
 
-  useEffect(() => {
-
-  }, [selectedBooking])
-
+  useEffect(() => {}, [selectedBooking])
 
   const form = useForm<Order>({
     // TODO : implement later
     resolver: zodResolver(schemas),
     defaultValues,
-  });
+  })
 
   // Watch the entire form for changes
-  const formValues = form.watch();
+  const formValues = form.watch()
   useEffect(() => {
     // Log the updated form values whenever they change
     //console.log("Form Values Changed:", formValues);
-  }, [formValues]);
+  }, [formValues])
 
   useEffect(() => {
     if (selectedBooking) {
-      form.reset(defaultValues);
+      form.reset(defaultValues)
     }
-  }, [selectedBooking, defaultValues, form]);
+  }, [selectedBooking, defaultValues, form])
 
   const toggleFullScreen = () => {
-    setFullScreen((prev) => !prev);
-  };
+    setFullScreen((prev) => !prev)
+  }
 
   const onSubmit = async (data: Order) => {
     const { bill_to_name, bill_to_old_name, bill_to_id } = data
 
     try {
-      const mappedShipperDetails = data.shipper_details?.map(item => ({ ...item, date: item.date ? format(item.date, "yyyy-MM-dd") : "" }))
+      const mappedShipperDetails = data.shipper_details?.map((item) => ({
+        ...item,
+        date: item.date ? format(item.date, "yyyy-MM-dd") : "",
+      }))
       data.shipper_details = mappedShipperDetails
-      setIsLoading(true);
+      setIsLoading(true)
 
-
-      const dataMapped = mapSchemaToJson(data);
+      const dataMapped = mapSchemaToJson(data)
       //update bill to name if the value changes
-      if (bill_to_id && bill_to_name && (bill_to_old_name !== bill_to_name)) {
+      if (bill_to_id && bill_to_name && bill_to_old_name !== bill_to_name) {
         await updateCustomer.mutateAsync({ id: bill_to_id, name: bill_to_name })
       }
 
@@ -143,31 +137,29 @@ export default function NewOrderModal(props: NewOrderModalProps) {
           toast({
             title: "Success!",
             description: "Your order has been created",
-          });
+          })
         } else {
-          await update.mutateAsync({ ...dataMapped as Order, id: data.ID })
+          await update.mutateAsync({ ...(dataMapped as Order), id: data.ID })
           toast({
             title: "Success!",
             description: "Your order has been updated",
-          });
+          })
         }
-        setOpen(false);
-        form.reset();
+        setOpen(false)
+        form.reset()
       } catch (e) {
         toast({
           title: "Failed!",
           variant: "destructive",
           description: "Your request failed",
-        });
+        })
       }
-
-
     } catch (error) {
-      console.error({ error });
+      console.error({ error })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -176,70 +168,70 @@ export default function NewOrderModal(props: NewOrderModalProps) {
         hideCloseButton
         className={
           isFullScreen
-            ? "w-screen h-screen max-w-none"
-            : "max-w-6xl top-8 translate-y-0"
+            ? "h-screen w-screen max-w-none"
+            : "top-8 max-w-6xl translate-y-0"
         }
         onInteractOutside={(e) => e.preventDefault()}
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <DialogHeader className="flex flex-row justify-between items-center space-y-0">
+            <DialogHeader className="flex flex-row items-center justify-between space-y-0">
               <DialogTitle>
                 {mode === "create" ? "New Orders" : "Edit Order"}
               </DialogTitle>
-              <div className="flex flex-row items-center justify-end text-muted-foreground gap-2">
+              <div className="flex flex-row items-center justify-end gap-2 text-muted-foreground">
                 <Button
                   onClick={toggleFullScreen}
                   variant={"ghost"}
                   size={"icon"}
-                  className="w-6 h-6"
+                  className="h-6 w-6"
                   type="button"
                 >
-                  <ArrowsPointingOutIcon className="w-4 h-4" />
+                  <ArrowsPointingOutIcon className="h-4 w-4" />
                 </Button>
                 <Button
                   onClick={() => setOpen(false)}
                   variant={"ghost"}
                   size={"icon"}
-                  className="w-6 h-6"
+                  className="h-6 w-6"
                   type="button"
                 >
-                  <XMarkIcon className="w-5 h-5" />
+                  <XMarkIcon className="h-5 w-5" />
                 </Button>
               </div>
             </DialogHeader>
             <Tabs defaultValue="booking-details">
-              <div className="w-full flex flex-row items-stretch gap-4 pt-4">
+              <div className="flex w-full flex-row items-stretch gap-4 pt-4">
                 <div className="min-w-[220px]">
                   <Card className="h-full">
-                    <TabsList className="p-0 py-2  ">
+                    <TabsList className="p-0 py-2">
                       <TabsTrigger value="booking-details">
-                        <SquarePenIcon className="w-4 h-4" />
+                        <SquarePenIcon className="h-4 w-4" />
                         Booking Details
                       </TabsTrigger>
                       <TabsTrigger value="consignment-details">
-                        <PlaneIcon className="w-4 h-4" />
+                        <PlaneIcon className="h-4 w-4" />
                         Consignment Details
                       </TabsTrigger>
                       <TabsTrigger value="shipper-details">
-                        <UserIcon className="w-4 h-4" />
+                        <UserIcon className="h-4 w-4" />
                         Shipper Details
                       </TabsTrigger>
                       <TabsTrigger value="process-rates">
-                        <PackageIcon className="w-4 h-4" />
+                        <PackageIcon className="h-4 w-4" />
                         Process Rates
                       </TabsTrigger>
                     </TabsList>
                     <Separator />
-                    <TabsList className="p-0 py-2 ">
+                    <TabsList className="p-0 py-2">
                       <TabsTrigger value="activity-log">
-                        <HistoryIcon className="w-4 h-4" />
+                        <HistoryIcon className="h-4 w-4" />
                         Activity Log
                       </TabsTrigger>
                     </TabsList>
                   </Card>
                 </div>
-                <div className="flex-1 grid">
+                <div className="grid flex-1">
                   <TabsContent value="booking-details" asChild>
                     <CreateBookingForm />
                   </TabsContent>
@@ -256,7 +248,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                     <ActivityLog />
                   </TabsContent>
                 </div>
-                <div className="gap-4 max-w-[300px] flex flex-col items-stretch justify-between">
+                <div className="flex max-w-[300px] flex-col items-stretch justify-between gap-4">
                   <div className="space-y-4">
                     <OrderSummaryCard {...formValues} />
                     <DimensionsCard {...formValues} />
@@ -268,7 +260,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                       variant={"button-secondary"}
                       className="w-full"
                     >
-                      <ScrollTextIcon className="w-4 h-4 mr-2" />
+                      <ScrollTextIcon className="mr-2 h-4 w-4" />
                       View Invoice
                     </Button>
                     <Button
@@ -287,5 +279,5 @@ export default function NewOrderModal(props: NewOrderModalProps) {
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

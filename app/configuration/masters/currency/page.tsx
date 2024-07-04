@@ -1,15 +1,16 @@
-"use client";
+"use client"
 
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterCurrencyPage() {
   const formFields: TFormTextField[] = [
@@ -30,7 +31,7 @@ export default function MasterCurrencyPage() {
       label: "isActive",
       type: "checkbox",
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -61,7 +62,7 @@ export default function MasterCurrencyPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -78,9 +79,9 @@ export default function MasterCurrencyPage() {
       created_at: "2022-01-03",
       updated_at: "2022-01-04",
     },
-  ];
+  ]
 
-  const currencyForm = useForm();
+  const currencyForm = useForm()
   return (
     <MastersPageTemplate
       heading="Currency Master"
@@ -90,5 +91,5 @@ export default function MasterCurrencyPage() {
       filterHookForm={currencyForm}
       customFilterButtons={<FilterActions />}
     />
-  );
+  )
 }

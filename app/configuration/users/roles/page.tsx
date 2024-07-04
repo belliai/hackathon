@@ -1,14 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useForm } from "react-hook-form";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function MasterRolePage() {
   const filterFormFields: TFormTextField[] = [
@@ -23,7 +24,7 @@ export default function MasterRolePage() {
       label: "isActive",
       type: "checkbox",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -56,7 +57,7 @@ export default function MasterRolePage() {
       placeholder: "Landing URL",
       type: "url",
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -89,7 +90,7 @@ export default function MasterRolePage() {
       header: "Created On",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -119,10 +120,10 @@ export default function MasterRolePage() {
       loginType: "Single Sign-On",
       createdOn: "2023-03-01",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
-  const form = useForm();
+  const filterForm = useForm()
+  const form = useForm()
 
   return (
     <MastersPageTemplate
@@ -132,5 +133,5 @@ export default function MasterRolePage() {
       filterFormFields={filterFormFields}
       filterHookForm={filterForm}
     />
-  );
+  )
 }

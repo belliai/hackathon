@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function UploadMasterPage() {
   const formFields: TFormTextField[] = [
@@ -28,9 +29,9 @@ export default function UploadMasterPage() {
       options: DUMMY_SELECT_OPTIONS,
       orientation: "horizontal",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -38,12 +39,12 @@ export default function UploadMasterPage() {
       hookForm={form}
       formFields={formFields}
       customDialogContent={
-        <div className="flex gap-2 mt-8">
+        <div className="mt-8 flex gap-2">
           <Button variant="button-primary">Upload</Button>
           <Button variant="button-primary">List</Button>
           <Button variant="button-primary">Download</Button>
         </div>
       }
     />
-  );
+  )
 }

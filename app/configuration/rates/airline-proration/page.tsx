@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function AirlineProration() {
   const formFields: TFormTextField[] = [
@@ -60,9 +61,9 @@ export default function AirlineProration() {
       label: "Active",
       orientation: "horizontal",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -101,7 +102,7 @@ export default function AirlineProration() {
       ),
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -149,7 +150,7 @@ export default function AirlineProration() {
       validTo: "2023-08-15",
       active: true,
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -159,7 +160,7 @@ export default function AirlineProration() {
       hookForm={form}
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -167,5 +168,5 @@ export default function AirlineProration() {
         </div>
       }
     />
-  );
+  )
 }

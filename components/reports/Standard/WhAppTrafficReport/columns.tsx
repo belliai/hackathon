@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type WHAppTrafficReportType = {
-  date: string;
-  time: string;
-  vehicle_number: string;
-  driver_name: string;
-  entry_time: string;
-  exit_time: string;
-  duration: string;
-  cargo_type: string;
-  cargo_weight: string;
-  origin: string;
-  destination: string;
-  status: string;
-  station: string;
-  updated_on: string;
-};
+  date: string
+  time: string
+  vehicle_number: string
+  driver_name: string
+  entry_time: string
+  exit_time: string
+  duration: string
+  cargo_type: string
+  cargo_weight: string
+  origin: string
+  destination: string
+  status: string
+  station: string
+  updated_on: string
+}
 
 export const columns: ColumnDef<WHAppTrafficReportType>[] = [
   {
@@ -76,4 +76,4 @@ export const columns: ColumnDef<WHAppTrafficReportType>[] = [
     header: "Updated On",
     accessorKey: "updated_on",
   },
-];
+]

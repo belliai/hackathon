@@ -1,11 +1,12 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useFieldArray, useForm } from "react-hook-form";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function MasterRateLinePage() {
   const rateLineForm = useForm({
@@ -28,17 +29,17 @@ export default function MasterRateLinePage() {
         },
       ],
     },
-  });
+  })
 
   const ralateBases = useFieldArray<any>({
     control: rateLineForm.control,
     name: "rateBases",
-  });
+  })
 
   const uldBases = useFieldArray<any>({
     control: rateLineForm.control,
     name: "uldBases",
-  });
+  })
 
   const excludeIncludeOptions = [
     {
@@ -49,7 +50,7 @@ export default function MasterRateLinePage() {
       label: "Include",
       value: "include",
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -541,7 +542,7 @@ export default function MasterRateLinePage() {
       ]}
       className="max-h-none"
       customDialogContent={
-        <div className="flex flex-col md:flex-row gap-2 mt-8">
+        <div className="mt-8 flex flex-col gap-2 md:flex-row">
           <Button variant="button-primary">Add Another</Button>
           <Button variant="button-primary">Save</Button>
           <Button variant="button-primary">Cancel</Button>
@@ -549,5 +550,5 @@ export default function MasterRateLinePage() {
         </div>
       }
     />
-  );
+  )
 }

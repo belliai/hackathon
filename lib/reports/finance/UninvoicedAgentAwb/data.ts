@@ -1,4 +1,4 @@
-import { UninvoicedAgentAwbType } from "@/components/reports/finance/UninvoicedAgentAwb/columns";
+import { UninvoicedAgentAwbType } from "@/components/reports/finance/UninvoicedAgentAwb/columns"
 
 export const DUMMY_DATA: UninvoicedAgentAwbType[] = [
   {
@@ -38,7 +38,7 @@ export const DUMMY_DATA: UninvoicedAgentAwbType[] = [
     mkt_gst: "280",
     total: "5750",
     mkt_total: "6100",
-    status: "Executed"
+    status: "Executed",
   },
   {
     org: "ORD",
@@ -77,7 +77,7 @@ export const DUMMY_DATA: UninvoicedAgentAwbType[] = [
     mkt_gst: "400",
     total: "7625",
     mkt_total: "8000",
-    status: "Accepted"
+    status: "Accepted",
   },
   {
     org: "LAX",
@@ -116,10 +116,10 @@ export const DUMMY_DATA: UninvoicedAgentAwbType[] = [
     mkt_gst: "225",
     total: "4450",
     mkt_total: "4775",
-    status: "Void"
-  }
-];
+    status: "Void",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

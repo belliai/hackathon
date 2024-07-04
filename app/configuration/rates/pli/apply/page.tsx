@@ -1,12 +1,13 @@
-"use client";
+"use client"
 
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function PliApplyPage() {
   const sectionedFormFields: SectionedFormFields[] = [
@@ -33,9 +34,9 @@ export default function PliApplyPage() {
         },
       ],
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -43,19 +44,19 @@ export default function PliApplyPage() {
       sectionedFormFields={sectionedFormFields}
       hookForm={form}
       customDialogContent={
-        <div className="flex flex-col gap-4 mt-8">
+        <div className="mt-8 flex flex-col gap-4">
           <div className="flex gap-2">
             <Button variant="button-primary">List</Button>
             <Button variant="button-primary">Recheck AWB&apos;s</Button>
             <Button variant="button-primary">Clear</Button>
           </div>
           <Separator />
-          <div className="flex gap-2 mt-8">
+          <div className="mt-8 flex gap-2">
             <Button variant="button-primary">Apply PLI</Button>
             <Button variant="button-primary">Export PLI</Button>
           </div>
         </div>
       }
     />
-  );
+  )
 }

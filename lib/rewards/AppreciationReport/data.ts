@@ -1,4 +1,4 @@
-import { AppreciationReportType } from "@/components/rewards/AppreciationReport/columns";
+import { AppreciationReportType } from "@/components/rewards/AppreciationReport/columns"
 
 export const DUMMY_DATA: AppreciationReportType[] = [
   {
@@ -8,7 +8,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager B",
     email_id: "jane@example.com",
     date: "31 Mei 2024",
-    remarks: "Outstanding work!"
+    remarks: "Outstanding work!",
   },
   {
     employee_name: "Alice Johnson",
@@ -17,7 +17,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager D",
     email_id: "alice@example.com",
     date: "31 Mei 2024",
-    remarks: "Well done!"
+    remarks: "Well done!",
   },
   {
     employee_name: "Bob Brown",
@@ -26,7 +26,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager E",
     email_id: "bob@example.com",
     date: "31 Mei 2024",
-    remarks: "Great job!"
+    remarks: "Great job!",
   },
   {
     employee_name: "Charlie Davis",
@@ -35,7 +35,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager A",
     email_id: "charlie@example.com",
     date: "31 Mei 2024",
-    remarks: "Keep it up!"
+    remarks: "Keep it up!",
   },
   {
     employee_name: "John Doe",
@@ -44,7 +44,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager C",
     email_id: "john@example.com",
     date: "31 Mei 2024",
-    remarks: "Excellent performance!"
+    remarks: "Excellent performance!",
   },
   {
     employee_name: "Jane Smith",
@@ -53,7 +53,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager B",
     email_id: "jane@example.com",
     date: "31 Mei 2024",
-    remarks: "Well done!"
+    remarks: "Well done!",
   },
   {
     employee_name: "Alice Johnson",
@@ -62,7 +62,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager E",
     email_id: "alice@example.com",
     date: "31 Mei 2024",
-    remarks: "Outstanding work!"
+    remarks: "Outstanding work!",
   },
   {
     employee_name: "Bob Brown",
@@ -71,7 +71,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager A",
     email_id: "bob@example.com",
     date: "31 Mei 2024",
-    remarks: "Great job!"
+    remarks: "Great job!",
   },
   {
     employee_name: "Charlie Davis",
@@ -80,7 +80,7 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager C",
     email_id: "charlie@example.com",
     date: "31 Mei 2024",
-    remarks: "Excellent performance!"
+    remarks: "Excellent performance!",
   },
   {
     employee_name: "John Doe",
@@ -89,10 +89,10 @@ export const DUMMY_DATA: AppreciationReportType[] = [
     given_by: "Manager D",
     email_id: "john@example.com",
     date: "31 Mei 2024",
-    remarks: "Keep it up!"
-  }
-];
+    remarks: "Keep it up!",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

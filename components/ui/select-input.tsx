@@ -1,18 +1,19 @@
-import { FormControl } from "./form";
-import { ControllerRenderProps } from "react-hook-form";
+import { ControllerRenderProps } from "react-hook-form"
+
+import { FormControl } from "./form"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./select";
+} from "./select"
 
 type SelectInputProps = ControllerRenderProps & {
-  label?: string;
-  placeholder?: string;
-  selectOptions: { value: string; label: string }[];
-};
+  label?: string
+  placeholder?: string
+  selectOptions: { value: string; label: string }[]
+}
 
 export default function SelectInput({
   value,
@@ -34,5 +35,5 @@ export default function SelectInput({
         ))}
       </SelectContent>
     </Select>
-  );
+  )
 }

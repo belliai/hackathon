@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function MasterUldPage() {
   const columns: ColumnDef<any>[] = [
@@ -39,7 +40,7 @@ export default function MasterUldPage() {
       header: "Updated On",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -102,7 +103,7 @@ export default function MasterUldPage() {
       createdAt: "2023-05-01",
       updatedAt: "2023-05-10",
     },
-  ];
+  ]
 
   const filterFormFields: TFormTextField[] = [
     {
@@ -139,9 +140,9 @@ export default function MasterUldPage() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -152,11 +153,11 @@ export default function MasterUldPage() {
       filterHookForm={filterForm}
       customFilterButtons={<FilterActions />}
       bottomCustomComponent={
-        <div className="flex gap-2 mt-4">
+        <div className="mt-4 flex gap-2">
           <Button variant="button-primary">Get Movement History</Button>
           <Button variant="button-primary">Delete</Button>
         </div>
       }
     />
-  );
+  )
 }

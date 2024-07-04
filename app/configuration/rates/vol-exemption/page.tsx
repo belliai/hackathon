@@ -1,16 +1,17 @@
-"use client";
+"use client"
 
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function VolExemptionPage() {
   const formFields: TFormTextField[] = [
@@ -39,9 +40,9 @@ export default function VolExemptionPage() {
       orientation: "horizontal",
       options: DUMMY_SELECT_OPTIONS_STATUS,
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -50,7 +51,7 @@ export default function VolExemptionPage() {
       hookForm={form}
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="flex max-w-96 mt-8">
+          <div className="mt-8 flex max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -58,5 +59,5 @@ export default function VolExemptionPage() {
         </div>
       }
     />
-  );
+  )
 }

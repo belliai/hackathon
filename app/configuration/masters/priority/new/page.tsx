@@ -1,16 +1,17 @@
-"use client";
+"use client"
 
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function NewPriorityPage() {
-  const form = useForm();
+  const form = useForm()
 
   const excludeIncludeOptions = [
     {
@@ -21,7 +22,7 @@ export default function NewPriorityPage() {
       label: "Include",
       value: "include",
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -254,7 +255,7 @@ export default function NewPriorityPage() {
         },
       ],
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -268,5 +269,5 @@ export default function NewPriorityPage() {
         </Button>
       }
     />
-  );
+  )
 }

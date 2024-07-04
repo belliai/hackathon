@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterCapacityMaster() {
   const columns: ColumnDef<any>[] = [
@@ -128,7 +129,7 @@ export default function MasterCapacityMaster() {
       header: "Flight Type",
     },
     actionColumn,
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -217,7 +218,7 @@ export default function MasterCapacityMaster() {
       label: "Active",
       type: "checkbox",
     },
-  ];
+  ]
 
   const data = [
     {
@@ -360,7 +361,7 @@ export default function MasterCapacityMaster() {
       ld11: 130,
       flightType: "Cargo",
     },
-  ];
+  ]
 
   const form = useForm({
     defaultValues: {
@@ -377,17 +378,17 @@ export default function MasterCapacityMaster() {
         },
       ],
     },
-  });
+  })
 
   const uldsFieldArray = useFieldArray<any>({
     control: form.control,
     name: "ulds",
-  });
+  })
 
   const shcsFieldArray = useFieldArray<any>({
     control: form.control,
     name: "shcs",
-  });
+  })
 
   return (
     <CreateFormPageTemplate
@@ -441,7 +442,7 @@ export default function MasterCapacityMaster() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -449,5 +450,5 @@ export default function MasterCapacityMaster() {
         </div>
       }
     />
-  );
+  )
 }

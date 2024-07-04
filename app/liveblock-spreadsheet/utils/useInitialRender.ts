@@ -1,13 +1,13 @@
-import { useRef } from "react";
+import { useRef } from "react"
 
 export function useInitialRender() {
-  const isInitial = useRef(true);
+  const isInitial = useRef(true)
 
   if (isInitial.current) {
-    isInitial.current = false;
+    isInitial.current = false
 
-    return true;
+    return true
   }
 
-  return isInitial.current;
+  return isInitial.current
 }

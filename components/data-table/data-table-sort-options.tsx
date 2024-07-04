@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import { ColumnDef, Table } from "@tanstack/react-table";
-import { ReactNode } from "react";
-import { Popover, PopoverContent } from "../ui/popover";
-import { PopoverTrigger } from "@radix-ui/react-popover";
+import { ReactNode } from "react"
+import { PopoverTrigger } from "@radix-ui/react-popover"
+import { ColumnDef, Table } from "@tanstack/react-table"
+import { ArrowDownAZIcon, ArrowUpAZIcon } from "lucide-react"
+
 import {
   Command,
   CommandEmpty,
@@ -11,12 +12,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "../ui/command";
-import { ArrowDownAZIcon, ArrowUpAZIcon } from "lucide-react";
+} from "../ui/command"
+import { Popover, PopoverContent } from "../ui/popover"
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
-  children: ReactNode;
+  table: Table<TData>
+  children: ReactNode
 }
 
 export function DataTableSortOptions<TData>({
@@ -27,12 +28,12 @@ export function DataTableSortOptions<TData>({
     .getAllColumns()
     .filter(
       (col) => Boolean(col.accessorFn) && col.getIsVisible() && col.getCanSort()
-    );
+    )
 
   return (
     <Popover>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
-      <PopoverContent align="end" className="w-[250px] p-0 ">
+      <PopoverContent align="end" className="w-[250px] p-0">
         <Command>
           <CommandInput placeholder="Search for a column" />
 
@@ -41,13 +42,13 @@ export function DataTableSortOptions<TData>({
 
             <CommandGroup>
               {sortableColumns.map((column) => {
-                const sortDir = column.getIsSorted();
+                const sortDir = column.getIsSorted()
                 return (
                   <CommandItem
                     key={column.id}
                     value={String(column.columnDef.header)}
                     onSelect={() => column.toggleSorting(undefined, true)}
-                    className="flex flex-row justify-between items-center"
+                    className="flex flex-row items-center justify-between"
                   >
                     {String(column.columnDef.header)}
                     {sortDir === "asc" && (
@@ -57,12 +58,12 @@ export function DataTableSortOptions<TData>({
                       <ArrowDownAZIcon className="size-4 text-muted-foreground" />
                     )}
                   </CommandItem>
-                );
+                )
               })}
             </CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

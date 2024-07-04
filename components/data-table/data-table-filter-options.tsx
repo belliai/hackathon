@@ -1,17 +1,8 @@
-"use client";
+"use client"
 
-import { Column, ColumnDef, ColumnMeta, Table } from "@tanstack/react-table";
-import { ReactNode, useEffect, useState } from "react";
-import { Popover, PopoverContent } from "../ui/popover";
-import { PopoverTrigger } from "@radix-ui/react-popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "../ui/command";
+import { ReactNode, useEffect, useState } from "react"
+import { PopoverTrigger } from "@radix-ui/react-popover"
+import { Column, ColumnDef, ColumnMeta, Table } from "@tanstack/react-table"
 import {
   ArrowDownAZIcon,
   ArrowLeftIcon,
@@ -20,25 +11,33 @@ import {
   FilterXIcon,
   SearchCheck,
   SearchIcon,
-} from "lucide-react";
-import { Separator } from "../ui/separator";
-import { useDebounceValue } from "usehooks-ts";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import DateInput from "../ui/date-input";
+} from "lucide-react"
+import { useDebounceValue } from "usehooks-ts"
+
+import { Button } from "../ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command"
+import DateInput from "../ui/date-input"
+import { Input } from "../ui/input"
+import { Popover, PopoverContent } from "../ui/popover"
+import { Separator } from "../ui/separator"
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
-  children: ReactNode;
+  table: Table<TData>
+  children: ReactNode
 }
 
 export function DataTableFilterOptions<TData>({
   table,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  const [colFilterView, setColFilterView] = useState<Column<TData> | null>(
-    null
-  );
+  const [colFilterView, setColFilterView] = useState<Column<TData> | null>(null)
 
   const filterableColumns = table
     .getAllColumns()
@@ -46,7 +45,7 @@ export function DataTableFilterOptions<TData>({
       (col) =>
         Boolean(col.accessorFn) && col.getIsVisible() && col.getCanFilter()
     )
-    .sort((a, b) => b.getFilterIndex() - a.getFilterIndex());
+    .sort((a, b) => b.getFilterIndex() - a.getFilterIndex())
 
   return (
     <Popover>
@@ -64,29 +63,29 @@ export function DataTableFilterOptions<TData>({
               <CommandEmpty>No column found.</CommandEmpty>
               <CommandGroup>
                 {filterableColumns.map((column) => {
-                  const filter = column.getFilterValue();
+                  const filter = column.getFilterValue()
                   return (
                     <CommandItem
                       key={column.id}
                       value={String(column.columnDef.header)}
                       onSelect={() => setColFilterView(column)}
-                      className="flex flex-row justify-between items-center"
+                      className="flex flex-row items-center justify-between"
                     >
                       {String(column.columnDef.header)}
                       {Boolean(filter) && (
                         <button
                           onClick={(e) => {
-                            e.stopPropagation();
-                            column.setFilterValue(undefined);
+                            e.stopPropagation()
+                            column.setFilterValue(undefined)
                           }}
-                          className="group text-muted-foreground hover:text-red-400 transition-colors"
+                          className="group text-muted-foreground transition-colors hover:text-red-400"
                         >
-                          <FilterIcon className="size-4 block group-hover:hidden" />
-                          <FilterXIcon className="size-4 hidden group-hover:block" />
+                          <FilterIcon className="block size-4 group-hover:hidden" />
+                          <FilterXIcon className="hidden size-4 group-hover:block" />
                         </button>
                       )}
                     </CommandItem>
-                  );
+                  )
                 })}
               </CommandGroup>
             </CommandList>
@@ -94,32 +93,32 @@ export function DataTableFilterOptions<TData>({
         )}
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
 const ColumnFilterView = <TData,>(props: {
-  column: Column<TData>;
-  onClose: () => void;
+  column: Column<TData>
+  onClose: () => void
 }) => {
-  const { column, onClose } = props;
+  const { column, onClose } = props
   const [filterValue, setFilterValue] = useState<string>(
     column.getFilterValue() as string
-  );
-  const [debouncedFilter] = useDebounceValue(filterValue, 200);
+  )
+  const [debouncedFilter] = useDebounceValue(filterValue, 200)
 
   useEffect(() => {
     column.setFilterValue(
       Boolean(debouncedFilter) ? debouncedFilter : undefined
-    );
-  }, [debouncedFilter]);
+    )
+  }, [debouncedFilter])
 
-  const meta = column.columnDef.meta;
-  const options = meta?.filterSelectOptions;
-  const isDate = meta?.isDateFilter;
+  const meta = column.columnDef.meta
+  const options = meta?.filterSelectOptions
+  const isDate = meta?.isDateFilter
 
   return (
     <div className="">
-      <div className="p-2  text-sm flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-2 p-2 text-sm">
         <Button
           onClick={onClose}
           variant={"ghost"}
@@ -151,14 +150,14 @@ const ColumnFilterView = <TData,>(props: {
                       key={option.value}
                       value={option.label}
                       onSelect={() => setFilterValue(option.value)}
-                      className="flex flex-row justify-between items-center"
+                      className="flex flex-row items-center justify-between"
                     >
                       {option.label}
                       {option.value === filterValue && (
                         <SearchCheck className="size-4 text-muted-foreground" />
                       )}
                     </CommandItem>
-                  );
+                  )
                 })}
               </CommandGroup>
             </CommandList>
@@ -166,13 +165,13 @@ const ColumnFilterView = <TData,>(props: {
         ) : (
           <Input
             value={filterValue}
-            className="border-none rounded-none px-4 focus-visible:ring-0"
+            className="rounded-none border-none px-4 focus-visible:ring-0"
             placeholder="Apply filter..."
             onChange={(e) => setFilterValue(e.target.value)}
-            rightIcon={<FilterIcon className="w-4 text-muted-foreground " />}
+            rightIcon={<FilterIcon className="w-4 text-muted-foreground" />}
           />
         )}
       </div>
     </div>
-  );
-};
+  )
+}

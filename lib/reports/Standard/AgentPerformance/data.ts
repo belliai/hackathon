@@ -1,4 +1,4 @@
-import { AgentPerformanceType } from "@/components/reports/Standard/AgentPerformance/columns";
+import { AgentPerformanceType } from "@/components/reports/Standard/AgentPerformance/columns"
 
 export const DUMMY_DATA: AgentPerformanceType[] = [
   {
@@ -12,7 +12,7 @@ export const DUMMY_DATA: AgentPerformanceType[] = [
     invoice_tax: "700",
     total_no_of_awb: "100",
     total_awb_fee: "1000",
-    total_cca_fee: "200"
+    total_cca_fee: "200",
   },
   {
     agent_name: "Jane Smith",
@@ -25,7 +25,7 @@ export const DUMMY_DATA: AgentPerformanceType[] = [
     invoice_tax: "600",
     total_no_of_awb: "90",
     total_awb_fee: "900",
-    total_cca_fee: "180"
+    total_cca_fee: "180",
   },
   {
     agent_name: "Alice Johnson",
@@ -38,10 +38,10 @@ export const DUMMY_DATA: AgentPerformanceType[] = [
     invoice_tax: "800",
     total_no_of_awb: "120",
     total_awb_fee: "1200",
-    total_cca_fee: "240"
-  }
-];
+    total_cca_fee: "240",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

@@ -1,4 +1,4 @@
-import { EpouchReportType } from "@/components/reports/operation/EpouchReport/columns";
+import { EpouchReportType } from "@/components/reports/operation/EpouchReport/columns"
 
 export const DUMMY_DATA: EpouchReportType[] = [
   {
@@ -8,7 +8,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Airport",
     origin: "JFK",
     destination: "LAX",
-    doc: "Invoice"
+    doc: "Invoice",
   },
   {
     awb_number: "AWB12345602",
@@ -17,7 +17,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Warehouse",
     origin: "ORD",
     destination: "DFW",
-    doc: "Packing List"
+    doc: "Packing List",
   },
   {
     awb_number: "AWB12345603",
@@ -26,7 +26,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Airport",
     origin: "LAX",
     destination: "JFK",
-    doc: "Proof of Delivery"
+    doc: "Proof of Delivery",
   },
   {
     awb_number: "AWB12345604",
@@ -35,7 +35,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Warehouse",
     origin: "MIA",
     destination: "ATL",
-    doc: "Manifest"
+    doc: "Manifest",
   },
   {
     awb_number: "AWB12345605",
@@ -44,7 +44,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Airport",
     origin: "SEA",
     destination: "DEN",
-    doc: "AWB"
+    doc: "AWB",
   },
   {
     awb_number: "AWB12345606",
@@ -53,7 +53,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Warehouse",
     origin: "SFO",
     destination: "BOS",
-    doc: "Scanned DO"
+    doc: "Scanned DO",
   },
   {
     awb_number: "AWB12345607",
@@ -62,7 +62,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Airport",
     origin: "LAS",
     destination: "PHX",
-    doc: "DG_Non DG Declaration"
+    doc: "DG_Non DG Declaration",
   },
   {
     awb_number: "AWB12345608",
@@ -71,7 +71,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Warehouse",
     origin: "DTW",
     destination: "MSP",
-    doc: "Permit Form"
+    doc: "Permit Form",
   },
   {
     awb_number: "AWB12345609",
@@ -80,7 +80,7 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Airport",
     origin: "CLT",
     destination: "MCO",
-    doc: "Customer Invoice Copy Delivery"
+    doc: "Customer Invoice Copy Delivery",
   },
   {
     awb_number: "AWB12345610",
@@ -89,10 +89,10 @@ export const DUMMY_DATA: EpouchReportType[] = [
     airport_type: "Warehouse",
     origin: "IAD",
     destination: "EWR",
-    doc: "Additional"
-  }
-];
+    doc: "Additional",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

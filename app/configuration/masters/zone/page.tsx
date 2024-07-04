@@ -1,16 +1,17 @@
-"use client";
+"use client"
 
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MastersZonePage() {
   const columns: ColumnDef<any>[] = [
@@ -38,7 +39,7 @@ export default function MastersZonePage() {
       ),
     },
     actionColumn,
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -65,9 +66,9 @@ export default function MastersZonePage() {
       label: "isActive",
       type: "checkbox",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   const data = [
     {
@@ -82,7 +83,7 @@ export default function MastersZonePage() {
       location: "Location 2",
       status: "Inactive",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -93,5 +94,5 @@ export default function MastersZonePage() {
       filterHookForm={filterForm}
       customFilterButtons={<FilterActions />}
     />
-  );
+  )
 }

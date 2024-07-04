@@ -1,25 +1,27 @@
-import { cn } from "@/lib/utils";
-import { type ComponentProps, useCallback, useMemo, useState } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
-import { GRID_MAX_COLUMNS, GRID_MAX_ROWS } from "../constants";
-import { useHistory } from "@liveblocks/react";
-import { getHeaderLabel } from "../spreadsheet/interpreter/utils";
-import type { ReactSpreadsheet } from "../spreadsheet/react";
-import { getCellId } from "../spreadsheet/utils";
-import type { CellAddress, Column, Row } from "../types";
-import { TABLE_ID, canUseHotkeys } from "../utils/canUseHotkeys";
-import { clamp } from "../utils/clamp";
-import { getIndexWithProperty } from "../utils/getIndexWithProperty";
-import { Cell } from "./Cell";
-import { Headers, type Props as HeadersProps } from "./Headers";
-import styles from "./Sheet.module.css";
+import { useCallback, useMemo, useState, type ComponentProps } from "react"
+import { useHistory } from "@liveblocks/react"
+import { useHotkeys } from "react-hotkeys-hook"
 
-export type Props = ComponentProps<"div"> & ReactSpreadsheet;
+import { cn } from "@/lib/utils"
+
+import { GRID_MAX_COLUMNS, GRID_MAX_ROWS } from "../constants"
+import { getHeaderLabel } from "../spreadsheet/interpreter/utils"
+import type { ReactSpreadsheet } from "../spreadsheet/react"
+import { getCellId } from "../spreadsheet/utils"
+import type { CellAddress, Column, Row } from "../types"
+import { canUseHotkeys, TABLE_ID } from "../utils/canUseHotkeys"
+import { clamp } from "../utils/clamp"
+import { getIndexWithProperty } from "../utils/getIndexWithProperty"
+import { Cell } from "./Cell"
+import { Headers, type Props as HeadersProps } from "./Headers"
+import styles from "./Sheet.module.css"
+
+export type Props = ComponentProps<"div"> & ReactSpreadsheet
 
 interface SortIndicator {
-  index: number;
-  position?: "after" | "before";
-  type: "column" | "row";
+  index: number
+  position?: "after" | "before"
+  type: "column" | "row"
 }
 
 export function Sheet({
@@ -43,121 +45,121 @@ export function Sheet({
   selection,
   others,
 }: Props) {
-  const history = useHistory();
-  const [edition, setEdition] = useState<CellAddress | null>(null);
-  const [sortIndicator, setSortIndicator] = useState<SortIndicator>();
+  const history = useHistory()
+  const [edition, setEdition] = useState<CellAddress | null>(null)
+  const [sortIndicator, setSortIndicator] = useState<SortIndicator>()
   const shouldUseHotkeys = useMemo(
     () => Boolean(selection && !edition),
     [selection, edition]
-  );
+  )
   const hotkeysOptions = useMemo(
     () => ({ enabled: shouldUseHotkeys, filter: canUseHotkeys }),
     [shouldUseHotkeys]
-  );
+  )
 
   const moveSelection = useCallback(
     (direction: "down" | "left" | "right" | "up") => {
       return (event: KeyboardEvent) => {
-        event.preventDefault();
+        event.preventDefault()
 
-        const x = getIndexWithProperty(columns, "id", selection!.columnId);
-        const y = getIndexWithProperty(rows, "id", selection!.rowId);
+        const x = getIndexWithProperty(columns, "id", selection!.columnId)
+        const y = getIndexWithProperty(rows, "id", selection!.rowId)
 
         switch (direction) {
           case "up":
             selectCell(
               selection!.columnId,
               rows[clamp(y - 1, 0, rows.length - 1)].id
-            );
-            break;
+            )
+            break
           case "down":
             selectCell(
               selection!.columnId,
               rows[clamp(y + 1, 0, rows.length - 1)].id
-            );
-            break;
+            )
+            break
           case "left":
             selectCell(
               columns[clamp(x - 1, 0, columns.length - 1)].id,
               selection!.rowId
-            );
-            break;
+            )
+            break
           case "right":
             selectCell(
               columns[clamp(x + 1, 0, columns.length - 1)].id,
               selection!.rowId
-            );
-            break;
+            )
+            break
         }
-      };
+      }
     },
     [columns, rows, selectCell, selection]
-  );
+  )
 
-  useHotkeys("up", moveSelection("up"), hotkeysOptions, [selection]);
-  useHotkeys("down", moveSelection("down"), hotkeysOptions, [selection]);
-  useHotkeys("left", moveSelection("left"), hotkeysOptions, [selection]);
-  useHotkeys("right", moveSelection("right"), hotkeysOptions, [selection]);
+  useHotkeys("up", moveSelection("up"), hotkeysOptions, [selection])
+  useHotkeys("down", moveSelection("down"), hotkeysOptions, [selection])
+  useHotkeys("left", moveSelection("left"), hotkeysOptions, [selection])
+  useHotkeys("right", moveSelection("right"), hotkeysOptions, [selection])
 
   useHotkeys(
     "enter",
     (event) => {
-      event.preventDefault();
-      setEdition(selection);
+      event.preventDefault()
+      setEdition(selection)
     },
     hotkeysOptions,
     [selection]
-  );
+  )
   useHotkeys(
     "delete, backspace",
     (event) => {
-      event.preventDefault();
-      deleteCell(selection!.columnId, selection!.rowId);
+      event.preventDefault()
+      deleteCell(selection!.columnId, selection!.rowId)
     },
     hotkeysOptions,
     [selection]
-  );
+  )
 
   useHotkeys(
     "cmd+z, ctrl+z",
     (event) => {
-      event.preventDefault();
-      history.undo();
+      event.preventDefault()
+      history.undo()
     },
     hotkeysOptions,
     [history]
-  );
+  )
   useHotkeys(
     "shift+cmd+z, shift+ctrl+z",
     (event) => {
-      event.preventDefault();
-      history.redo();
+      event.preventDefault()
+      history.redo()
     },
     hotkeysOptions,
     [history]
-  );
+  )
 
   const handleColumnSortOver: HeadersProps["onSortOver"] = useCallback(
     (index, position) => {
       if (typeof index === "number") {
-        setSortIndicator({ type: "column", index, position });
+        setSortIndicator({ type: "column", index, position })
       } else {
-        setSortIndicator(undefined);
+        setSortIndicator(undefined)
       }
     },
     []
-  );
+  )
 
   const handleRowSortOver: HeadersProps["onSortOver"] = useCallback(
     (index, position) => {
       if (typeof index === "number") {
-        setSortIndicator({ type: "row", index, position });
+        setSortIndicator({ type: "row", index, position })
       } else {
-        setSortIndicator(undefined);
+        setSortIndicator(undefined)
       }
     },
     []
-  );
+  )
 
   return (
     <div className={styles.sheet}>
@@ -235,13 +237,13 @@ export function Sheet({
                 <tr key={y}>
                   <th className="sr">{getHeaderLabel(y, "row")}</th>
                   {columns.map((column) => {
-                    const id = getCellId(column.id, row.id);
+                    const id = getCellId(column.id, row.id)
                     const isSelected =
                       selection?.columnId === column.id &&
-                      selection?.rowId === row.id;
+                      selection?.rowId === row.id
                     const isEditing =
                       edition?.columnId === column.id &&
-                      edition?.rowId === row.id;
+                      edition?.rowId === row.id
 
                     return (
                       <Cell
@@ -253,13 +255,13 @@ export function Sheet({
                         isSelected={isSelected}
                         key={id}
                         onCommit={(value, direction) => {
-                          setCellValue(column.id, row.id, value);
+                          setCellValue(column.id, row.id, value)
 
                           if (direction === "down" && rows[y + 1]) {
-                            selectCell(column.id, rows[y + 1].id);
+                            selectCell(column.id, rows[y + 1].id)
                           }
 
-                          setEdition(null);
+                          setEdition(null)
                         }}
                         onEndEditing={() => setEdition(null)}
                         onSelect={() => selectCell(column.id, row.id)}
@@ -270,14 +272,14 @@ export function Sheet({
                         value={cells[id]}
                         width={column.width}
                       />
-                    );
+                    )
                   })}
                 </tr>
-              );
+              )
             })}
           </tbody>
         </table>
       </div>
     </div>
-  );
+  )
 }

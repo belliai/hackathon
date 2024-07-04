@@ -1,4 +1,4 @@
-import { DoInvoiceType } from "@/components/reports/finance/DoInvoice/columns";
+import { DoInvoiceType } from "@/components/reports/finance/DoInvoice/columns"
 
 export const DUMMY_DATA: DoInvoiceType[] = [
   {
@@ -10,7 +10,7 @@ export const DUMMY_DATA: DoInvoiceType[] = [
     invoice_no: "INV001",
     chargeable_weight: "1500 kg",
     payment_collected_mode: "Credit Card",
-    created_on: "2023-05-10"
+    created_on: "2023-05-10",
   },
   {
     origin: "LAX",
@@ -21,7 +21,7 @@ export const DUMMY_DATA: DoInvoiceType[] = [
     invoice_no: "INV002",
     chargeable_weight: "2000 kg",
     payment_collected_mode: "Bank Transfer",
-    created_on: "2023-05-11"
+    created_on: "2023-05-11",
   },
   {
     origin: "ORD",
@@ -32,7 +32,7 @@ export const DUMMY_DATA: DoInvoiceType[] = [
     invoice_no: "INV003",
     chargeable_weight: "1750 kg",
     payment_collected_mode: "Cash",
-    created_on: "2023-05-12"
+    created_on: "2023-05-12",
   },
   {
     origin: "DFW",
@@ -43,7 +43,7 @@ export const DUMMY_DATA: DoInvoiceType[] = [
     invoice_no: "INV004",
     chargeable_weight: "1600 kg",
     payment_collected_mode: "Credit Card",
-    created_on: "2023-05-13"
+    created_on: "2023-05-13",
   },
   {
     origin: "SFO",
@@ -54,10 +54,10 @@ export const DUMMY_DATA: DoInvoiceType[] = [
     invoice_no: "INV005",
     chargeable_weight: "1800 kg",
     payment_collected_mode: "Bank Transfer",
-    created_on: "2023-05-14"
-  }
-];
+    created_on: "2023-05-14",
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

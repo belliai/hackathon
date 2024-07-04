@@ -1,20 +1,21 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import DataTableSelectHead from "@/components/data-table/DataTableSelectHead";
-import DataTableSelectRow from "@/components/data-table/DataTableSelectRow";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
+import { Separator } from "@/components/ui/separator"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import DataTableSelectHead from "@/components/data-table/DataTableSelectHead"
+import DataTableSelectRow from "@/components/data-table/DataTableSelectRow"
 import FormTextField, {
   FormTextFieldProps,
-} from "@/components/form/FormTextField";
-import { Badge } from "@/components/ui/badge";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function MastersCountryPage() {
   const columns: ColumnDef<any>[] = [
@@ -106,7 +107,7 @@ export default function MastersCountryPage() {
       header: "Action",
       cell: ({ row }) => <DataTableRowActions />,
     },
-  ];
+  ]
 
   const filterForm = useForm({
     defaultValues: {
@@ -117,7 +118,7 @@ export default function MastersCountryPage() {
       country_name: "",
       status: "",
     },
-  });
+  })
 
   const filterFormFields: Omit<FormTextFieldProps, "form">[] = [
     {
@@ -239,7 +240,7 @@ export default function MastersCountryPage() {
       label: "CASS Billing Offset Day",
       hideTooltip: true,
     },
-  ];
+  ]
 
   const countryForm = useForm({
     defaultValues: {
@@ -260,7 +261,7 @@ export default function MastersCountryPage() {
       billing_period: "",
       cass_billing_offset_day: "",
     },
-  });
+  })
 
   const formFields: Omit<FormTextFieldProps, "form">[] = [
     {
@@ -422,7 +423,7 @@ export default function MastersCountryPage() {
       label: "Cass Billing Offset Day",
       hideTooltip: true,
     },
-  ];
+  ]
 
   const data = [
     {
@@ -470,7 +471,7 @@ export default function MastersCountryPage() {
       domDivisor: "1",
       id: 3,
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -482,7 +483,7 @@ export default function MastersCountryPage() {
       customFilterButtons={<FilterActions />}
       customComponent={
         <Form {...filterForm}>
-          <div className="grid grid-cols-4 w-full max-w-sm items-end gap-x-2 gap-4">
+          <div className="grid w-full max-w-sm grid-cols-4 items-end gap-4 gap-x-2">
             <div className="col-span-3">
               <FormTextField
                 name="operationalContact"
@@ -524,5 +525,5 @@ export default function MastersCountryPage() {
         </Form>
       }
     />
-  );
+  )
 }

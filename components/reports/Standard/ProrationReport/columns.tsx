@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type ProrationReportType = {
-  awb_number: string;
-  from_date: string;
-  to_date: string;
-  station: string;
-  carrier: string;
-  flight_type: string;
-  origin: string;
-  destination: string;
-  total_weight: string;
-  total_pieces: string;
-  total_revenue: string;
-  total_cost: string;
-  net_profit: string;
-  proration_factor: string;
-  updated_on: string;
-};
+  awb_number: string
+  from_date: string
+  to_date: string
+  station: string
+  carrier: string
+  flight_type: string
+  origin: string
+  destination: string
+  total_weight: string
+  total_pieces: string
+  total_revenue: string
+  total_cost: string
+  net_profit: string
+  proration_factor: string
+  updated_on: string
+}
 
 export const columns: ColumnDef<ProrationReportType>[] = [
   {
@@ -81,4 +81,4 @@ export const columns: ColumnDef<ProrationReportType>[] = [
     header: "Updated On",
     accessorKey: "updated_on",
   },
-];
+]

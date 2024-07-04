@@ -1,23 +1,24 @@
-"use client";
+"use client"
 
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
+} from "@/app/k360/organize/masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function DealAuditPage() {
-  const form = useForm();
+  const form = useForm()
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -54,7 +55,7 @@ export default function DealAuditPage() {
       header: "Applied Deal Type",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -107,7 +108,7 @@ export default function DealAuditPage() {
       deals: "Deal5",
       appliedDealType: "Seasonal",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -164,7 +165,7 @@ export default function DealAuditPage() {
       label: "Applied Deal Type",
       orientation: "horizontal",
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -174,7 +175,7 @@ export default function DealAuditPage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-8">
+          <div className="mt-8 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -182,5 +183,5 @@ export default function DealAuditPage() {
         </div>
       }
     />
-  );
+  )
 }

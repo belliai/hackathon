@@ -1,20 +1,20 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type AgentPerformanceType = {
-  agent_name?: string;
-  agent_no?: string;
-  date_from?: string;
-  date_to?: string;
-  billing_currency?: string;
-  freight_revenue?: string;
-  commission?: string;
-  invoice_tax?: string;
-  total_no_of_awb?: string;
-  total_awb_fee?: string;
-  total_cca_fee?: string;
-};
+  agent_name?: string
+  agent_no?: string
+  date_from?: string
+  date_to?: string
+  billing_currency?: string
+  freight_revenue?: string
+  commission?: string
+  invoice_tax?: string
+  total_no_of_awb?: string
+  total_awb_fee?: string
+  total_cca_fee?: string
+}
 
 export const columns: ColumnDef<AgentPerformanceType>[] = [
   {
@@ -61,4 +61,4 @@ export const columns: ColumnDef<AgentPerformanceType>[] = [
     header: "Total CCA Fee",
     accessorKey: "total_cca_fee",
   },
-];
+]

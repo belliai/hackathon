@@ -1,4 +1,4 @@
-import { GHATonnageType } from "@/components/reports/Standard/GhaTonnage/columns";
+import { GHATonnageType } from "@/components/reports/Standard/GhaTonnage/columns"
 
 export const DUMMY_DATA: GHATonnageType[] = [
   {
@@ -201,8 +201,8 @@ export const DUMMY_DATA: GHATonnageType[] = [
     net_profit: "$4000",
     updated_on: "2024-05-14",
   },
-];
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

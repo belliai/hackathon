@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type SquareRootProrationType = {
-  awb_number: string;
-  from_date: string;
-  to_date: string;
-  carrier: string;
-  agent_code: string;
-  report_type: string;
-  total_weight: string;
-  total_pieces: string;
-  gross_weight: string;
-  chargeable_weight: string;
-  revenue: string;
-  cost: string;
-  net_profit: string;
-  updated_on: string;
-};
+  awb_number: string
+  from_date: string
+  to_date: string
+  carrier: string
+  agent_code: string
+  report_type: string
+  total_weight: string
+  total_pieces: string
+  gross_weight: string
+  chargeable_weight: string
+  revenue: string
+  cost: string
+  net_profit: string
+  updated_on: string
+}
 
 export const columns: ColumnDef<SquareRootProrationType>[] = [
   {
@@ -76,4 +76,4 @@ export const columns: ColumnDef<SquareRootProrationType>[] = [
     header: "Updated On",
     accessorKey: "updated_on",
   },
-];
+]

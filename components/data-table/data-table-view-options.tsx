@@ -1,30 +1,18 @@
-"use client";
+"use client"
 
-import { Column, Table } from "@tanstack/react-table";
-import { Button } from "@components/ui/button";
-import { HTMLAttributes, ReactNode, useState } from "react";
-import { Popover, PopoverContent } from "../ui/popover";
-import { PopoverTrigger } from "@radix-ui/react-popover";
+import { HTMLAttributes, ReactNode, useState } from "react"
+import { Button } from "@components/ui/button"
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "../ui/command";
-import { EyeIcon, EyeOffIcon, GripVerticalIcon } from "lucide-react";
-import {
+  closestCorners,
   DndContext,
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
-  closestCorners,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from "@dnd-kit/core"
 import {
   arrayMove,
   SortableContext,
@@ -32,143 +20,149 @@ import {
   useSortable,
   UseSortableArguments,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { cn } from "@/lib/utils";
+} from "@dnd-kit/sortable"
+import { PopoverTrigger } from "@radix-ui/react-popover"
+import { Column, Table } from "@tanstack/react-table"
+import { EyeIcon, EyeOffIcon, GripVerticalIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command"
+import { Popover, PopoverContent } from "../ui/popover"
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
-  children: ReactNode;
-  buttonClassName?: HTMLDivElement["className"];
+  table: Table<TData>
+  children: ReactNode
+  buttonClassName?: HTMLDivElement["className"]
 }
 
 export function DataTableViewOptions<TData>({
   table,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  const columns = table
-    .getAllColumns()
-    .filter((col) => Boolean(col.accessorFn));
+  const columns = table.getAllColumns().filter((col) => Boolean(col.accessorFn))
 
   const activeColumns = columns.filter(
     (column) => column.getIsVisible() === true
-  );
+  )
   const hiddenColumns = columns.filter(
     (column) => column.getIsVisible() === false
-  );
+  )
 
   const [sections, setSections] = useState<{
-    [key: string]: Column<TData, unknown>[];
+    [key: string]: Column<TData, unknown>[]
   }>({
     active: activeColumns,
     hidden: hiddenColumns,
-  });
+  })
 
-  const [activeColumnId, setActiveColumndId] = useState<null | string>(null);
+  const [activeColumnId, setActiveColumndId] = useState<null | string>(null)
 
   const sensors = useSensors(
     useSensor(ExtendedPointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
 
   const handleDragStart = ({ active }: DragStartEvent) => {
-    setActiveColumndId(active.id as string);
-  };
+    setActiveColumndId(active.id as string)
+  }
 
   const onHideColumn = (col: Column<TData, unknown>) => {
-    console.log(col);
+    console.log(col)
 
     setSections((sections) => {
       const activeIndex = sections.active.findIndex(
         (column) => column.id === col.id
-      );
+      )
 
       if (activeIndex === -1) {
-        return sections;
+        return sections
       }
 
-      const newActive = sections.active.filter(
-        (column) => column.id !== col.id
-      );
-      const newHidden = [...sections.hidden, col];
+      const newActive = sections.active.filter((column) => column.id !== col.id)
+      const newHidden = [...sections.hidden, col]
 
-      col.toggleVisibility(false);
+      col.toggleVisibility(false)
 
       return {
         ...sections,
         active: newActive,
         hidden: newHidden,
-      };
-    });
-  };
+      }
+    })
+  }
 
   const onShowColumn = (col: Column<TData, unknown>) => {
     setSections((sections) => {
       const hiddenIndex = sections.hidden.findIndex(
         (column) => column.id === col.id
-      );
+      )
 
       if (hiddenIndex === -1) {
-        return sections;
+        return sections
       }
 
-      const newHidden = sections.hidden.filter(
-        (column) => column.id !== col.id
-      );
-      const newActive = [...sections.active, col];
+      const newHidden = sections.hidden.filter((column) => column.id !== col.id)
+      const newActive = [...sections.active, col]
 
       // Update the column visibility in the table
-      col.toggleVisibility(true);
+      col.toggleVisibility(true)
 
       return {
         ...sections,
         active: newActive,
         hidden: newHidden,
-      };
-    });
-  };
+      }
+    })
+  }
 
   const onHideAllColumn = () => {
     setSections((sections) => {
       return {
         active: [],
         hidden: [...sections["active"], ...sections["hidden"]],
-      };
-    });
-    table.toggleAllColumnsVisible(false);
-  };
+      }
+    })
+    table.toggleAllColumnsVisible(false)
+  }
 
   const onShowAllColumn = () => {
     setSections((sections) => {
       return {
         active: [...sections["active"], ...sections["hidden"]],
         hidden: [],
-      };
-    });
-    table.toggleAllColumnsVisible(true);
-  };
+      }
+    })
+    table.toggleAllColumnsVisible(true)
+  }
 
   const handleDragOver = ({ active, over }: DragOverEvent) => {
-    const activeContainer = findSectionContainer(sections, active.id as string);
-    const overContainer = findSectionContainer(sections, over?.id as string);
+    const activeContainer = findSectionContainer(sections, active.id as string)
+    const overContainer = findSectionContainer(sections, over?.id as string)
 
     if (
       !activeContainer ||
       !overContainer ||
       activeContainer === overContainer
     ) {
-      return;
+      return
     }
 
     setSections((section) => {
-      const activeItems = section[activeContainer];
-      const overItems = section[overContainer];
+      const activeItems = section[activeContainer]
+      const overItems = section[overContainer]
 
-      const activeIndex = activeItems.findIndex(
-        (item) => item.id === active.id
-      );
-      const overIndex = overItems.findIndex((item) => item.id !== over?.id);
+      const activeIndex = activeItems.findIndex((item) => item.id === active.id)
+      const overIndex = overItems.findIndex((item) => item.id !== over?.id)
 
       return {
         ...section,
@@ -183,34 +177,34 @@ export function DataTableViewOptions<TData>({
             section[overContainer].length
           ),
         ],
-      };
-    });
-  };
+      }
+    })
+  }
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    const activeContainer = findSectionContainer(sections, active.id as string);
-    const overContainer = findSectionContainer(sections, over?.id as string);
+    const activeContainer = findSectionContainer(sections, active.id as string)
+    const overContainer = findSectionContainer(sections, over?.id as string)
 
     if (
       !activeContainer ||
       !overContainer ||
       activeContainer !== overContainer
     ) {
-      return;
+      return
     }
 
     const activeIndex = sections[activeContainer].findIndex(
       (col) => col.id === active.id
-    );
+    )
     const overIndex = sections[overContainer].findIndex(
       (col) => col.id === over?.id
-    );
+    )
 
-    console.log({ activeContainer, overContainer });
+    console.log({ activeContainer, overContainer })
 
     table
       .getColumn(active.id as string)
-      ?.toggleVisibility(overContainer === "hidden" ? false : true);
+      ?.toggleVisibility(overContainer === "hidden" ? false : true)
 
     if (activeIndex !== overIndex) {
       setSections((section) => {
@@ -218,22 +212,22 @@ export function DataTableViewOptions<TData>({
           section[overContainer],
           activeIndex,
           overIndex
-        );
-        table.setColumnOrder(newOrder.map((col) => col.id));
+        )
+        table.setColumnOrder(newOrder.map((col) => col.id))
         return {
           ...section,
           [overContainer]: newOrder,
-        };
-      });
+        }
+      })
     }
 
-    setActiveColumndId(null);
-  };
+    setActiveColumndId(null)
+  }
 
   return (
     <Popover>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
-      <PopoverContent align="end" className="w-[250px] p-0 ">
+      <PopoverContent align="end" className="w-[250px] p-0">
         <Command>
           <CommandInput placeholder="Search for a column" />
           <DndContext
@@ -251,14 +245,14 @@ export function DataTableViewOptions<TData>({
                 strategy={verticalListSortingStrategy}
               >
                 <CommandGroup>
-                  <div className="h-fit px-2 py-2 flex flex-row items-center justify-between">
-                    <span className="text-xs text-muted-foreground font-medium">
+                  <div className="flex h-fit flex-row items-center justify-between px-2 py-2">
+                    <span className="text-xs font-medium text-muted-foreground">
                       Active Columns
                     </span>
                     <Button
                       onClick={onHideAllColumn}
                       variant={"link"}
-                      className="hover:no-underline text-xs h-fit px-0 py-0 text-button-primary  transition-colors"
+                      className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
                     >
                       Hide All
                     </Button>
@@ -280,12 +274,12 @@ export function DataTableViewOptions<TData>({
                         <button
                           data-no-dnd="true"
                           onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            onHideColumn(column);
+                            e.preventDefault()
+                            e.stopPropagation()
+                            onHideColumn(column)
                           }}
                         >
-                          <EyeIcon className="z-50 size-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer" />
+                          <EyeIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
                         </button>
                       </CommandItem>
                     </Draggable>
@@ -298,14 +292,14 @@ export function DataTableViewOptions<TData>({
                 strategy={verticalListSortingStrategy}
               >
                 <CommandGroup>
-                  <div className="h-fit px-2 py-2 flex flex-row items-center justify-between">
-                    <span className="text-xs text-muted-foreground font-medium">
+                  <div className="flex h-fit flex-row items-center justify-between px-2 py-2">
+                    <span className="text-xs font-medium text-muted-foreground">
                       Hidden Columns
                     </span>
                     <Button
                       onClick={onShowAllColumn}
                       variant={"link"}
-                      className="hover:no-underline text-xs h-fit px-0 py-0 text-button-primary  transition-colors"
+                      className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
                     >
                       Show All
                     </Button>
@@ -324,12 +318,12 @@ export function DataTableViewOptions<TData>({
                         <button
                           data-no-dnd="true"
                           onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            onShowColumn(column);
+                            e.preventDefault()
+                            e.stopPropagation()
+                            onShowColumn(column)
                           }}
                         >
-                          <EyeOffIcon className="z-50 size-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer" />
+                          <EyeOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
                         </button>
                       </CommandItem>
                     </Draggable>
@@ -342,7 +336,7 @@ export function DataTableViewOptions<TData>({
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
 function Draggable({
@@ -357,14 +351,14 @@ function Draggable({
     transform,
     transition,
     isDragging,
-  } = useSortable(args);
+  } = useSortable(args)
 
   const style = {
     transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
     transition,
     opacity: isDragging ? 0.7 : 1,
     zIndex: isDragging ? 30 : undefined,
-  };
+  }
 
   return (
     <div
@@ -373,7 +367,7 @@ function Draggable({
       style={style}
       {...props}
       className={cn(
-        "w-full h-full hover:cursor-grab active:cursor-grabbing",
+        "h-full w-full hover:cursor-grab active:cursor-grabbing",
         props.className
       )}
       {...listeners}
@@ -381,7 +375,7 @@ function Draggable({
     >
       {children}
     </div>
-  );
+  )
 }
 
 function findSectionContainer<TData>(
@@ -389,13 +383,13 @@ function findSectionContainer<TData>(
   id: string
 ) {
   if (id in sections) {
-    return id;
+    return id
   }
 
   const container = Object.keys(sections).find((key) =>
     sections[key].find((item) => item.id === id)
-  );
-  return container;
+  )
+  return container
 }
 
 export class ExtendedPointerSensor extends PointerSensor {
@@ -403,21 +397,21 @@ export class ExtendedPointerSensor extends PointerSensor {
     {
       eventName: "onPointerDown" as const,
       handler: ({ nativeEvent: event }: { nativeEvent: PointerEvent }) => {
-        return shouldHandleEvent(event.target as HTMLElement);
+        return shouldHandleEvent(event.target as HTMLElement)
       },
     },
-  ];
+  ]
 }
 
 function shouldHandleEvent(element: HTMLElement | null) {
-  let cur = element;
+  let cur = element
 
   while (cur) {
     if (cur.dataset && cur.dataset.noDnd) {
-      return false;
+      return false
     }
-    cur = cur.parentElement;
+    cur = cur.parentElement
   }
 
-  return true;
+  return true
 }

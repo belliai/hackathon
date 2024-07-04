@@ -1,31 +1,32 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 export type Order = {
-  mb_number?: string;
-  truck_number?: string;
-  via_station?: string;
-  assign_date?: string;
-  piece_per_mb?: string;
-  axb?: string;
-  origin?: string;
-  destination?: string;
-  weight?: string;
-  mwb?: string;
-  status?: string;
-  created_at?: string;
-  updated_at?: string;
-};
+  mb_number?: string
+  truck_number?: string
+  via_station?: string
+  assign_date?: string
+  piece_per_mb?: string
+  axb?: string
+  origin?: string
+  destination?: string
+  weight?: string
+  mwb?: string
+  status?: string
+  created_at?: string
+  updated_at?: string
+}
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -110,20 +111,21 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" className="bg-button-secondary hover:bg-button-secondary/80 text-white">
+          <Button
+            size="icon"
+            className="bg-button-secondary text-white hover:bg-button-secondary/80"
+          >
             <span className="h-4 w-4">
               <DotsHorizontalIcon />
             </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            View Mother Bag
-          </DropdownMenuItem>
+          <DropdownMenuItem>View Mother Bag</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
     enableSorting: false,
     enableHiding: false,
   },
-];
+]

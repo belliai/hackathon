@@ -1,9 +1,23 @@
-"use client";
+"use client"
 
-import { type CSSProperties, useMemo } from "react";
-import { Sheet } from "./components/Sheet";
-import { Tooltip } from "./components/Tooltip";
-import "./sheet-styles.css";
+import { useMemo, type CSSProperties } from "react"
+
+import { Sheet } from "./components/Sheet"
+import { Tooltip } from "./components/Tooltip"
+
+import "./sheet-styles.css"
+
+import {
+  ClientSideSuspense,
+  RoomProvider,
+  useCanRedo,
+  useCanUndo,
+  useHistory,
+  useSelf,
+} from "@liveblocks/react/suspense"
+import { Loader } from "lucide-react"
+
+import { cn } from "@/lib/utils"
 
 import {
   COLUMN_HEADER_WIDTH,
@@ -13,42 +27,32 @@ import {
   GRID_MAX_COLUMNS,
   GRID_MAX_ROWS,
   ROW_INITIAL_HEIGHT,
-} from "./constants";
+} from "./constants"
 import {
   AddColumnAfterIcon,
   AddRowAfterIcon,
   RedoIcon,
   UndoIcon,
-} from "./icons";
-import {
-  ClientSideSuspense,
-  RoomProvider,
-  useCanRedo,
-  useCanUndo,
-  useHistory,
-  useSelf,
-} from "@liveblocks/react/suspense";
-import { useSpreadsheet } from "./spreadsheet/react";
-import { createInitialStorage } from "./spreadsheet/utils";
-import { appendUnit } from "./utils/appendUnit";
-import styles from "./index.module.css";
-import { Loader } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from "./icons"
+import styles from "./index.module.css"
+import { useSpreadsheet } from "./spreadsheet/react"
+import { createInitialStorage } from "./spreadsheet/utils"
+import { appendUnit } from "./utils/appendUnit"
 
-const AVATARS_MAX = 3;
+const AVATARS_MAX = 3
 
 function Example() {
-  const spreadsheet = useSpreadsheet();
-  const history = useHistory();
-  const canUndo = useCanUndo();
-  const canRedo = useCanRedo();
-  const self = useSelf();
+  const spreadsheet = useSpreadsheet()
+  const history = useHistory()
+  const canUndo = useCanUndo()
+  const canRedo = useCanRedo()
+  const self = useSelf()
 
   if (spreadsheet == null) {
-    return <Loader className="size-5 text-muted-foreground animate-spin" />;
+    return <Loader className="size-5 animate-spin text-muted-foreground" />
   }
 
-  const { users, columns, rows, insertColumn, insertRow } = spreadsheet;
+  const { users, columns, rows, insertColumn, insertRow } = spreadsheet
 
   return (
     <main
@@ -110,7 +114,7 @@ function Example() {
       </div>
       <Sheet {...spreadsheet} />
     </main>
-  );
+  )
 }
 
 const initialStorage = createInitialStorage(
@@ -123,10 +127,10 @@ const initialStorage = createInitialStorage(
     ["-8", "=B3%2", ""],
     ["", "", ""],
   ]
-);
+)
 
 export default function Page() {
-  const roomId = "belli:spreadsheet";
+  const roomId = "belli:spreadsheet"
 
   return (
     <RoomProvider
@@ -139,11 +143,11 @@ export default function Page() {
     >
       <ClientSideSuspense
         fallback={
-          <Loader className="size-5 text-muted-foreground animate-spin" />
+          <Loader className="size-5 animate-spin text-muted-foreground" />
         }
       >
         <Example />
       </ClientSideSuspense>
     </RoomProvider>
-  );
+  )
 }

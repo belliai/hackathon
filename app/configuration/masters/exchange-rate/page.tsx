@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DataTable } from "@/components/data-table/data-table";
-import FilterActions from "@/components/page-template/FilterActions";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function MasterExchangeRatePage() {
   const columns: ColumnDef<any>[] = [
@@ -37,7 +38,7 @@ export default function MasterExchangeRatePage() {
       header: "Type",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -140,7 +141,7 @@ export default function MasterExchangeRatePage() {
       createdAt: "2023-12-01",
       updatedAt: "2023-12-10",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -183,9 +184,9 @@ export default function MasterExchangeRatePage() {
       label: "Valid To",
       orientation: "horizontal",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -195,12 +196,12 @@ export default function MasterExchangeRatePage() {
       hookForm={form}
       customDialogContent={
         <div className="flex flex-col gap-8">
-          <div className="flex max-w-96 mt-8">
+          <div className="mt-8 flex max-w-96">
             <FilterActions />
           </div>
           <DataTable columns={columns} data={data} hideToolbar />
         </div>
       }
     />
-  );
+  )
 }

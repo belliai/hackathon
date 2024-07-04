@@ -3,5 +3,5 @@ export function getIndexWithProperty<T extends {}, K extends keyof T>(
   property: K,
   value: T[K]
 ) {
-  return array.findIndex((element) => element[property] === value);
+  return array.findIndex((element) => element[property] === value)
 }

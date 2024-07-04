@@ -1,73 +1,74 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table"
+
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type AwbType = {
-  do_number: string;
-  collect: string;
-  consignee: string;
-  awb_number: string;
-  hawb_number: string;
-  custom_check: string;
-  custom_code: string;
-  origin: string;
-  destination: string;
-  arr_pcs: string;
-  arr_wt: string;
-  uom: string;
-  dlr_pcs: string;
-  dlr_wt: string;
-  dlrd_pcs: string;
-  dlrd_wt: string;
-  rem_pcs: string;
-  flt_number: string;
-  flt_date: string;
-  comm_desc?: string;
-  agent?: string;
-  accepted_pcs?: string;
-  payment_type?: string;
-  invoice?: string;
-  charges?: string;
-  tax?: string;
-  total?: string;
-  amt_due?: string;
-  updated_on?: string;
-};
+  do_number: string
+  collect: string
+  consignee: string
+  awb_number: string
+  hawb_number: string
+  custom_check: string
+  custom_code: string
+  origin: string
+  destination: string
+  arr_pcs: string
+  arr_wt: string
+  uom: string
+  dlr_pcs: string
+  dlr_wt: string
+  dlrd_pcs: string
+  dlrd_wt: string
+  rem_pcs: string
+  flt_number: string
+  flt_date: string
+  comm_desc?: string
+  agent?: string
+  accepted_pcs?: string
+  payment_type?: string
+  invoice?: string
+  charges?: string
+  tax?: string
+  total?: string
+  amt_due?: string
+  updated_on?: string
+}
 
 export type UldType = {
-  do_number: string;
-  collect: string;
-  consignee: string;
-  uld: string;
-  awb: string;
-  awb_ct: string;
-  custom_check: string;
-  custom_code: string;
-  origin: string;
-  destination: string;
-  arr_pcs: string;
-  arr_wt: string;
-  uom: string;
-  dlr_pcs: string;
-  dlr_wt: string;
-  dlrd_pcs: string;
-  rem_pcs: string;
-  rem_wt: string;
-  dlrd_wt: string;
-  flt_number: string;
-  flt_date: string;
-  comm_desc?: string;
-  agent?: string;
-  accepted_pcs?: string;
-  payment_type?: string;
-  invoice?: string;
-  charges?: string;
-  tax?: string;
-  total?: string;
-  amt_due?: string;
-  updated_on?: string;
-};
+  do_number: string
+  collect: string
+  consignee: string
+  uld: string
+  awb: string
+  awb_ct: string
+  custom_check: string
+  custom_code: string
+  origin: string
+  destination: string
+  arr_pcs: string
+  arr_wt: string
+  uom: string
+  dlr_pcs: string
+  dlr_wt: string
+  dlrd_pcs: string
+  rem_pcs: string
+  rem_wt: string
+  dlrd_wt: string
+  flt_number: string
+  flt_date: string
+  comm_desc?: string
+  agent?: string
+  accepted_pcs?: string
+  payment_type?: string
+  invoice?: string
+  charges?: string
+  tax?: string
+  total?: string
+  amt_due?: string
+  updated_on?: string
+}
 
 export const awbColumn: ColumnDef<AwbType>[] = [
   {
@@ -210,7 +211,7 @@ export const awbColumn: ColumnDef<AwbType>[] = [
     accessorKey: "updated_on",
     header: "Updated On",
   },
-];
+]
 
 export const uldColumn: ColumnDef<UldType>[] = [
   {
@@ -361,4 +362,4 @@ export const uldColumn: ColumnDef<UldType>[] = [
     accessorKey: "updated_on",
     header: "Updated On",
   },
-];
+]

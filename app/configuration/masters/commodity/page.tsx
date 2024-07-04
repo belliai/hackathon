@@ -1,20 +1,21 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+} from "@/app/k360/organize/masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterCommodityPage() {
   const columns: ColumnDef<any>[] = [
@@ -66,7 +67,7 @@ export default function MasterCommodityPage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -132,9 +133,9 @@ export default function MasterCommodityPage() {
       label: "Show In Mobile App",
       type: "checkbox",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   const data = [
     {
@@ -203,7 +204,7 @@ export default function MasterCommodityPage() {
       updatedAt: "2023-08-20",
       action: "Edit",
     },
-  ];
+  ]
 
   return (
     <MastersPageTemplate
@@ -214,5 +215,5 @@ export default function MasterCommodityPage() {
       data={data}
       customFilterButtons={<FilterActions />}
     />
-  );
+  )
 }

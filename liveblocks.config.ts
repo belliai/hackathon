@@ -1,23 +1,23 @@
-import { LiveMap, LiveObject, createClient } from "@liveblocks/client";
-import { createRoomContext, createLiveblocksContext } from "@liveblocks/react";
-import { Storage, UserMeta } from "./app/liveblock-spreadsheet/types";
+import { createClient, LiveMap, LiveObject } from "@liveblocks/client"
+import { createLiveblocksContext, createRoomContext } from "@liveblocks/react"
 
+import { Storage, UserMeta } from "./app/liveblock-spreadsheet/types"
 
 const client = createClient({
   publicApiKey: process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_API_KEY as string,
-});
+})
 
 declare global {
   interface Liveblocks {
     // Each user's Presence, for room.getPresence, room.subscribe("others"), etc.
     Presence: Presence & {
-      cursor: { x?: number; y?: number } | null;
-    };
-      // Each user's Presence, for useMyPresence, useOthers, etc.
-      // The Storage tree for the room, for useMutation, useStorage, etc.
-      Storage: Storage;
-      // Custom user info set when authenticating with a secret key
-      UserMeta: UserMeta;
+      cursor: { x?: number; y?: number } | null
+    }
+    // Each user's Presence, for useMyPresence, useOthers, etc.
+    // The Storage tree for the room, for useMutation, useStorage, etc.
+    Storage: Storage
+    // Custom user info set when authenticating with a secret key
+    UserMeta: UserMeta
   }
 }
 /*
@@ -70,16 +70,15 @@ declare global {
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
 type Presence = {
-  selectedCell: string | null;
-  cursor: { x: number, y: number } | null,
+  selectedCell: string | null
+  cursor: { x: number; y: number } | null
   // ...
-};
+}
 
 // Optionally, Storage represents the shared document that persists in the
 // Room, even after all users leave. Fields under Storage typically are
 // LiveList, LiveMap, LiveObject instances, for which updates are
 // automatically persisted and synced to all connected clients.
-
 
 // Optionally, UserMeta represents static/readonly metadata on each user, as
 // provided by your own custom auth back end (if used). Useful for data that
@@ -90,7 +89,7 @@ type Presence = {
 type RoomEvent = {
   // type: "NOTIFICATION",
   // ...
-};
+}
 
 // Optionally, when using Comments, ThreadMetadata represents metadata on
 // each thread. Can only contain booleans, strings, and numbers.
@@ -98,7 +97,7 @@ export type ThreadMetadata = {
   // resolved: boolean;
   // quote: string;
   // time: number;
-};
+}
 
 // Room-level hooks, use inside `RoomProvider`
 export const {
@@ -144,8 +143,8 @@ export const {
     // useRoomInfo
   },
 } = createRoomContext<Presence, Storage, UserMeta, RoomEvent, ThreadMetadata>(
-  client,
-);
+  client
+)
 
 // Project-level hooks, use inside `LiveblocksProvider`
 export const {
@@ -160,4 +159,4 @@ export const {
     useUser,
     useRoomInfo,
   },
-} = createLiveblocksContext<UserMeta, ThreadMetadata>(client);
+} = createLiveblocksContext<UserMeta, ThreadMetadata>(client)

@@ -1,22 +1,23 @@
-"use client";
+"use client"
 
-import { FormTextFieldProps } from "@/components/form/FormTextField";
-import { Search } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { useForm } from "react-hook-form";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import {
-  DUMMY_SELECT_OPTIONS,
-  DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
+import { FormTextFieldProps } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
-import FilterActions from "@/components/page-template/FilterActions";
+} from "@/app/k360/organize/masters/components/columnItem"
+import {
+  DUMMY_SELECT_OPTIONS,
+  DUMMY_SELECT_OPTIONS_STATUS,
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterPriorityPage() {
   const formFields: Omit<FormTextFieldProps, "form">[] = [
@@ -46,7 +47,7 @@ export default function MasterPriorityPage() {
       label: "Active",
       type: "checkbox",
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -77,7 +78,7 @@ export default function MasterPriorityPage() {
       ),
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -94,9 +95,9 @@ export default function MasterPriorityPage() {
       remarks: "Remarks",
       status: "Active",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -107,5 +108,5 @@ export default function MasterPriorityPage() {
       data={data}
       customFilterButtons={<FilterActions />}
     />
-  );
+  )
 }

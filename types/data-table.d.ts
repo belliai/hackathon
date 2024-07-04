@@ -1,8 +1,8 @@
-import "@tanstack/react-table";
+import "@tanstack/react-table"
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta {
-    isDateFilter?: boolean;
-    filterSelectOptions?: { value: string; label: string }[];
+    isDateFilter?: boolean
+    filterSelectOptions?: { value: string; label: string }[]
   }
 }

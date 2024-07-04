@@ -1,10 +1,18 @@
-import { Button } from "@/components/ui/button";
-import { DownloadIcon, MagnifyingGlassIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { CalendarDaysIcon } from "@heroicons/react/24/solid"
+import {
+  DownloadIcon,
+  MagnifyingGlassIcon,
+  ReloadIcon,
+} from "@radix-ui/react-icons"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -12,91 +20,88 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { CalendarDaysIcon } from "@heroicons/react/24/solid";
-import { Calendar } from "@/components/ui/calendar";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/components/ui/select"
 
 const AIRPORT_LIST = [
   {
     id: 1,
-    label: 'All',
+    label: "All",
   },
   {
     id: 2,
-    label: 'CGK',
+    label: "CGK",
   },
   {
     id: 3,
-    label: 'SIN',
+    label: "SIN",
   },
-];
+]
 
 const FLIGHT_TYPE = [
   {
     id: 1,
-    label: 'All',
+    label: "All",
   },
   {
     id: 2,
-    label: 'Domestic',
+    label: "Domestic",
   },
   {
     id: 3,
-    label: 'International',
+    label: "International",
   },
-];
+]
 
 const CARRIER_LIST = [
   {
     id: 1,
-    label: 'All',
+    label: "All",
   },
   {
     id: 2,
-    label: 'AK',
+    label: "AK",
   },
   {
     id: 3,
-    label: 'I5',
+    label: "I5",
   },
   {
     id: 4,
-    label: '8K',
+    label: "8K",
   },
   {
     id: 5,
-    label: 'DJ',
+    label: "DJ",
   },
   {
     id: 6,
-    label: '6P',
+    label: "6P",
   },
   {
     id: 7,
-    label: 'Z2',
+    label: "Z2",
   },
   {
     id: 8,
-    label: 'XT',
+    label: "XT",
   },
   {
     id: 9,
-    label: 'D7',
+    label: "D7",
   },
   {
     id: 10,
-    label: 'FD',
+    label: "FD",
   },
   {
     id: 11,
-    label: 'XJ',
+    label: "XJ",
   },
   {
     id: 12,
-    label: 'QZ',
+    label: "QZ",
   },
-];
+]
 
 export default function FilterSection() {
   return (
@@ -104,13 +109,13 @@ export default function FilterSection() {
       <div className="flex justify-between">
         <h1 className="text-xl font-semibold">Proration Report</h1>
         <div className="flex gap-4">
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+          <Button className="bg-zinc-800 text-white hover:bg-zinc-700">
             <span className="mr-1 h-4 w-4">
               <ReloadIcon />
             </span>
             Refresh
           </Button>
-          <Button className="bg-zinc-800 hover:bg-zinc-700 text-white">
+          <Button className="bg-zinc-800 text-white hover:bg-zinc-700">
             <span className="mr-1 h-4 w-4">
               <DownloadIcon />
             </span>
@@ -120,17 +125,17 @@ export default function FilterSection() {
       </div>
 
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-zinc-700 p-5">
-        <div className="text-white text-base font-semibold">Filter</div>
-        <div className="flex gap-4 w-full">
-          <div className="flex flex-col gap-2 w-1/6">
-            <div className="flex gap-1 items-center text-white">
+        <div className="text-base font-semibold text-white">Filter</div>
+        <div className="flex w-full gap-4">
+          <div className="flex w-1/6 flex-col gap-2">
+            <div className="flex items-center gap-1 text-white">
               <div className="text-sm">From Date</div>
             </div>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
-                  className={`flex justify-between border-zinc-700 bg-zinc-900 pl-3 pr-3 w-full`}
+                  className={`flex w-full justify-between border-zinc-700 bg-zinc-900 pl-3 pr-3`}
                 >
                   <span>From Date</span>
                   <CalendarDaysIcon className="h-4 w-4 text-zinc-400" />
@@ -148,15 +153,15 @@ export default function FilterSection() {
             </Popover>
           </div>
 
-          <div className="flex flex-col gap-2 w-1/6">
-            <div className="flex gap-1 items-center text-white">
+          <div className="flex w-1/6 flex-col gap-2">
+            <div className="flex items-center gap-1 text-white">
               <div className="text-sm">To Date</div>
             </div>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
-                  className={`flex justify-between border-zinc-700 bg-zinc-900 pl-3 pr-3 w-full`}
+                  className={`flex w-full justify-between border-zinc-700 bg-zinc-900 pl-3 pr-3`}
                 >
                   <span>To Date</span>
                   <CalendarDaysIcon className="h-4 w-4 text-zinc-400" />
@@ -174,61 +179,67 @@ export default function FilterSection() {
             </Popover>
           </div>
 
-          <div className="flex flex-col gap-2 w-1/6">
-            <div className="flex gap-1 items-center text-white">
+          <div className="flex w-1/6 flex-col gap-2">
+            <div className="flex items-center gap-1 text-white">
               <div className="text-sm">Flight</div>
             </div>
             <Select>
-              <SelectTrigger className="border-zinc-700 w-full">
+              <SelectTrigger className="w-full border-zinc-700">
                 <SelectValue placeholder="Flight" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {FLIGHT_TYPE.map((flightType) => (
-                    <SelectItem key ={flightType.id} value={flightType.label}>{flightType.label}</SelectItem>
+                    <SelectItem key={flightType.id} value={flightType.label}>
+                      {flightType.label}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="flex flex-col gap-2 w-1/6">
-            <div className="flex gap-1 items-center text-white">
+          <div className="flex w-1/6 flex-col gap-2">
+            <div className="flex items-center gap-1 text-white">
               <div className="text-sm">Station</div>
             </div>
             <Select>
-              <SelectTrigger className="border-zinc-700 w-full">
+              <SelectTrigger className="w-full border-zinc-700">
                 <SelectValue placeholder="Origin" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {AIRPORT_LIST.map((airportList) => (
-                    <SelectItem key ={airportList.id} value={airportList.label}>{airportList.label}</SelectItem>
+                    <SelectItem key={airportList.id} value={airportList.label}>
+                      {airportList.label}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="flex flex-col gap-2 w-1/6">
-            <div className="flex gap-1 items-center text-white">
+          <div className="flex w-1/6 flex-col gap-2">
+            <div className="flex items-center gap-1 text-white">
               <div className="text-sm">Carrier</div>
             </div>
             <Select>
-              <SelectTrigger className="border-zinc-700 w-full">
+              <SelectTrigger className="w-full border-zinc-700">
                 <SelectValue placeholder="Carrier" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {CARRIER_LIST.map((carrierList) => (
-                    <SelectItem key ={carrierList.id} value={carrierList.label}>{carrierList.label}</SelectItem>
+                    <SelectItem key={carrierList.id} value={carrierList.label}>
+                      {carrierList.label}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="w-1/6 flex items-center space-x-2 mt-5">
+          <div className="mt-5 flex w-1/6 items-center space-x-2">
             <Checkbox id="include-awb" />
             <label
               htmlFor="include-awb"
@@ -237,10 +248,9 @@ export default function FilterSection() {
               Including Booked AWB
             </label>
           </div>
-
         </div>
 
-        <Button className="bg-zinc-800 hover:bg-zinc-700 text-white w-fit">
+        <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700">
           <span className="mr-1 h-4 w-4">
             <MagnifyingGlassIcon />
           </span>
@@ -248,5 +258,5 @@ export default function FilterSection() {
         </Button>
       </div>
     </div>
-  );
+  )
 }

@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type ConsigneeReconciliationType = {
-  agent_code?: string;
-  agent_name?: string;
-  execution_date?: string;
-  payment_type?: string;
-  transaction_details?: string;
-  awb_number?: string;
-  debit?: string;
-  credit?: string;
-  balance?: string;
-  awb_status?: string;
-  transaction_date?: string;
-  remarks?: string;
-};
+  agent_code?: string
+  agent_name?: string
+  execution_date?: string
+  payment_type?: string
+  transaction_details?: string
+  awb_number?: string
+  debit?: string
+  credit?: string
+  balance?: string
+  awb_status?: string
+  transaction_date?: string
+  remarks?: string
+}
 
 export const columns: ColumnDef<ConsigneeReconciliationType>[] = [
   {
@@ -66,4 +66,4 @@ export const columns: ColumnDef<ConsigneeReconciliationType>[] = [
     accessorKey: "remarks",
     header: "Remarks",
   },
-];
+]

@@ -1,15 +1,16 @@
-"use client";
+"use client"
 
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { TFormTextField } from "@/components/form/FormTextField";
-import FilterActions from "@/components/page-template/FilterActions";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterCartPage() {
   const cartFormFields: TFormTextField[] = [
@@ -46,7 +47,7 @@ export default function MasterCartPage() {
         { label: "Inactive", value: "inactive" },
       ],
     },
-  ];
+  ]
 
   const columns: ColumnDef<any>[] = [
     selectColumn,
@@ -77,7 +78,7 @@ export default function MasterCartPage() {
       ),
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -143,9 +144,9 @@ export default function MasterCartPage() {
       created_at: "2021-09-01",
       updated_at: "2021-09-01",
     },
-  ];
+  ]
 
-  const cartForm = useForm();
+  const cartForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -156,5 +157,5 @@ export default function MasterCartPage() {
       filterHookForm={cartForm}
       customFilterButtons={<FilterActions />}
     />
-  );
+  )
 }

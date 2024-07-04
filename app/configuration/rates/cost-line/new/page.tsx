@@ -1,20 +1,21 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useFieldArray, useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+} from "@/app/k360/organize/masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
-import { Button } from "@/components/ui/button";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterCostLinePage() {
   const excludeIncludeOptions = [
@@ -26,7 +27,7 @@ export default function MasterCostLinePage() {
       label: "Include",
       value: "include",
     },
-  ];
+  ]
 
   const form = useForm({
     defaultValues: {
@@ -40,12 +41,12 @@ export default function MasterCostLinePage() {
         },
       ],
     },
-  });
+  })
 
   const uldBases = useFieldArray<any>({
     control: form.control,
     name: "uldBases",
-  });
+  })
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -510,7 +511,7 @@ export default function MasterCostLinePage() {
         },
       ],
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -519,11 +520,11 @@ export default function MasterCostLinePage() {
       className="max-h-none"
       sectionedFormFields={sectionedFormFields}
       customDialogContent={
-        <div className="flex gap-2 mt-8">
+        <div className="mt-8 flex gap-2">
           <Button variant="button-primary">Save</Button>
           <Button variant="button-primary">Cancel</Button>
         </div>
       }
     />
-  );
+  )
 }

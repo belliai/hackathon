@@ -1,113 +1,112 @@
-import { DataTable } from "@/components/dashboard/dashtable";
-import { plannedColumn } from "@/components/operation/TruckExport/columns";
-import { getData } from "@/lib/operation/TruckExport/data";
+import { getData } from "@/lib/operation/TruckExport/data"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import PlannedSummary from "./PlannedSummary";
+} from "@/components/ui/dropdown-menu"
+import { DataTable } from "@/components/dashboard/dashtable"
+import { plannedColumn } from "@/components/operation/TruckExport/columns"
+
+import PlannedSummary from "./PlannedSummary"
 
 const BULK_ACTION_LIST = [
   {
-    id: 'offload',
-    label: 'Offload',
+    id: "offload",
+    label: "Offload",
   },
   {
-    id: 'uld',
-    label: 'ULD Offload',
+    id: "uld",
+    label: "ULD Offload",
   },
   {
-    id: 'manifest',
-    label: 'Manifest',
+    id: "manifest",
+    label: "Manifest",
   },
   {
-    id: 'depart',
-    label: 'Depart Fit',
+    id: "depart",
+    label: "Depart Fit",
   },
   {
-    id: 'reopen',
-    label: 'Reopen Fit',
+    id: "reopen",
+    label: "Reopen Fit",
   },
   {
-    id: 'send_nfm',
-    label: 'Send NFM',
+    id: "send_nfm",
+    label: "Send NFM",
   },
   {
-    id: 'send_fwb_fhl',
-    label: 'Send FWB/FHL',
+    id: "send_fwb_fhl",
+    label: "Send FWB/FHL",
   },
   {
-    id: 'send_ffm',
-    label: 'Send FFM',
+    id: "send_ffm",
+    label: "Send FFM",
   },
   {
-    id: 'send_ucm',
-    label: 'Send UCM',
+    id: "send_ucm",
+    label: "Send UCM",
   },
   {
-    id: 'send_pri',
-    label: 'Send PRI',
+    id: "send_pri",
+    label: "Send PRI",
   },
   {
-    id: 'send_fri_frc_frx_fsn',
-    label: 'Send FRI/FRC/FRX/FSN',
+    id: "send_fri_frc_frx_fsn",
+    label: "Send FRI/FRC/FRX/FSN",
   },
   {
-    id: 'notoc',
-    label: 'NOTOC',
+    id: "notoc",
+    label: "NOTOC",
   },
   {
-    id: 'print_mft',
-    label: 'Print MFT',
+    id: "print_mft",
+    label: "Print MFT",
   },
   {
-    id: 'epouch',
-    label: 'ePouch (0)',
+    id: "epouch",
+    label: "ePouch (0)",
   },
   {
-    id: 'view_cpm',
-    label: 'View CPM',
+    id: "view_cpm",
+    label: "View CPM",
   },
   {
-    id: 'send_krt',
-    label: 'Send KRT FFM',
+    id: "send_krt",
+    label: "Send KRT FFM",
   },
   {
-    id: 'send_dac',
-    label: 'Send DAC FFM',
+    id: "send_dac",
+    label: "Send DAC FFM",
   },
   {
-    id: 'send_xff',
-    label: 'Send XFF',
-  }
+    id: "send_xff",
+    label: "Send XFF",
+  },
 ]
 
 export default async function PlannedSection() {
-  const data = await getData('planned');
+  const data = await getData("planned")
   return (
-    <div className="flex flex-col mt-5 gap-4">
+    <div className="mt-5 flex flex-col gap-4">
       <PlannedSummary />
 
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-zinc-700 p-5">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="bg-zinc-800 hover:bg-zinc-700 text-white w-fit">
-                Bulk Action
+            <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700">
+              Bulk Action
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {BULK_ACTION_LIST.map((bulk) => (
-              <DropdownMenuItem key={bulk.id}>
-                {bulk.label}
-              </DropdownMenuItem>
+              <DropdownMenuItem key={bulk.id}>{bulk.label}</DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
         <DataTable columns={plannedColumn} data={data} />
       </div>
     </div>
-  );
+  )
 }

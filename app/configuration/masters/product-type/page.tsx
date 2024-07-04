@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { Separator } from "@/components/ui/separator"
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
-import { useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterProductTypePage() {
   const columns: ColumnDef<any>[] = [
@@ -43,7 +44,7 @@ export default function MasterProductTypePage() {
       header: "Updated At",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -84,7 +85,7 @@ export default function MasterProductTypePage() {
       createdAt: "2023-05-25",
       updatedAt: "2023-08-20",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -132,9 +133,9 @@ export default function MasterProductTypePage() {
       type: "checkbox",
       label: "Show In Mobile",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -144,7 +145,7 @@ export default function MasterProductTypePage() {
       className="max-h-none"
       customDialogContent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-96 mt-4">
+          <div className="mt-4 max-w-96">
             <FilterActions />
           </div>
           <Separator />
@@ -152,5 +153,5 @@ export default function MasterProductTypePage() {
         </div>
       }
     />
-  );
+  )
 }

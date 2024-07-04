@@ -1,7 +1,7 @@
-type UnitCategory = 'weight' | 'length' | 'volume'
+type UnitCategory = "weight" | "length" | "volume"
 
 interface Unit {
-    ID: string;
-    Name: string;
-    Symbol: string;
+  ID: string
+  Name: string
+  Symbol: string
 }

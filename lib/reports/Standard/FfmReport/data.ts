@@ -1,4 +1,4 @@
-import { FfmReportType } from "@/components/reports/Standard/FfmReport/columns";
+import { FfmReportType } from "@/components/reports/Standard/FfmReport/columns"
 
 export const DUMMY_DATA: FfmReportType[] = [
   {
@@ -160,9 +160,9 @@ export const DUMMY_DATA: FfmReportType[] = [
     volume: 4.0,
     status: "In Transit",
     updated_on: "2024-06-11 13:00",
-  }
-];
+  },
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

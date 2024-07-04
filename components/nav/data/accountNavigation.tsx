@@ -1,4 +1,4 @@
-import { TSidebarItem } from "@/components/nav/SidebarItem";
+import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const accountNavigation: TSidebarItem[] = [
   {
@@ -7,18 +7,8 @@ export const accountNavigation: TSidebarItem[] = [
     current: false,
   },
   {
-    name: "Auth",
-    href: "#",
-    children: [
-      {
-        name: "Clerk",
-        href: "/clerk",
-      },
-      {
-        name: "Supabase",
-        href: "/supabase",
-      },
-    ],
+    name: "All Users",
+    href: "/users",
   },
   {
     name: "Preferences",
@@ -30,4 +20,4 @@ export const accountNavigation: TSidebarItem[] = [
     href: "/setting/notifications",
     current: false,
   },
-];
+]

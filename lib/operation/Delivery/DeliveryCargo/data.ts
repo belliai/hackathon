@@ -1,4 +1,7 @@
-import { AwbType, UldType } from "@/components/operation/Delivery/DeliveryCargo/columns";
+import {
+  AwbType,
+  UldType,
+} from "@/components/operation/Delivery/DeliveryCargo/columns"
 
 export const DUMMY_DATA_AWB: AwbType[] = [
   {
@@ -30,7 +33,7 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     tax: "200",
     total: "1200",
     amt_due: "0",
-    updated_on: "2024-06-02"
+    updated_on: "2024-06-02",
   },
   {
     do_number: "002",
@@ -61,9 +64,9 @@ export const DUMMY_DATA_AWB: AwbType[] = [
     tax: "100",
     total: "600",
     amt_due: "600",
-    updated_on: "2024-06-04"
-  }
-];
+    updated_on: "2024-06-04",
+  },
+]
 
 export const DUMMY_DATA_ULD: UldType[] = [
   {
@@ -97,7 +100,7 @@ export const DUMMY_DATA_ULD: UldType[] = [
     tax: "140",
     total: "840",
     amt_due: "0",
-    updated_on: "2024-06-06"
+    updated_on: "2024-06-06",
   },
   {
     do_number: "004",
@@ -130,14 +133,14 @@ export const DUMMY_DATA_ULD: UldType[] = [
     tax: "60",
     total: "360",
     amt_due: "360",
-    updated_on: "2024-06-08"
-  }
-];
+    updated_on: "2024-06-08",
+  },
+]
 
 export async function getDataAwb() {
-  return DUMMY_DATA_AWB;
+  return DUMMY_DATA_AWB
 }
 
 export async function getDataUld() {
-  return DUMMY_DATA_ULD;
+  return DUMMY_DATA_ULD
 }

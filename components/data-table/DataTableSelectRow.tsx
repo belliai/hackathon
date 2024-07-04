@@ -1,8 +1,9 @@
-import { Row } from "@tanstack/react-table";
-import { Checkbox } from "../ui/checkbox";
+import { Row } from "@tanstack/react-table"
+
+import { Checkbox } from "../ui/checkbox"
 
 interface DataTableSelectRowProps {
-  row: Row<any>;
+  row: Row<any>
 }
 
 export default function DataTableSelectRow({ row }: DataTableSelectRowProps) {
@@ -12,7 +13,7 @@ export default function DataTableSelectRow({ row }: DataTableSelectRowProps) {
       onCheckedChange={(value) => row.toggleSelected(!!value)}
       onClick={(e) => e.stopPropagation()}
       aria-label="Select row"
-      className="translate-y-[2px] mx-1"
+      className="mx-1 translate-y-[2px]"
     />
-  );
+  )
 }

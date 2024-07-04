@@ -1,4 +1,8 @@
-import type { Awb, Planned, Uld } from "@/components/operation/TruckExport/columns";
+import type {
+  Awb,
+  Planned,
+  Uld,
+} from "@/components/operation/TruckExport/columns"
 
 export const DUMMY_DATA_PLANNED: Planned[] = [
   {
@@ -19,7 +23,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "JFK",
     bonded: "Yes",
     remarks: "Handle with care",
-    loading_priority: "High"
+    loading_priority: "High",
   },
   {
     uld: "AKE54321IB",
@@ -39,7 +43,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "SIN",
     bonded: "No",
     remarks: "Keep refrigerated",
-    loading_priority: "Medium"
+    loading_priority: "Medium",
   },
   {
     uld: "AKE67890IB",
@@ -59,7 +63,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "LAX",
     bonded: "Yes",
     remarks: "Handle with extreme care",
-    loading_priority: "Critical"
+    loading_priority: "Critical",
   },
   {
     uld: "AKE99887IB",
@@ -79,7 +83,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "ORD",
     bonded: "Yes",
     remarks: "Fragile",
-    loading_priority: "High"
+    loading_priority: "High",
   },
   {
     uld: "AKE55667IB",
@@ -99,7 +103,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "HKG",
     bonded: "No",
     remarks: "Handle with care",
-    loading_priority: "High"
+    loading_priority: "High",
   },
   {
     uld: "AKE33445IB",
@@ -119,7 +123,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "DXB",
     bonded: "Yes",
     remarks: "N/A",
-    loading_priority: "Medium"
+    loading_priority: "Medium",
   },
   {
     uld: "AKE99865IB",
@@ -139,7 +143,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "SIN",
     bonded: "No",
     remarks: "Urgent",
-    loading_priority: "High"
+    loading_priority: "High",
   },
   {
     uld: "AKE55443IB",
@@ -159,7 +163,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "MIA",
     bonded: "Yes",
     remarks: "Temperature control required",
-    loading_priority: "Critical"
+    loading_priority: "Critical",
   },
   {
     uld: "AKE44556IB",
@@ -179,7 +183,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "NRT",
     bonded: "No",
     remarks: "Handle with care",
-    loading_priority: "Medium"
+    loading_priority: "Medium",
   },
   {
     uld: "AKE66778IB",
@@ -199,7 +203,7 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "SYD",
     bonded: "Yes",
     remarks: "N/A",
-    loading_priority: "Low"
+    loading_priority: "Low",
   },
   {
     uld: "AKE88990IB",
@@ -219,9 +223,9 @@ export const DUMMY_DATA_PLANNED: Planned[] = [
     origin: "AMS",
     bonded: "No",
     remarks: "Priority shipment",
-    loading_priority: "High"
+    loading_priority: "High",
   },
-];
+]
 
 export const DUMMY_DATA_ULD: Uld[] = [
   {
@@ -230,7 +234,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     awb_pcs: "50",
     wt: "2000",
     uom: "KG",
-    fltflag: "Loaded"
+    fltflag: "Loaded",
   },
   {
     uld_no: "AKE54321IB",
@@ -238,7 +242,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     awb_pcs: "30",
     wt: "1500",
     uom: "KG",
-    fltflag: "Unloaded"
+    fltflag: "Unloaded",
   },
   {
     uld_no: "AKE67890IB",
@@ -246,7 +250,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     awb_pcs: "40",
     wt: "1800",
     uom: "KG",
-    fltflag: "Loaded"
+    fltflag: "Loaded",
   },
   {
     uld_no: "AKE09876IB",
@@ -254,7 +258,7 @@ export const DUMMY_DATA_ULD: Uld[] = [
     awb_pcs: "20",
     wt: "1000",
     uom: "KG",
-    fltflag: "In Transit"
+    fltflag: "In Transit",
   },
   {
     uld_no: "AKE11223IB",
@@ -262,9 +266,9 @@ export const DUMMY_DATA_ULD: Uld[] = [
     awb_pcs: "60",
     wt: "2200",
     uom: "KG",
-    fltflag: "Loaded"
+    fltflag: "Loaded",
   },
-];
+]
 
 export const DUMMY_DATA_AWB: Awb[] = [
   {
@@ -276,7 +280,7 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "300",
     uom: "KG",
     unid: "UN12345",
-    next_flight: "2024-05-23 15:30:00"
+    next_flight: "2024-05-23 15:30:00",
   },
   {
     cart_no: "CART5678",
@@ -287,7 +291,7 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "150",
     uom: "KG",
     unid: "UN67890",
-    next_flight: "2024-05-24 09:00:00"
+    next_flight: "2024-05-24 09:00:00",
   },
   {
     cart_no: "CART9101",
@@ -298,7 +302,7 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "100",
     uom: "KG",
     unid: "UN09876",
-    next_flight: "2024-05-25 12:45:00"
+    next_flight: "2024-05-25 12:45:00",
   },
   {
     cart_no: "CART2345",
@@ -309,7 +313,7 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "300",
     uom: "KG",
     unid: "UN34567",
-    next_flight: "2024-05-26 18:00:00"
+    next_flight: "2024-05-26 18:00:00",
   },
   {
     cart_no: "CART3456",
@@ -320,7 +324,7 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "250",
     uom: "KG",
     unid: "UN45678",
-    next_flight: "2024-05-27 22:15:00"
+    next_flight: "2024-05-27 22:15:00",
   },
   {
     cart_no: "CART4567",
@@ -331,7 +335,7 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "250",
     uom: "KG",
     unid: "UN56789",
-    next_flight: "2024-05-28 05:45:00"
+    next_flight: "2024-05-28 05:45:00",
   },
   {
     cart_no: "CART5678",
@@ -342,7 +346,7 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "150",
     uom: "KG",
     unid: "UN67890",
-    next_flight: "2024-05-29 14:00:00"
+    next_flight: "2024-05-29 14:00:00",
   },
   {
     cart_no: "CART6789",
@@ -353,17 +357,17 @@ export const DUMMY_DATA_AWB: Awb[] = [
     acc_wt: "100",
     uom: "KG",
     unid: "UN78901",
-    next_flight: "2024-05-30 20:30:00"
-  }
-];
+    next_flight: "2024-05-30 20:30:00",
+  },
+]
 
-export async function getData(param = 'uld') {
+export async function getData(param = "uld") {
   switch (param) {
-    case 'planned':
-      return DUMMY_DATA_PLANNED;
-    case 'awb':
-      return DUMMY_DATA_AWB;
+    case "planned":
+      return DUMMY_DATA_PLANNED
+    case "awb":
+      return DUMMY_DATA_AWB
     default:
-      return DUMMY_DATA_ULD;
+      return DUMMY_DATA_ULD
   }
 }

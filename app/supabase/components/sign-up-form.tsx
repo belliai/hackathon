@@ -1,37 +1,37 @@
-"use client";
+"use client"
 
-import Link from "next/link";
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/utils/supabase/client"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createClient } from "@/lib/utils/supabase/client";
-import { toast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { toast } from "@/components/ui/use-toast"
 
 export function SignUpForm() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const supabase = createClient();
+  const supabase = createClient()
 
   const signupFormSchema = z.object({
     firstName: z.string().nonempty(),
     lastName: z.string().nonempty(),
     email: z.string().email(),
     password: z.string().min(8),
-  });
+  })
 
-  type SignUpFormValues = z.infer<typeof signupFormSchema>;
+  type SignUpFormValues = z.infer<typeof signupFormSchema>
 
   const signUpForm = useForm({
     resolver: zodResolver(signupFormSchema),
@@ -41,7 +41,7 @@ export function SignUpForm() {
       email: "",
       password: "",
     },
-  });
+  })
 
   async function handleLoginWithGithub() {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -49,22 +49,22 @@ export function SignUpForm() {
       options: {
         redirectTo: window.location.origin + "/supabase",
       },
-    });
+    })
 
     if (error) {
       toast({
         title: "Error",
         description: error.message,
-      });
+      })
     } else {
       toast({
         title: "Success",
-      });
+      })
     }
   }
 
   async function handleSignup(data: SignUpFormValues) {
-    const origin = window.location.origin;
+    const origin = window.location.origin
 
     const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
@@ -77,18 +77,18 @@ export function SignUpForm() {
         },
         emailRedirectTo: origin + "/supabase",
       },
-    });
+    })
 
     if (error) {
       toast({
         title: "Error",
         description: error.message,
-      });
+      })
     } else {
       toast({
         title: "Success",
         description: "Check your email for the confirmation link",
-      });
+      })
     }
   }
 
@@ -112,7 +112,7 @@ export function SignUpForm() {
                   {...signUpForm.register("firstName")}
                 />
                 {signUpForm.formState.errors.firstName && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-sm text-red-500">
                     {signUpForm.formState.errors.firstName.message}
                   </p>
                 )}
@@ -125,7 +125,7 @@ export function SignUpForm() {
                   {...signUpForm.register("lastName")}
                 />
                 {signUpForm.formState.errors.lastName && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-sm text-red-500">
                     {signUpForm.formState.errors.lastName.message}
                   </p>
                 )}
@@ -140,7 +140,7 @@ export function SignUpForm() {
                 {...signUpForm.register("email")}
               />
               {signUpForm.formState.errors.email && (
-                <p className="text-red-500 text-sm">
+                <p className="text-sm text-red-500">
                   {signUpForm.formState.errors.email.message}
                 </p>
               )}
@@ -153,7 +153,7 @@ export function SignUpForm() {
                 {...signUpForm.register("password")}
               />
               {signUpForm.formState.errors.password && (
-                <p className="text-red-500 text-sm">
+                <p className="text-sm text-red-500">
                   {signUpForm.formState.errors.password.message}
                 </p>
               )}
@@ -183,5 +183,5 @@ export function SignUpForm() {
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }

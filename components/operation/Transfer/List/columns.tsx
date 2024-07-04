@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type TransferListType = {
-  manifest_id?: string;
-  transfer_date?: string;
-  origin?: string;
-  destination?: string;
-  shipper?: string;
-  consignee?: string;
-  cargo_id?: string;
-  quantity?: string;
-  weight?: string;
-  volume?: string;
-  handling_info?: string;
-  special_instructions?: string;
-  status?: string;
-};
+  manifest_id?: string
+  transfer_date?: string
+  origin?: string
+  destination?: string
+  shipper?: string
+  consignee?: string
+  cargo_id?: string
+  quantity?: string
+  weight?: string
+  volume?: string
+  handling_info?: string
+  special_instructions?: string
+  status?: string
+}
 
 export const columns: ColumnDef<TransferListType>[] = [
   {
@@ -71,4 +71,4 @@ export const columns: ColumnDef<TransferListType>[] = [
     header: "Status",
     accessorKey: "status",
   },
-];
+]

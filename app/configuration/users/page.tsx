@@ -1,16 +1,17 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Search } from "lucide-react";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useForm } from "react-hook-form";
-import { selectColumn } from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import FilterActions from "@/components/page-template/FilterActions";
+import Link from "next/link"
+import { ColumnDef } from "@tanstack/react-table"
+import { Search } from "lucide-react"
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import FilterActions from "@/components/page-template/FilterActions"
+import { selectColumn } from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function ConfigurationUsersPage() {
   const columns: ColumnDef<any>[] = [
@@ -61,7 +62,7 @@ export default function ConfigurationUsersPage() {
       accessorKey: "updatedAt",
       header: "Updated At",
     },
-  ];
+  ]
 
   const filterFormFields = [
     {
@@ -98,7 +99,7 @@ export default function ConfigurationUsersPage() {
       placeholder: "Company Name",
       type: "text",
     },
-  ];
+  ]
 
   const formFieldsL: TFormTextField[] = [
     {
@@ -172,7 +173,7 @@ export default function ConfigurationUsersPage() {
 
       type: "text",
     },
-  ];
+  ]
 
   const data = [
     {
@@ -223,9 +224,9 @@ export default function ConfigurationUsersPage() {
       createdAt: "2023-03-01",
       updatedAt: "2023-03-10",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <MastersPageTemplate
@@ -237,12 +238,12 @@ export default function ConfigurationUsersPage() {
       filterHookForm={filterForm}
       pageActions={
         <Button
-          className="bg-button-primary hover:bg-button-primary/80 text-white"
+          className="bg-button-primary text-white hover:bg-button-primary/80"
           asChild
         >
           <Link href="/configuration/users/new">Create User</Link>
         </Button>
       }
     />
-  );
+  )
 }

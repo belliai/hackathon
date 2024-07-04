@@ -1,21 +1,22 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import { useForm } from "react-hook-form";
+import { ColumnDef } from "@tanstack/react-table"
+import { useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+} from "@/app/k360/organize/masters/components/columnItem"
 import {
   DUMMY_SELECT_OPTIONS,
   DUMMY_SELECT_OPTIONS_STATUS,
-} from "@/app/organize/masters/components/dummySelectOptions";
-import MastersPageTemplate from "@/app/organize/masters/components/MastersPageTemplate";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { DataTable } from "@/components/data-table/data-table";
-import FilterActions from "@/components/page-template/FilterActions";
+} from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function MasterCutoffTimePage() {
   const columns: ColumnDef<any>[] = [
@@ -73,7 +74,7 @@ export default function MasterCutoffTimePage() {
             statusText="Active"
             severity={row.original.status === "Active" ? "default" : "error"}
           />
-        );
+        )
       },
     },
     {
@@ -85,7 +86,7 @@ export default function MasterCutoffTimePage() {
       header: "Destination Country",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -168,7 +169,7 @@ export default function MasterCutoffTimePage() {
       orginCountry: "USA",
       destinationCountry: "USA",
     },
-  ];
+  ]
 
   const formFields: TFormTextField[] = [
     {
@@ -299,9 +300,9 @@ export default function MasterCutoffTimePage() {
       orientation: "horizontal",
       type: "text",
     },
-  ];
+  ]
 
-  const filterForm = useForm();
+  const filterForm = useForm()
 
   return (
     <CreateFormPageTemplate
@@ -318,5 +319,5 @@ export default function MasterCutoffTimePage() {
         </div>
       }
     />
-  );
+  )
 }

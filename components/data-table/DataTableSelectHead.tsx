@@ -1,8 +1,9 @@
-import { Table } from "@tanstack/react-table";
-import { Checkbox } from "../ui/checkbox";
+import { Table } from "@tanstack/react-table"
+
+import { Checkbox } from "../ui/checkbox"
 
 interface DataTableSelectHeadProps {
-  table: Table<any>;
+  table: Table<any>
 }
 
 export default function DataTableSelectHead({
@@ -16,7 +17,7 @@ export default function DataTableSelectHead({
       }
       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
       aria-label="Select all"
-      className="translate-y-[2px] mx-1"
+      className="mx-1 translate-y-[2px]"
     />
-  );
+  )
 }

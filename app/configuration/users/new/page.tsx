@@ -1,13 +1,14 @@
-"use client";
+"use client"
 
-import CreateFormTemplate from "@/app/organize/masters/components/CreateFormTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import PageContainer from "@/components/layout/PageContainer";
-import PageHeader from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { TFormTextField } from "@/components/form/FormTextField"
+import PageContainer from "@/components/layout/PageContainer"
+import PageHeader from "@/components/layout/PageHeader"
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
 
 export default function ConfigurationUsersNewPage() {
   const formFields: TFormTextField[] = [
@@ -132,9 +133,9 @@ export default function ConfigurationUsersNewPage() {
       label: "AD User",
       type: "checkbox",
     },
-  ];
+  ]
 
-  const form = useForm();
+  const form = useForm()
 
   return (
     <PageContainer className="flex flex-col gap-4">
@@ -146,16 +147,16 @@ export default function ConfigurationUsersNewPage() {
         className="max-h-none"
       />
       <div className="flex gap-2">
-        <Button className="bg-button-primary hover:bg-button-primary/80 text-white">
+        <Button className="bg-button-primary text-white hover:bg-button-primary/80">
           Save
         </Button>
         <Button
           variant="outline"
-          className="border-button-primary hover:border-button-primary/80 text-button-primary hover:text-button-primary"
+          className="border-button-primary text-button-primary hover:border-button-primary/80 hover:text-button-primary"
         >
           Cancel
         </Button>
       </div>
     </PageContainer>
-  );
+  )
 }

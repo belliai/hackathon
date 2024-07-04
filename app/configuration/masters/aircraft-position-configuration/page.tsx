@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import MastersPageTemplate, {
-  SectionedFormFields,
-} from "@/app/organize/masters/components/MastersPageTemplate";
-import StatusBadge from "@/app/organize/masters/components/StatusBadge";
+import { ColumnDef } from "@tanstack/react-table"
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { DataTable } from "@/components/data-table/data-table"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
 import {
   actionColumn,
   selectColumn,
-} from "@/app/organize/masters/components/columnItem";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { DataTable } from "@/components/data-table/data-table";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import { ColumnDef } from "@tanstack/react-table";
-import { useFieldArray, useForm } from "react-hook-form";
+} from "@/app/k360/organize/masters/components/columnItem"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import MastersPageTemplate, {
+  SectionedFormFields,
+} from "@/app/k360/organize/masters/components/MastersPageTemplate"
+import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
 
 export default function AirportPositionConfiguration() {
   const columns: ColumnDef<any>[] = [
@@ -77,7 +78,7 @@ export default function AirportPositionConfiguration() {
       header: "Loading Pattern",
     },
     actionColumn,
-  ];
+  ]
 
   const data = [
     {
@@ -160,7 +161,7 @@ export default function AirportPositionConfiguration() {
       loadingPattern: "Pattern 5",
       action: "Edit",
     },
-  ];
+  ]
 
   const form = useForm({
     defaultValues: {
@@ -173,12 +174,12 @@ export default function AirportPositionConfiguration() {
         },
       ],
     },
-  });
+  })
 
   const fieldArray = useFieldArray<any>({
     name: "fieldArray",
     control: form.control,
-  });
+  })
 
   const fieldArrayFormFields: TFormTextField[] = [
     {
@@ -219,7 +220,7 @@ export default function AirportPositionConfiguration() {
       type: "select",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -228,76 +229,76 @@ export default function AirportPositionConfiguration() {
           name: "aircraftType",
           label: "Aircraft Type *",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "equipmentNo",
           label: "Equipment No.",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "fromDate",
           label: "From Date",
           type: "date",
           hideTooltip: true,
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "toDate",
           label: "To Date",
           type: "date",
           hideTooltip: true,
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "patternName",
           label: "Pattern Name *",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "flightNo",
           label: "Flight No.",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "overLoad",
           label: "Over Load%",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "bulkWeight",
           label: "Bulk Weight",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "bulkVolume",
           label: "Bulk Volume",
           type: "text",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "uom",
           label: "UOM",
           type: "select",
           options: DUMMY_SELECT_OPTIONS,
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "isActive",
           label: "isActive",
           type: "checkbox",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
         {
           name: "isDefault",
           label: "isDefault",
           type: "checkbox",
-          orientation: "horizontal"
+          orientation: "horizontal",
         },
       ],
     },
@@ -308,7 +309,7 @@ export default function AirportPositionConfiguration() {
         fieldArray,
       },
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -320,5 +321,5 @@ export default function AirportPositionConfiguration() {
         <DataTable columns={columns} data={data} hideToolbar className="mt-8" />
       }
     />
-  );
+  )
 }

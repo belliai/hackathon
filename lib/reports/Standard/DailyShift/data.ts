@@ -1,4 +1,4 @@
-import { DailyShiftType } from "@/components/reports/Standard/DailyShift/columns";
+import { DailyShiftType } from "@/components/reports/Standard/DailyShift/columns"
 
 export const DUMMY_DATA: DailyShiftType[] = [
   {
@@ -101,8 +101,8 @@ export const DUMMY_DATA: DailyShiftType[] = [
     station: "SYD",
     flights: "QF123",
   },
-];
+]
 
 export async function getData() {
-  return DUMMY_DATA;
+  return DUMMY_DATA
 }

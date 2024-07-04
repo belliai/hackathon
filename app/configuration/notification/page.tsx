@@ -1,13 +1,14 @@
-"use client";
+"use client"
 
-import CreateFormTemplate from "@/app/organize/masters/components/CreateFormTemplate";
-import { SectionedFormFields } from "@/app/organize/masters/components/MastersPageTemplate";
-import { DUMMY_SELECT_OPTIONS } from "@/app/organize/masters/components/dummySelectOptions";
-import { TFormTextField } from "@/components/form/FormTextField";
-import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate";
-import FilterActions from "@/components/page-template/FilterActions";
-import { Button } from "@/components/ui/button";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form"
+
+import { Button } from "@/components/ui/button"
+import { TFormTextField } from "@/components/form/FormTextField"
+import CreateFormPageTemplate from "@/components/page-template/CreateFormPageTemplate"
+import FilterActions from "@/components/page-template/FilterActions"
+import CreateFormTemplate from "@/app/k360/organize/masters/components/CreateFormTemplate"
+import { DUMMY_SELECT_OPTIONS } from "@/app/k360/organize/masters/components/dummySelectOptions"
+import { SectionedFormFields } from "@/app/k360/organize/masters/components/MastersPageTemplate"
 
 export default function NotificationMasterPage() {
   const formFields: TFormTextField[] = [
@@ -50,18 +51,18 @@ export default function NotificationMasterPage() {
       orientation: "horizontal",
       options: DUMMY_SELECT_OPTIONS,
     },
-  ];
+  ]
 
   const form = useForm({
     defaultValues: {
       notifications: [{}],
     },
-  });
+  })
 
   const fieldArray = useFieldArray<any>({
     control: form.control,
     name: "notifications",
-  });
+  })
 
   const sectionedFormFields: SectionedFormFields[] = [
     {
@@ -122,7 +123,7 @@ export default function NotificationMasterPage() {
         ],
       },
     },
-  ];
+  ]
 
   return (
     <CreateFormPageTemplate
@@ -138,7 +139,7 @@ export default function NotificationMasterPage() {
             sectionedFormFields={sectionedFormFields}
             hookForm={form}
           />
-          <div className="flex gap-2 mt-8">
+          <div className="mt-8 flex gap-2">
             <Button variant="button-primary">Add</Button>
             <Button variant="button-primary">Save</Button>
             <Button variant="button-primary">Delete</Button>
@@ -146,5 +147,5 @@ export default function NotificationMasterPage() {
         </div>
       }
     />
-  );
+  )
 }

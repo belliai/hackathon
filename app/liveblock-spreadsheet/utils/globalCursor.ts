@@ -3,12 +3,12 @@ type CursorType =
   | "grabbing"
   | "resizing-column"
   | "resizing-row"
-  | "scrubbing";
+  | "scrubbing"
 
 export function setGlobalCursor(type: CursorType) {
-  document.body.classList.add(type);
+  document.body.classList.add(type)
 }
 
 export function removeGlobalCursor(type: CursorType) {
-  document.body.classList.remove(type);
+  document.body.classList.remove(type)
 }

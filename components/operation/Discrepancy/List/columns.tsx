@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export type DiscrepancyListType = {
-  awb_number?: string;
-  origin?: string;
-  destination?: string;
-  shipper?: string;
-  consignee?: string;
-  declared_weight?: string;
-  actual_weight?: string;
-  weight_discrepancy?: string;
-  declared_pieces?: string;
-  actual_pieces?: string;
-  pieces_discrepancy?: string;
-  flight_number?: string;
-  flight_date?: string;
-  remarks?: string;
-};
+  awb_number?: string
+  origin?: string
+  destination?: string
+  shipper?: string
+  consignee?: string
+  declared_weight?: string
+  actual_weight?: string
+  weight_discrepancy?: string
+  declared_pieces?: string
+  actual_pieces?: string
+  pieces_discrepancy?: string
+  flight_number?: string
+  flight_date?: string
+  remarks?: string
+}
 
 export const columns: ColumnDef<DiscrepancyListType>[] = [
   {
@@ -76,4 +76,4 @@ export const columns: ColumnDef<DiscrepancyListType>[] = [
     header: "Remarks",
     accessorKey: "remarks",
   },
-];
+]
