@@ -146,7 +146,7 @@ export function Combobox({
                     asChild
                     className="px-2 text-zinc-400"
                   >
-                    <Link href={editLink} className="text-xs">
+                    <Link href={editLink} className="text-xs" target="_blank">
                       <List className="mr-2 h-4 w-4" />
                       Edit dropdown
                     </Link>
