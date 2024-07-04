@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Combobox } from "@/components/form/combobox"
 
 const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
   (_, ref) => {
@@ -53,32 +54,19 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
       customers &&
       customers.data.find((item: any) => item.ID === bill_to_id)
 
+    const locationsOptions = locations?.map((location: any) => ({
+      label: location.name,
+      value: location.ID,
+    }))
+
     return (
       <Card className="grid grid-cols-2 gap-x-3 gap-y-2 p-4" ref={ref}>
-        <FormField
-          control={form.control}
+        <Combobox
           name="origin_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="booking type info here">Origin</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {locations &&
-                    locations.map((location: any) => (
-                      <SelectItem value={location.ID} key={location.ID}>
-                        {location.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={locationsOptions}
+          label="Origin"
+          info="Select the origin location"
+          editLink="/locations"
         />
         <FormField
           control={form.control}

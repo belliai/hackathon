@@ -13,19 +13,18 @@ const Status = () => {
   const add = useAddStatus()
   const remove = useRemoveStatus()
 
-  if (isPending) return "Loading..."
-
   if (error) return "An error has occurred: " + error.message
 
   return (
     <CrudTable
+      isLoading={isLoading}
       title="Status"
       columns={[{ accessorKey: "option" }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Status" },
       ]}
-      data={data.map((item: any) => ({ option: item.name, id: item.ID }))}
+      data={data?.map((item: any) => ({ option: item.name, id: item.ID }))}
       onSave={(data) => {
         // configure logic for add or edit, for edit the id will be zero
         const { id, option } = data
