@@ -39,7 +39,7 @@ import {
   Path,
   useFavorites,
 } from "./favorites-provider"
-
+import { getIconByHref } from "../data/operationsNavigation"
 export default function FavoritesMenu() {
   const {
     favorites,
@@ -297,6 +297,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({
   }
 
   if (isPath(item)) {
+    const itemIcon =  getIconByHref(item.href)
     return (
       <div
         ref={setNodeRef}
@@ -307,7 +308,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({
       >
         <GripVerticalIcon className="absolute -left-4 top-1/2 size-4 -translate-y-1/2 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
         <SidebarItem
-          item={{ ...item, icon: item.icon ?? StarIcon }}
+          item={{ ...item, icon: itemIcon ?? StarIcon }}
           active={false}
           disabled={isDragging}
         />
