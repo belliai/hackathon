@@ -1,6 +1,8 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { getTooltipContents } from "@/lib/contentful"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -108,6 +110,32 @@ const TableCaption = React.forwardRef<
 ))
 TableCaption.displayName = "TableCaption"
 
+const TableHeaderWithTooltip = ({ header, tooltipId }: { header: string, tooltipId?: string }) => {
+  const tooltips = getTooltipContents()
+  const content = tooltips.find(
+    (list) => list.id === tooltipId
+  )
+
+  const tooltipContent = content?.content 
+
+  return (
+    <div className="inline-flex items-center gap-2">
+      <Tooltip>
+        <TooltipTrigger>
+          <div>{header}</div>
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="border bg-card text-foreground"
+        >
+          <p>{tooltipContent}</p>
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  )
+}
+TableHeaderWithTooltip.displayName = "TableHeaderWithTooltip"
+
 export {
   Table,
   TableHeader,
@@ -117,4 +145,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableHeaderWithTooltip,
 }

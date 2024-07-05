@@ -56,6 +56,7 @@ import MastersPageTemplate, {
   SectionedFormFields,
 } from "@/app/k360/organize/masters/components/MastersPageTemplate"
 import StatusBadge from "@/app/k360/organize/masters/components/StatusBadge"
+import { TableHeaderWithTooltip } from "@/components/ui/table"
 
 export default function MasterAircraftPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<Aircraft | null>(null)
@@ -486,47 +487,48 @@ export default function MasterAircraftPage() {
     selectColumn as ColumnDef<Aircraft>,
     {
       accessorKey: "manufacturer",
-      header: "Manufacturer",
+      header: () => <TableHeaderWithTooltip header="Manufacturer" tooltipId="aircraft-manufacturer" />,
     },
     {
       accessorKey: "aircraft_type",
-      header: "Aircraft Type",
+      header: () => <TableHeaderWithTooltip header="Aircraft Type" tooltipId="aircraft-aircraft-type" />
     },
     {
       accessorKey: "version",
-      header: "Version",
+      header: () => <TableHeaderWithTooltip header="Version" tooltipId="aircraft-version" />
     },
     {
       accessorKey: "passenger_capacity",
-      header: "Pax Capacity",
+      header: () => <TableHeaderWithTooltip header="Passenger Capacity" tooltipId="aircraft-passenger-capacity" />
     },
     {
       accessorKey: "landing_weight",
-      header: "Landing Wt",
+      header: () => <TableHeaderWithTooltip header="Landing Wt" tooltipId="aircraft-landing-weight" />
     },
     {
       accessorKey: "cargo_capacity",
-      header: "Cargo Cap",
+      header: () => <TableHeaderWithTooltip header="Cargo cap" tooltipId="aircraft-cargo-capacity" />
     },
     {
       accessorKey: "mtow",
-      header: "MTOW",
+      header: () => <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
+
     },
     {
       accessorKey: "max_zero_fuel_weight",
-      header: "Max Zero Fuel Wt",
+      header: () => <TableHeaderWithTooltip header="Max Zero Fuel Wt" tooltipId="aircraft-max-zero-fuel-wt" />
     },
     {
       accessorKey: "body_type.Name",
-      header: "Body Type",
+      header: () => <TableHeaderWithTooltip header="Body Type" tooltipId="aircraft-body-type" />
     },
     {
       accessorKey: "count",
-      header: "Active Count",
+      header: () => <TableHeaderWithTooltip header="Active Count" tooltipId="aircraft-active-count" />
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: () => <TableHeaderWithTooltip header="Status" tooltipId="aircraft-status" />,
       cell: ({ row }) => (
         <StatusBadge
           statusText={row.original.status.Name}
