@@ -94,6 +94,12 @@ const formDefaultValues = {
   sector: "",
   status: "",
   flightType: "",
+  rangeDate: {
+    from: new Date(),
+    to: new Date(),
+    fromTime: "00:00",
+    toTime: "00:00",
+  },
   deptTime: {
     deptDay: "0",
     deptHour: "0",
