@@ -67,21 +67,6 @@ export default function Home() {
 
   const columnWithActions = [
     ...columns,
-    createActionColumn({
-      items: [
-        {
-          label: "Edit",
-          value: "edit",
-          fn: openModal,
-        },
-        {
-          label: "Delete",
-          value: "delete",
-          fn: onShowDelete,
-          shortcut: "⌘⌫",
-        },
-      ],
-    }),
   ]
 
   return (

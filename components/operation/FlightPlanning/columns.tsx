@@ -67,30 +67,6 @@ export type Uld = {
 
 export const unassignedColumn: ColumnDef<Unassigned>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        className="border-white"
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        className="border-zinc-500"
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "awb_number",
     header: "AWB Number",
   },
@@ -162,30 +138,6 @@ export const unassignedColumn: ColumnDef<Unassigned>[] = [
 
 export const assignedColumn: ColumnDef<Assigned>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        className="border-white"
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        className="border-zinc-500"
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "awb_number",
     header: "AWB Number",
   },
@@ -237,30 +189,6 @@ export const assignedColumn: ColumnDef<Assigned>[] = [
 
 export const cartColumn: ColumnDef<Cart>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        className="border-white"
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        className="border-zinc-500"
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "cart",
     header: "Cart#",
   },
@@ -295,30 +223,6 @@ export const cartColumn: ColumnDef<Cart>[] = [
 ]
 
 export const uldColumn: ColumnDef<Uld>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        className="border-white"
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        className="border-zinc-500"
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "uld",
     header: "ULD#",

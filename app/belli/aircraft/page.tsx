@@ -484,7 +484,6 @@ export default function MasterAircraftPage() {
   }
 
   const columns: ColumnDef<Aircraft>[] = [
-    selectColumn as ColumnDef<Aircraft>,
     {
       accessorKey: "manufacturer",
       header: () => <TableHeaderWithTooltip header="Manufacturer" tooltipId="aircraft-manufacturer" />,
@@ -536,21 +535,6 @@ export default function MasterAircraftPage() {
         />
       ),
     },
-    createActionColumn({
-      items: [
-        {
-          label: "Edit",
-          value: "edit",
-          fn: handleRowClick,
-        },
-        {
-          label: "Delete",
-          value: "delete",
-          fn: onShowDelete,
-          shortcut: "⌘⌫",
-        },
-      ],
-    }) as ColumnDef<Aircraft>,
   ]
 
   const { mutateAsync, isPending } = useCreateAircraft()
