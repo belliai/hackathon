@@ -9,8 +9,10 @@ import {
   ArrowUpAZIcon,
   FilterIcon,
   FilterXIcon,
+  PlusIcon,
   SearchCheck,
   SearchIcon,
+  Trash,
 } from "lucide-react"
 import { useDebounceValue } from "usehooks-ts"
 
@@ -27,17 +29,31 @@ import DateInput from "../ui/date-input"
 import { Input } from "../ui/input"
 import { Popover, PopoverContent } from "../ui/popover"
 import { Separator } from "../ui/separator"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   children: ReactNode
 }
 
+const DEFAULT_FILTER_DATA = {
+  id: 1,
+  column: "",
+  value: "",
+};
+
 export function DataTableFilterOptions<TData>({
   table,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  const [colFilterView, setColFilterView] = useState<Column<TData> | null>(null)
+  const [filterList, setFilterList] = useState<typeof DEFAULT_FILTER_DATA[]>([DEFAULT_FILTER_DATA]);
 
   const filterableColumns = table
     .getAllColumns()
@@ -46,51 +62,81 @@ export function DataTableFilterOptions<TData>({
         Boolean(col.accessorFn) && col.getIsVisible() && col.getCanFilter()
     )
     .sort((a, b) => b.getFilterIndex() - a.getFilterIndex())
+  
+  const handleAddFilter = () => {
+    setFilterList([...filterList, { ...DEFAULT_FILTER_DATA, id: filterList.length + 1 }]);
+  }
+
+  const handleRemoveFilter = (id: number) => {
+    setFilterList(filterList.filter((filter) => filter.id !== id));
+    table.resetColumnFilters();
+  }
+
+  const handleChangeFilter = (id: number, value: string, identifier: string, index: number) => {
+    if (identifier === "column") {
+      table.resetColumnFilters();
+    }
+
+    setFilterList(filterList.map((filter) => filter.id === id ? { ...filter, [identifier]: value } : filter));
+  }
+
+  useEffect(() => {
+    filterList.forEach((filter) => {
+      if (filter.column) {
+        table.getColumn(filter.column)?.setFilterValue(filter.value);
+      }
+    });
+  }, [filterList, table])
 
   return (
     <Popover>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
-      <PopoverContent align="end" className="w-[250px] p-0">
-        {colFilterView ? (
-          <ColumnFilterView
-            column={colFilterView}
-            onClose={() => setColFilterView(null)}
-          />
-        ) : (
-          <Command>
-            <CommandInput placeholder="Search for a column" />
-            <CommandList className="custom-scrollbar">
-              <CommandEmpty>No column found.</CommandEmpty>
-              <CommandGroup>
-                {filterableColumns.map((column) => {
-                  const filter = column.getFilterValue()
-                  return (
-                    <CommandItem
-                      key={column.id}
-                      value={String(column.columnDef.header)}
-                      onSelect={() => setColFilterView(column)}
-                      className="flex flex-row items-center justify-between"
-                    >
-                      {String(column.columnDef.header)}
-                      {Boolean(filter) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            column.setFilterValue(undefined)
-                          }}
-                          className="group text-muted-foreground transition-colors hover:text-red-400"
-                        >
-                          <FilterIcon className="block size-4 group-hover:hidden" />
-                          <FilterXIcon className="hidden size-4 group-hover:block" />
-                        </button>
-                      )}
-                    </CommandItem>
-                  )
-                })}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        )}
+      <PopoverContent align="end" className="w-[500px] flex flex-col gap-4 p-4 border-zinc-700">
+        {filterList.map((filter, index) => (
+          <div key={filter.id} className="flex gap-2 items-center">
+            <div className="text-sm w-2/12 grow-0">
+              {index === 0 ? "WHERE" : "AND"}
+            </div>
+
+            <div className="w-5/12">
+              <Select onValueChange={(value) => handleChangeFilter(filter.id, value, "column", index)} value={filter.column}>
+                <SelectTrigger className="w-full border-zinc-7000 text-left h-9">
+                  <SelectValue placeholder="Column" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {filterableColumns.map((columnItem) => (
+                      <SelectItem key={columnItem.id} value={columnItem.id}>
+                        {typeof columnItem?.columnDef?.header === 'string' ? columnItem?.columnDef?.header : ''}
+                        {typeof columnItem?.columnDef?.header === 'function' ? (columnItem?.columnDef?.header as () => string)() : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="w-4/12">
+              <Input
+                className="border-zinc-700"
+                value={filter.value}
+                onChange={(e) => {
+                  handleChangeFilter(filter.id, e.target.value, "value", index);
+                }}
+              />
+            </div>
+            
+            {index !== 0 && (
+              <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700" onClick={() => handleRemoveFilter(filter.id)}>
+                <Trash className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        ))}
+
+        <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700" onClick={handleAddFilter}>
+          <PlusIcon className="h-4 w-4" /> Add Filter
+        </Button>
       </PopoverContent>
     </Popover>
   )

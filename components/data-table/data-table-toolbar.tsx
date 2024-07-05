@@ -43,7 +43,8 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [search, setSearch] = useState<string>()
-  const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
+  const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500);
+  const [isFilterActive, setIsFilterActive] = useState(false);
 
   const toggleSearchOpen = () => {
     setSearchOpen((prev) => !prev)
@@ -52,6 +53,10 @@ export function DataTableToolbar<TData>({
   useEffect(() => {
     table.setGlobalFilter(debouncedSearch)
   }, [debouncedSearch])
+
+  useEffect(() => {
+    setIsFilterActive(table.getState().columnFilters.length > 0);
+  }, [table.getState().columnFilters]);
 
   return (
     <div className="flex items-center justify-between">
@@ -73,7 +78,7 @@ export function DataTableToolbar<TData>({
           <DataTableFilterOptions table={table}>
             <TooltipTrigger asChild>
               <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
-                <ListFilterIcon className="h-4 w-4" />
+                <ListFilterIcon className={`h-4 w-4 ${isFilterActive ? "text-button-primary" : ""}`} />
               </Button>
             </TooltipTrigger>
           </DataTableFilterOptions>

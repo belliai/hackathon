@@ -29,24 +29,23 @@ export const columns = (
   {
     accessorKey: "entry_type",
     header: "Entry Type",
-    cell: ({ row }) => {
-      return "Manual"
-    },
+    cell: ({ row }) => "Manual",
   },
   {
     accessorKey: "flight_no",
     header: "Flight No.",
   },
   {
-    accessorKey: "source",
+    accessorKey: "source.name",
     header: "Source",
     cell: ({ row }) => {
       const source = row.original.source
       return source ? source.name : ""
     },
+    filterFn: 'includesString'
   },
   {
-    accessorKey: "destination",
+    accessorKey: "destination.name",
     header: "Destination",
     cell: ({ row }) => {
       const destination = row.original.destination
@@ -70,7 +69,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "aircraft",
+    accessorKey: "aircraft.aircraft_type",
     header: "Aircraft Type",
     cell: ({ row }) => {
       const aircraft = row.original.aircraft
@@ -78,7 +77,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "tail",
+    accessorKey: "tail.tail_number",
     header: "Tail No.",
     cell: ({ row }) => {
       const tail = row.original.tail
@@ -86,7 +85,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "flight_type",
+    accessorKey: "flight_type.value",
     header: "Flight Type",
     cell: ({ row }) => {
       const flightType = row.original.flight_type
@@ -94,7 +93,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "status.value",
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status
@@ -102,7 +101,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "sector",
+    accessorKey: "sector.value",
     header: "Sector",
     cell: ({ row }) => {
       const sector = row.original.sector
@@ -128,9 +127,7 @@ export const columns = (
   {
     accessorKey: "updated_by",
     header: "Updated By",
-    cell: ({ row }) => {
-      return "Jeff Pan"
-    },
+    cell: ({ row }) => "Jeff Pan",
   },
   createActionColumn({
     items: [
