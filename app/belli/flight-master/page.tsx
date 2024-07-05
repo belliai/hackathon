@@ -116,7 +116,7 @@ const recurringFlightSchema = flightMasterFormSchema.pick({
   status: true,
   deptTime: true,
   arrivalTime: true,
-  rangeDate: true
+  rangeDate: true,
 })
 
 export default function Page() {
@@ -257,7 +257,7 @@ export default function Page() {
 
   const reformatDetailToForm = (data: Flight): FlightDetailFormValues => {
     const aircraftTypeId = aircraftTypeList?.find(
-      (item: any) => item.aircraft_type === data.aircraft.aircraft_type
+      (item: any) => item.aircraft_type === data.aircraft?.aircraft_type
     )
 
     const formattedPayload: FlightDetailFormValues = {
