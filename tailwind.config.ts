@@ -18,6 +18,8 @@ const config = {
       },
     },
     extend: {
+      // Workaround for this issue: https://github.com/shadcn-ui/ui/issues/1690
+      // Basically its to make the PopoverContent match the same width as its container/trigger
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
