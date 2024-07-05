@@ -1,22 +1,22 @@
-import { CubeIcon, PaperPlaneIcon, DashboardIcon } from "@radix-ui/react-icons"
 import {
-        HomeIcon,
-        CalendarIcon,
-        GlobeAmericasIcon,
-        HandThumbUpIcon,
-        PresentationChartLineIcon,
-        ServerStackIcon,
-        CurrencyDollarIcon,
-        ReceiptPercentIcon,
-        CircleStackIcon,
-        BanknotesIcon,
-        BoltIcon,
-        ChartBarIcon,
-        CursorArrowRippleIcon, 
-        ClipboardIcon
-      } from "@heroicons/react/24/outline";
-import { PlaneIcon } from "lucide-react";
-      
+  BanknotesIcon,
+  BoltIcon,
+  CalendarIcon,
+  ChartBarIcon,
+  CircleStackIcon,
+  ClipboardIcon,
+  CurrencyDollarIcon,
+  CursorArrowRippleIcon,
+  GlobeAmericasIcon,
+  HandThumbUpIcon,
+  HomeIcon,
+  PresentationChartLineIcon,
+  ReceiptPercentIcon,
+  ServerStackIcon,
+} from "@heroicons/react/24/outline"
+import { CubeIcon, DashboardIcon, PaperPlaneIcon } from "@radix-ui/react-icons"
+import { PlaneIcon } from "lucide-react"
+
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const operationsNavigation: TSidebarItem[] = [
@@ -61,18 +61,24 @@ export const operationsNavigation: TSidebarItem[] = [
         icon: PlaneIcon,
         current: false,
       },
+      {
+        name: "Data Sync",
+        href: "/belli/data-sync",
+        icon: CubeIcon,
+        current: false,
+      },
     ],
   },
 ]
 
 export const getIconByHref = (href: string): React.ElementType | null => {
-        for (const section of operationsNavigation) {
-          if (section.children) {
-            const foundItem = section.children.find((item) => item.href === href);
-            if (foundItem) {
-              return foundItem.icon;
-            }
-          }
-        }
-        return null; // Return null if href is not found
-      };
+  for (const section of operationsNavigation) {
+    if (section.children) {
+      const foundItem = section.children.find((item) => item.href === href)
+      if (foundItem) {
+        return foundItem.icon
+      }
+    }
+  }
+  return null // Return null if href is not found
+}
