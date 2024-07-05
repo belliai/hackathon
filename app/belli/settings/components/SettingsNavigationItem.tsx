@@ -3,12 +3,13 @@ import {
   NavigationMenuTrigger,
 } from "@radix-ui/react-navigation-menu"
 
+import { SettingsTabName } from "@/lib/hooks/useSettingsDynamicHook"
 import { cn } from "@/lib/utils"
 
 interface SettingsNavigationItemProps {
-  tabName: string
+  tabName: SettingsTabName
   activeTab: string
-  setActiveTab: (tab: string) => void
+  setActiveTab: (tab: SettingsTabName) => void
 }
 
 const SettingsNavigationItem: React.FC<SettingsNavigationItemProps> = ({
