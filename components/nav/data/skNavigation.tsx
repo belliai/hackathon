@@ -85,8 +85,16 @@ export const skNavigation: TSidebarItem[] = [
             icon: ReceiptPercentIcon,
             current: false,
             children: [
-              { name: "List", href: "/sk/sales/other-charges-list", current: false },
-              { name: "New", href: "/sk/sales/other-charges-new", current: false },
+              {
+                name: "List",
+                href: "/sk/sales/other-charges-list",
+                current: false,
+              },
+              {
+                name: "New",
+                href: "/sk/sales/other-charges-new",
+                current: false,
+              },
             ],
           },
           {
@@ -575,7 +583,11 @@ export const skNavigation: TSidebarItem[] = [
                     href: "/sk/accounting/agent/collection/invoice-collection",
                     current: false,
                   },
-                  { name: "List Card Transactions", href: "/sk/accounting/agent/collection/card-transactions", current: false },
+                  {
+                    name: "List Card Transactions",
+                    href: "/sk/accounting/agent/collection/card-transactions",
+                    current: false,
+                  },
                   {
                     name: "Upload AWB collection File",
                     href: "/sk/accounting/agent/collection/upload-awb",
@@ -850,12 +862,17 @@ export const skNavigation: TSidebarItem[] = [
         current: false,
       },
       {
-        name:"Charts",
+        name: "Charts",
         href: "/sk/charts",
+        icon: CubeIcon,
+        current: false,
+      },
+      {
+        name: "testingpage",
+        href: "/sk/testpage",
         icon: CubeIcon,
         current: false,
       },
     ],
   },
-  
 ]
