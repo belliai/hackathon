@@ -1,16 +1,31 @@
 "use client"
 
+import { useCallback, useMemo, useState } from "react"
+import { PaginationState } from "@tanstack/react-table"
+
 import { useFlightList } from "@/lib/hooks/flight-master/flight-master"
-import { useOrders } from "@/lib/hooks/orders"
 import { DataTable } from "@/components/data-table/data-table"
 import { columns } from "@/app/belli/flight-master/components/column"
-import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
 
 export default function FlightsDashboardPage() {
-  const { data: flights, isLoading } = useFlightList({
-    page: 1,
-    page_size: 10,
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
   })
+
+  const tableState = useCallback(async ({ pagination }: any) => {
+    setPagination(pagination)
+  }, [])
+
+  const paginationDetails = useMemo(
+    () => ({
+      page: pagination.pageIndex === 0 ? 1 : pagination.pageIndex + 1,
+      page_size: pagination.pageSize,
+    }),
+    [pagination]
+  )
+
+  const { data: flights, isLoading } = useFlightList(paginationDetails)
 
   const flightsData = flights?.data || []
 
@@ -24,9 +39,16 @@ export default function FlightsDashboardPage() {
         (data) => {},
         (data) => {}
       )}
+      initialVisibility={{
+        updated_at: false,
+        updated_by: false,
+        created_at: false,
+        sector: false,
+      }}
       data={flightsData}
-      pageCount={isLoading ? 1 : flights?.total_pages || 1}
+      pageCount={isLoading ? 1 : flights?.total_pages}
       manualPagination={true}
+      tableState={tableState}
       className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
     />
   )

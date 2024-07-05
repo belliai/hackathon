@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { Button, ButtonProps } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Cross2Icon } from "@radix-ui/react-icons"
-import { Table } from "@tanstack/react-table"
+import { Table, VisibilityColumn, VisibilityState } from "@tanstack/react-table"
 import {
   ArrowUpDownIcon,
   EyeIcon,
@@ -27,6 +27,7 @@ import { DataTableViewOptions } from "./data-table-view-options"
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>
   buttonVariant?: ButtonProps["variant"]
+  initialVisibility?: VisibilityState
   extraButtons?: {
     label: string
     icon?: LucideIcon
@@ -132,7 +133,10 @@ export function DataTableToolbar<TData>({
           </Tooltip>
         </div>
         <Tooltip delayDuration={100}>
-          <DataTableViewOptions table={table}>
+          <DataTableViewOptions
+            table={table}
+            initialVisibility={props.initialVisibility ?? {}}
+          >
             <TooltipTrigger asChild>
               <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
                 <EyeIcon className="h-4 w-4" />

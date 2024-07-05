@@ -16,17 +16,23 @@ import { Table } from "@tanstack/react-table"
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
+  showSelectedCount?: boolean
 }
 
 export function DataTablePagination<TData>({
   table,
+  showSelectedCount,
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div>
+      {showSelectedCount ? (
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+      ) : (
+        <div />
+      )}
       <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-8">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>

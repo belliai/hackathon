@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { PopoverClose } from "@radix-ui/react-popover"
 import { Check, ChevronDown, ChevronsUpDown, List } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 
@@ -29,8 +30,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import { ScrollArea } from "../ui/scroll-area"
-import { SelectScrollDownButton, SelectScrollUpButton } from "../ui/select"
 import { Separator } from "../ui/separator"
 import { FormTextFieldProps } from "./FormTextField"
 
@@ -40,6 +39,7 @@ interface ComboboxFormProps extends Omit<FormTextFieldProps, "form" | "type"> {
   popoverClassName?: string
   editLink?: string
   info?: string
+  searchPlaceholder?: string
 }
 
 /**
@@ -76,6 +76,7 @@ export function Combobox({
   className,
   popoverClassName,
   editLink,
+  searchPlaceholder = "Search",
 }: ComboboxFormProps) {
   const form = useFormContext()
 
@@ -85,7 +86,7 @@ export function Combobox({
       name={name}
       disabled={disabled}
       render={({ field }) => (
-        <FormItem className={cn("", className)}>
+        <FormItem className={cn(className)}>
           {label && <FormLabel info={info}>{label}</FormLabel>}
           <Popover>
             <PopoverTrigger asChild>
@@ -107,47 +108,60 @@ export function Combobox({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className={cn("p-0", popoverClassName)}>
+            <PopoverContent
+              className={cn(
+                "popover-content-width-same-as-its-trigger w-full min-w-36 rounded-lg p-0 !text-xs",
+                popoverClassName
+              )}
+              sideOffset={-4}
+              align="start"
+            >
               <Command>
-                <CommandInput placeholder="Search" />
-                <ScrollArea className="max-h-48 overflow-auto">
-                  <CommandEmpty>No results</CommandEmpty>
-                  <CommandGroup>
-                    <CommandList>
-                      {options?.map((opt) => (
-                        <CommandItem
-                          value={opt.label}
-                          key={opt.value}
-                          onSelect={() => {
-                            form.setValue(name, opt.value)
-                          }}
-                        >
+                <CommandInput
+                  hideIcon
+                  placeholder={searchPlaceholder}
+                  className="h-9 py-2 text-inherit placeholder:text-xs"
+                />
+                <CommandEmpty>No results</CommandEmpty>
+                <CommandGroup className="py-0 pr-0">
+                  <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
+                    {options?.map((opt) => (
+                      <CommandItem
+                        value={opt.label}
+                        key={opt.value}
+                        onSelect={() => {
+                          form.setValue(name, opt.value)
+                        }}
+                        className="flex h-8 items-center justify-between px-2.5 text-xs"
+                        asChild
+                      >
+                        <PopoverClose className="w-full">
+                          {opt.label}
                           <Check
                             className={cn(
-                              "mr-2 h-4 w-4",
+                              "h-4 w-4",
                               opt.value === field.value
                                 ? "opacity-100"
                                 : "opacity-0"
                             )}
                           />
-                          {opt.label}
-                        </CommandItem>
-                      ))}
-                    </CommandList>
-                  </CommandGroup>
-                </ScrollArea>
+                        </PopoverClose>
+                      </CommandItem>
+                    ))}
+                  </CommandList>
+                </CommandGroup>
               </Command>
               <Separator />
-              <div className="px-2 py-2">
+              <div className="px-2 py-1">
                 {editLink && (
                   <Button
-                    variant="ghost"
+                    variant="link"
                     size="sm"
                     asChild
-                    className="px-2 text-zinc-400"
+                    className="h-fit px-2 py-1 text-button-primary hover:text-button-primary/50 hover:no-underline"
                   >
-                    <Link href={editLink} className="text-xs" target="_blank">
-                      <List className="mr-2 h-4 w-4" />
+                    <Link href={editLink} target="_blank">
+                      {/* <List className="mr-2 h-4 w-4" /> */}
                       Edit dropdown
                     </Link>
                   </Button>

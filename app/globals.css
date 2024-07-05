@@ -47,15 +47,15 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  @apply w-2 h-2;
+  @apply h-2 w-2;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-muted h-2 w-2;
+  @apply h-2 w-2 bg-muted;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 hover:bg-muted-foreground/30 rounded-md;
+  @apply rounded-md bg-muted-foreground/20 hover:bg-muted-foreground/30;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -85,4 +85,11 @@ input[type="number"] {
 
 #chat-window {
   bottom: 24px !important;
+}
+
+@layer utilities {
+  .popover-content-width-same-as-its-trigger {
+    width: var(--radix-popover-trigger-width);
+    max-height: var(--radix-popover-content-available-height);
+  }
 }
