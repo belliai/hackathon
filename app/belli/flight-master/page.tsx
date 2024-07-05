@@ -46,6 +46,7 @@ import PageHeader from "@/components/layout/PageHeader"
 
 import { columns } from "./components/column"
 import FlightMasterForm from "./components/FlightMasterForm"
+import FlightMasterFormRecurring from "./components/FlightMasterFormRecurring"
 
 type FlightDetailFormValues = {
   flightNo: string
@@ -61,6 +62,12 @@ type FlightDetailFormValues = {
   sector: string
   status: string
   flightType: string
+  rangeDate: {
+    from: Date
+    to: Date
+    fromTime: string
+    toTime: string
+  }
   deptTime: {
     deptDay: string
     deptHour: string
@@ -99,8 +106,24 @@ const formDefaultValues = {
   },
 }
 
+const recurringFlightSchema = flightMasterFormSchema.pick({
+  flightNo: true,
+  source: true,
+  destination: true,
+  fromDate: true,
+  toDate: true,
+  aircraftType: true,
+  status: true,
+  deptTime: true,
+  arrivalTime: true,
+  rangeDate: true
+})
+
 export default function Page() {
   const [openModal, setOpenModal] = useState<string | boolean>(false)
+  const [openModalRecurring, setOpenModalRecurring] = useState<
+    string | boolean
+  >(false)
   const [deleteConfirm, setDeleteConfirm] = useState<Flight | null>(null)
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -126,11 +149,15 @@ export default function Page() {
 
   const sectionedHookForm = useForm({
     defaultValues: formDefaultValues,
-    resolver: zodResolver(flightMasterFormSchema),
+    resolver: zodResolver(recurringFlightSchema),
   })
 
   const findDays = (data: string[], key: string): boolean => {
-    return data.includes(key)
+    return (data && data.includes(key)) || false
+  }
+
+  const leadingZero = (val: number, count: number) => {
+    return String(val).padStart(count, "0")
   }
 
   const handleCreateFlight = async (param: FlightMasterFormValue) => {
@@ -162,9 +189,23 @@ export default function Page() {
       sun: findDays(param.frequencyItems, "sun"),
     }
 
-    if (typeof openModal === "string") {
+    if (param.rangeDate) {
+      const [fromHour, fromMin] = param.rangeDate.fromTime.split(":")
+      const [toHour, toMin] = param.rangeDate.toTime.split(":")
+      payload.departure_h = parseInt(fromHour)
+      payload.departure_m = parseInt(fromMin)
+      payload.arrival_h = parseInt(toHour)
+      payload.arrival_m = parseInt(toMin)
+    }
+
+    if (
+      typeof openModal === "string" ||
+      typeof openModalRecurring === "string"
+    ) {
+      const id = openModal || openModalRecurring
+
       await updateFlight(
-        { id: openModal, ...payload },
+        { id: String(id), ...payload },
         {
           onError: (error) => {
             console.error(error)
@@ -175,6 +216,7 @@ export default function Page() {
           },
           onSuccess: (data) => {
             setOpenModal(false)
+            setOpenModalRecurring(false)
             sectionedHookForm.reset(formDefaultValues)
             console.log("res data", data)
             toast({
@@ -195,6 +237,7 @@ export default function Page() {
         },
         onSuccess: (data) => {
           setOpenModal(false)
+          setOpenModalRecurring(false)
           sectionedHookForm.reset(formDefaultValues)
           console.log("res data", data)
           toast({
@@ -225,12 +268,22 @@ export default function Page() {
       toDate: new Date(data.to_date),
       frequencyItems: reformatDays(data) || [],
       aircraftType: aircraftTypeId?.id,
-      tailNo: data.tail.ID,
-      capacity: data.capacity.toString(),
-      uom: data.uom.ID,
-      sector: data.sector.ID,
+      tailNo: data.tail?.ID,
+      capacity: data.capacity?.toString(),
+      uom: data.uom?.ID,
+      sector: data.sector?.ID,
       status: data.status.ID,
-      flightType: data.flight_type.ID,
+      flightType: data.flight_type?.ID,
+      rangeDate: {
+        from: new Date(data.from_date),
+        to: new Date(data.to_date),
+        fromTime:
+          leadingZero(data.departure_d, 2) +
+          ":" +
+          leadingZero(data.departure_m, 2),
+        toTime:
+          leadingZero(data.arrival_h, 2) + ":" + leadingZero(data.arrival_m, 2),
+      },
       deptTime: {
         deptDay: data.departure_d.toString(),
         deptHour: data.departure_h.toString(),
@@ -249,6 +302,12 @@ export default function Page() {
   const openDetailFlight = (data: Flight) => {
     const formValue = reformatDetailToForm(data)
     setOpenModal(data.ID)
+    sectionedHookForm.reset(formValue as FlightDetailFormValues) // Ensure correct type assertion
+  }
+
+  const openDetailRecurringFlight = (data: Flight) => {
+    const formValue = reformatDetailToForm(data)
+    setOpenModalRecurring(data.ID)
     sectionedHookForm.reset(formValue as FlightDetailFormValues) // Ensure correct type assertion
   }
 
@@ -287,7 +346,6 @@ export default function Page() {
   }
 
   const tableState = useCallback(async ({ pagination }: any) => {
-    console.log(pagination)
     setPagination(pagination)
   }, [])
 
@@ -298,7 +356,6 @@ export default function Page() {
         <Tabs defaultValue="list-view" className="w-full">
           <TabsList>
             <TabsTrigger value="list-view">List View</TabsTrigger>
-            <TabsTrigger value="calendar-view">Calendar View</TabsTrigger>
             <TabsTrigger value="create-recurring-flight">
               Create Recurring Flight
             </TabsTrigger>
@@ -325,11 +382,31 @@ export default function Page() {
               />
             </div>
           </TabsContent>
-          <TabsContent value="calendar-view"></TabsContent>
-          <TabsContent value="create-recurring-flight"></TabsContent>
+
+          <TabsContent value="create-recurring-flight">
+            <div className="mt-4">
+              <DataTable
+                columns={columns(openDetailFlight, onShowDelete)}
+                data={isLoading ? [] : (flightData && flightData.data) || []}
+                onRowClick={openDetailRecurringFlight}
+                extraToolbarButtons={[
+                  {
+                    label: "Create Recurring Flight",
+                    icon: Plus,
+                    variant: "button-primary",
+                    onClick: () => setOpenModalRecurring(true),
+                  },
+                ]}
+                pageCount={
+                  isLoading ? 1 : (flightData && flightData.total_pages) || 1
+                }
+                manualPagination={true}
+                tableState={tableState}
+              />
+            </div>
+          </TabsContent>
         </Tabs>
       </PageContainer>
-
       <CreateEditModal
         title={
           typeof openModal === "string"
@@ -368,7 +445,44 @@ export default function Page() {
           </Card>
         }
       />
-
+      <CreateEditModal
+        title={
+          typeof openModalRecurring === "string"
+            ? "Edit Flight"
+            : openModal
+              ? "Create Recurring Flight"
+              : ""
+        }
+        open={openModalRecurring !== false}
+        form={sectionedHookForm}
+        onSubmit={handleCreateFlight}
+        setOpen={(open) => {
+          if (open) {
+            setOpenModalRecurring(openModalRecurring)
+          } else {
+            sectionedHookForm.reset(formDefaultValues)
+            setOpenModalRecurring(false)
+          }
+        }}
+        tabItems={[]}
+        content={
+          <Card className="mt-4 pt-4">
+            <CardContent>
+              <FlightMasterFormRecurring hookForm={sectionedHookForm} />
+            </CardContent>
+            <CardFooter className="flex flex-col items-end">
+              <Button
+                isLoading={isPending}
+                variant={"button-primary"}
+                className="w-40"
+                type="submit"
+              >
+                Save Flight
+              </Button>
+            </CardFooter>
+          </Card>
+        }
+      />
       <AlertDialog
         open={deleteConfirm !== null}
         onOpenChange={(open) => {

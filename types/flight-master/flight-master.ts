@@ -70,3 +70,5 @@ interface CreateFlightMasterPayload {
   sat: boolean
   sun: boolean
 }
+
+

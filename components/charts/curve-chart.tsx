@@ -1,81 +1,58 @@
-import React, { useEffect, useRef, useState } from "react";
-import { scaleLinear, scaleTime } from "@visx/scale";
-import { LinePath } from "@visx/shape";
-import { curveMonotoneX } from "@visx/curve";
+import React from 'react';
+import { scaleTime, scaleLinear } from '@visx/scale';
+import { LinePath, AreaClosed } from '@visx/shape';
+import { curveMonotoneX } from '@visx/curve';
+import { Card, CardContent } from '@/components/ui/card';
+import { LinearGradient } from '@visx/gradient';
 
-export type LineGraphData = {
-  weightLifted: number;
-  numberOfRepetitions: number;
-  doneAt: string;
-};
+// Example data
+const data = [
+  { date: new Date(2023, 0, 1), value: 10 },
+  { date: new Date(2023, 1, 1), value: 20 },
+  { date: new Date(2023, 2, 1), value: 15 },
+  { date: new Date(2023, 3, 1), value: 30 },
+  { date: new Date(2023, 4, 1), value: 25 },
+];
 
-const getDate = (d: LineGraphData) => new Date(d.doneAt);
+const xScale = scaleTime({
+  domain: [Math.min(...data.map(d => d.date.getTime())), Math.max(...data.map(d => d.date.getTime()))],
+  range: [0, 500],
+});
 
-const calculateOneRepMax = (weight: number, repetitions: number) => {
-  return weight * repetitions * 0.0333 + weight;
-};
+const yScale = scaleLinear({
+  domain: [0, Math.max(...data.map(d => d.value))],
+  range: [500, 0],
+});
 
-export const LineGraph = ({ data = [] }: { data: LineGraphData[] }) => {
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const divRef = useRef<HTMLDivElement | null>(null);
-  const svgRef = useRef<SVGSVGElement | null>(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (divRef.current) {
-        const { width, height } = divRef.current.getBoundingClientRect();
-        setDimensions({ width, height });
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set dimensions
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  if (dimensions.width === 0 || dimensions.height === 0) {
-    return <div ref={divRef} style={{ width: '100%', height: '100%' }} />;
-  }
-
-  const dateScale = scaleTime({
-    range: [0, dimensions.width],
-    domain: [
-      Math.min(...data.map((x) => getDate(x).getTime())),
-      Math.max(...data.map((x) => getDate(x).getTime())),
-    ],
-  });
-
-  const oneRepMaxScale = scaleLinear({
-    range: [dimensions.height - 1, 1],
-    round: true,
-    domain: [
-      Math.min(...data.map((d) => calculateOneRepMax(d.weightLifted, d.numberOfRepetitions))),
-      Math.max(...data.map((d) => calculateOneRepMax(d.weightLifted, d.numberOfRepetitions))),
-    ],
-    nice: true,
-  });
-
+const LineGraphWithGradient = () => {
   return (
-    <div ref={divRef} style={{ width: '100%', height: '100%' }}>
-      <svg
-        height="100%"
-        width="100%"
-        viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
-        ref={svgRef}
-        className="p-2"
-      >
-        <LinePath<LineGraphData>
-          data={data}
-          x={(d) => dateScale(getDate(d)) ?? 0}
-          y={(d) => oneRepMaxScale(calculateOneRepMax(d.weightLifted, d.numberOfRepetitions)) ?? 0}
-          className="stroke-brand-color-two"
-          strokeWidth={2}
-          curve={curveMonotoneX}
-        />
-      </svg>
-    </div>
+    <Card>
+      <CardContent style={{ justifyContent: 'center' }}>
+        <svg width={500} height={500}>
+          <LinearGradient id="gradient" from="#4B0082" to="#800080" />
+          <rect width={500} height={500} fill="url(#gradient)" />
+          
+          <AreaClosed
+            data={data}
+            x={d => xScale(d.date)}
+            y={d => yScale(d.value)}
+            yScale={yScale}
+            fill="rgba(255, 105, 180, 0.2)"  // Adjust the pink fill color's transparency
+            stroke="transparent"
+          />
+          
+          <LinePath
+            data={data}
+            x={d => xScale(d.date)}
+            y={d => yScale(d.value)}
+            stroke="#FF69B4"  // Pink color for the line
+            strokeWidth={2}
+            curve={curveMonotoneX}
+          />
+        </svg>
+      </CardContent>
+    </Card>
   );
 };
 
-export default LineGraph;
+export default LineGraphWithGradient;
