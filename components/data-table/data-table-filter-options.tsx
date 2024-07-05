@@ -87,7 +87,7 @@ export function DataTableFilterOptions<TData>({
       }
     });
   }, [filterList, table])
-  
+
   return (
     <Popover>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
@@ -107,7 +107,8 @@ export function DataTableFilterOptions<TData>({
                   <SelectGroup>
                     {filterableColumns.map((columnItem) => (
                       <SelectItem key={columnItem.id} value={columnItem.id}>
-                        {columnItem?.columnDef?.header as string}
+                        {typeof columnItem?.columnDef?.header === 'string' ? columnItem?.columnDef?.header : ''}
+                        {typeof columnItem?.columnDef?.header === 'function' ? (columnItem?.columnDef?.header as () => string)() : ''}
                       </SelectItem>
                     ))}
                   </SelectGroup>
