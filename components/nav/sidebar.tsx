@@ -7,6 +7,7 @@ import { useOrganization, useOrganizationList } from "@clerk/nextjs"
 import { UserCircleIcon } from "@heroicons/react/24/outline"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { Boxes, PlusSquare } from "lucide-react"
+import { useFeatureFlagVariantKey } from "posthog-js/react"
 
 import { accountNavigation } from "@/components/nav/data/accountNavigation"
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation"
@@ -39,6 +40,8 @@ export default function SideBar() {
       infinite: true,
     },
   })
+
+  const variant = useFeatureFlagVariantKey("order-button-test-experiment")
 
   const isBelliAdmin = userMemberships.data?.some(
     (data) => data.organization.slug === "admin"
@@ -90,7 +93,7 @@ export default function SideBar() {
                       className="mb-5 h-8 w-full justify-start rounded-sm bg-button-primary px-2 text-[13px] text-white hover:bg-button-primary/80"
                     >
                       <PlusSquare className="mr-2.5 h-4 w-4" />
-                      New Order
+                      {variant && variant === "test" ? "Create" : "New"} Order
                     </Button>
                   </NewOrderModal>
                 </li>
