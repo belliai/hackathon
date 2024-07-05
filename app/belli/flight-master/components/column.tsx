@@ -129,19 +129,4 @@ export const columns = (
     header: "Updated By",
     cell: ({ row }) => "Jeff Pan",
   },
-  createActionColumn({
-    items: [
-      {
-        label: "Edit",
-        value: "edit",
-        fn: onRowClick,
-      },
-      {
-        label: "Delete",
-        value: "delete",
-        fn: onDelete,
-        shortcut: "⌘⌫",
-      },
-    ],
-  }) as ColumnDef<Flight>,
 ]
