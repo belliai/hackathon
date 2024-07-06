@@ -5,6 +5,6 @@ import { cartColumn } from "@/components/operation/FlightPlanning/columns"
 export default async function CartLoadSection() {
   const data = await getData("cart")
   return (
-    <DataTable columns={cartColumn} data={data} />
+    <DataTable columns={cartColumn} data={data} menuId="flight-planning-cart-load" />
   )
 }

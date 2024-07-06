@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils"
 import { ButtonProps } from "../ui/button"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar"
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -47,6 +48,7 @@ export interface DataTableProps<TData, TValue> {
   manualPagination?: boolean
   tableState?: (prop: any) => void
   pageCount?: number
+  menuId?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -63,6 +65,7 @@ export function DataTable<TData, TValue>({
   manualPagination,
   tableState,
   pageCount,
+  menuId,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -119,6 +122,7 @@ export function DataTable<TData, TValue>({
           initialVisibility={initialVisibility}
           extraButtons={extraToolbarButtons}
           buttonVariant={toolbarButtonVariant}
+          menuId={menuId}
         />
       )}
       <div className={cn("rounded-md border", className)}>
@@ -132,13 +136,22 @@ export function DataTable<TData, TValue>({
                       key={header.id}
                       colSpan={header.colSpan}
                       className={cn("min-w-10 whitespace-nowrap")}
+                      onClick={header.column.getToggleSortingHandler()}
                     >
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : (
+                          <div className="flex items-center gap-1 cursor-pointer justify-between">
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: <TriangleUpIcon />,
+                              desc: <TriangleDownIcon />,
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        )}
                     </TableHead>
                   )
                 })}

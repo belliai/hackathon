@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useOrganization, useOrganizationList } from "@clerk/nextjs"
 import { UserCircleIcon } from "@heroicons/react/24/outline"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
@@ -21,6 +21,7 @@ import { k360Navigation } from "./data/k360Navigation"
 import FavoritesMenu from "./favorites/favorites-menu"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
+import { findActiveItem } from "@/lib/utils/nav-utils"
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -56,7 +57,10 @@ export default function SideBar() {
   const currentNavigation =
     sidebarType === SIDEBAR_TYPE.SETTING ? settingNavigation : skNavigation
 
-  const firstCurrentNavigationItem = currentNavigation[0]
+  const firstCurrentNavigationItem = currentNavigation[0];
+
+  const pathname = usePathname();
+  const activeItem = findActiveItem([...accountNavigation, ...operationsNavigation, ...settingNavigation, ...skNavigation, ...k360Navigation], pathname);
 
   return (
     <Suspense>
@@ -90,7 +94,7 @@ export default function SideBar() {
                     <Button
                       variant="ghost"
                       onClick={() => setDialogOpen(true)}
-                      className="mb-5 h-8 w-full justify-start rounded-sm bg-button-primary px-2 text-[13px] text-white hover:bg-button-primary/80"
+                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? '' : 'bg-button-primary hover:bg-button-primary/80'}`}
                     >
                       <PlusSquare className="mr-2.5 h-4 w-4" />
                       {variant && variant === "test" ? "Create" : "New"} Order

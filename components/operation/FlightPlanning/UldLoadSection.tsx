@@ -5,6 +5,6 @@ import { uldColumn } from "@/components/operation/FlightPlanning/columns"
 export default async function UldLoadSection() {
   const data = await getData("uld")
   return (
-    <DataTable columns={uldColumn} data={data} />
+    <DataTable columns={uldColumn} data={data} menuId="flight-planning-uld-load" />
   )
 }

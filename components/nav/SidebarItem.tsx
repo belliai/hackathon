@@ -25,6 +25,7 @@ export type TSidebarItem = {
   href: string
   current?: boolean
   children?: TSidebarItem[]
+  isCanCreate?: boolean
 }
 
 interface SidebarItemProps {

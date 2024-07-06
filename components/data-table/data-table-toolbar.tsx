@@ -10,8 +10,10 @@ import {
   ArrowUpDownIcon,
   EyeIcon,
   ListFilterIcon,
+  LockIcon,
   LucideIcon,
   SearchIcon,
+  UnlockIcon,
   ViewIcon,
 } from "lucide-react"
 import { useDebounceValue } from "usehooks-ts"
@@ -19,9 +21,7 @@ import { useDebounceValue } from "usehooks-ts"
 import { cn } from "@/lib/utils"
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
-import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 import { DataTableFilterOptions } from "./data-table-filter-options"
-import { DataTableSortOptions } from "./data-table-sort-options"
 import { DataTableViewOptions } from "./data-table-view-options"
 
 export interface DataTableToolbarProps<TData> {
@@ -35,6 +35,7 @@ export interface DataTableToolbarProps<TData> {
     variant?: ButtonProps["variant"]
     className?: ButtonProps["className"]
   }[]
+  menuId?: string
 }
 
 export function DataTableToolbar<TData>({
@@ -45,9 +46,36 @@ export function DataTableToolbar<TData>({
   const [search, setSearch] = useState<string>()
   const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500);
   const [isFilterActive, setIsFilterActive] = useState(false);
+  const [isLockedView, setIsLockedView] = useState(false);
+  const [isGlobalFiltered, setIsGlobalFiltered] = useState(false);
+  const [isCustomVisibility, setIsCustomVisibility] = useState(false);
+
+  const getPageFilters = () => {
+    if (typeof localStorage === "undefined") return [];
+    const storedData = localStorage.getItem(`page_view:${props.menuId ?? ''}`);
+    if (!storedData) return { isLocked: false };
+    try {
+      return JSON.parse(storedData);
+    } catch (error) {
+      console.error("Failed to get custom page view from local storage", error);
+      return { isLocked: false };
+    }
+  }
+
+  const lockedPageFilters = getPageFilters();
 
   const toggleSearchOpen = () => {
     setSearchOpen((prev) => !prev)
+  }
+
+  const toggleLockedView = (currentState: boolean) => {
+    setIsLockedView(!currentState);
+    if (!currentState && typeof localStorage !== "undefined") {
+      localStorage.setItem(
+        `page_view:${props.menuId ?? ''}`,
+        JSON.stringify({ ...table.getState(), isLocked: true})
+      );
+    }
   }
 
   useEffect(() => {
@@ -57,6 +85,18 @@ export function DataTableToolbar<TData>({
   useEffect(() => {
     setIsFilterActive(table.getState().columnFilters.length > 0);
   }, [table.getState().columnFilters]);
+
+  useEffect(() => {
+    setIsGlobalFiltered(table.getState().globalFilter);
+  }, [table.getState().globalFilter]);
+
+  useEffect(() => {
+    setIsCustomVisibility(JSON.stringify(table.getState().columnVisibility) !== JSON.stringify(props.initialVisibility ?? {}));
+  }, [table.getState().columnVisibility]); 
+
+  useEffect(() => {
+    setIsLockedView(lockedPageFilters.isLocked);
+  }, [lockedPageFilters.isLocked]);
 
   return (
     <div className="flex items-center justify-between">
@@ -75,7 +115,7 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="inline-flex gap-2 text-muted-foreground">
         <Tooltip delayDuration={100}>
-          <DataTableFilterOptions table={table}>
+          <DataTableFilterOptions table={table} isLocked={isLockedView} lockedPageFilters={lockedPageFilters}>
             <TooltipTrigger asChild>
               <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
                 <ListFilterIcon className={`h-4 w-4 ${isFilterActive ? "text-button-primary" : ""}`} />
@@ -89,21 +129,6 @@ export function DataTableToolbar<TData>({
             <p>Filter</p>
           </TooltipContent>
         </Tooltip>
-        <Tooltip delayDuration={100}>
-          <DataTableSortOptions table={table}>
-            <TooltipTrigger asChild>
-              <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
-                <ArrowUpDownIcon className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-          </DataTableSortOptions>
-          <TooltipContent
-            side="top"
-            className="border bg-background text-foreground"
-          >
-            <p>Sort</p>
-          </TooltipContent>
-        </Tooltip>
         <div className="inline-flex items-center">
           <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
@@ -113,7 +138,7 @@ export function DataTableToolbar<TData>({
                 variant={"outline"}
                 className={"h-8 w-8"}
               >
-                <SearchIcon className="h-4 w-4" />
+                <SearchIcon className={`h-4 w-4 ${isGlobalFiltered ? "text-button-primary" : ""}`} />
               </Button>
             </TooltipTrigger>
             <TooltipContent
@@ -144,7 +169,7 @@ export function DataTableToolbar<TData>({
           >
             <TooltipTrigger asChild>
               <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
-                <EyeIcon className="h-4 w-4" />
+                <EyeIcon className={`h-4 w-4 ${isCustomVisibility ? "text-button-primary" : ""}`} />
               </Button>
             </TooltipTrigger>
           </DataTableViewOptions>
@@ -153,6 +178,20 @@ export function DataTableToolbar<TData>({
             className="border bg-background text-foreground"
           >
             <p>Columns</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip delayDuration={100}>
+          <TooltipTrigger asChild>
+            <Button size={"icon"} variant={"outline"} className={"h-8 w-8"} onClick={() => toggleLockedView(isLockedView)}>
+              {isLockedView && ( <LockIcon className={`h-4 w-4 ${isLockedView ? "text-button-primary" : ""}`} /> )}
+              {!isLockedView && ( <UnlockIcon className={`h-4 w-4`} /> )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent
+            side="top"
+            className="border bg-background text-foreground"
+          >
+            <p>{isLockedView ? 'Unlock Filter' : 'Lock Filter'}</p>
           </TooltipContent>
         </Tooltip>
       </div>

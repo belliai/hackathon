@@ -41,6 +41,8 @@ import {
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   children: ReactNode
+  isLocked: boolean
+  lockedPageFilters: any
 }
 
 const DEFAULT_FILTER_DATA = {
@@ -51,6 +53,8 @@ const DEFAULT_FILTER_DATA = {
 
 export function DataTableFilterOptions<TData>({
   table,
+  isLocked,
+  lockedPageFilters,
   ...props
 }: DataTableViewOptionsProps<TData>) {
   const [filterList, setFilterList] = useState<typeof DEFAULT_FILTER_DATA[]>([DEFAULT_FILTER_DATA]);
@@ -88,6 +92,17 @@ export function DataTableFilterOptions<TData>({
     });
   }, [filterList, table])
 
+  useEffect(() => {
+    const reformatColumnFilter = (lockedPageFilters?.columnFilters ?? []).map((filter: any, index: number) => (
+      {
+        id: `${filter.id}-${index}`,
+        column: filter.id,
+        value: filter.value,
+      }
+    ))
+    setFilterList(isLocked ? [DEFAULT_FILTER_DATA] : [...reformatColumnFilter ?? [], ...filterList]);
+  }, [isLocked]);
+
   return (
     <Popover>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
@@ -101,7 +116,7 @@ export function DataTableFilterOptions<TData>({
             <div className="w-5/12">
               <Select onValueChange={(value) => handleChangeFilter(filter.id, value, "column", index)} value={filter.column}>
                 <SelectTrigger className="w-full border-zinc-7000 text-left h-9">
-                  <SelectValue placeholder="Column" />
+                  <SelectValue placeholder="Select Column" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -126,11 +141,9 @@ export function DataTableFilterOptions<TData>({
               />
             </div>
             
-            {index !== 0 && (
-              <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700" onClick={() => handleRemoveFilter(filter.id)}>
-                <Trash className="h-4 w-4" />
-              </Button>
-            )}
+            <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700" onClick={() => handleRemoveFilter(filter.id)}>
+              <Trash className="h-4 w-4" />
+            </Button>
           </div>
         ))}
 

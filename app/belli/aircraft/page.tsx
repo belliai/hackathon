@@ -331,6 +331,7 @@ export default function MasterAircraftPage() {
                 onClick: () => setCurrentOpenModal(true),
               },
             ]}
+            menuId="aircraft"
           />
         </TabsContent>
         <TabsContent value="tailnumbers-list" asChild>
