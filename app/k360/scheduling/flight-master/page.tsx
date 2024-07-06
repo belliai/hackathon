@@ -169,13 +169,27 @@ export default function Page() {
       departure_d: parseInt(param.deptTime.deptDay || "0", 10),
       departure_h: parseInt(param.deptTime.deptHour || "0", 10),
       departure_m: parseInt(param.deptTime.deptMinute || "0", 10),
-      mon: findDays(param.frequencyItems, "mon"),
-      tue: findDays(param.frequencyItems, "tue"),
-      wed: findDays(param.frequencyItems, "wed"),
-      thu: findDays(param.frequencyItems, "thu"),
-      fri: findDays(param.frequencyItems, "fri"),
-      sat: findDays(param.frequencyItems, "sat"),
-      sun: findDays(param.frequencyItems, "sun"),
+      mon:
+        (param.frequencyItems && findDays(param.frequencyItems, "mon")) ||
+        false,
+      tue:
+        (param.frequencyItems && findDays(param.frequencyItems, "tue")) ||
+        false,
+      wed:
+        (param.frequencyItems && findDays(param.frequencyItems, "wed")) ||
+        false,
+      thu:
+        (param.frequencyItems && findDays(param.frequencyItems, "thu")) ||
+        false,
+      fri:
+        (param.frequencyItems && findDays(param.frequencyItems, "fri")) ||
+        false,
+      sat:
+        (param.frequencyItems && findDays(param.frequencyItems, "sat")) ||
+        false,
+      sun:
+        (param.frequencyItems && findDays(param.frequencyItems, "sun")) ||
+        false,
     }
 
     if (typeof openModal === "string") {
