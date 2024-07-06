@@ -36,6 +36,7 @@ export const useCreateFlight = () => {
   })
 }
 
+
 export const updateFlight = async (
   id: string,
   data: CreateFlightMasterPayload

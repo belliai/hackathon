@@ -124,7 +124,7 @@ export default function FormTextField({
                   </PopoverContent>
                 </Popover>
               )
-            case "date-range":
+            case "date-range-time":
               return (
                 <div className="flex flex-col gap-2">
                   <Popover>
@@ -223,8 +223,8 @@ export default function FormTextField({
                           size="sm"
                           onClick={() => {
                             field.onChange({ from: null, to: null });
-                            form.setValue(`${name}.fromTime`, "");
-                            form.setValue(`${name}.toTime`, "");
+                            form.setValue(`${name}.fromTime`, "00:00");
+                            form.setValue(`${name}.toTime`, "00:00");
                           }}
                         >
                           Clear

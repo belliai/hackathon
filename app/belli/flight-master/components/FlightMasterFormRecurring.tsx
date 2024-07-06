@@ -233,7 +233,7 @@ export default function FlightMasterFormRecurring({
           <FormTextField
             name="rangeDate"
             form={hookForm}
-            type="date-range"
+            type="date-range-time"
             label="Range Date"
           />
           <FormTextField

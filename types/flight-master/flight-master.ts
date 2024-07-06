@@ -72,3 +72,18 @@ interface CreateFlightMasterPayload {
 }
 
 
+interface CreateRecurringFlightMasterPayload {
+  aircraft_id: string
+  destination_id: string
+  flight_no: string
+  source_id: string
+  status_id: string
+  from_date: string
+  to_date: string
+  arrival_h: number
+  arrival_m: number
+  departure_h: number
+  departure_m: number
+
+}
+

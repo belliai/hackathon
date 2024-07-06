@@ -4,17 +4,19 @@ export const flightMasterFormSchema = z.object({
   flightNo: z.string().min(1, { message: "Flight Number is required" }),
   source: z.string().min(1, { message: "Source is required" }),
   destination: z.string().min(1, { message: "Destination is required" }),
+  recurring: z.string().min(1, { message: "Recurring is required" }),
   rangeDate: z.object({
     from: z.date(),
     to : z.date(),
     fromTime: z.string(),
     toTime : z.string()
   }).optional(),
+  
   fromDate: z.date(),
   toDate: z.date(),
   frequencyItems: z
     .array(z.string())
-    .nonempty({ message: "Please select at least 1 Day" }),
+    .optional(),
   aircraftType: z.string().min(1, { message: "Aircraft Type is required" }),
   tailNo: z.string().min(1, { message: "Tail Number is required" }),
   capacity: z.string().min(1, { message: "Capacity is required" }),
