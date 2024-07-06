@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   aircraftFormSchema,
   AircraftFormValues,
@@ -131,6 +131,36 @@ export default function MasterAircraftPage() {
 
   const aircraftsData = aircrafts?.data
 
+  const aircraftTailNumbersData = useMemo(
+    () =>
+      aircraftsData
+        ?.flatMap(
+          (aircraft) =>
+            aircraft.aircraft_tail_numbers?.map((tailNumber) => ({
+              ...tailNumber,
+              aircraft_id: aircraft.ID,
+              manufacturer: aircraft.manufacturer,
+              aircraft_type: aircraft.aircraft_type,
+              version: aircraft.version,
+              mtow: aircraft.mtow,
+              landing_weight: aircraft.landing_weight,
+              cargo_capacity: aircraft.cargo_capacity,
+            })) ?? []
+        )
+        .sort((a, b) => {
+          if (a.manufacturer < b.manufacturer) return -1
+          if (a.manufacturer > b.manufacturer) return 1
+          if (a.aircraft_type < b.aircraft_type) return -1
+          if (a.aircraft_type > b.aircraft_type) return 1
+          if (a.version < b.version) return -1
+          if (a.version > b.version) return 1
+          return 0
+        }) ?? [],
+    [aircraftsData]
+  )
+
+  console.log({ aircraftTailNumbersData })
+
   const form = useForm<AircraftFormValues>({
     resolver: zodResolver(aircraftFormSchema),
     defaultValues: formDefaultValues,
@@ -144,7 +174,7 @@ export default function MasterAircraftPage() {
       aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
         id: tailNumber.ID,
         status_id: String(tailNumber.status.ID),
-        tail_number: tailNumber.tail_number,
+        tail_number: tailNumber?.tail_number,
       })),
       body_type_id: String(data.body_type.ID),
       bulk_cubic_id: String(data.bulk_cubic.ID),
@@ -170,7 +200,15 @@ export default function MasterAircraftPage() {
     })
   }
 
-  const columns: ColumnDef<Aircraft>[] = [
+  const handleTailNumberRowClick = (aircraft_id: Aircraft["ID"]) => {
+    const aircraft = aircraftsData?.find((item) => item.ID === aircraft_id)
+
+    if (!aircraft) return
+
+    handleRowClick(aircraft)
+  }
+
+  const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     {
       accessorKey: "manufacturer",
       header: () => (
@@ -217,7 +255,7 @@ export default function MasterAircraftPage() {
       accessorKey: "cargo_capacity",
       header: () => (
         <TableHeaderWithTooltip
-          header="Cargo cap"
+          header="Cargo Cap"
           tooltipId="aircraft-cargo-capacity"
         />
       ),
@@ -276,18 +314,103 @@ export default function MasterAircraftPage() {
     },
   ]
 
+  const aircraftTailNumbersColumns: ColumnDef<
+    ArrayElement<typeof aircraftTailNumbersData>
+  >[] = [
+    {
+      accessorKey: "tail_number",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Tail Number"
+          tooltipId="aircraft-manufacturer"
+        />
+      ),
+    },
+    {
+      accessorKey: "aircraft_type",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Aircraft Type"
+          tooltipId="aircraft-aircraft-type"
+        />
+      ),
+      cell: ({ row }) =>
+        [
+          row.original.manufacturer,
+          row.original.aircraft_type,
+          row.original.version,
+        ].join(" "),
+    },
+    {
+      accessorKey: "mtow",
+      header: () => (
+        <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
+      ),
+    },
+    {
+      accessorKey: "landing_weight",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Landing Wt"
+          tooltipId="aircraft-landing-weight"
+        />
+      ),
+    },
+    {
+      accessorKey: "cargo_capacity",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Cargo Cap"
+          tooltipId="aircraft-cargo-capacity"
+        />
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: () => (
+        <TableHeaderWithTooltip header="Status" tooltipId="aircraft-status" />
+      ),
+      cell: ({ row }) => (
+        <Badge
+          variant={
+            row.original.status.Name === "Active" ? "success" : "destructive"
+          }
+        >
+          {row.original.status.Name}
+        </Badge>
+      ),
+    },
+  ]
+
   return (
     <PageContainer>
       <Tabs className="space-y-4" defaultValue="aircraft-types">
         <TabsList>
           <TabsTrigger value="aircraft-types">Aircraft Types</TabsTrigger>
-          <TabsTrigger value="aircraft-list">List of Aircrafts</TabsTrigger>
+          <TabsTrigger value="tailnumbers-list">List of Aircrafts</TabsTrigger>
         </TabsList>
         <TabsContent value="aircraft-types" asChild>
           <DataTable
-            columns={columns}
+            columns={aircraftTypeColumns}
             data={aircraftsData ?? []}
             onRowClick={handleRowClick}
+            extraToolbarButtons={[
+              {
+                label: "Create Aircraft",
+                icon: Plus,
+                variant: "button-primary",
+                onClick: () => setCurrentOpenModal(true),
+              },
+            ]}
+          />
+        </TabsContent>
+        <TabsContent value="tailnumbers-list" asChild>
+          <DataTable
+            columns={aircraftTailNumbersColumns}
+            data={aircraftTailNumbersData ?? []}
+            onRowClick={({ aircraft_id }) => {
+              handleTailNumberRowClick(aircraft_id)
+            }}
             extraToolbarButtons={[
               {
                 label: "Create Aircraft",
