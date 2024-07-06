@@ -20,24 +20,26 @@ import {
   SelectValue,
 } from "../ui/select"
 
+export type InputSwitchProps<DataType> = InputProps &
+  (
+    | {
+        type: "date" | "search" | "text" | "checkbox" | "hidden"
+        name: Path<DataType>
+        label?: string
+        withDialog?: boolean
+      }
+    | {
+        type: "select"
+        name: Path<DataType>
+        names?: Path<DataType>[]
+        label?: string
+        selectOptions?: { value: string; label: string }[]
+        withDialog?: boolean
+      }
+  )
+
 export default function InputSwitch<DataType extends FieldValues>(
-  props: InputProps &
-    (
-      | {
-          type: "date" | "search" | "text" | "checkbox"
-          name: Path<DataType>
-          label?: string
-          withDialog?: boolean
-        }
-      | {
-          type: "select"
-          name: Path<DataType>
-          names?: Path<DataType>[]
-          label?: string
-          selectOptions?: { value: string; label: string }[]
-          withDialog?: boolean
-        }
-    )
+  props: InputSwitchProps<DataType>
 ) {
   const form = useFormContext<DataType>()
   const input = () => {
@@ -156,6 +158,17 @@ export default function InputSwitch<DataType extends FieldValues>(
                   </FormLabel>
                 )}
               </FormItem>
+            )}
+          />
+        )
+      case "hidden":
+        return (
+          <FormField
+            key={props.name}
+            control={form.control}
+            name={props.name}
+            render={({ field }) => (
+              <input className="hidden" {...field} {...props} />
             )}
           />
         )
