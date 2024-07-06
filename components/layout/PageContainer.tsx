@@ -7,5 +7,9 @@ export default function PageContainer({
   children: React.ReactNode
   className?: string
 }) {
-  return <div className={cn("flex w-full flex-col", className)}>{children}</div>
+  return (
+    <div className={cn("flex w-full flex-col gap-4", className)}>
+      {children}
+    </div>
+  )
 }

@@ -104,6 +104,9 @@ export default function MastersPageTemplate({
                   <DialogTitle>
                     {activeData ? "Update" : "Create"} {heading}
                   </DialogTitle>
+                  <DialogTitle>
+                    {activeData ? "Update" : "Create"} {heading}
+                  </DialogTitle>
                   <CreateFormTemplate
                     hookForm={hookForm}
                     formFields={formFields}
@@ -130,20 +133,20 @@ export default function MastersPageTemplate({
           </>
         }
       />
-      {/* <div className="p-4 border rounded-md">
+      <div className="rounded-md border p-4">
         <Form {...filterHookForm}>
           <form
-            className={cn("grid sm:grid-cols-2 gap-4 items-end w-full", {
+            className={cn("grid w-full items-end gap-4 sm:grid-cols-2", {
               "md:grid-cols-5": filterFormFields.length > 2,
               "flex flex-col md:flex-row": filterFormFields.length <= 2,
             })}
           >
             {filterFormFields.map((field) => {
               return (
-                <div key={field.name} className="md:max-w-72 w-full">
+                <div key={field.name} className="w-full md:max-w-72">
                   <FormTextField {...field} form={filterHookForm} />
                 </div>
-              );
+              )
             })}
             {customFilterButtons ? (
               customFilterButtons
@@ -152,21 +155,21 @@ export default function MastersPageTemplate({
                 <Button
                   size="icon"
                   type="button"
-                  className="bg-button-primary  text-white hover:bg-button-primary/80"
+                  className="bg-button-primary text-white hover:bg-button-primary/80"
                 >
                   <Search size={16} />
                 </Button>
                 <Button
                   size="icon"
                   type="button"
-                  className="bg-button-primary  text-white hover:bg-button-primary/80"
+                  className="bg-button-primary text-white hover:bg-button-primary/80"
                 >
                   <RefreshCcw size={16} />
                 </Button>
                 <Button
                   size="icon"
                   type="button"
-                  className="bg-button-secondary  text-white hover:bg-button-secondary/80"
+                  className="bg-button-secondary text-white hover:bg-button-secondary/80"
                 >
                   <Download size={16} />
                 </Button>
@@ -174,7 +177,7 @@ export default function MastersPageTemplate({
             )}
           </form>
         </Form>
-      </div> */}
+      </div>
       {customComponent}
       <DataTable
         columns={columns}

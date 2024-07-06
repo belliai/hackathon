@@ -25,7 +25,7 @@ export type DataTableRowActionItem = {
 }
 
 interface DataTableRowActionsProps<TData> {
-  row?: Row<TData>
+  row?: TData
   items?: DataTableRowActionItem[]
 }
 
