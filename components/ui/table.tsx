@@ -6,9 +6,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 
 const Table = React.forwardRef<
   HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
+  React.HTMLAttributes<HTMLTableElement> & {
+    containerClassName?: HTMLDivElement["className"]
+  }
 >(({ className, ...props }, ref) => (
-  <div className="custom-scrollbar relative w-full overflow-auto">
+  <div
+    className={cn(
+      "custom-scrollbar relative w-full overflow-auto",
+      props.containerClassName
+    )}
+  >
     <table
       ref={ref}
       className={cn("w-full caption-bottom text-sm", className)}

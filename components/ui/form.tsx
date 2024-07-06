@@ -126,13 +126,8 @@ const FormLabel = React.forwardRef<
     return (
       <div className="inline-flex items-center gap-2">
         <Tooltip>
-          <TooltipTrigger>
-            <div>{label}</div>
-          </TooltipTrigger>
-          <TooltipContent
-            side="top"
-            className="border bg-card text-foreground"
-          >
+          <TooltipTrigger asChild>{label}</TooltipTrigger>
+          <TooltipContent side="top" className="border bg-card text-foreground">
             <p>{tooltipContent}</p>
           </TooltipContent>
         </Tooltip>
@@ -140,7 +135,7 @@ const FormLabel = React.forwardRef<
     )
   }
 
-  //return label
+  return label
 })
 FormLabel.displayName = "FormLabel"
 

@@ -1,5 +1,5 @@
 import { ListIcon, SearchIcon } from "lucide-react"
-import { FieldValues, Path, useFormContext } from "react-hook-form"
+import { FieldValues, Path, PathValue, useFormContext } from "react-hook-form"
 
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
@@ -21,13 +21,23 @@ import {
 } from "../ui/select"
 
 export default function InputSwitch<DataType extends FieldValues>(
-  props: InputProps & {
-    type: "select" | "date" | "search" | "text" | "checkbox"
-    name: Path<DataType>
-    label: string
-    selectOptions?: { value: string; label: string }[]
-    withDialog?: boolean
-  }
+  props: InputProps &
+    (
+      | {
+          type: "date" | "search" | "text" | "checkbox"
+          name: Path<DataType>
+          label?: string
+          withDialog?: boolean
+        }
+      | {
+          type: "select"
+          name: Path<DataType>
+          names?: Path<DataType>[]
+          label?: string
+          selectOptions?: { value: string; label: string }[]
+          withDialog?: boolean
+        }
+    )
 ) {
   const form = useFormContext<DataType>()
   const input = () => {
@@ -40,12 +50,27 @@ export default function InputSwitch<DataType extends FieldValues>(
             name={props.name}
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
-                <FormLabel className="text-xs font-semibold text-muted-foreground">
-                  {props.label}
-                </FormLabel>
+                {!!props.label && (
+                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                    {props.label}
+                  </FormLabel>
+                )}
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={
+                    !!props.names
+                      ? (val) => {
+                          props.names?.forEach((name) =>
+                            form.setValue(
+                              name,
+                              val as PathValue<DataType, typeof name>
+                            )
+                          )
+                        }
+                      : field.onChange
+                  }
+                  value={props.names ? form.watch(props.names[0]) : field.value}
                   defaultValue={field.value}
+                  disabled={props.disabled}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -73,9 +98,11 @@ export default function InputSwitch<DataType extends FieldValues>(
             name={props.name}
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
-                <FormLabel className="text-xs font-semibold text-muted-foreground">
-                  {props.label}
-                </FormLabel>
+                {!!props.label && (
+                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                    {props.label}
+                  </FormLabel>
+                )}
                 <DateInput {...field} />
                 <FormMessage />
               </FormItem>
@@ -90,9 +117,11 @@ export default function InputSwitch<DataType extends FieldValues>(
             name={props.name}
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
-                <FormLabel className="text-xs font-semibold text-muted-foreground">
-                  {props.label}
-                </FormLabel>
+                {!!props.label && (
+                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                    {props.label}
+                  </FormLabel>
+                )}
                 <FormControl>
                   <Input
                     {...field}
@@ -121,7 +150,11 @@ export default function InputSwitch<DataType extends FieldValues>(
                     className="border-zinc-700"
                   />
                 </FormControl>
-                <FormLabel>{props.label}</FormLabel>
+                {!!props.label && (
+                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                    {props.label}
+                  </FormLabel>
+                )}
               </FormItem>
             )}
           />
@@ -134,9 +167,11 @@ export default function InputSwitch<DataType extends FieldValues>(
             name={props.name}
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
-                <FormLabel className="text-xs font-semibold text-muted-foreground">
-                  {props.label}
-                </FormLabel>
+                {!!props.label && (
+                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                    {props.label}
+                  </FormLabel>
+                )}
                 <FormControl>
                   <Input {...field} {...props} />
                 </FormControl>
