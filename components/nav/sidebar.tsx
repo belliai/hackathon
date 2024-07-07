@@ -9,6 +9,7 @@ import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { Boxes, PlusSquare } from "lucide-react"
 import { useFeatureFlagVariantKey } from "posthog-js/react"
 
+import { findActiveItem } from "@/lib/utils/nav-utils"
 import { accountNavigation } from "@/components/nav/data/accountNavigation"
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation"
 import { settingNavigation } from "@/components/nav/data/settingNavigation"
@@ -21,7 +22,6 @@ import { k360Navigation } from "./data/k360Navigation"
 import FavoritesMenu from "./favorites/favorites-menu"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
-import { findActiveItem } from "@/lib/utils/nav-utils"
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -57,10 +57,19 @@ export default function SideBar() {
   const currentNavigation =
     sidebarType === SIDEBAR_TYPE.SETTING ? settingNavigation : skNavigation
 
-  const firstCurrentNavigationItem = currentNavigation[0];
+  const firstCurrentNavigationItem = currentNavigation[0]
 
-  const pathname = usePathname();
-  const activeItem = findActiveItem([...accountNavigation, ...operationsNavigation, ...settingNavigation, ...skNavigation, ...k360Navigation], pathname);
+  const pathname = usePathname()
+  const activeItem = findActiveItem(
+    [
+      ...accountNavigation,
+      ...operationsNavigation,
+      ...settingNavigation,
+      ...skNavigation,
+      ...k360Navigation,
+    ],
+    pathname
+  )
 
   return (
     <Suspense>
@@ -94,7 +103,7 @@ export default function SideBar() {
                     <Button
                       variant="ghost"
                       onClick={() => setDialogOpen(true)}
-                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? '' : 'bg-button-primary hover:bg-button-primary/80'}`}
+                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? "" : "bg-button-primary hover:bg-button-primary/80"}`}
                     >
                       <PlusSquare className="mr-2.5 h-4 w-4" />
                       {variant && variant === "test" ? "Create" : "New"} Order

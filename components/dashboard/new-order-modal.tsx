@@ -32,13 +32,8 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/vertical-tabs"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 
 import ActivityLog from "./activity-log"
@@ -203,33 +198,44 @@ export default function NewOrderModal(props: NewOrderModalProps) {
             <Tabs defaultValue="booking-details">
               <div className="flex w-full flex-row items-stretch gap-4 pt-4">
                 <div className="min-w-[220px]">
-                  <Card className="h-full">
-                    <TabsList className="p-0 py-2">
-                      <TabsTrigger value="booking-details">
-                        <SquarePenIcon className="h-4 w-4" />
-                        Booking Details
-                      </TabsTrigger>
-                      <TabsTrigger value="consignment-details">
-                        <PlaneIcon className="h-4 w-4" />
-                        Consignment Details
-                      </TabsTrigger>
-                      <TabsTrigger value="shipper-details">
-                        <UserIcon className="h-4 w-4" />
-                        Shipper Details
-                      </TabsTrigger>
-                      <TabsTrigger value="process-rates">
-                        <PackageIcon className="h-4 w-4" />
-                        Process Rates
-                      </TabsTrigger>
-                    </TabsList>
-                    <Separator />
-                    <TabsList className="p-0 py-2">
-                      <TabsTrigger value="activity-log">
-                        <HistoryIcon className="h-4 w-4" />
-                        Activity Log
-                      </TabsTrigger>
-                    </TabsList>
-                  </Card>
+                  <TabsList className="h-fit w-full flex-col">
+                    <TabsTrigger
+                      className="w-full justify-start py-1.5"
+                      value="booking-details"
+                    >
+                      <SquarePenIcon className="mr-2 h-4 w-4" />
+                      Booking Details
+                    </TabsTrigger>
+                    <TabsTrigger
+                      className="w-full justify-start py-1.5"
+                      value="consignment-details"
+                    >
+                      <PlaneIcon className="mr-2 h-4 w-4" />
+                      Consignment Details
+                    </TabsTrigger>
+                    <TabsTrigger
+                      className="w-full justify-start py-1.5"
+                      value="shipper-details"
+                    >
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      Shipper Details
+                    </TabsTrigger>
+                    <TabsTrigger
+                      className="w-full justify-start py-1.5"
+                      value="process-rates"
+                    >
+                      <PackageIcon className="mr-2 h-4 w-4" />
+                      Process Rates
+                    </TabsTrigger>
+                    <Separator className="my-1 bg-muted-foreground/30" />
+                    <TabsTrigger
+                      className="w-full justify-start py-1.5"
+                      value="activity-log"
+                    >
+                      <HistoryIcon className="mr-2 h-4 w-4" />
+                      Activity Log
+                    </TabsTrigger>
+                  </TabsList>
                 </div>
                 <div className="grid flex-1">
                   <TabsContent value="booking-details" asChild>
