@@ -110,6 +110,8 @@ export function DataTablePagination<TData>({
             <TooltipContent
               side="top"
               className="border bg-background text-foreground"
+              align="end"
+              alignOffset={15}
             >
               <p>Download Data</p>
             </TooltipContent>
