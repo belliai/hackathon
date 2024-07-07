@@ -29,22 +29,6 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex flex-col items-center justify-between gap-4 px-2 md:flex-row !mt-1">
-      {isCanExport && (
-        <Tooltip delayDuration={100}>
-          <TooltipTrigger asChild>
-            <Button size={"icon"} variant={"ghost"} className={"h-8 w-8"}>
-              <DownloadIcon className={`h-4 w-4`} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent
-            side="top"
-            className="border bg-background text-foreground"
-          >
-            <p>Download Data</p>
-          </TooltipContent>
-        </Tooltip>
-      )}
-
       {showSelectedCount ? (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -116,6 +100,23 @@ export function DataTablePagination<TData>({
             <DoubleArrowRightIcon className="h-4 w-4" />
           </Button>
         </div>
+        {isCanExport && (
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger asChild>
+              <Button size={"icon"} variant={"ghost"} className={"h-8 w-8"}>
+                <DownloadIcon className={`h-4 w-4`} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              className="border bg-background text-foreground"
+              align="end"
+              alignOffset={15}
+            >
+              <p>Download Data</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
     </div>
   )

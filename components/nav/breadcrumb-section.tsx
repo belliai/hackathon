@@ -137,9 +137,7 @@ export default function BreadCrumbSection() {
       </div>
       <ClientSideSuspense
         fallback={
-          <span className="mr-4 text-sm text-muted-foreground">
-            Users on this page
-          </span>
+          <></>
         }
       >
         <ActiveUsers />

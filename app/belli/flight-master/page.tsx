@@ -43,7 +43,6 @@ import { toast } from "@/components/ui/use-toast"
 import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal"
 import { DataTable } from "@/components/data-table/data-table"
 import PageContainer from "@/components/layout/PageContainer"
-import PageHeader from "@/components/layout/PageHeader"
 
 import { columns } from "./components/column"
 import FlightMasterForm from "./components/FlightMasterForm"
@@ -456,16 +455,9 @@ export default function Page() {
   return (
     <>
       <PageContainer className="gap-6">
-        <PageHeader title="Flight Master" />
         <Tabs defaultValue="list-view" className="w-full">
-          <TabsList>
-            <TabsTrigger value="list-view">List View</TabsTrigger>
-            <TabsTrigger value="create-recurring-flight">
-              Create Recurring Flight
-            </TabsTrigger>
-          </TabsList>
           <TabsContent value="list-view">
-            <div className="mt-4">
+            <div className="">
               <DataTable
                 columns={columns(openDetailFlight, onShowDelete)}
                 data={isLoading ? [] : (flightData && flightData.data) || []}
@@ -478,6 +470,22 @@ export default function Page() {
                     onClick: () => setOpenModal(true),
                   },
                 ]}
+                extraLeftComponents={
+                  <TabsList className="gap-2 bg-transparent p-0">
+                    <TabsTrigger
+                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                      value="list-view"
+                    >
+                      List View
+                    </TabsTrigger>
+                    <TabsTrigger
+                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                      value="create-recurring-flight"
+                    >
+                      Create Recurring Flight
+                    </TabsTrigger>
+                  </TabsList>
+                }
                 pageCount={
                   isLoading ? 1 : (flightData && flightData.total_pages) || 1
                 }
@@ -490,7 +498,7 @@ export default function Page() {
           </TabsContent>
 
           <TabsContent value="create-recurring-flight">
-            <div className="mt-4">
+            <div className="">
               <DataTable
                 columns={columns(openDetailFlight, onShowDelete)}
                 data={isLoading ? [] : (flightData && flightData.data) || []}
@@ -503,6 +511,22 @@ export default function Page() {
                     onClick: () => setOpenModalRecurring(true),
                   },
                 ]}
+                extraLeftComponents={
+                  <TabsList className="gap-2 bg-transparent p-0">
+                    <TabsTrigger
+                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                      value="list-view"
+                    >
+                      List View
+                    </TabsTrigger>
+                    <TabsTrigger
+                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                      value="create-recurring-flight"
+                    >
+                      Create Recurring Flight
+                    </TabsTrigger>
+                  </TabsList>
+                }
                 pageCount={
                   isLoading ? 1 : (flightData && flightData.total_pages) || 1
                 }
