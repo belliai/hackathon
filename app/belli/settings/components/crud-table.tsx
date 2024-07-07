@@ -1,4 +1,5 @@
 import { PropsWithChildren, useState } from "react"
+import { Trigger as PrimitiveTrigger } from "@radix-ui/react-accordion"
 import {
   ColumnDef,
   flexRender,
@@ -149,12 +150,11 @@ const FormDropdown = <T extends FieldValues>(
   return (
     <Accordion value={value} onValueChange={setValue} collapsible type="single">
       <AccordionItem value="item" className="space-y-4 border-b-0">
-        <AccordionTrigger
-          className="flex flex-row justify-end p-0 hover:no-underline"
-          customarrow={<></>}
-        >
-          <Button variant={"button-primary"}>Add new</Button>
-        </AccordionTrigger>
+        <div className="flex w-full flex-row justify-end">
+          <PrimitiveTrigger asChild>
+            <Button variant={"button-primary"}>Add new</Button>
+          </PrimitiveTrigger>
+        </div>
         <AccordionContent className="border-none p-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
