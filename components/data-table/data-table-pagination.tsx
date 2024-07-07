@@ -28,7 +28,7 @@ export function DataTablePagination<TData>({
   isCanExport,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
+    <div className="flex flex-col items-center justify-between gap-4 px-2 md:flex-row !mt-1">
       {isCanExport && (
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>
