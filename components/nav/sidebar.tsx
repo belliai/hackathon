@@ -103,7 +103,7 @@ export default function SideBar() {
                     <Button
                       variant="ghost"
                       onClick={() => setDialogOpen(true)}
-                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? "" : "bg-button-primary hover:bg-button-primary/80"}`}
+                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? 'bg-accent' : 'bg-button-primary hover:bg-button-primary/80'}`}
                     >
                       <PlusSquare className="mr-2.5 h-4 w-4" />
                       {variant && variant === "test" ? "Create" : "New"} Order
