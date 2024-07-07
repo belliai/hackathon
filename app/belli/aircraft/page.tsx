@@ -8,7 +8,7 @@ import {
 } from "@/schemas/aircraft/aircraft"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ColumnDef } from "@tanstack/react-table"
-import { Plus } from "lucide-react"
+import { PlaneIcon, Plus, ScrollTextIcon } from "lucide-react"
 import { useForm, UseFormReturn } from "react-hook-form"
 
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
@@ -314,9 +314,21 @@ export default function MasterAircraftPage() {
         className="space-y-4"
         defaultValue={searchParams.get("tab") ?? "aircraft-types"}
       >
-        <TabsList>
-          <TabsTrigger value="aircraft-types">Aircraft Types</TabsTrigger>
-          <TabsTrigger value="tailnumbers-list">List of Aircrafts</TabsTrigger>
+        <TabsList className="gap-2 bg-transparent p-0">
+          <TabsTrigger
+            className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+            value="aircraft-types"
+          >
+            <PlaneIcon className="mr-2 size-4" />
+            Aircraft Types
+          </TabsTrigger>
+          <TabsTrigger
+            className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+            value="tailnumbers-list"
+          >
+            <ScrollTextIcon className="mr-2 size-4" />
+            List of Aircrafts
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="aircraft-types" asChild>
           <DataTable
