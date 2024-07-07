@@ -11,20 +11,40 @@ import {
   ChevronRightIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
+  DownloadIcon,
 } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
   showSelectedCount?: boolean
+  isCanExport?: boolean
 }
 
 export function DataTablePagination<TData>({
   table,
   showSelectedCount,
+  isCanExport,
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
+      {isCanExport && (
+        <Tooltip delayDuration={100}>
+          <TooltipTrigger asChild>
+            <Button size={"icon"} variant={"ghost"} className={"h-8 w-8"}>
+              <DownloadIcon className={`h-4 w-4`} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent
+            side="top"
+            className="border bg-background text-foreground"
+          >
+            <p>Download Data</p>
+          </TooltipContent>
+        </Tooltip>
+      )}
+
       {showSelectedCount ? (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

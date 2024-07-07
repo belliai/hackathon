@@ -49,6 +49,7 @@ export interface DataTableProps<TData, TValue> {
   tableState?: (prop: any) => void
   pageCount?: number
   menuId?: string
+  isCanExport?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -66,6 +67,7 @@ export function DataTable<TData, TValue>({
   tableState,
   pageCount,
   menuId,
+  isCanExport
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -125,8 +127,8 @@ export function DataTable<TData, TValue>({
           menuId={menuId}
         />
       )}
-      <div className={cn("rounded-md border", className)}>
-        <Table>
+      <div className={cn("border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground [&>div]:overflow-hidden [&>div]:hover:overflow-x-scroll", className)}>
+        <Table className="border-b">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -195,7 +197,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {!hidePagination && <DataTablePagination table={table} />}
+      {!hidePagination && <DataTablePagination table={table} isCanExport={isCanExport} />}
     </div>
   )
 }
