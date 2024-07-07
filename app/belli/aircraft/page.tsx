@@ -8,11 +8,12 @@ import {
 } from "@/schemas/aircraft/aircraft"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ColumnDef } from "@tanstack/react-table"
-import { PlaneIcon, Plus, ScrollTextIcon } from "lucide-react"
+import { PlaneIcon, Plus, PlusIcon, ScrollTextIcon } from "lucide-react"
 import { useForm, UseFormReturn } from "react-hook-form"
 
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/components/ui/use-toast"
@@ -314,35 +315,37 @@ export default function MasterAircraftPage() {
         className="space-y-4"
         defaultValue={searchParams.get("tab") ?? "aircraft-types"}
       >
-        <TabsList className="gap-2 bg-transparent p-0">
-          <TabsTrigger
-            className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-            value="aircraft-types"
+        <div className="flex w-full flex-row items-center justify-between">
+          <TabsList className="gap-2 bg-transparent p-0">
+            <TabsTrigger
+              className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+              value="aircraft-types"
+            >
+              <PlaneIcon className="mr-2 size-4" />
+              Aircraft Types
+            </TabsTrigger>
+            <TabsTrigger
+              className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+              value="tailnumbers-list"
+            >
+              <ScrollTextIcon className="mr-2 size-4" />
+              List of Aircrafts
+            </TabsTrigger>
+          </TabsList>
+          <Button
+            size={"sm"}
+            variant={"button-primary"}
+            onClick={() => setCurrentOpenModal(true)}
           >
-            <PlaneIcon className="mr-2 size-4" />
-            Aircraft Types
-          </TabsTrigger>
-          <TabsTrigger
-            className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-            value="tailnumbers-list"
-          >
-            <ScrollTextIcon className="mr-2 size-4" />
-            List of Aircrafts
-          </TabsTrigger>
-        </TabsList>
+            <PlusIcon className="mr-2 size-4" />
+            Create Aircraft
+          </Button>
+        </div>
         <TabsContent value="aircraft-types" asChild>
           <DataTable
             columns={aircraftTypeColumns}
             data={aircraftsData ?? []}
             onRowClick={handleRowClick}
-            extraToolbarButtons={[
-              {
-                label: "Create Aircraft",
-                icon: Plus,
-                variant: "button-primary",
-                onClick: () => setCurrentOpenModal(true),
-              },
-            ]}
             menuId="aircraft"
           />
         </TabsContent>
@@ -353,14 +356,6 @@ export default function MasterAircraftPage() {
             onRowClick={({ aircraft_id }) => {
               handleTailNumberRowClick(aircraft_id)
             }}
-            extraToolbarButtons={[
-              {
-                label: "Create Aircraft",
-                icon: Plus,
-                variant: "button-primary",
-                onClick: () => setCurrentOpenModal(true),
-              },
-            ]}
           />
         </TabsContent>
       </Tabs>
@@ -380,10 +375,4 @@ export default function MasterAircraftPage() {
       />
     </PageContainer>
   )
-}
-
-type AircraftTypeFormProps = {
-  currentOpen: string | boolean
-  onOpenChange: (open: boolean) => void
-  form: UseFormReturn<AircraftFormValues>
 }
