@@ -36,6 +36,7 @@ export interface DataTableToolbarProps<TData> {
     className?: ButtonProps["className"]
   }[]
   menuId?: string
+  extraLeftComponents?: React.ReactNode
 }
 
 export function DataTableToolbar<TData>({
@@ -112,6 +113,7 @@ export function DataTableToolbar<TData>({
             {button.label}
           </Button>
         ))}
+        {props.extraLeftComponents}
       </div>
       <div className="inline-flex gap-2 text-muted-foreground">
         <Tooltip delayDuration={100}>

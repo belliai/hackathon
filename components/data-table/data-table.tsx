@@ -50,6 +50,7 @@ export interface DataTableProps<TData, TValue> {
   pageCount?: number
   menuId?: string
   isCanExport?: boolean
+  extraLeftComponents?: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
@@ -67,7 +68,8 @@ export function DataTable<TData, TValue>({
   tableState,
   pageCount,
   menuId,
-  isCanExport
+  isCanExport,
+  extraLeftComponents,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -125,10 +127,11 @@ export function DataTable<TData, TValue>({
           extraButtons={extraToolbarButtons}
           buttonVariant={toolbarButtonVariant}
           menuId={menuId}
+          extraLeftComponents={extraLeftComponents}
         />
       )}
       <div className="relative">
-        <div className={cn("border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground [&>div]:overflow-hidden [&>div]:hover:overflow-x-auto [&>div]:pb-4 [&>div]:hover:pb-2", className)}>
+        <div className={cn("border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground [&>div]:overflow-hidden [&>div]:hover:overflow-x-scroll [&>div]:pb-4 [&>div]:hover:pb-2", className)}>
           <Table className="border-b">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
