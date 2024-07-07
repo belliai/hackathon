@@ -73,7 +73,7 @@ export default function Home() {
     <div className="relative">
       <ClientSideSuspense
         fallback={
-          <Loader className="absolute size-5 animate-spin text-muted-foreground" />
+          <></>
         }
       >
         <LiveCursorHoc />

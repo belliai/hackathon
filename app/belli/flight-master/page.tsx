@@ -484,6 +484,7 @@ export default function Page() {
                 manualPagination={true}
                 tableState={tableState}
                 menuId="flight-master-list-view"
+                isCanExport
               />
             </div>
           </TabsContent>
@@ -508,6 +509,7 @@ export default function Page() {
                 manualPagination={true}
                 tableState={tableState}
                 menuId="flight-master-recurring-view"
+                isCanExport
               />
             </div>
           </TabsContent>
