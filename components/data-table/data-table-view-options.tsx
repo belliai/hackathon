@@ -283,7 +283,11 @@ export function DataTableViewOptions<TData>({
                     <Draggable key={column.id} args={{ id: column.id }}>
                       <CommandItem
                         key={column.id}
-                        value={String(column.columnDef.header)}
+                        value={
+                          typeof column?.columnDef?.header === "function"
+                            ? (column?.columnDef?.header as () => string)()
+                            : String(column.columnDef.header)
+                        }
                         className={cn(
                           "flex flex-row items-center justify-between",
                           !column.getCanHide() && "hidden"
@@ -291,7 +295,9 @@ export function DataTableViewOptions<TData>({
                       >
                         <div className="flex flex-row items-center gap-2">
                           <GripVerticalIcon className="size-4 text-muted-foreground" />
-                          {String(column.columnDef.header)}
+                          {typeof column?.columnDef?.header === "function"
+                            ? (column?.columnDef?.header as () => string)()
+                            : String(column.columnDef.header)}
                         </div>
                         <button
                           data-no-dnd="true"
@@ -332,12 +338,18 @@ export function DataTableViewOptions<TData>({
                     <Draggable key={column.id} args={{ id: column.id }}>
                       <CommandItem
                         key={column.id}
-                        value={String(column.columnDef.header)}
+                        value={
+                          typeof column?.columnDef?.header === "function"
+                            ? (column?.columnDef?.header as () => string)()
+                            : String(column.columnDef.header)
+                        }
                         className="flex flex-row items-center justify-between"
                       >
                         <div className="flex flex-row items-center gap-2">
                           <GripVerticalIcon className="size-4 text-muted-foreground" />
-                          {String(column.columnDef.header)}
+                          {typeof column?.columnDef?.header === "function"
+                            ? (column?.columnDef?.header as () => string)()
+                            : String(column.columnDef.header)}
                         </div>
                         <button
                           data-no-dnd="true"
