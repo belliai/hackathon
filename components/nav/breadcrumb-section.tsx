@@ -17,6 +17,7 @@ import {
 } from "../ui/breadcrumb"
 import { Button } from "../ui/button"
 import ActiveUsers from "./active-users"
+import { belliSettingsNavigation } from "./data/belliSettingsNavigation"
 import { k360Navigation } from "./data/k360Navigation"
 import { settingNavigation } from "./data/settingNavigation"
 import { skNavigation } from "./data/skNavigation"
@@ -60,6 +61,7 @@ const getCurrentPaths = (pathname: string) => {
     ...skNavigation,
     ...k360Navigation,
     ...operationsNavigation,
+    ...belliSettingsNavigation,
   ]
 
   // Use the helper function to find the current path
@@ -135,11 +137,7 @@ export default function BreadCrumbSection() {
           />
         </Button>
       </div>
-      <ClientSideSuspense
-        fallback={
-          <></>
-        }
-      >
+      <ClientSideSuspense fallback={<></>}>
         <ActiveUsers />
       </ClientSideSuspense>
     </div>

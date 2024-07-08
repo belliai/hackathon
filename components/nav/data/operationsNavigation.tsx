@@ -54,20 +54,6 @@ export const operationsNavigation: TSidebarItem[] = [
         isCanCreate: false,
       },
       {
-        name: "Settings",
-        href: "/belli/settings",
-        icon: CursorArrowRippleIcon,
-        current: false,
-        isCanCreate: true,
-      },
-      {
-        name: "Aircraft",
-        href: "/belli/aircraft",
-        icon: PlaneIcon,
-        current: false,
-        isCanCreate: true,
-      },
-      {
         name: "Data Sync",
         href: "/belli/data-sync",
         icon: CubeIcon,

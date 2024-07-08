@@ -10,6 +10,7 @@ import { Boxes, PlusSquare } from "lucide-react"
 import { useFeatureFlagVariantKey } from "posthog-js/react"
 
 import { findActiveItem } from "@/lib/utils/nav-utils"
+import { belliSettingsNavigation } from "@/components/nav//data/belliSettingsNavigation"
 import { accountNavigation } from "@/components/nav/data/accountNavigation"
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation"
 import { settingNavigation } from "@/components/nav/data/settingNavigation"
@@ -83,7 +84,7 @@ export default function SideBar() {
               className="flex cursor-pointer items-center gap-x-2"
               onClick={() => {
                 setNavigationType(SIDEBAR_TYPE.DEFAULT)
-                router.push("/belli/home")
+                router.push("/")
               }}
             >
               <ChevronLeftIcon
@@ -103,7 +104,7 @@ export default function SideBar() {
                     <Button
                       variant="ghost"
                       onClick={() => setDialogOpen(true)}
-                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? 'bg-accent' : 'bg-button-primary hover:bg-button-primary/80'}`}
+                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? "bg-accent" : "bg-button-primary hover:bg-button-primary/80"}`}
                     >
                       <PlusSquare className="mr-2.5 h-4 w-4" />
                       {variant && variant === "test" ? "Create" : "New"} Order
@@ -127,6 +128,7 @@ export default function SideBar() {
                   <>
                     <FavoritesMenu />
                     <SidebarMenu items={operationsNavigation} collapsible />
+                    <SidebarMenu items={belliSettingsNavigation} collapsible />
                   </>
                 ) : (
                   <SidebarMenu items={settingNavigation[0].children ?? []} />
@@ -150,21 +152,35 @@ export default function SideBar() {
               )}
             </ul>
           </ul>
-          {/* {isBelliAdmin && (
-            <Button className="mt-4" size="sm" variant="button-primary" asChild>
-              <Link href="/admin/organization/organization-members">Admin</Link>
-            </Button>
-          )} */}
-          <SidebarMenu
-            items={skNavigation[0].children ?? []}
-            sectionTitle="SK"
-            collapsible
-          />
-          <SidebarMenu
-            items={k360Navigation[0].children ?? []}
-            sectionTitle="K360"
-            collapsible
-          />
+          {isBelliAdmin && (
+            <>
+              {/* <Button
+                className="mt-4"
+                size="sm"
+                variant="button-primary"
+                asChild
+              >
+                <Link href="/admin/organization/organization-members">
+                  Admin
+                </Link>
+              </Button> */}
+              <SidebarMenu
+                items={settingNavigation[0].children ?? []}
+                sectionTitle="SETTINGS (Jul 2024)"
+                collapsible
+              />
+              <SidebarMenu
+                items={skNavigation[0].children ?? []}
+                sectionTitle="SK (Jun 2024)"
+                collapsible
+              />
+              <SidebarMenu
+                items={k360Navigation[0].children ?? []}
+                sectionTitle="K360 (Jun 2024)"
+                collapsible
+              />
+            </>
+          )}
         </nav>
       </div>
     </Suspense>

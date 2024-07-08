@@ -76,18 +76,18 @@ export default function UserDropdown({
   }, [hasActiveOrg, isLoaded, userMemberships.data])
 
   const ITEMS: UserDropdownItem[] = [
-    {
-      icon: <User className="mr-2 h-4 w-4" />,
-      // shortcut: "⇧⌘P",
-      route: "/profile",
-      label: "Profile",
-      separator: true,
-    },
-    {
-      route: "/k360/organize/masters/finance/cart",
-      label: "Settings",
-      changeNavigation: true,
-    },
+    // {
+    //   icon: <User className="mr-2 h-4 w-4" />,
+    //   // shortcut: "⇧⌘P",
+    //   route: "/profile",
+    //   label: "Profile",
+    //   separator: true,
+    // },
+    // {
+    //   route: "/k360/organize/masters/finance/cart",
+    //   label: "Settings",
+    //   changeNavigation: true,
+    // },
   ]
 
   return (
