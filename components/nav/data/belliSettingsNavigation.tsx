@@ -26,8 +26,8 @@ export const belliSettingsNavigation: TSidebarItem[] = [
         icon: UserIcon,
       },
       {
-        name: "Aircraft",
-        href: "/belli/aircraft",
+        name: "Aircraft Setup",
+        href: "/belli/aircraft-setup",
         icon: PlaneIcon,
         current: false,
         isCanCreate: true,
