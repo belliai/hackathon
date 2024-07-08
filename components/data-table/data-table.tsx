@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@components/ui/table"
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -26,13 +27,13 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
+import { useHover } from "usehooks-ts"
 
 import { cn } from "@/lib/utils"
 
 import { ButtonProps } from "../ui/button"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar"
-import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -51,6 +52,8 @@ export interface DataTableProps<TData, TValue> {
   menuId?: string
   isCanExport?: boolean
   extraLeftComponents?: React.ReactNode
+  extraRightComponents?: React.ReactNode
+  showToolbarOnlyOnHover?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -70,6 +73,8 @@ export function DataTable<TData, TValue>({
   menuId,
   isCanExport,
   extraLeftComponents,
+  extraRightComponents,
+  showToolbarOnlyOnHover,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -81,6 +86,9 @@ export function DataTable<TData, TValue>({
   const [columnPinning, setColumnPinnig] = React.useState<ColumnPinningState>(
     initialPinning ?? { left: [], right: [] }
   )
+
+  const hoverRef = React.useRef(null)
+  const isHover = useHover(hoverRef)
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -119,19 +127,26 @@ export function DataTable<TData, TValue>({
   }, [pagination])
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" ref={hoverRef}>
       {!hideToolbar && (
         <DataTableToolbar
+          isHover={showToolbarOnlyOnHover ? isHover : undefined}
           table={table}
           initialVisibility={initialVisibility}
           extraButtons={extraToolbarButtons}
           buttonVariant={toolbarButtonVariant}
           menuId={menuId}
           extraLeftComponents={extraLeftComponents}
+          extraRightComponents={extraRightComponents}
         />
       )}
       <div className="relative">
-        <div className={cn("border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground [&>div]:overflow-hidden [&>div]:hover:overflow-x-scroll [&>div]:pb-4 [&>div]:hover:pb-2", className)}>
+        <div
+          className={cn(
+            "border-none [&>div]:overflow-hidden [&>div]:pb-4 [&>div]:hover:overflow-x-scroll [&>div]:hover:pb-2 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground",
+            className
+          )}
+        >
           <Table className="border-b">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -144,20 +159,18 @@ export function DataTable<TData, TValue>({
                         className={cn("min-w-10 whitespace-nowrap")}
                         onClick={header.column.getToggleSortingHandler()}
                       >
-                        {header.isPlaceholder
-                          ? null
-                          : (
-                            <div className="flex items-center gap-1 cursor-pointer justify-between">
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              {{
-                                asc: <TriangleUpIcon />,
-                                desc: <TriangleDownIcon />,
-                              }[header.column.getIsSorted() as string] ?? null}
-                            </div>
-                          )}
+                        {header.isPlaceholder ? null : (
+                          <div className="flex cursor-pointer items-center justify-between gap-1">
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: <TriangleUpIcon />,
+                              desc: <TriangleDownIcon />,
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        )}
                       </TableHead>
                     )
                   })}
@@ -201,10 +214,12 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <div className="absolute bottom-0 left-0 w-full h-4"></div>
+        <div className="absolute bottom-0 left-0 h-4 w-full"></div>
       </div>
-      
-      {!hidePagination && <DataTablePagination table={table} isCanExport={isCanExport} />}
+
+      {!hidePagination && (
+        <DataTablePagination table={table} isCanExport={isCanExport} />
+      )}
     </div>
   )
 }

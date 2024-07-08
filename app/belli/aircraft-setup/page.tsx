@@ -308,6 +308,37 @@ export default function MasterAircraftPage() {
     router.push(pathname + "?" + createQueryString("tab", value))
   }
 
+  const createButton = (
+    <Button
+      size={"sm"}
+      variant={"button-primary"}
+      className="p-2 text-xs"
+      onClick={() => setCurrentOpenModal(true)}
+    >
+      <PlusIcon className="mr-2 size-4" />
+      Create Aircraft
+    </Button>
+  )
+
+  const tabsList = (
+    <TabsList className="gap-2 bg-transparent p-0">
+      <TabsTrigger
+        className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+        value="aircraft-types"
+      >
+        <PlaneIcon className="mr-2 size-4" />
+        Aircraft Types
+      </TabsTrigger>
+      <TabsTrigger
+        className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+        value="tailnumbers-list"
+      >
+        <ScrollTextIcon className="mr-2 size-4" />
+        List of Aircrafts
+      </TabsTrigger>
+    </TabsList>
+  )
+
   return (
     <PageContainer>
       <Tabs
@@ -315,38 +346,15 @@ export default function MasterAircraftPage() {
         className="space-y-4"
         defaultValue={searchParams.get("tab") ?? "aircraft-types"}
       >
-        <div className="flex w-full flex-row items-center justify-between">
-          <TabsList className="gap-2 bg-transparent p-0">
-            <TabsTrigger
-              className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-              value="aircraft-types"
-            >
-              <PlaneIcon className="mr-2 size-4" />
-              Aircraft Types
-            </TabsTrigger>
-            <TabsTrigger
-              className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-              value="tailnumbers-list"
-            >
-              <ScrollTextIcon className="mr-2 size-4" />
-              List of Aircrafts
-            </TabsTrigger>
-          </TabsList>
-          <Button
-            size={"sm"}
-            variant={"button-primary"}
-            onClick={() => setCurrentOpenModal(true)}
-          >
-            <PlusIcon className="mr-2 size-4" />
-            Create Aircraft
-          </Button>
-        </div>
         <TabsContent value="aircraft-types" asChild>
           <DataTable
+            showToolbarOnlyOnHover={true}
             columns={aircraftTypeColumns}
             data={aircraftsData ?? []}
             onRowClick={handleRowClick}
             menuId="aircraft"
+            extraRightComponents={createButton}
+            extraLeftComponents={tabsList}
           />
         </TabsContent>
         <TabsContent value="tailnumbers-list" asChild>
@@ -356,6 +364,8 @@ export default function MasterAircraftPage() {
             onRowClick={({ aircraft_id }) => {
               handleTailNumberRowClick(aircraft_id)
             }}
+            extraRightComponents={createButton}
+            extraLeftComponents={tabsList}
           />
         </TabsContent>
       </Tabs>
