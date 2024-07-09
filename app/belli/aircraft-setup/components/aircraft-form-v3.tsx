@@ -158,7 +158,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     Object.entries(selectedAircraftDetails).forEach(([key, value]) => {
       form.setValue(key as Path<AircraftFormValues>, value)
     })
-  }, [selectedAircraftDetails])
+  }, [selectedAircraftDetails, form, isEdit])
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
     const payload: CreateAircraftRequest = {
