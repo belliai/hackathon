@@ -501,7 +501,7 @@ export default function Page() {
                       className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="create-recurring-flight"
                     >
-                      Recurring Flight
+                      Recurring Flights
                     </TabsTrigger>
                   </TabsList>
                 }
@@ -535,7 +535,7 @@ export default function Page() {
                       className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="create-recurring-flight"
                     >
-                      Recurring Flight
+                      Recurring Flights
                     </TabsTrigger>
                   </TabsList>
                 }
