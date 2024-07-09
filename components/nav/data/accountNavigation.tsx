@@ -3,12 +3,11 @@ import { TSidebarItem } from "@/components/nav/SidebarItem"
 export const accountNavigation: TSidebarItem[] = [
   {
     name: "Profile",
-    href: "/setting/profile",
-    current: false,
+    href: "/settings/profile"
   },
   {
-    name: "All Users",
-    href: "/users",
+    name: "Users",
+    href: "/settings/users",
   },
   {
     name: "Preferences",
@@ -18,6 +17,16 @@ export const accountNavigation: TSidebarItem[] = [
   {
     name: "Notifications",
     href: "/setting/notifications",
+    current: false,
+  },
+  {
+    name: "Data Fields",
+    href: "/settings/data-fields",
+    current: false,
+  },
+  {
+    name: "Aircraft Setup",
+    href: "/settings/aircraft-setup",
     current: false,
   },
 ]
