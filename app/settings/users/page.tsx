@@ -74,7 +74,10 @@ export default function UsersPage() {
           <Loader className="size-6 animate-spin text-muted-foreground" />
         </div>
       ) : (
-        <DataTable columns={columns} data={data ?? []} />
+        <DataTable 
+        columns={columns} data={data ?? []}
+        showToolbarOnlyOnHover={true} 
+        />
       )}
     </div>
   )

@@ -52,6 +52,7 @@ export default function FlightsDashboardPage() {
         tableState={tableState}
         className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
         menuId="flight-dashboard"
+        showToolbarOnlyOnHover={true}
       />
     </div>
   )  

@@ -459,6 +459,7 @@ export default function Page() {
           <TabsContent value="list-view">
             <div className="">
               <DataTable
+                showToolbarOnlyOnHover={true}
                 columns={columns(openDetailFlight, onShowDelete)}
                 data={isLoading ? [] : (flightData && flightData.data) || []}
                 onRowClick={openDetailFlight}
@@ -500,6 +501,7 @@ export default function Page() {
           <TabsContent value="create-recurring-flight">
             <div className="">
               <DataTable
+                showToolbarOnlyOnHover={true}
                 columns={columns(openDetailFlight, onShowDelete)}
                 data={isLoading ? [] : (flightData && flightData.data) || []}
                 // onRowClick={openDetailRecurringFlight}
