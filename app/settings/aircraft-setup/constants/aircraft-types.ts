@@ -1,7 +1,23 @@
 import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
 
+type AircraftManufacturer = "Boeing" | "Airbus"
+
+type AircraftTypeListOfType =
+  | "A220"
+  | "A320"
+  | "A330"
+  | "A340"
+  | "A350"
+  | "A380"
+  | "737"
+  | "747"
+  | "757"
+  | "767"
+  | "777"
+  | "787"
+
 type AircraftType = {
-  manufacturer: string
+  manufacturer: AircraftManufacturer
   types: {
     type: string
     versions: { version: string; details: Partial<AircraftFormValues> }[]
@@ -12,6 +28,8 @@ const DEFAULT_BODY_TYPE_ID = "1161055d-0f85-48f4-844e-0c29add31ba8"
 const DEFAULT_WEIGHT_UNIT_ID = "a708c7ab-c41a-45c3-a3f2-9ae6cb21f47c"
 const DEFAULT_VOLUME_UNIT_ID = "aefd86d6-6fe7-4fcf-8a42-5ef860542401"
 const DEFAULT_DIMENSION_UNIT_ID = "767c9495-c8f8-48fe-82cb-28d7a42a016d"
+const DEFAULT_STATUS_ID_ACTIVE = "a2a781e6-c892-46e4-ab3e-fb344727cfd8" // Assuming this is the ID for "Active"
+const DEFAULT_STATUS_ID_INACTIVE = "ca0dcee5-9813-4064-a29b-513198cce7fe"
 
 export const aircraftTypes: AircraftType = [
   {
@@ -760,7 +778,7 @@ export const aircraftTypes: AircraftType = [
           {
             version: "100",
             details: {
-              mtow: "80000",
+              mtow: "70000",
               mtow_unit_id: DEFAULT_WEIGHT_UNIT_ID,
               max_zero_fuel_weight: "58000",
               max_zero_fuel_weight_unit_id: DEFAULT_WEIGHT_UNIT_ID,
@@ -916,6 +934,58 @@ export const aircraftTypes: AircraftType = [
               fwd: "20",
               bulk: "30",
               bulk_cubic_id: DEFAULT_VOLUME_UNIT_ID,
+            },
+          },
+        ],
+      },
+      {
+        // example test data
+        type: "A330", //
+        versions: [
+          {
+            version: "300", //
+            details: {
+              mtow: "233000", // Max takeoff weight
+              mtow_unit_id: DEFAULT_WEIGHT_UNIT_ID,
+              max_zero_fuel_weight: "170000", //
+              max_zero_fuel_weight_unit_id: DEFAULT_WEIGHT_UNIT_ID,
+              body_type_id: DEFAULT_BODY_TYPE_ID,
+              passenger_capacity: "239", //
+              uld_position: "6",
+              landing_weight: "187000",
+              landing_weight_unit_id: DEFAULT_WEIGHT_UNIT_ID,
+              cargo_capacity: "30000",
+              cargo_capacity_unit_id: DEFAULT_VOLUME_UNIT_ID,
+              max_bulk_capacity_weight: "15000",
+              max_bulk_capacity_weight_unit_id: DEFAULT_WEIGHT_UNIT_ID,
+              max_bulk_capacity_volume: "102",
+              max_bulk_capacity_volume_unit_id: DEFAULT_VOLUME_UNIT_ID,
+              max_volume: "102",
+              max_volume_unit_id: DEFAULT_VOLUME_UNIT_ID,
+              restricted_weight_piece: "200",
+              restricted_weight_piece_unit_id: DEFAULT_WEIGHT_UNIT_ID,
+              max_dimension_length: "2",
+              max_dimension_breadth: "1.5",
+              max_dimension_height: "1.5",
+              max_dimension_unit_id: DEFAULT_DIMENSION_UNIT_ID,
+              aft_h: "5",
+              aft_w: "4",
+              fwd_h: "5",
+              fwd_w: "4",
+              bulk_h: "4",
+              bulk_w: "3",
+              bulk_unit_id: DEFAULT_DIMENSION_UNIT_ID,
+              fwt: "15",
+              fwd: "20",
+              bulk: "30",
+              bulk_cubic_id: DEFAULT_VOLUME_UNIT_ID,
+              aircraft_tail_numbers: [
+                {
+                  id: "100",
+                  tail_number: "OAP",
+                  status_id: DEFAULT_STATUS_ID_ACTIVE,
+                },
+              ],
             },
           },
         ],
