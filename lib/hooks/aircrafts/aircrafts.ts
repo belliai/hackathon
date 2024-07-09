@@ -1,10 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { AxiosInstance } from "axios"
 
-import { belliApi } from "@/lib/utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "aircrafts"
 
-export const fetchAircrafts = async (params: PaginationParams) => {
+export const fetchAircrafts = async (
+  belliApi: AxiosInstance,
+  params: PaginationParams
+) => {
   return belliApi
     .get(route, {
       params,
@@ -13,23 +17,29 @@ export const fetchAircrafts = async (params: PaginationParams) => {
 }
 
 export const useAircrafts = (params: PaginationParams) => {
+  const belliApi = useBelliApi()
+
   return useQuery({
     queryKey: [route],
-    queryFn: async () => await fetchAircrafts(params),
+    queryFn: async () => await fetchAircrafts(await belliApi, params),
   })
 }
 
-export const createAircraft = async (data: CreateAircraftRequest) => {
+export const createAircraft = async (
+  belliApi: AxiosInstance,
+  data: CreateAircraftRequest
+) => {
   return belliApi.post(route, data).then((res) => res.data as Aircraft)
 }
 
 export const useCreateAircraft = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
 
   return useMutation({
     mutationKey: [route],
     mutationFn: async (data: CreateAircraftRequest) =>
-      await createAircraft(data),
+      await createAircraft(await belliApi, data),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [route] })
     },
@@ -37,6 +47,7 @@ export const useCreateAircraft = () => {
 }
 
 export const updateAircraft = async (
+  belliApi: AxiosInstance,
   id: string,
   data: CreateAircraftRequest
 ) => {
@@ -47,12 +58,13 @@ export const updateAircraft = async (
 
 export const useUpdateAircraft = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
 
   return useMutation({
     mutationKey: [route],
     mutationFn: async (data: CreateAircraftRequest & { id: string }) => {
       const { id, ...rest } = data
-      return await updateAircraft(data.id, rest)
+      return await updateAircraft(await belliApi, data.id, rest)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -60,16 +72,18 @@ export const useUpdateAircraft = () => {
   })
 }
 
-export const deleteAircaft = async (id: string) => {
+export const deleteAircaft = async (belliApi: AxiosInstance, id: string) => {
   return belliApi.delete(`${route}/${id}`).then((res) => res.data as Aircraft)
 }
 
 export const useDeleteAircraft = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (data: { id: string }) => await deleteAircaft(data.id),
+    mutationFn: async (data: { id: string }) =>
+      await deleteAircaft(await belliApi, data.id),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [route] })
     },

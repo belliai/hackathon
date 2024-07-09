@@ -1,52 +1,56 @@
-import { error } from "console"
 import { Order } from "@/schemas/order/order"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-import { objectToParams, setHeaders } from "../utils/network"
+import { objectToParams, useBelliApi } from "@/lib/utils/network"
 
 const route = "orders"
 
-const config = {
-  headers: setHeaders(),
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-}
-
-export const fetchOrders = async (filter: FetchOrdersProps) => {
+export const fetchOrders = async (
+  belliApi: AxiosInstance,
+  filter: FetchOrdersProps
+) => {
   const pagination = {
     page: filter.pagination.pageIndex + 1,
     page_size: filter.pagination.pageSize,
   }
   const queryParams = objectToParams(pagination)
 
-  const { data } = await axios.get(`/${route}?${queryParams}`, config)
+  const { data } = await belliApi.get(`/${route}?${queryParams}`)
   return data
 }
 
-export const updateOrder = async (prop: Order & { id: string }) => {
+export const updateOrder = async (
+  belliApi: AxiosInstance,
+  prop: Order & { id: string }
+) => {
   const filteredOrder = Object.entries(prop)
     .filter(([key, value]) => value)
     .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Order)
 
   const updateData = filteredOrder
 
-  const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config)
+  const { data } = await belliApi.put(`/${route}/${prop.id}`, updateData)
   return data
 }
 
-export const addOrder = async (prop: Order) => {
+export const addOrder = async (belliApi: AxiosInstance, prop: Order) => {
   const filteredOrder = Object.entries(prop)
     .filter(([key, value]) => value)
     .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Order)
 
   const newData = filteredOrder
   delete prop.ID
-  const { data } = await axios.post(`/${route}`, newData, config)
+
+  const { data } = await belliApi.post(`/${route}`, newData)
   return data
 }
 
-export const removeOrder = async (prop: { id: string }) => {
-  const resp = await axios.delete(`/${route}/${prop.id}`, config)
+export const removeOrder = async (
+  belliApi: AxiosInstance,
+  prop: { id: string }
+) => {
+  const resp = await belliApi.delete(`/${route}/${prop.id}`)
   return resp
 }
 
@@ -56,49 +60,53 @@ type FetchOrdersProps = {
     pageIndex: number
   }
 }
+
 export const useOrders = (props: FetchOrdersProps) => {
+  const belliApi = useBelliApi()
+
   return useQuery({
     queryKey: [route, props],
-    queryFn: () => fetchOrders(props),
+    queryFn: async () => await fetchOrders(await belliApi, props),
   })
 }
 
 export const useUpdateOrder = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: updateOrder,
+  const belliApi = useBelliApi()
 
+  return useMutation({
+    mutationFn: async (prop: Order & { id: string }) =>
+      await updateOrder(await belliApi, prop),
     onError: (error) => {
       throw Error("Error")
     },
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useAddOrder = () => {
   const queryClient = useQueryClient()
-  const mutation: any = useMutation({
-    mutationFn: addOrder,
+  const belliApi = useBelliApi()
+
+  return useMutation({
+    mutationFn: async (prop: Order) => await addOrder(await belliApi, prop),
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useRemoveOrder = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: removeOrder,
+  const belliApi = useBelliApi()
+
+  return useMutation({
+    mutationFn: async (prop: { id: string }) =>
+      await removeOrder(await belliApi, prop),
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
