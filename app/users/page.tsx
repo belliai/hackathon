@@ -67,7 +67,7 @@ export default function UsersPage() {
   ]
 
   return (
-    <div>
+    <div style={{ marginTop: '10px' }}>
       <PageHeader title="Users" />
       {isLoading ? (
         <div className="flex w-full justify-center py-16">
