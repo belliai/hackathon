@@ -33,6 +33,11 @@ import {
 import { Separator } from "../ui/separator"
 import { FormTextFieldProps } from "./FormTextField"
 
+/**
+ * TODO:
+ * We might need to switch over to extend the InputSwitchProps type from the InputSwitch component
+ * since it is better maintained and is more widely used in the codebase.
+ */
 interface ComboboxFormProps extends Omit<FormTextFieldProps, "form" | "type"> {
   options?: { label: string; value: string }[]
   className?: string
@@ -72,7 +77,7 @@ export function Combobox({
   placeholder,
   description,
   disabled,
-  options=[],
+  options = [],
   className,
   popoverClassName,
   editLink,
@@ -81,7 +86,7 @@ export function Combobox({
   const form = useFormContext()
 
   // Determine if the search input should be shown
-  const showSearchInput = options.length > 10;
+  const showSearchInput = options.length > 10
 
   return (
     <FormField
@@ -89,7 +94,7 @@ export function Combobox({
       name={name}
       disabled={disabled}
       render={({ field }) => (
-        <FormItem className={cn(className)}>
+        <FormItem>
           {label && <FormLabel info={info}>{label}</FormLabel>}
           <Popover>
             <PopoverTrigger asChild>
@@ -99,7 +104,8 @@ export function Combobox({
                   role="combobox"
                   className={cn(
                     "h-10 w-full justify-between border-2 border-foreground/30 px-3",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
+                    className
                   )}
                 >
                   <span>
@@ -120,13 +126,13 @@ export function Combobox({
               align="start"
             >
               <Command>
-              {showSearchInput && (
-                <CommandInput
-                  hideIcon
-                  placeholder={searchPlaceholder}
-                  className="h-9 py-2 text-inherit placeholder:text-xs"
-                />
-              )}
+                {showSearchInput && (
+                  <CommandInput
+                    hideIcon
+                    placeholder={searchPlaceholder}
+                    className="h-9 py-2 text-inherit placeholder:text-xs"
+                  />
+                )}
                 <CommandEmpty>No results</CommandEmpty>
                 <CommandGroup className="py-0 pr-0">
                   <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
@@ -160,17 +166,17 @@ export function Combobox({
                 <>
                   <Separator />
                   <div className="px-2 py-1">
-                      <Button
-                        variant="link"
-                        size="sm"
-                        asChild
-                        className="h-fit px-2 py-1 text-button-primary hover:text-button-primary/50 hover:no-underline"
-                      >
-                        <Link href={editLink} target="_blank">
-                          {/* <List className="mr-2 h-4 w-4" /> */}
-                          Edit dropdown
-                        </Link>
-                      </Button>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      asChild
+                      className="h-fit px-2 py-1 text-button-primary hover:text-button-primary/50 hover:no-underline"
+                    >
+                      <Link href={editLink} target="_blank">
+                        {/* <List className="mr-2 h-4 w-4" /> */}
+                        Edit dropdown
+                      </Link>
+                    </Button>
                   </div>
                 </>
               )}

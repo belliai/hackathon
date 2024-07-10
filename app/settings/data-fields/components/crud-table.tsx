@@ -1,5 +1,6 @@
 import { PropsWithChildren, useState } from "react"
 import { Trigger as PrimitiveTrigger } from "@radix-ui/react-accordion"
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
 import {
   ColumnDef,
   flexRender,
@@ -55,7 +56,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
 
 type CrudTableProps<T extends FieldValues> = {
@@ -152,7 +160,9 @@ const FormDropdown = <T extends FieldValues>(
       <AccordionItem value="item" className="space-y-4 border-b-0">
         <div className="flex w-full flex-row justify-end">
           <PrimitiveTrigger asChild>
-            <Button variant={"button-primary"} style={{ fontSize: '0.875rem' }}>Add new</Button>
+            <Button variant={"button-primary"} style={{ fontSize: "0.875rem" }}>
+              Add new
+            </Button>
           </PrimitiveTrigger>
         </div>
         <AccordionContent className="border-none p-0">
@@ -209,7 +219,8 @@ export default function CrudTable<T extends FieldValues>(
     ...props.columns,
     {
       accessorKey: "action",
-      header: "Action",
+      enableSorting: false,
+      header: " ",
       cell: ({ row }) => (
         <div className="flex w-full flex-row items-center justify-end">
           <FormDialog
@@ -242,6 +253,9 @@ export default function CrudTable<T extends FieldValues>(
     getCoreRowModel: getCoreRowModel(),
   })
 
+  // Check if any columns passed from props have explicitly defined headers
+  const hasExplicitHeaders = props.columns.some((column) => column.header)
+
   return (
     <section id={props.id} className="space-y-4">
       <FormDropdown form={props.form} onSave={props.onSave} />
@@ -258,6 +272,40 @@ export default function CrudTable<T extends FieldValues>(
             </div>
           ) : (
             <Table>
+              {hasExplicitHeaders && (
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead
+                            key={header.id}
+                            colSpan={header.colSpan}
+                            className={cn(
+                              "min-w-10 whitespace-nowrap text-white"
+                            )}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {header.isPlaceholder ? null : (
+                              <div className="flex cursor-pointer items-center justify-between gap-1">
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                                {{
+                                  asc: <TriangleUpIcon />,
+                                  desc: <TriangleDownIcon />,
+                                }[header.column.getIsSorted() as string] ??
+                                  null}
+                              </div>
+                            )}
+                          </TableHead>
+                        )
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+              )}
               <TableBody className="leading-6 text-zinc-400">
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (

@@ -10,6 +10,7 @@ import {
   HandshakeIcon,
   LucideIcon,
   MapPinIcon,
+  Plane,
   PlaneTakeoffIcon,
   ReceiptTextIcon,
   TruckIcon,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/tooltip"
 import PageContainer from "@/components/layout/PageContainer"
 
+import CrudAircraft from "./aircraft"
 import CrudBookingType from "./booking-type"
 import CrudCommodityCode from "./commodity-code"
 import CrudCurrency from "./currency"
@@ -103,7 +105,12 @@ const tabs: {
     icon: BadgeDollarSignIcon,
     tooltipId: "aircraft-settings-currency",
   },
-  // { name: "Customers", component: <CrudCustomers /> },
+  {
+    name: "Aircrafts",
+    component: <CrudAircraft />,
+    icon: Plane,
+    tooltipId: "aircraft",
+  },
 ]
 
 export default function Page() {
@@ -146,11 +153,6 @@ export default function Page() {
         createQueryString("tab", val.toLowerCase().replace(/\s+/g, "-"))
     )
   }
-  // //handle tab change
-  // const handleTabChange = (val:any) => {
-  //   setActiveTab(val);
-  //   window.location.hash = val.toLowerCase().replace(/\s+/g, '-');
-  // };
 
   const getHoveredContent = (tabName: string) => {
     const tabFound = tabs.find((tab) => tab.name === tabName)
@@ -178,7 +180,6 @@ export default function Page() {
     <PageContainer>
       <Tabs
         value={activeTab}
-        //onValueChange={(val) => setActiveTab(val as SettingsTabName)}
         onValueChange={handleTabChange}
         className="flex h-full w-full flex-row items-start justify-start gap-4 space-y-0"
       >

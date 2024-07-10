@@ -1,6 +1,8 @@
 import { ListIcon, SearchIcon } from "lucide-react"
 import { FieldValues, Path, PathValue, useFormContext } from "react-hook-form"
 
+import { cn } from "@/lib/utils"
+
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
 import DateInput from "../ui/date-input"
@@ -19,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { Combobox } from "./combobox"
 
 export type InputSwitchProps<DataType> = InputProps &
   (
@@ -29,7 +32,7 @@ export type InputSwitchProps<DataType> = InputProps &
         withDialog?: boolean
       }
     | {
-        type: "select"
+        type: "select" | "combobox"
         name: Path<DataType>
         names?: Path<DataType>[]
         label?: string
@@ -44,6 +47,17 @@ export default function InputSwitch<DataType extends FieldValues>(
   const form = useFormContext<DataType>()
   const input = () => {
     switch (props.type) {
+      case "combobox":
+        return (
+          <Combobox
+            name={props.name}
+            label={props.label}
+            options={props.selectOptions}
+            placeholder={props.placeholder}
+            className={cn("h-9 rounded-sm border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",props.className)}
+          />
+        )
+
       case "select":
         return (
           <FormField
@@ -75,8 +89,15 @@ export default function InputSwitch<DataType extends FieldValues>(
                   disabled={props.disabled}
                 >
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
+                    <SelectTrigger
+                      className={cn(
+                        {
+                          "text-muted-foreground": !field.value, // Placeholder styling
+                        },
+                        props.className
+                      )}
+                    >
+                      <SelectValue placeholder={props.placeholder} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -105,7 +126,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                     {props.label}
                   </FormLabel>
                 )}
-                <DateInput {...field} />
+                <DateInput {...field} className={props.className} />
                 <FormMessage />
               </FormItem>
             )}
@@ -127,6 +148,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                 <FormControl>
                   <Input
                     {...field}
+                    className={props.className}
                     rightIcon={
                       <SearchIcon className="size-4 min-w-10 text-muted-foreground" />
                     }
@@ -149,7 +171,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    className="border-zinc-700"
+                    className={cn("border-zinc-700", props.className)}
                   />
                 </FormControl>
                 {!!props.label && (
