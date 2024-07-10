@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import moment from "moment"
 
 import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
+import { TableHeaderWithTooltip } from "@/components/ui/table"
 
 export type FlightMasterDataType = {
   entry_type: string
@@ -28,16 +29,25 @@ export const columns = (
 ): ColumnDef<Flight>[] => [
   {
     accessorKey: "entry_type",
-    header: "Entry Type",
+    header: () => (
+        <TableHeaderWithTooltip header="Entry Type" tooltipId="flight-master-entry-type" />
+      ),
     cell: ({ row }) => "Manual",
   },
   {
     accessorKey: "flight_no",
-    header: "Flight No.",
+    header: () => (
+        <TableHeaderWithTooltip
+          header="Flight No."
+          tooltipId="flight-master-flight-no"
+        />
+    ),
   },
   {
     accessorKey: "source.name",
-    header: "Source",
+    header: () => (
+        <TableHeaderWithTooltip header="Source" tooltipId="flight-master-source" />
+      ),
     cell: ({ row }) => {
       const source = row.original.source
       return source ? source.name : ""
@@ -46,7 +56,9 @@ export const columns = (
   },
   {
     accessorKey: "destination.name",
-    header: "Destination",
+    header: () => (
+        <TableHeaderWithTooltip header="Destination" tooltipId="flight-master-destination" />
+      ),
     cell: ({ row }) => {
       const destination = row.original.destination
       return destination ? destination.name : ""
@@ -54,7 +66,9 @@ export const columns = (
   },
   {
     accessorKey: "from_date",
-    header: "STD(API)",
+    header: () => (
+        <TableHeaderWithTooltip header="STD(API)" tooltipId="flight-master-std" />
+      ),
     cell: ({ row }) => {
       const date = row.original.from_date || ""
       return moment(date).format("YYYY-MM-DD")
@@ -62,7 +76,9 @@ export const columns = (
   },
   {
     accessorKey: "to_date",
-    header: "STA",
+    header: () => (
+        <TableHeaderWithTooltip header="STA" tooltipId="flight-master-sta" />
+      ),
     cell: ({ row }) => {
       const date = row.original.to_date || ""
       return moment(date).format("YYYY-MM-DD")
@@ -70,7 +86,9 @@ export const columns = (
   },
   {
     accessorKey: "aircraft.aircraft_type",
-    header: "Aircraft Type",
+    header: () => (
+        <TableHeaderWithTooltip header="Aircraft Type" tooltipId="flight-master-aircraft-type" />
+      ),
     cell: ({ row }) => {
       const aircraft = row.original.aircraft
       return aircraft ? aircraft.aircraft_type : ""
@@ -78,7 +96,9 @@ export const columns = (
   },
   {
     accessorKey: "tail.tail_number",
-    header: "Tail No.",
+    header: () => (
+        <TableHeaderWithTooltip header="Tail No." tooltipId="flight-master-tail-no" />
+      ),
     cell: ({ row }) => {
       const tail = row.original.tail
       return tail ? tail.tail_number : ""
@@ -86,7 +106,9 @@ export const columns = (
   },
   {
     accessorKey: "flight_type.value",
-    header: "Flight Type",
+    header: () => (
+        <TableHeaderWithTooltip header="Flight Type" tooltipId="flight-master-flight-type" />
+      ),
     cell: ({ row }) => {
       const flightType = row.original.flight_type
       return flightType ? flightType.value : ""
@@ -94,7 +116,9 @@ export const columns = (
   },
   {
     accessorKey: "status.value",
-    header: "Status",
+    header: () => (
+        <TableHeaderWithTooltip header="Status" tooltipId="flight-master-status" />
+      ),
     cell: ({ row }) => {
       const status = row.original.status
       return status ? status.value : ""
@@ -102,7 +126,9 @@ export const columns = (
   },
   {
     accessorKey: "sector.value",
-    header: "Sector",
+    header: () => (
+        <TableHeaderWithTooltip header="Sector" tooltipId="flight-master-sector" />
+      ),
     cell: ({ row }) => {
       const sector = row.original.sector
       return sector ? sector.value : ""
@@ -110,7 +136,9 @@ export const columns = (
   },
   {
     accessorKey: "created_at",
-    header: "Created At",
+    header: () => (
+        <TableHeaderWithTooltip header="Created At" tooltipId="flight-master-created-at" />
+      ),
     cell: ({ row }) => {
       const date = row.original.created_at || ""
       return moment(date).format("YYYY-MM-DD HH:mm:ss")
@@ -118,7 +146,9 @@ export const columns = (
   },
   {
     accessorKey: "updated_at",
-    header: "Updated At",
+    header: () => (
+        <TableHeaderWithTooltip header="Updated At" tooltipId="flight-master-updated-at" />
+      ),
     cell: ({ row }) => {
       const date = row.original.updated_at || ""
       return moment(date).format("YYYY-MM-DD HH:mm:ss")
@@ -126,7 +156,9 @@ export const columns = (
   },
   {
     accessorKey: "updated_by",
-    header: "Updated By",
+    header: () => (
+        <TableHeaderWithTooltip header="Updated By" tooltipId="flight-master-updated-by" />
+      ),
     cell: ({ row }) => "Jeff Pan",
   },
 ]
