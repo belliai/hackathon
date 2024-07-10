@@ -9,7 +9,10 @@ export default async function UnassinedSection() {
   return (
     <div className="mt-5 flex flex-col gap-4">
       <UnassignedSummary />
-      <DataTable columns={unassignedColumn} data={data} menuId="flight-planning-unassigned" />
+      <DataTable 
+      columns={unassignedColumn} data={data} menuId="flight-planning-unassigned"
+      showToolbarOnlyOnHover={true} 
+      />
     </div>
   )
 }

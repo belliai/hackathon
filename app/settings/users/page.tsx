@@ -67,14 +67,17 @@ export default function UsersPage() {
   ]
 
   return (
-    <div>
+    <div style={{ marginTop: '10px' }}>
       <PageHeader title="Users" />
       {isLoading ? (
         <div className="flex w-full justify-center py-16">
           <Loader className="size-6 animate-spin text-muted-foreground" />
         </div>
       ) : (
-        <DataTable columns={columns} data={data ?? []} />
+        <DataTable 
+        columns={columns} data={data ?? []}
+        showToolbarOnlyOnHover={true} 
+        />
       )}
     </div>
   )

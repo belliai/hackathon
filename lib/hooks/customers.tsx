@@ -1,22 +1,18 @@
 import { Customer } from "@/schemas/customer"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-import { setHeaders } from "../utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "customers"
 
-const config = {
-  headers: setHeaders(),
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-}
-
-export const fetchCustomers = async () => {
-  const { data } = await axios.get(`/${route}`, config)
+export const fetchCustomers = async (belliApi: AxiosInstance) => {
+  const { data } = await belliApi.get(`/${route}`)
   return data
 }
 
 export const updateCustomer = async (
+  belliApi: AxiosInstance,
   prop: Partial<Customer> & { id: string }
 ) => {
   const filteredCustomer = Object.entries(prop)
@@ -27,61 +23,74 @@ export const updateCustomer = async (
     )
 
   const updateData = filteredCustomer
-  const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config)
+  const { data } = await belliApi.put(`/${route}/${prop.id}`, updateData)
   return data
 }
 
-export const addCustomer = async (prop: Customer) => {
+export const addCustomer = async (belliApi: AxiosInstance, prop: Customer) => {
   const filteredCustomer = Object.entries(prop)
     .filter(([key, value]) => value)
     .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Customer)
 
   const newData = filteredCustomer
   delete prop.ID
-  const { data } = await axios.post(`/${route}`, newData, config)
+
+  const { data } = await belliApi.post(`/${route}`, newData)
   return data
 }
 
-export const removeCustomer = async (prop: { id: string }) => {
-  const resp = await axios.delete(`/${route}/${prop.id}`, config)
+export const removeCustomer = async (
+  belliApi: AxiosInstance,
+  prop: { id: string }
+) => {
+  const resp = await belliApi.delete(`/${route}/${prop.id}`)
   return resp
 }
 
 export const useCustomers = () => {
+  const belliApi = useBelliApi()
+
   return useQuery({
     queryKey: [route],
-    queryFn: fetchCustomers,
+    queryFn: async () => await fetchCustomers(await belliApi),
   })
 }
 
 export const useUpdateCustomer = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: updateCustomer,
+  const belliApi = useBelliApi()
+
+  return useMutation({
+    mutationFn: async (prop: Partial<Customer> & { id: string }) =>
+      await updateCustomer(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useAddCustomer = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: addCustomer,
+  const belliApi = useBelliApi()
+
+  return useMutation({
+    mutationFn: async (prop: Customer) =>
+      await addCustomer(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useRemoveCustomer = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: removeCustomer,
+  const belliApi = useBelliApi()
+
+  return useMutation({
+    mutationFn: async (prop: { id: string }) =>
+      await removeCustomer(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -90,5 +99,4 @@ export const useRemoveCustomer = () => {
       console.log(e)
     },
   })
-  return mutation
 }

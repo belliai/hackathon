@@ -11,23 +11,23 @@ export const belliSettingsNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Profile",
-        href: "/profile",
+        href: "/settings/profile",
         icon: UserIcon,
       },
       {
         name: "Data Fields",
-        href: "/belli/data-fields",
+        href: "/settings/data-fields",
         icon: CursorArrowRippleIcon,
         isCanCreate: true,
       },
       {
         name: "Users",
-        href: "/users",
+        href: "/settings/users",
         icon: UserIcon,
       },
       {
         name: "Aircraft Setup",
-        href: "/belli/aircraft-setup",
+        href: "/settings/aircraft-setup",
         icon: PlaneIcon,
         current: false,
         isCanCreate: true,

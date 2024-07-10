@@ -1,17 +1,20 @@
 import { useQuery } from "@tanstack/react-query"
+import { AxiosInstance } from "axios"
 
-import { belliApi } from "@/lib/utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "aircrafts/types"
 
-export const fetchAircraftTypes = async () => {
+export const fetchAircraftTypes = async (belliApi: AxiosInstance) => {
   return belliApi.get(route).then((res) => res.data as AircraftTypeList[])
 }
 
 export const useAircraftTypes = () => {
+  const belliApi = useBelliApi()
+
   const aircraftTypesRes = useQuery({
     queryKey: [route],
-    queryFn: async () => await fetchAircraftTypes(),
+    queryFn: async () => await fetchAircraftTypes(await belliApi),
   })
 
   return aircraftTypesRes

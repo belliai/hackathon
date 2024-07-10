@@ -1,48 +1,55 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-import { setHeaders } from "../utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "booking-types"
 
-const config = {
-  headers: setHeaders(),
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-}
-
-export const fetchBookingTypes = async () => {
-  const { data } = await axios.get(`/${route}`, config)
+export const fetchBookingTypes = async (belliApi: AxiosInstance) => {
+  const { data } = await belliApi.get(`/${route}`)
   return data
 }
 
-export const updateBookingType = async (prop: { id: string; name: string }) => {
+export const updateBookingType = async (
+  belliApi: AxiosInstance,
+  prop: { id: string; name: string }
+) => {
   const updateData = { name: prop.name }
-  const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config)
+  const { data } = await belliApi.put(`/${route}/${prop.id}`, updateData)
   return data
 }
 
-export const addBookingType = async (prop: { name: string }) => {
+export const addBookingType = async (
+  belliApi: AxiosInstance,
+  prop: { name: string }
+) => {
   const newData = { name: prop.name }
-  const { data } = await axios.post(`/${route}`, newData, config)
+  const { data } = await belliApi.post(`/${route}`, newData)
   return data
 }
 
-export const removeBookingType = async (prop: { id: string }) => {
-  const resp = await axios.delete(`/${route}/${prop.id}`, config)
+export const removeBookingType = async (
+  belliApi: AxiosInstance,
+  prop: { id: string }
+) => {
+  const resp = await belliApi.delete(`/${route}/${prop.id}`)
   return resp
 }
 
 export const useBookingTypes = () => {
+  const belliApi = useBelliApi()
   return useQuery({
     queryKey: [route],
-    queryFn: fetchBookingTypes,
+    queryFn: async () => await fetchBookingTypes(await belliApi),
   })
 }
 
 export const useUpdateBookingType = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
   const mutation = useMutation({
-    mutationFn: updateBookingType,
+    mutationFn: async (prop: { id: string; name: string }) =>
+      await updateBookingType(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -53,8 +60,10 @@ export const useUpdateBookingType = () => {
 
 export const useAddBookingType = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
   const mutation = useMutation({
-    mutationFn: addBookingType,
+    mutationFn: async (prop: { name: string }) =>
+      await addBookingType(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -65,8 +74,10 @@ export const useAddBookingType = () => {
 
 export const useRemoveBookingType = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
   const mutation = useMutation({
-    mutationFn: removeBookingType,
+    mutationFn: async (prop: { id: string }) =>
+      await removeBookingType(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
