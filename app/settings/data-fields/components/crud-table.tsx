@@ -152,7 +152,7 @@ const FormDropdown = <T extends FieldValues>(
       <AccordionItem value="item" className="space-y-4 border-b-0">
         <div className="flex w-full flex-row justify-end">
           <PrimitiveTrigger asChild>
-            <Button variant={"button-primary"}>Add new</Button>
+            <Button variant={"button-primary"} style={{ fontSize: '0.875rem' }}>Add new</Button>
           </PrimitiveTrigger>
         </div>
         <AccordionContent className="border-none p-0">
