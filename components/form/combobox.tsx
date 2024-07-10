@@ -156,22 +156,24 @@ export function Combobox({
                   </CommandList>
                 </CommandGroup>
               </Command>
-              <Separator />
-              <div className="px-2 py-1">
-                {editLink && (
-                  <Button
-                    variant="link"
-                    size="sm"
-                    asChild
-                    className="h-fit px-2 py-1 text-button-primary hover:text-button-primary/50 hover:no-underline"
-                  >
-                    <Link href={editLink} target="_blank">
-                      {/* <List className="mr-2 h-4 w-4" /> */}
-                      Edit dropdown
-                    </Link>
-                  </Button>
-                )}
-              </div>
+              {editLink && (
+                <>
+                  <Separator />
+                  <div className="px-2 py-1">
+                      <Button
+                        variant="link"
+                        size="sm"
+                        asChild
+                        className="h-fit px-2 py-1 text-button-primary hover:text-button-primary/50 hover:no-underline"
+                      >
+                        <Link href={editLink} target="_blank">
+                          {/* <List className="mr-2 h-4 w-4" /> */}
+                          Edit dropdown
+                        </Link>
+                      </Button>
+                  </div>
+                </>
+              )}
             </PopoverContent>
           </Popover>
           {description && <FormDescription>{description}</FormDescription>}
