@@ -80,12 +80,11 @@ export default function Page() {
       }
     }
   }, []);
-
+  //handle tab change
   const handleTabChange = (val:any) => {
     setActiveTab(val);
     window.location.hash = val.toLowerCase().replace(/\s+/g, '-');
   };
-
   return (
     <PageContainer>
       <Tabs
