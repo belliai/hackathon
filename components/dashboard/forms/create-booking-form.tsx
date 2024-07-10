@@ -79,14 +79,14 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={bookingTypeOptions}
           label="Booking Type"
           info="Select the Booking Type"
-          editLink="/belli/data-fields/#booking-type"
+          editLink="/settings/data-fields?tab=booking-type"
         />
         <Combobox
           name="partner_prefix_id"
           options={partnerPrefixesOptions}
           label="Partner Prefix"
           info="Select the Partner Prefix"
-          editLink="/belli/data-fields/#partner-prefix"
+          editLink="/settings/data-fields?tab=partner-prefix"
         />
         <FormField
           control={form.control}
@@ -106,7 +106,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={partnerCodesOptions}
           label="Partner Code"
           info="Select the Partner Code"
-          editLink="/belli/data-fields/#partner-code"
+          editLink="/settings/data-fields?tab=partner-code"
         />
       </div>
       <div className="flex w-full flex-row items-center justify-between">
@@ -142,7 +142,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={statusOptions}
           label="Status"
           info="Select the Status"
-          editLink="/belli/data-fields/#status"
+          editLink="/settings/data-fields?tab=status"
         />
     </Card>
   )

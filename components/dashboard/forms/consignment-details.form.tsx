@@ -76,21 +76,21 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           options={locationsOptions}
           label="Origin"
           info="Select the origin location"
-          editLink="/belli/data-fields/#location"
+          editLink="/settings/data-fields?tab=location"
         />
         <Combobox
           name="destination_id"
           options={locationsOptions}
           label="Destination"
           info="Select the Destination location"
-          editLink="/belli/data-fields/#location"
+          editLink="/settings/data-fields?tab=location"
         />
         <Combobox
           name="commodity_code_id"
           options={commodityCodeOptions}
           label="Commodity Code *"
           info="Select the Commodity Code"
-          editLink="/belli/data-fields/#commodity-code"
+          editLink="/settings/data-fields?tab=commodity-code"
         />
         <FormField
           control={form.control}
@@ -117,7 +117,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           options={paymentOptions}
           label="Payment Mode"
           info="Select the Payment Mode"
-          editLink="/belli/data-fields/#payment-mode"
+          editLink="/settings/data-fields?tab=payment-mode"
         />
         <FormField
           control={form.control}

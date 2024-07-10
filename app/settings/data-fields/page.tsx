@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useCallback, useState, useEffect } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   BadgeDollarSignIcon,
   BookUserIcon,
@@ -69,22 +70,44 @@ const tabs: {
 ]
 
 export default function Page() {
-  const [activeTab, setActiveTab] = useState(tabs[0].name)
+  //const [activeTab, setActiveTab] = useState(tabs[0].name)
   
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const [activeTab, setActiveTab] = useState(tabs[0].name)
+
+  // Get the tab from the search params on initial load
   useEffect(() => {
-    const hash = window.location.hash.replace("#", "");
-    if (hash) {
-      const tab = tabs.find((tab) => tab.name.toLowerCase().replace(/\s+/g, '-') === hash);
+    const tabParam = searchParams.get("tab")
+    if (tabParam) {
+      const tab = tabs.find((tab) => tab.name.toLowerCase().replace(/\s+/g, '-') === tabParam)
       if (tab) {
-        setActiveTab(tab.name);
+        setActiveTab(tab.name)
       }
     }
-  }, []);
-  //handle tab change
-  const handleTabChange = (val:any) => {
-    setActiveTab(val);
-    window.location.hash = val.toLowerCase().replace(/\s+/g, '-');
-  };
+  }, [searchParams])
+
+  // Create a new searchParams string by merging the current searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  // Handle tab change
+  const handleTabChange = (val: any) => {
+    setActiveTab(val)
+    router.push(pathname + "?" + createQueryString("tab", val.toLowerCase().replace(/\s+/g, '-')))
+  }
+  // //handle tab change
+  // const handleTabChange = (val:any) => {
+  //   setActiveTab(val);
+  //   window.location.hash = val.toLowerCase().replace(/\s+/g, '-');
+  // };
   return (
     <PageContainer>
       <Tabs

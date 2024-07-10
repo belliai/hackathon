@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs"
 import { TabsList } from "@/components/ui/vertical-tabs"
+import { Combobox } from "@/components/form/combobox"
+
 
 const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext()
@@ -39,6 +41,31 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const { data: partnerTypes } = usePartnerTypes()
   const { data: locations } = useLocations()
   const { data: transportMethods } = useTransportMethods()
+
+  const transportMethodOptions = transportMethods?.map((method: any) => ({
+    value: method.ID,
+    label: method.name,
+  }));
+
+  const locationOptions = locations?.map((loc: any) => ({
+    value: loc.ID,
+    label: loc.name,
+  }));
+
+  const partnerTypeOptions = partnerTypes?.map((type: any) => ({
+    value: type.ID,
+    label: type.name,
+  }));
+
+  const partnerCodeOptions = partnerCodes?.map((code: any) => ({
+    value: code.ID,
+    label: code.name,
+  }));
+
+  const statusOptions = statuses?.map((status: any) => ({
+    value: status.ID,
+    label: status.name,
+  }));
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     { control: form.control, name: "shipper_details" }
@@ -112,154 +139,47 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].transport_method_id`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Select</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value ?? "truck"}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="border-2 border-foreground/30">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {transportMethods &&
-                          transportMethods.map((transportMethod: any) => (
-                            <SelectItem
-                              value={transportMethod.ID}
-                              key={transportMethod.ID}
-                            >
-                              {transportMethod.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <Combobox
+                name="transport_method_id"
+                options={transportMethodOptions}
+                label="Transport Method"
+                info="Select the Transport Method"
+                editLink="/settings/data-fields?tab=transport-method"
               />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].origin_id`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Origin *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="border-2 border-foreground/30">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {locations &&
-                          locations.map((location: any) => (
-                            <SelectItem value={location.ID} key={location.ID}>
-                              {location.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <Combobox
+                name="origin_id"
+                options={locationOptions}
+                label="Origin *"
+                info="Select the Location"
+                editLink="/settings/data-fields?tab=location"
               />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].destination_id`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Destination *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="border-2 border-foreground/30">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {locations &&
-                          locations.map((location: any) => (
-                            <SelectItem value={location.ID} key={location.ID}>
-                              {location.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <Combobox
+                name="destination_id"
+                options={locationOptions}
+                label="Destination *"
+                info="Select the Location"
+                editLink="/settings/data-fields?tab=location"
               />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].partner_type_id`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Partner Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value ?? "air"}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="border-2 border-foreground/30">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {partnerTypes &&
-                          partnerTypes.map((partnerType: any) => (
-                            <SelectItem
-                              value={partnerType.ID}
-                              key={partnerType.ID}
-                            >
-                              {partnerType.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <Combobox
+                name="destination_id"
+                options={locationOptions}
+                label="Destination *"
+                info="Select the Location"
+                editLink="/settings/data-fields?tab=location"
               />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].partner_code_id`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Partner Code</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value ?? "sg"}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="border-2 border-foreground/30">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {partnerCodes &&
-                          partnerCodes.map((partnerCode: any) => (
-                            <SelectItem
-                              value={partnerCode.ID}
-                              key={partnerCode.ID}
-                            >
-                              {partnerCode.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <Combobox
+                name="partner_type_id"
+                options={partnerTypeOptions}
+                label="Partner Type"
+                info="Select the Partner Type"
+                editLink="/settings/data-fields?tab=partner-type"
+              />
+              <Combobox
+                name="partner_code_id"
+                options={partnerCodeOptions}
+                label="Partner Code"
+                info="Select the Partner Code"
+                editLink="/settings/data-fields?tab=partner-code"
               />
               <FormField
                 control={form.control}
@@ -307,33 +227,12 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].status_id`}
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>AWB Status</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="border-2 border-foreground/30">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {statuses &&
-                          statuses.map((status: any) => (
-                            <SelectItem value={status.ID} key={status.ID}>
-                              {status.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <Combobox
+                name="status_id"
+                options={statusOptions}
+                label="AWB Status"
+                info="Select the AWB Status"
+                editLink="/settings/data-fields?tab=status"
               />
               <div className="col-span-2 mt-3 inline-flex items-center gap-3">
                 <Button

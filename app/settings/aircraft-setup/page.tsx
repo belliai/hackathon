@@ -331,7 +331,7 @@ export default function MasterAircraftPage() {
       </TabsTrigger>
       <TabsTrigger
         className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-        value="tailnumbers-list"
+        value="list-of-aircrafts"
       >
         <ScrollTextIcon className="mr-2 size-4" />
         List of Aircrafts
@@ -357,7 +357,7 @@ export default function MasterAircraftPage() {
             extraLeftComponents={tabsList}
           />
         </TabsContent>
-        <TabsContent value="tailnumbers-list" asChild>
+        <TabsContent value="list-of-aircrafts" asChild>
           <DataTable
             columns={aircraftTailNumbersColumns}
             data={aircraftTailNumbersData ?? []}
