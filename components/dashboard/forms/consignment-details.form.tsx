@@ -69,6 +69,17 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
       label: mode.name, 
     }))
 
+    const customerOptions = customers?.data.map((customer: any) => ({
+      value: customer.ID,
+      label: customer.name,
+    }))
+
+    const customerCodeOptions = customers?.data.map((customer: any) => ({
+      value: customer.ID,
+      label: customer.code,
+    }))
+
+
     return (
       <Card className="grid grid-cols-2 gap-x-3 gap-y-2 p-4" ref={ref}>
         <Combobox
@@ -119,30 +130,10 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           info="Select the Payment Mode"
           editLink="/settings/data-fields?tab=payment-mode"
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="bill_to_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">Bill To</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {customers &&
-                    customers.data.map((customer: any) => (
-                      <SelectItem value={customer.ID} key={customer.ID}>
-                        {customer.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={customerOptions}
+          label="Bill To"
         />
         <FormField
           name={`bill_to_old_name`}
@@ -176,82 +167,20 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="shipper_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">Shipper</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {customers &&
-                    customers.data.map((customer: any) => (
-                      <SelectItem value={customer.ID} key={customer.ID}>
-                        {customer.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={customerOptions}
+          label="Shipper"
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="consignee_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Consignee
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {customers &&
-                    customers.data.map((customer: any) => (
-                      <SelectItem value={customer.ID} key={customer.ID}>
-                        {customer.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={customerOptions}
+          label="Consignee"
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="customer_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="Customer">Customer</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {customers &&
-                    customers.data.map((customer: any) => (
-                      <SelectItem value={customer.ID} key={customer.ID}>
-                        {customer.code}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={customerCodeOptions}
+          label="Customer"
         />
         <FormField
           control={form.control}
@@ -272,27 +201,14 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="pieces"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="booking type info here">Pieces</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="origin-1">Origin Type 1</SelectItem>
-                  <SelectItem value="origin-2">Origin Type 2</SelectItem>
-                  <SelectItem value="origin-3">Origin Type 3</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={[
+            { label: "Origin Type 1", value: "origin-1" },
+            { label: "Origin Type 2", value: "origin-2" },
+            { label: "Origin Type 3", value: "origin-3" }
+          ]}
+          label="Pieces"
         />
         <FormField
           control={form.control}
@@ -314,57 +230,15 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="freight_forwarder_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Freight Forwarder
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {customers &&
-                    customers.data.map((customer: any) => (
-                      <SelectItem value={customer.ID} key={customer.ID}>
-                        {customer.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={customerOptions}
+          label="Freight Forwarder"
         />
-        <FormField
-          control={form.control}
-          name="organization_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="Organization">Organization</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {customers &&
-                    customers.data.map((customer: any) => (
-                      <SelectItem value={customer.ID} key={customer.ID}>
-                        {customer.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+        <Combobox
+          name="organizaiton_id"
+          options={customerOptions}
+          label="Organization"
         />
       </Card>
     )

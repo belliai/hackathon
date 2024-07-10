@@ -17,6 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import FormTextField from "@/components/form/FormTextField"
+import { Combobox } from "@/components/form/combobox"
+
 
 interface FlightMasterFormType {
   hookForm: UseFormReturn<any>
@@ -109,7 +111,7 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
   }))
 
   const aircraftTypeOptions = aircraftTypeList?.map((list) => ({
-    value: String(list.id),
+    value: list.id,
     label: list.aircraft_type,
   }))
 
@@ -137,19 +139,19 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
             type="text"
             label="Flight No"
           />
-          <FormTextField
-            form={hookForm}
+          <Combobox
             name="source"
+            options={formattedLocation}
             label="Source"
-            type="select"
-            options={formattedLocation}
+            info="Select the source location"
+            editLink="/settings/data-fields?tab=location"
           />
-          <FormTextField
-            form={hookForm}
+          <Combobox
             name="destination"
-            label="Destination"
-            type="select"
             options={formattedLocation}
+            label="Destination"
+            info="Select the destination location"
+            editLink="/settings/data-fields?tab=location"
           />
         </div>
         <div className="grid grid-cols-2 gap-2">

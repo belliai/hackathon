@@ -34,7 +34,7 @@ import { Separator } from "../ui/separator"
 import { FormTextFieldProps } from "./FormTextField"
 
 interface ComboboxFormProps extends Omit<FormTextFieldProps, "form" | "type"> {
-  options: { label: string; value: string }[]
+  options?: { label: string; value: string }[]
   className?: string
   popoverClassName?: string
   editLink?: string
@@ -72,13 +72,16 @@ export function Combobox({
   placeholder,
   description,
   disabled,
-  options,
+  options=[],
   className,
   popoverClassName,
   editLink,
   searchPlaceholder = "Search",
 }: ComboboxFormProps) {
   const form = useFormContext()
+
+  // Determine if the search input should be shown
+  const showSearchInput = options.length > 10;
 
   return (
     <FormField
@@ -117,11 +120,13 @@ export function Combobox({
               align="start"
             >
               <Command>
+              {showSearchInput && (
                 <CommandInput
                   hideIcon
                   placeholder={searchPlaceholder}
                   className="h-9 py-2 text-inherit placeholder:text-xs"
                 />
+              )}
                 <CommandEmpty>No results</CommandEmpty>
                 <CommandGroup className="py-0 pr-0">
                   <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
