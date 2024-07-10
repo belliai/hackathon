@@ -49,11 +49,12 @@ export default function Page() {
 
   return (
     <PageContainer className="gap-6">
-      <div className="flex">
+      <div style={{ marginTop: '-5px' }}>
         <div className="flex-1 p-4">
           <Button
             onClick={handleClick}
             className="bg-button-primary text-white hover:bg-button-primary/80"
+            style={{ fontSize: '0.875rem' }}            
           >
             <span className="hidden md:block">Extract Data</span>
           </Button>

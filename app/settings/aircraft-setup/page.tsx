@@ -314,6 +314,7 @@ export default function MasterAircraftPage() {
       variant={"button-primary"}
       className="p-2 text-xs"
       onClick={() => setCurrentOpenModal(true)}
+      style={{ fontSize: '0.875rem' }}
     >
       <PlusIcon className="mr-2 size-4" />
       Create Aircraft
@@ -323,6 +324,7 @@ export default function MasterAircraftPage() {
   const tabsList = (
     <TabsList className="gap-2 bg-transparent p-0">
       <TabsTrigger
+        style={{ fontSize: '0.875rem' }}
         className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
         value="aircraft-types"
       >
@@ -330,6 +332,7 @@ export default function MasterAircraftPage() {
         Aircraft Types
       </TabsTrigger>
       <TabsTrigger
+        style={{ fontSize: '0.875rem' }}
         className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
         value="list-of-aircrafts"
       >
@@ -341,6 +344,7 @@ export default function MasterAircraftPage() {
 
   return (
     <PageContainer>
+      <div style={{ marginTop: '9px' }}>
       <Tabs
         onValueChange={setTabSearchParams}
         className="space-y-4"
@@ -359,6 +363,7 @@ export default function MasterAircraftPage() {
         </TabsContent>
         <TabsContent value="list-of-aircrafts" asChild>
           <DataTable
+            showToolbarOnlyOnHover={true}
             columns={aircraftTailNumbersColumns}
             data={aircraftTailNumbersData ?? []}
             onRowClick={({ aircraft_id }) => {
@@ -369,6 +374,7 @@ export default function MasterAircraftPage() {
           />
         </TabsContent>
       </Tabs>
+      </div>
       <AircraftTypeForm
         form={form}
         currentOpen={currentOpenModal}

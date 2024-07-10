@@ -551,6 +551,12 @@ export const settingNavigation: TSidebarItem[] = [
           },
         ],
       },
+      {
+        name: "testpage",
+        icon: CubeIcon,
+        href: "/configuration/testpage",
+        current: false,
+      },
     ],
   },
 ]
