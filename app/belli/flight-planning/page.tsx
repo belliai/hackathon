@@ -10,14 +10,14 @@ import { DataTable } from "@/components/data-table/data-table";
 export default function FlightPlanning() {
   return (
     <div>
-      <div className="flex gap-5">
+      <div style={{ marginTop: '10px' }}>
         <div className="w-3/4 dataTableContainer">
           <Tabs defaultValue="unassined-section" className="w-full">
             <TabsList>
-              <TabsTrigger value="unassined-section">Unassigned AWB</TabsTrigger>
-              <TabsTrigger value="assigned-section">Assigned AWB</TabsTrigger>
-              <TabsTrigger value="cart-load">Cart Load</TabsTrigger>
-              <TabsTrigger value="uld-load">ULD Load</TabsTrigger>
+              <TabsTrigger value="unassined-section" style={{ fontSize: '0.875rem' }}>Unassigned AWB</TabsTrigger>
+              <TabsTrigger value="assigned-section" style={{ fontSize: '0.875rem' }}>Assigned AWB</TabsTrigger>
+              <TabsTrigger value="cart-load" style={{ fontSize: '0.875rem' }}>Cart Load</TabsTrigger>
+              <TabsTrigger value="uld-load" style={{ fontSize: '0.875rem' }}>ULD Load</TabsTrigger>
             </TabsList>
             <TabsContent value="unassined-section">
               <UnassinedSection />

@@ -455,6 +455,7 @@ export default function Page() {
       variant={"button-primary"}
       className="p-2 text-xs"
       onClick={() => setOpenModal(true)}
+      style={{ fontSize: '0.875rem' }}
     >
       <PlusIcon className="mr-2 size-4" />
       Create New Flight
@@ -467,6 +468,7 @@ export default function Page() {
       variant={"button-primary"}
       className="p-2 text-xs"
       onClick={() => setOpenModalRecurring(true)}
+      style={{ fontSize: '0.875rem' }}
     >
       <PlusIcon className="mr-2 size-4" />
       Create Recurring Flight
@@ -494,12 +496,14 @@ export default function Page() {
                     <TabsTrigger
                       className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="list-view"
+                      style={{ fontSize: '0.875rem' }}
                     >
                       List View
                     </TabsTrigger>
                     <TabsTrigger
                       className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="create-recurring-flight"
+                      style={{ fontSize: '0.875rem' }}
                     >
                       Recurring Flights
                     </TabsTrigger>
