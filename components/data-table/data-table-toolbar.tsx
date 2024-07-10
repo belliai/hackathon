@@ -46,6 +46,9 @@ export function DataTableToolbar<TData>({
   table,
   ...props
 }: DataTableToolbarProps<TData>) {
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [viewOpen, setViewOpen] = useState(false)
+
   const [searchOpen, setSearchOpen] = useState(false)
   const [search, setSearch] = useState<string>()
   const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
@@ -126,13 +129,14 @@ export function DataTableToolbar<TData>({
           "inline-flex gap-2 text-muted-foreground opacity-0 transition-opacity delay-0 duration-200",
           props.isHover === undefined
             ? "opacity-100"
-            : props.isHover
+            : props.isHover || filterOpen || viewOpen
               ? "opacity-100"
               : "opacity-0"
         )}
       >
         <Tooltip delayDuration={100}>
           <DataTableFilterOptions
+            onOpenChange={setFilterOpen}
             table={table}
             isLocked={isLockedView}
             lockedPageFilters={lockedPageFilters}
@@ -189,6 +193,7 @@ export function DataTableToolbar<TData>({
         </div>
         <Tooltip delayDuration={100}>
           <DataTableViewOptions
+            onOpenChange={setViewOpen}
             table={table}
             initialVisibility={props.initialVisibility ?? {}}
           >

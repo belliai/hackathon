@@ -16,6 +16,15 @@ import {
 } from "lucide-react"
 import { useDebounceValue } from "usehooks-ts"
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { Button } from "../ui/button"
 import {
   Command,
@@ -29,27 +38,20 @@ import DateInput from "../ui/date-input"
 import { Input } from "../ui/input"
 import { Popover, PopoverContent } from "../ui/popover"
 import { Separator } from "../ui/separator"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   children: ReactNode
   isLocked: boolean
   lockedPageFilters: any
+  onOpenChange: (open: boolean) => void
 }
 
 const DEFAULT_FILTER_DATA = {
   id: 1,
   column: "",
   value: "",
-};
+}
 
 export function DataTableFilterOptions<TData>({
   table,
@@ -57,7 +59,9 @@ export function DataTableFilterOptions<TData>({
   lockedPageFilters,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  const [filterList, setFilterList] = useState<typeof DEFAULT_FILTER_DATA[]>([DEFAULT_FILTER_DATA]);
+  const [filterList, setFilterList] = useState<(typeof DEFAULT_FILTER_DATA)[]>([
+    DEFAULT_FILTER_DATA,
+  ])
 
   const filterableColumns = table
     .getAllColumns()
@@ -66,64 +70,92 @@ export function DataTableFilterOptions<TData>({
         Boolean(col.accessorFn) && col.getIsVisible() && col.getCanFilter()
     )
     .sort((a, b) => b.getFilterIndex() - a.getFilterIndex())
-  
+
   const handleAddFilter = () => {
-    setFilterList([...filterList, { ...DEFAULT_FILTER_DATA, id: filterList.length + 1 }]);
+    setFilterList([
+      ...filterList,
+      { ...DEFAULT_FILTER_DATA, id: filterList.length + 1 },
+    ])
   }
 
   const handleRemoveFilter = (id: number) => {
-    setFilterList(filterList.filter((filter) => filter.id !== id));
-    table.resetColumnFilters();
+    setFilterList(filterList.filter((filter) => filter.id !== id))
+    table.resetColumnFilters()
   }
 
-  const handleChangeFilter = (id: number, value: string, identifier: string, index: number) => {
+  const handleChangeFilter = (
+    id: number,
+    value: string,
+    identifier: string,
+    index: number
+  ) => {
     if (identifier === "column") {
-      table.resetColumnFilters();
+      table.resetColumnFilters()
     }
 
-    setFilterList(filterList.map((filter) => filter.id === id ? { ...filter, [identifier]: value } : filter));
+    setFilterList(
+      filterList.map((filter) =>
+        filter.id === id ? { ...filter, [identifier]: value } : filter
+      )
+    )
   }
 
   useEffect(() => {
     filterList.forEach((filter) => {
       if (filter.column) {
-        table.getColumn(filter.column)?.setFilterValue(filter.value);
+        table.getColumn(filter.column)?.setFilterValue(filter.value)
       }
-    });
+    })
   }, [filterList, table])
 
   useEffect(() => {
-    const reformatColumnFilter = (lockedPageFilters?.columnFilters ?? []).map((filter: any, index: number) => (
-      {
+    const reformatColumnFilter = (lockedPageFilters?.columnFilters ?? []).map(
+      (filter: any, index: number) => ({
         id: `${filter.id}-${index}`,
         column: filter.id,
         value: filter.value,
-      }
-    ))
-    setFilterList(isLocked ? [DEFAULT_FILTER_DATA] : [...reformatColumnFilter ?? [], ...filterList]);
-  }, [isLocked]);
+      })
+    )
+    setFilterList(
+      isLocked
+        ? [DEFAULT_FILTER_DATA]
+        : [...(reformatColumnFilter ?? []), ...filterList]
+    )
+  }, [isLocked])
 
   return (
-    <Popover>
+    <Popover onOpenChange={props.onOpenChange}>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
-      <PopoverContent align="end" className="w-[500px] flex flex-col gap-4 p-4 border-zinc-700">
+      <PopoverContent
+        align="end"
+        className="flex w-[500px] flex-col gap-4 border-zinc-700 p-4"
+      >
         {filterList.map((filter, index) => (
-          <div key={filter.id} className="flex gap-2 items-center">
-            <div className="text-sm w-2/12 grow-0">
+          <div key={filter.id} className="flex items-center gap-2">
+            <div className="w-2/12 grow-0 text-sm">
               {index === 0 ? "WHERE" : "AND"}
             </div>
 
             <div className="w-5/12">
-              <Select onValueChange={(value) => handleChangeFilter(filter.id, value, "column", index)} value={filter.column}>
-                <SelectTrigger className="w-full border-zinc-7000 text-left h-9">
+              <Select
+                onValueChange={(value) =>
+                  handleChangeFilter(filter.id, value, "column", index)
+                }
+                value={filter.column}
+              >
+                <SelectTrigger className="border-zinc-7000 h-9 w-full text-left">
                   <SelectValue placeholder="Select Column" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     {filterableColumns.map((columnItem) => (
                       <SelectItem key={columnItem.id} value={columnItem.id}>
-                        {typeof columnItem?.columnDef?.header === 'string' ? columnItem?.columnDef?.header : ''}
-                        {typeof columnItem?.columnDef?.header === 'function' ? (columnItem?.columnDef?.header as () => string)() : ''}
+                        {typeof columnItem?.columnDef?.header === "string"
+                          ? columnItem?.columnDef?.header
+                          : ""}
+                        {typeof columnItem?.columnDef?.header === "function"
+                          ? (columnItem?.columnDef?.header as () => string)()
+                          : ""}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -136,18 +168,24 @@ export function DataTableFilterOptions<TData>({
                 className="border-zinc-700"
                 value={filter.value}
                 onChange={(e) => {
-                  handleChangeFilter(filter.id, e.target.value, "value", index);
+                  handleChangeFilter(filter.id, e.target.value, "value", index)
                 }}
               />
             </div>
-            
-            <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700" onClick={() => handleRemoveFilter(filter.id)}>
+
+            <Button
+              className="w-fit bg-zinc-800 text-white hover:bg-zinc-700"
+              onClick={() => handleRemoveFilter(filter.id)}
+            >
               <Trash className="h-4 w-4" />
             </Button>
           </div>
         ))}
 
-        <Button className="w-fit bg-zinc-800 text-white hover:bg-zinc-700" onClick={handleAddFilter}>
+        <Button
+          className="w-fit bg-zinc-800 text-white hover:bg-zinc-700"
+          onClick={handleAddFilter}
+        >
           <PlusIcon className="h-4 w-4" /> Add Filter
         </Button>
       </PopoverContent>

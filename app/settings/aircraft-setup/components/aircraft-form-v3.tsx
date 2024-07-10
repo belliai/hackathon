@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
 import {
   FileClockIcon,
@@ -66,6 +66,8 @@ type AircraftTypeFormProps = {
 
 export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
+
+  const [closeWarningOpen, setCloseWarningOpen] = useState(false)
 
   const fieldArray = useFieldArray({
     control: form.control,
@@ -215,6 +217,10 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     }
   }
 
+  useEffect(() => {
+    form.reset(formDefaultValues)
+  }, [currentOpen, form, formDefaultValues])
+
   const { mutateAsync: deleteMutateAsync, isPending: isPendingDelete } =
     useDeleteAircraft()
 
@@ -244,7 +250,14 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
 
   return (
     <Dialog open={!!currentOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[90dvh] min-w-[800px]">
+      <DialogContent
+        hideCloseButton
+        className="h-[90dvh] min-w-[1100px]"
+        onInteractOutside={(e) => {
+          e.preventDefault()
+          setCloseWarningOpen(true)
+        }}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmitAircraft, (data) =>
@@ -261,35 +274,47 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
               defaultValue="aircraft-type"
               className="flex h-full flex-row items-start justify-start gap-4 space-y-0"
             >
-              <TabsList className="h-fit w-52 flex-col">
-                <TabsTrigger
-                  value="aircraft-type"
-                  className="w-full justify-start py-1.5"
-                >
-                  <PlaneIcon className="mr-2 size-4" />
-                  Aircraft Type
-                </TabsTrigger>
-                <TabsTrigger
-                  value="aircraft-tail-numbers"
-                  className="w-full justify-start py-1.5"
-                >
-                  <ScrollTextIcon className="mr-2 size-4" />
-                  Tail Numbers
-                </TabsTrigger>
-                <TabsTrigger
-                  value="aircraft-details"
-                  className="w-full justify-start py-1.5"
-                >
-                  <FileSlidersIcon className="mr-2 size-4" />
-                  Aircraft Details
-                </TabsTrigger>
-                <TabsTrigger
-                  value="activity-log"
-                  className="w-full justify-start py-1.5"
-                >
-                  <FileClockIcon className="mr-2 size-4" /> Activity Log
-                </TabsTrigger>
-              </TabsList>
+              <div className="space-y-2">
+                <TabsList className="h-fit w-52 flex-col">
+                  <TabsTrigger
+                    value="aircraft-type"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <PlaneIcon className="mr-2 size-4" />
+                    Aircraft Type
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={!selectedVersion}
+                    value="aircraft-tail-numbers"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <ScrollTextIcon className="mr-2 size-4" />
+                    Tail Numbers
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={!selectedVersion}
+                    value="aircraft-details"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <FileSlidersIcon className="mr-2 size-4" />
+                    Aircraft Details
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={!isEdit}
+                    value="activity-log"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <FileClockIcon className="mr-2 size-4" /> Activity Log
+                  </TabsTrigger>
+                </TabsList>
+                <InputSwitch<AircraftFormValues>
+                  label="Aircraft Status"
+                  name="status_id"
+                  type="select"
+                  className="rounded-md"
+                  selectOptions={aircraftStatusOptions}
+                />
+              </div>
               <TabsContent className="w-full flex-1" value="aircraft-type">
                 <Card className="divide-y rounded-md">
                   <CardHeader className="space-y-0">
@@ -342,21 +367,21 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                         {fieldArray.fields?.map((field, index) => {
                           return (
                             <TableRow key={field.id}>
-                              <TableCell className="pl-4 pr-1">
+                              <TableCell className="pl-4 pr-1 align-top">
                                 <InputSwitch<AircraftFormValues>
                                   name={`aircraft_tail_numbers.${index}.tail_number`}
                                   placeholder="Tail Number"
                                   type="text"
                                 />
                               </TableCell>
-                              <TableCell className="min-w-24 px-1">
+                              <TableCell className="min-w-24 px-1 align-top">
                                 <InputSwitch<AircraftFormValues>
                                   name={`aircraft_tail_numbers.${index}.status_id`}
                                   type="select"
                                   selectOptions={aircraftStatusOptions}
                                 />
                               </TableCell>
-                              <TableCell className="w-9 pl-1 pr-4">
+                              <TableCell className="w-9 pl-1 pr-4 align-top">
                                 <Button
                                   type="button"
                                   size="icon"
@@ -446,7 +471,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       </div>
                       <div className="space-y-2">
                         <span className="font-semibold">Details</span>
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                        <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                           <InputSwitch<AircraftFormValues>
                             label="MTOW"
                             name="mtow"
@@ -518,6 +543,12 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                             name="max_dimension_height"
                             type="text"
                           />
+                          <InputSwitch<AircraftFormValues>
+                            label="GL Code"
+                            name="gl_code_id"
+                            type="select"
+                            selectOptions={aircraftBodyTypesOptions}
+                          />
                           <input
                             name="count"
                             type="hidden"
@@ -580,23 +611,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           />
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <span className="font-semibold">Status</span>
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-                          <InputSwitch<AircraftFormValues>
-                            label="Status"
-                            name="status_id"
-                            type="select"
-                            selectOptions={aircraftStatusOptions}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="GL Code"
-                            name="gl_code_id"
-                            type="select"
-                            selectOptions={aircraftBodyTypesOptions}
-                          />
-                        </div>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -606,6 +620,13 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
               </TabsContent>
             </Tabs>
             <DialogFooter>
+              <Button
+                type="button"
+                variant={"secondary"}
+                onClick={() => setCloseWarningOpen(true)}
+              >
+                Cancel
+              </Button>
               {typeof currentOpen === "string" && (
                 <AlertDialog>
                   <AlertDialogTrigger>
@@ -637,6 +658,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   </AlertDialogContent>
                 </AlertDialog>
               )}
+
               <Button
                 type="submit"
                 variant={"button-primary"}
@@ -649,6 +671,24 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
           </form>
         </Form>
       </DialogContent>
+      <AlertDialog open={closeWarningOpen} onOpenChange={setCloseWarningOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              You may have unsaved changes. Continue?
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No, continue editing</AlertDialogCancel>
+            <AlertDialogAction
+              variant={"button-primary"}
+              onClick={() => onOpenChange(false)}
+            >
+              Yes, discard changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

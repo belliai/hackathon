@@ -1,3 +1,7 @@
+"use client"
+
+import { useCallback, useEffect, useRef } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@components/ui/button"
 import {
   Select,
@@ -14,6 +18,7 @@ import {
   DownloadIcon,
 } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
+
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 interface DataTablePaginationProps<TData> {
@@ -27,8 +32,55 @@ export function DataTablePagination<TData>({
   showSelectedCount,
   isCanExport,
 }: DataTablePaginationProps<TData>) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const removeQueryString = useCallback(
+    (name: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete(name)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  const setSearchParams = (key: string, value: string) => {
+    router.push(pathname + "?" + createQueryString(key, value))
+  }
+
+  const deleteSearchParams = (key: string) => {
+    router.push(pathname + "?" + removeQueryString(key))
+  }
+
+  const currentPage = table.getState().pagination.pageIndex + 1
+  const currentPageSize = table.getState().pagination.pageSize
+
+  const pageSizeParams = searchParams.get("pageSize")
+
+  useEffect(() => {
+    if (!pageSizeParams) return
+    table.setPageSize(Number(pageSizeParams))
+  }, [pageSizeParams])
+
+  useEffect(() => {
+    if (currentPageSize === 10) {
+      deleteSearchParams("pageSize")
+      return
+    }
+    setSearchParams("pageSize", String(currentPageSize))
+  }, [currentPageSize])
   return (
-    <div className="flex flex-col items-center justify-between gap-4 px-2 md:flex-row !mt-1">
+    <div className="!mt-1 flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
       {showSelectedCount ? (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -41,13 +93,13 @@ export function DataTablePagination<TData>({
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${currentPageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
+              <SelectValue placeholder={currentPageSize} />
             </SelectTrigger>
             <SelectContent side="top">
               {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -59,8 +111,7 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+          Page {currentPage} of {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
           <Button

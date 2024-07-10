@@ -22,10 +22,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Combobox } from "@/components/form/combobox"
+
 
 const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext()
   const { data: currencies } = useCurrencies()
+
+  const currencyOptions = currencies?.map((currency: any) => ({
+    value: currency.ID,
+    label: currency.name,
+  }));
 
   return (
     <Card className="p-4" ref={ref}>
@@ -43,30 +50,12 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="currency_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hello this is info here">Currency</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {currencies &&
-                    currencies.map((currency: any) => (
-                      <SelectItem value={currency.ID} key={currency.ID}>
-                        {currency.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+        <Combobox
+          name="partner_prefix_id"
+          options={currencyOptions}
+          label="Currency"
+          info="Select the Currency"
+          editLink="/settings/data-fields?tab=currency"
         />
         <FormField
           control={form.control}
