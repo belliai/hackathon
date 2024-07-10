@@ -11,6 +11,7 @@ import {
   PackageIcon,
   PlaneIcon,
   Plus,
+  PlusIcon,
   ScrollTextIcon,
   SquarePenIcon,
   UserIcon,
@@ -448,6 +449,30 @@ export default function Page() {
     setDeleteConfirm(data)
   }
 
+  const createButtonFlight = (
+    <Button
+      size={"sm"}
+      variant={"button-primary"}
+      className="p-2 text-xs"
+      onClick={() => setOpenModal(true)}
+    >
+      <PlusIcon className="mr-2 size-4" />
+      Create New Flight
+    </Button>
+  )
+
+  const createButtonRecurringFlight = (
+    <Button
+      size={"sm"}
+      variant={"button-primary"}
+      className="p-2 text-xs"
+      onClick={() => setOpenModalRecurring(true)}
+    >
+      <PlusIcon className="mr-2 size-4" />
+      Create Recurring Flight
+    </Button>
+  )
+
   const tableState = useCallback(async ({ pagination }: any) => {
     setPagination(pagination)
   }, [])
@@ -459,17 +484,11 @@ export default function Page() {
           <TabsContent value="list-view">
             <div className="">
               <DataTable
+                showToolbarOnlyOnHover={true}
                 columns={columns(openDetailFlight, onShowDelete)}
                 data={isLoading ? [] : (flightData && flightData.data) || []}
                 onRowClick={openDetailFlight}
-                extraToolbarButtons={[
-                  {
-                    label: "Create New Flight",
-                    icon: Plus,
-                    variant: "button-primary",
-                    onClick: () => setOpenModal(true),
-                  },
-                ]}
+                extraRightComponents={createButtonFlight}
                 extraLeftComponents={
                   <TabsList className="gap-2 bg-transparent p-0">
                     <TabsTrigger
@@ -482,7 +501,7 @@ export default function Page() {
                       className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="create-recurring-flight"
                     >
-                      Create Recurring Flight
+                      Recurring Flights
                     </TabsTrigger>
                   </TabsList>
                 }
@@ -500,17 +519,10 @@ export default function Page() {
           <TabsContent value="create-recurring-flight">
             <div className="">
               <DataTable
+                showToolbarOnlyOnHover={true}
                 columns={columns(openDetailFlight, onShowDelete)}
                 data={isLoading ? [] : (flightData && flightData.data) || []}
-                // onRowClick={openDetailRecurringFlight}
-                extraToolbarButtons={[
-                  {
-                    label: "Create Recurring Flight",
-                    icon: Plus,
-                    variant: "button-primary",
-                    onClick: () => setOpenModalRecurring(true),
-                  },
-                ]}
+                extraRightComponents={createButtonRecurringFlight}
                 extraLeftComponents={
                   <TabsList className="gap-2 bg-transparent p-0">
                     <TabsTrigger
@@ -523,7 +535,7 @@ export default function Page() {
                       className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="create-recurring-flight"
                     >
-                      Create Recurring Flight
+                      Recurring Flights
                     </TabsTrigger>
                   </TabsList>
                 }

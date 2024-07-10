@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Combobox } from "@/components/form/combobox"
 
 const generateAWBNumbers = (start: number, length: number) => {
   return Array.from({ length }, (_, i) => {
@@ -47,67 +48,45 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const { data: partnerCodes } = usePartnerCodes()
   const { data: statuses } = useStatuses()
 
+  const bookingTypeOptions = bookingTypes?.map((type: any) => ({
+    value: type.ID,
+    label: type.name,
+  }));
+
+  const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
+    value: prefix.ID,
+    label: prefix.name,
+  }));
+
+  const partnerCodesOptions = partnerCodes?.map((code: any) => ({
+    value: code.ID,
+    label: code.name,
+  }));
+
+  const statusOptions = statuses?.map((status: any) => ({
+    value: status.ID,
+    label: status.name,
+  }));
+
+
   useEffect(() => {}, [form.formState])
 
   return (
     <Card className="space-y-2 p-4" ref={ref}>
       <div className="grid grid-cols-4 gap-2">
-        <FormField
-          control={form.control}
+      <Combobox
           name="booking_type_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel tooltipId="new-orders-booking-type">
-                Booking Type
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {bookingTypes &&
-                    bookingTypes.map((bookingType: any) => (
-                      <SelectItem value={bookingType.ID} key={bookingType.ID}>
-                        {bookingType.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={bookingTypeOptions}
+          label="Booking Type"
+          info="Select the Booking Type"
+          editLink="/belli/data-fields/#booking-type"
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="partner_prefix_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel tooltipId="new-orders-partner-prefix">
-                Partner Prefix *
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {partnerPrefixes &&
-                    partnerPrefixes.map((partnerPrefix: any) => (
-                      <SelectItem
-                        value={partnerPrefix.ID}
-                        key={partnerPrefix.ID}
-                      >
-                        {partnerPrefix.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={partnerPrefixesOptions}
+          label="Partner Prefix"
+          info="Select the Partner Prefix"
+          editLink="/belli/data-fields/#partner-prefix"
         />
         <FormField
           control={form.control}
@@ -122,32 +101,12 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="partner_code_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel tooltipId="new-orders-partner-code">
-                Partner Code *
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/40">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {partnerCodes &&
-                    partnerCodes.map((partnerCode: any) => (
-                      <SelectItem value={partnerCode.ID} key={partnerCode.ID}>
-                        {partnerCode.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={partnerCodesOptions}
+          label="Partner Code"
+          info="Select the Partner Code"
+          editLink="/belli/data-fields/#partner-code"
         />
       </div>
       <div className="flex w-full flex-row items-center justify-between">
@@ -178,31 +137,13 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           </Button>
         </div>
       </div>
-      <FormField
-        control={form.control}
-        name="status_id"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel tooltipId="new-orders-status">Status</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger className="border-2 border-foreground/30">
-                  <SelectValue />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {statuses &&
-                  statuses.map((status: any) => (
-                    <SelectItem value={status.ID} key={status.ID}>
-                      {status.name}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <Combobox
+          name="status_id"
+          options={statusOptions}
+          label="Status"
+          info="Select the Status"
+          editLink="/belli/data-fields/#status"
+        />
     </Card>
   )
 })

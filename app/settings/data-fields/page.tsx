@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   BadgeDollarSignIcon,
   BookUserIcon,
@@ -70,18 +70,34 @@ const tabs: {
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState(tabs[0].name)
-
+  
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+      const tab = tabs.find((tab) => tab.name.toLowerCase().replace(/\s+/g, '-') === hash);
+      if (tab) {
+        setActiveTab(tab.name);
+      }
+    }
+  }, []);
+  //handle tab change
+  const handleTabChange = (val:any) => {
+    setActiveTab(val);
+    window.location.hash = val.toLowerCase().replace(/\s+/g, '-');
+  };
   return (
     <PageContainer>
       <Tabs
-        defaultValue={activeTab}
-        onValueChange={(val) => setActiveTab(val as SettingsTabName)}
+        value={activeTab}
+        //onValueChange={(val) => setActiveTab(val as SettingsTabName)}
+        onValueChange={handleTabChange}
         className="flex h-full w-full flex-row items-start justify-start gap-4 space-y-0"
       >
         <TabsList className="h-fit w-52 flex-col">
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.name}
+              id={tab.name.toLowerCase().replace(/\s+/g, '-')}
               value={tab.name}
               className="w-full justify-start px-2 py-1.5"
             >

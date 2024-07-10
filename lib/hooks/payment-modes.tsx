@@ -1,72 +1,81 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-import { setHeaders } from "../utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "payment-modes"
 
-const config = {
-  headers: setHeaders(),
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-}
-
-export const fetchPaymentModes = async () => {
-  const { data } = await axios.get(`/${route}`, config)
+export const fetchPaymentModes = async (belliApi: AxiosInstance) => {
+  const { data } = await belliApi.get(`/${route}`)
   return data
 }
 
-export const updatePaymentMode = async (prop: { id: string; name: string }) => {
+export const updatePaymentMode = async (
+  belliApi: AxiosInstance,
+  prop: { id: string; name: string }
+) => {
   const updateData = { name: prop.name }
-  const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config)
+  const { data } = await belliApi.put(`/${route}/${prop.id}`, updateData)
   return data
 }
 
-export const addPaymentMode = async (prop: { name: string }) => {
+export const addPaymentMode = async (
+  belliApi: AxiosInstance,
+  prop: { name: string }
+) => {
   const newData = { name: prop.name }
-  const { data } = await axios.post(`/${route}`, newData, config)
+  const { data } = await belliApi.post(`/${route}`, newData)
   return data
 }
 
-export const removePaymentMode = async (prop: { id: string }) => {
-  const resp = await axios.delete(`/${route}/${prop.id}`, config)
+export const removePaymentMode = async (
+  belliApi: AxiosInstance,
+  prop: { id: string }
+) => {
+  const resp = await belliApi.delete(`/${route}/${prop.id}`)
   return resp
 }
 
 export const usePaymentModes = () => {
+  const belliApi = useBelliApi()
   return useQuery({
     queryKey: [route],
-    queryFn: fetchPaymentModes,
+    queryFn: async () => await fetchPaymentModes(await belliApi),
   })
 }
 
 export const useUpdatePaymentMode = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: updatePaymentMode,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { id: string; name: string }) =>
+      await updatePaymentMode(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useAddPaymentMode = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: addPaymentMode,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { name: string }) =>
+      await addPaymentMode(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useRemovePaymentMode = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: removePaymentMode,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { id: string }) =>
+      await removePaymentMode(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -75,5 +84,4 @@ export const useRemovePaymentMode = () => {
       console.log(e)
     },
   })
-  return mutation
 }

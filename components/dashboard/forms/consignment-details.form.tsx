@@ -59,6 +59,16 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
       value: location.ID,
     }))
 
+    const commodityCodeOptions = commodityCodes.map((code: any) => ({
+      value: code.ID,
+      label: code.name,
+    }));
+
+    const paymentOptions = paymentModes?.map((mode: any) => ({
+      value: mode.ID, 
+      label: mode.name, 
+    }))
+
     return (
       <Card className="grid grid-cols-2 gap-x-3 gap-y-2 p-4" ref={ref}>
         <Combobox
@@ -66,64 +76,21 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           options={locationsOptions}
           label="Origin"
           info="Select the origin location"
-          editLink="/belli/settings/#location"
+          editLink="/belli/data-fields/#location"
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="destination_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Destination
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {locations &&
-                    locations.map((location: any) => (
-                      <SelectItem value={location.ID} key={location.ID}>
-                        {location.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={locationsOptions}
+          label="Destination"
+          info="Select the Destination location"
+          editLink="/belli/data-fields/#location"
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="commodity_code_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Commodity Code *
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {commodityCodes &&
-                    commodityCodes.map((commodityCode: any) => (
-                      <SelectItem
-                        value={commodityCode.ID}
-                        key={commodityCode.ID}
-                      >
-                        {commodityCode.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={commodityCodeOptions}
+          label="Commodity Code *"
+          info="Select the Commodity Code"
+          editLink="/belli/data-fields/#commodity-code"
         />
         <FormField
           control={form.control}
@@ -145,32 +112,12 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
+        <Combobox
           name="payment_mode_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Payment Mode
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border-2 border-foreground/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {paymentModes &&
-                    paymentModes.map((paymentMode: any) => (
-                      <SelectItem value={paymentMode.ID} key={paymentMode.ID}>
-                        {paymentMode.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={paymentOptions}
+          label="Payment Mode"
+          info="Select the Payment Mode"
+          editLink="/belli/data-fields/#payment-mode"
         />
         <FormField
           control={form.control}

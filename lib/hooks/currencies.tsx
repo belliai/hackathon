@@ -1,48 +1,55 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-import { setHeaders } from "../utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "currencies"
 
-const config = {
-  headers: setHeaders(),
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-}
-
-export const fetchCurrencies = async () => {
-  const { data } = await axios.get(`/${route}`, config)
+export const fetchCurrencies = async (belliApi: AxiosInstance) => {
+  const { data } = await belliApi.get(`/${route}`)
   return data
 }
 
-export const updateCurrency = async (prop: { id: string; name: string }) => {
+export const updateCurrency = async (
+  belliApi: AxiosInstance,
+  prop: { id: string; name: string }
+) => {
   const updateData = { name: prop.name }
-  const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config)
+  const { data } = await belliApi.put(`/${route}/${prop.id}`, updateData)
   return data
 }
 
-export const addCurrency = async (prop: { name: string }) => {
+export const addCurrency = async (
+  belliApi: AxiosInstance,
+  prop: { name: string }
+) => {
   const newData = { name: prop.name }
-  const { data } = await axios.post(`/${route}`, newData, config)
+  const { data } = await belliApi.post(`/${route}`, newData)
   return data
 }
 
-export const removeCurrency = async (prop: { id: string }) => {
-  const resp = await axios.delete(`/${route}/${prop.id}`, config)
+export const removeCurrency = async (
+  belliApi: AxiosInstance,
+  prop: { id: string }
+) => {
+  const resp = await belliApi.delete(`/${route}/${prop.id}`)
   return resp
 }
 
 export const useCurrencies = () => {
+  const belliApi = useBelliApi()
   return useQuery({
     queryKey: [route],
-    queryFn: fetchCurrencies,
+    queryFn: async () => await fetchCurrencies(await belliApi),
   })
 }
 
 export const useUpdateCurrency = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
   const mutation = useMutation({
-    mutationFn: updateCurrency,
+    mutationFn: async (prop: { id: string; name: string }) =>
+      await updateCurrency(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -53,8 +60,10 @@ export const useUpdateCurrency = () => {
 
 export const useAddCurrency = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
   const mutation = useMutation({
-    mutationFn: addCurrency,
+    mutationFn: async (prop: { name: string }) =>
+      await addCurrency(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -65,8 +74,10 @@ export const useAddCurrency = () => {
 
 export const useRemoveCurrency = () => {
   const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
   const mutation = useMutation({
-    mutationFn: removeCurrency,
+    mutationFn: async (prop: { id: string }) =>
+      await removeCurrency(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })

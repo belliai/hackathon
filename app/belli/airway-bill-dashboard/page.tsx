@@ -70,7 +70,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="relative">
+    <div style={{ marginTop: '10px' }}>
       <ClientSideSuspense
         fallback={
           <></>
@@ -91,6 +91,7 @@ export default function Home() {
         tableState={tableState}
         className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
         menuId="airway-bill-dashboard"
+        showToolbarOnlyOnHover={true}
       />
       <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode="edit" />
       <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>

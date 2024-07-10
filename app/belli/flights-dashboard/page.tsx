@@ -30,27 +30,30 @@ export default function FlightsDashboardPage() {
   const flightsData = flights?.data || []
 
   return (
-    <DataTable
-      initialPinning={{
-        left: [],
-        right: ["actions"],
-      }}
-      columns={columns(
-        (data) => {},
-        (data) => {}
-      )}
-      initialVisibility={{
-        updated_at: false,
-        updated_by: false,
-        created_at: false,
-        sector: false,
-      }}
-      data={flightsData}
-      pageCount={isLoading ? 1 : flights?.total_pages}
-      manualPagination={true}
-      tableState={tableState}
-      className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
-      menuId="flight-dashboard"
-    />
-  )
+    <div style={{ marginTop: '10px' }}>
+      <DataTable
+        initialPinning={{
+          left: [],
+          right: ["actions"],
+        }}
+        columns={columns(
+          (data) => {},
+          (data) => {}
+        )}
+        initialVisibility={{
+          updated_at: false,
+          updated_by: false,
+          created_at: false,
+          sector: false,
+        }}
+        data={flightsData}
+        pageCount={isLoading ? 1 : flights?.total_pages}
+        manualPagination={true}
+        tableState={tableState}
+        className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
+        menuId="flight-dashboard"
+        showToolbarOnlyOnHover={true}
+      />
+    </div>
+  )  
 }

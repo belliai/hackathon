@@ -9,7 +9,10 @@ export default async function AssignedSection() {
   return (
     <div className="mt-5 flex flex-col gap-4">
       <AssignedSummary />
-      <DataTable columns={assignedColumn} data={data} menuId="flight-planning-assigned" />
+      <DataTable 
+      columns={assignedColumn} data={data} menuId="flight-planning-assigned"
+      showToolbarOnlyOnHover={true} 
+      />
     </div>
   )
 }

@@ -1,72 +1,81 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-import { setHeaders } from "../utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "locations"
 
-const config = {
-  headers: setHeaders(),
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-}
-
-export const fetchLocations = async () => {
-  const { data } = await axios.get(`/${route}`, config)
+export const fetchLocations = async (belliApi: AxiosInstance) => {
+  const { data } = await belliApi.get(`/${route}`)
   return data
 }
 
-export const updateLocation = async (prop: { id: string; name: string }) => {
+export const updateLocation = async (
+  belliApi: AxiosInstance,
+  prop: { id: string; name: string }
+) => {
   const updateData = { name: prop.name }
-  const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config)
+  const { data } = await belliApi.put(`/${route}/${prop.id}`, updateData)
   return data
 }
 
-export const addLocation = async (prop: { name: string }) => {
+export const addLocation = async (
+  belliApi: AxiosInstance,
+  prop: { name: string }
+) => {
   const newData = { name: prop.name }
-  const { data } = await axios.post(`/${route}`, newData, config)
+  const { data } = await belliApi.post(`/${route}`, newData)
   return data
 }
 
-export const removeLocation = async (prop: { id: string }) => {
-  const resp = await axios.delete(`/${route}/${prop.id}`, config)
+export const removeLocation = async (
+  belliApi: AxiosInstance,
+  prop: { id: string }
+) => {
+  const resp = await belliApi.delete(`/${route}/${prop.id}`)
   return resp
 }
 
 export const useLocations = () => {
+  const belliApi = useBelliApi()
   return useQuery({
     queryKey: [route],
-    queryFn: fetchLocations,
+    queryFn: async () => await fetchLocations(await belliApi),
   })
 }
 
 export const useUpdateLocation = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: updateLocation,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { id: string; name: string }) =>
+      await updateLocation(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useAddLocation = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: addLocation,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { name: string }) =>
+      await addLocation(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useRemoveLocation = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: removeLocation,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { id: string }) =>
+      await removeLocation(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -75,5 +84,4 @@ export const useRemoveLocation = () => {
       console.log(e)
     },
   })
-  return mutation
 }

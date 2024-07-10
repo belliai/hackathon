@@ -1,75 +1,81 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import { AxiosInstance } from "axios"
 
-import { setHeaders } from "../utils/network"
+import { useBelliApi } from "@/lib/utils/network"
 
 const route = "partner-prefixes"
 
-const config = {
-  headers: setHeaders(),
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-}
-
-export const fetchPartnerPrefixes = async () => {
-  const { data } = await axios.get(`/${route}`, config)
+export const fetchPartnerPrefixes = async (belliApi: AxiosInstance) => {
+  const { data } = await belliApi.get(`/${route}`)
   return data
 }
 
-export const updatePartnerPrefix = async (prop: {
-  id: string
-  name: string
-}) => {
+export const updatePartnerPrefix = async (
+  belliApi: AxiosInstance,
+  prop: { id: string; name: string }
+) => {
   const updateData = { name: prop.name }
-  const { data } = await axios.put(`/${route}/${prop.id}`, updateData, config)
+  const { data } = await belliApi.put(`/${route}/${prop.id}`, updateData)
   return data
 }
 
-export const addPartnerPrefix = async (prop: { name: string }) => {
+export const addPartnerPrefix = async (
+  belliApi: AxiosInstance,
+  prop: { name: string }
+) => {
   const newData = { name: prop.name }
-  const { data } = await axios.post(`/${route}`, newData, config)
+  const { data } = await belliApi.post(`/${route}`, newData)
   return data
 }
 
-export const removePartnerPrefix = async (prop: { id: string }) => {
-  const resp = await axios.delete(`/${route}/${prop.id}`, config)
+export const removePartnerPrefix = async (
+  belliApi: AxiosInstance,
+  prop: { id: string }
+) => {
+  const resp = await belliApi.delete(`/${route}/${prop.id}`)
   return resp
 }
 
 export const usePartnerPrefixes = () => {
+  const belliApi = useBelliApi()
   return useQuery({
     queryKey: [route],
-    queryFn: fetchPartnerPrefixes,
+    queryFn: async () => await fetchPartnerPrefixes(await belliApi),
   })
 }
 
 export const useUpdatePartnerPrefix = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: updatePartnerPrefix,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { id: string; name: string }) =>
+      await updatePartnerPrefix(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useAddPartnerPrefix = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: addPartnerPrefix,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { name: string }) =>
+      await addPartnerPrefix(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
-  return mutation
 }
 
 export const useRemovePartnerPrefix = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: removePartnerPrefix,
+  const belliApi = useBelliApi()
+  return useMutation({
+    mutationFn: async (prop: { id: string }) =>
+      await removePartnerPrefix(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -78,5 +84,4 @@ export const useRemovePartnerPrefix = () => {
       console.log(e)
     },
   })
-  return mutation
 }
