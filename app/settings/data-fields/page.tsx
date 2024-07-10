@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   BadgeDollarSignIcon,
@@ -16,8 +16,14 @@ import {
   UserRoundCogIcon,
 } from "lucide-react"
 
+import { getTooltipContents } from "@/lib/contentful"
 import { SettingsTabName } from "@/lib/hooks/useSettingsDynamicHook"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import PageContainer from "@/components/layout/PageContainer"
 
 import CrudBookingType from "./booking-type"
@@ -35,43 +41,74 @@ const tabs: {
   name: SettingsTabName
   component: JSX.Element
   icon: LucideIcon
+  tooltipId: string
 }[] = [
   {
     name: "Booking Type",
     component: <CrudBookingType />,
     icon: ReceiptTextIcon,
+    tooltipId: "aircraft-settings-booking-type",
   },
   {
     name: "Partner Prefix",
     component: <CrudPartnerPrefix />,
     icon: UserRoundCogIcon,
+    tooltipId: "aircraft-settings-partner-prefix",
   },
-  { name: "Partner Code", component: <CrudPartnerCode />, icon: BookUserIcon },
-  { name: "Partner Type", component: <CrudPartnerType />, icon: HandshakeIcon },
-  { name: "Status", component: <CrudStatus />, icon: PlaneTakeoffIcon },
-  { name: "Location", component: <CrudLocation />, icon: MapPinIcon },
+  {
+    name: "Partner Code",
+    component: <CrudPartnerCode />,
+    icon: BookUserIcon,
+    tooltipId: "aircraft-settings-partner-code",
+  },
+  {
+    name: "Partner Type",
+    component: <CrudPartnerType />,
+    icon: HandshakeIcon,
+    tooltipId: "aircraft-settings-partner-type",
+  },
+  {
+    name: "Status",
+    component: <CrudStatus />,
+    icon: PlaneTakeoffIcon,
+    tooltipId: "aircraft-settings-status",
+  },
+  {
+    name: "Location",
+    component: <CrudLocation />,
+    icon: MapPinIcon,
+    tooltipId: "aircraft-settings-location",
+  },
   {
     name: "Commodity Code",
     component: <CrudCommodityCode />,
     icon: FileBoxIcon,
+    tooltipId: "aircraft-settings-commodity-code",
   },
   {
     name: "Payment Mode",
     component: <CrudPaymentMode />,
     icon: CreditCardIcon,
+    tooltipId: "aircraft-settings-payment-mode",
   },
   {
     name: "Transport Method",
     component: <CrudTransportMethod />,
     icon: TruckIcon,
+    tooltipId: "aircraft-settings-transport-method",
   },
-  { name: "Currency", component: <CrudCurrency />, icon: BadgeDollarSignIcon },
+  {
+    name: "Currency",
+    component: <CrudCurrency />,
+    icon: BadgeDollarSignIcon,
+    tooltipId: "aircraft-settings-currency",
+  },
   // { name: "Customers", component: <CrudCustomers /> },
 ]
 
 export default function Page() {
-  //const [activeTab, setActiveTab] = useState(tabs[0].name)
-  
+  const tooltips = getTooltipContents()
+
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -81,7 +118,9 @@ export default function Page() {
   useEffect(() => {
     const tabParam = searchParams.get("tab")
     if (tabParam) {
-      const tab = tabs.find((tab) => tab.name.toLowerCase().replace(/\s+/g, '-') === tabParam)
+      const tab = tabs.find(
+        (tab) => tab.name.toLowerCase().replace(/\s+/g, "-") === tabParam
+      )
       if (tab) {
         setActiveTab(tab.name)
       }
@@ -101,13 +140,40 @@ export default function Page() {
   // Handle tab change
   const handleTabChange = (val: any) => {
     setActiveTab(val)
-    router.push(pathname + "?" + createQueryString("tab", val.toLowerCase().replace(/\s+/g, '-')))
+    router.push(
+      pathname +
+        "?" +
+        createQueryString("tab", val.toLowerCase().replace(/\s+/g, "-"))
+    )
   }
   // //handle tab change
   // const handleTabChange = (val:any) => {
   //   setActiveTab(val);
   //   window.location.hash = val.toLowerCase().replace(/\s+/g, '-');
   // };
+
+  const getHoveredContent = (tabName: string) => {
+    const tabFound = tabs.find((tab) => tab.name === tabName)
+    const tooltip = tooltips.find((list) => list.id === tabFound?.tooltipId)
+    return tooltip?.content || ""
+  }
+  const renderTooltip = (tabName: string) => {
+    const content = getHoveredContent(tabName)
+    if (!content) {
+      return <p>{tabName}</p>
+    }
+    return (
+      <Tooltip>
+        <TooltipTrigger>
+          <div>{tabName}</div>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="border bg-card text-foreground">
+          <p>{content}</p>
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
   return (
     <PageContainer>
       <Tabs
@@ -120,12 +186,13 @@ export default function Page() {
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.name}
-              id={tab.name.toLowerCase().replace(/\s+/g, '-')}
+              id={tab.name.toLowerCase().replace(/\s+/g, "-")}
               value={tab.name}
               className="w-full justify-start px-2 py-1.5"
             >
               {<tab.icon className="mr-2 size-4" />}
-              {tab.name}
+
+              {renderTooltip(tab.name)}
             </TabsTrigger>
           ))}
         </TabsList>
