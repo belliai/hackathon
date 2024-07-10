@@ -270,6 +270,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   Aircraft Type
                 </TabsTrigger>
                 <TabsTrigger
+                  disabled={!selectedVersion}
                   value="aircraft-tail-numbers"
                   className="w-full justify-start py-1.5"
                 >
@@ -277,6 +278,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   Tail Numbers
                 </TabsTrigger>
                 <TabsTrigger
+                  disabled={!selectedVersion}
                   value="aircraft-details"
                   className="w-full justify-start py-1.5"
                 >
@@ -284,6 +286,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   Aircraft Details
                 </TabsTrigger>
                 <TabsTrigger
+                  disabled={!isEdit}
                   value="activity-log"
                   className="w-full justify-start py-1.5"
                 >

@@ -44,6 +44,7 @@ interface DataTableViewOptionsProps<TData> {
   showHideAll?: boolean
   showShowAll?: boolean
   initialVisibility?: VisibilityState
+  onOpenChange: (open: boolean) => void
 }
 
 export function DataTableViewOptions<TData>({
@@ -245,7 +246,7 @@ export function DataTableViewOptions<TData>({
   }
 
   return (
-    <Popover>
+    <Popover onOpenChange={props.onOpenChange}>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
       <PopoverContent align="end" className="w-[250px] p-0">
         <Command>
