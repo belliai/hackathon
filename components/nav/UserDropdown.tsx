@@ -1,6 +1,6 @@
 "use client"
 
-import React, { Dispatch, SetStateAction, useEffect } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   ClerkLoading,
@@ -15,6 +15,7 @@ import {
 } from "@clerk/nextjs"
 import { Check, ChevronDownIcon, User } from "lucide-react"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,9 +27,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { Skeleton } from "../ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export type UserDropdownItem = {
   icon?: React.ReactNode
@@ -50,6 +49,7 @@ export default function UserDropdown({
 
   const auth = useAuth()
   const userSession = useUser()
+  const [switched, setSwitched] = useState<boolean>(false)
 
   const hasActiveOrg = !!auth.orgId
 
@@ -74,6 +74,19 @@ export default function UserDropdown({
       })
     }
   }, [hasActiveOrg, isLoaded, userMemberships.data])
+
+  // useEffect(() => {
+  //   if (switched) {
+  //     window.location.reload()
+  //   }
+  // }, [switched, isLoaded])
+
+  const handleSetActiveOrg = (orgId: string) => {
+    if (setActive) {
+      setActive({ organization: orgId })
+      // window.location.reload()
+    }
+  }
 
   const ITEMS: UserDropdownItem[] = [
     // {
@@ -154,7 +167,16 @@ export default function UserDropdown({
                     const isActive = organization.id === auth.orgId
 
                     return (
-                      <DropdownMenuItem disabled={isActive} key={orgmem.id}>
+                      <DropdownMenuItem
+                        disabled={isActive}
+                        key={orgmem.id}
+                        onClick={async () => {
+                          await setActive({
+                            organization: orgmem.organization.id,
+                          })
+                          window.location.reload()
+                        }}
+                      >
                         {organization.name}{" "}
                         {isActive && <Check size={14} className="ml-1" />}
                       </DropdownMenuItem>
