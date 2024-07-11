@@ -51,30 +51,29 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const bookingTypeOptions = bookingTypes?.map((type: any) => ({
     value: type.ID,
     label: type.name,
-  }));
+  }))
 
   const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
     value: prefix.ID,
     label: prefix.name,
-  }));
+  }))
 
   const partnerCodesOptions = partnerCodes?.map((code: any) => ({
     value: code.ID,
     label: code.name,
-  }));
+  }))
 
   const statusOptions = statuses?.map((status: any) => ({
     value: status.ID,
     label: status.name,
-  }));
-
+  }))
 
   useEffect(() => {}, [form.formState])
 
   return (
     <Card className="space-y-2 p-4" ref={ref}>
       <div className="grid grid-cols-4 gap-2">
-      <Combobox
+        <Combobox
           name="booking_type_id"
           options={bookingTypeOptions}
           label="Booking Type"
@@ -138,12 +137,12 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         </div>
       </div>
       <Combobox
-          name="status_id"
-          options={statusOptions}
-          label="Status"
-          info="Select the Status"
-          editLink="/settings/data-fields?tab=status"
-        />
+        name="status_id"
+        options={statusOptions}
+        label="Status"
+        info="Select the Status"
+        editLink="/settings/data-fields?tab=status"
+      />
     </Card>
   )
 })

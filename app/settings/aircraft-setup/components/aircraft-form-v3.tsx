@@ -218,7 +218,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }
 
   useEffect(() => {
-    form.reset(formDefaultValues)
+    !currentOpen && form.reset(formDefaultValues)
   }, [currentOpen, form, formDefaultValues])
 
   const { mutateAsync: deleteMutateAsync, isPending: isPendingDelete } =
@@ -326,22 +326,25 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     <InputSwitch<AircraftFormValues>
                       label="Manufacturer"
                       name="manufacturer"
-                      type="select"
+                      type="combobox"
                       selectOptions={aircraftManufacturerOptions}
+                      enableAdminControl
                     />
                     <InputSwitch<AircraftFormValues>
                       label="Type"
                       name="aircraft_type"
-                      type="select"
+                      type="combobox"
                       selectOptions={aircraftTypeOptions}
                       disabled={aircraftTypeOptions.length < 1}
+                      enableAdminControl
                     />
                     <InputSwitch<AircraftFormValues>
                       label="Version"
                       name="version"
-                      type="select"
+                      type="combobox"
                       selectOptions={aircraftVersionOptions}
                       disabled={aircraftVersionOptions.length < 1}
+                      enableAdminControl
                     />
                   </CardContent>
                 </Card>
@@ -651,7 +654,10 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => onDelete(currentOpen)}>
+                      <AlertDialogAction
+                        variant={"destructive"}
+                        onClick={() => onDelete(currentOpen)}
+                      >
                         Continue
                       </AlertDialogAction>
                     </AlertDialogFooter>
