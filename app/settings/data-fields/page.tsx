@@ -109,7 +109,7 @@ const tabs: {
     name: "Aircrafts",
     component: <CrudAircraft />,
     icon: Plane,
-    tooltipId: "aircraft",
+    tooltipId: "aircraft", // TODO: add tooltip content
   },
 ]
 
@@ -166,7 +166,7 @@ export default function Page() {
     }
     return (
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <div>{tabName}</div>
         </TooltipTrigger>
         <TooltipContent side="right" className="border bg-card text-foreground">
@@ -191,7 +191,7 @@ export default function Page() {
               value={tab.name}
               className="w-full justify-start px-2 py-1.5"
             >
-              {<tab.icon className="mr-2 size-4" />}
+              <tab.icon className="mr-2 size-4" />
 
               {renderTooltip(tab.name)}
             </TabsTrigger>

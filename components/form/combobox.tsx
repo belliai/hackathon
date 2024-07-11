@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { PopoverClose } from "@radix-ui/react-popover"
-import { Check, ChevronDown, PlusCircle } from "lucide-react"
+import { Check, ChevronDown, Pencil, PlusCircle, X } from "lucide-react"
 import { useForm, useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -44,6 +44,7 @@ export type ComboboxProps = {
   info?: string
   searchPlaceholder?: string
   onAddOption?: (newOption: string, close: () => void) => void
+  onSaveEditOption?: (newOption: string, targetValue: string) => void
 }
 
 /**
@@ -90,14 +91,24 @@ export function Combobox({
   editLink,
   searchPlaceholder = "Search",
   onAddOption, // Show the add option button if this is provided
+  onSaveEditOption,
 }: ComboboxFormProps) {
   const [isAdding, setIsAdding] = useState<boolean>(false)
+  const [editingOptionValue, setEditingOptionValue] = useState<string | null>(
+    null
+  )
 
   const form = useFormContext()
 
   const addForm = useForm({
     defaultValues: {
       newOption: "",
+    },
+  })
+
+  const editForm = useForm({
+    defaultValues: {
+      editedOption: "",
     },
   })
 
@@ -121,6 +132,26 @@ export function Combobox({
     if (onAddOption) {
       onAddOption(data.newOption, handleCloseAddOptionAndReset)
     }
+  }
+
+  function handleOpenEditOption(value: string) {
+    // Find the option with the value and use the label to populate the edit form
+    editForm.reset({
+      editedOption: options.find((opt) => opt.value === value)?.label,
+    })
+    setEditingOptionValue(value)
+  }
+
+  function handleCloseOpenEditOption() {
+    setEditingOptionValue(null)
+  }
+
+  function handleOnSaveEditOption(data: { editedOption: string }) {
+    if (onSaveEditOption && editingOptionValue) {
+      onSaveEditOption(data.editedOption, editingOptionValue)
+    }
+
+    setEditingOptionValue(null)
   }
 
   const addOptionLabel = label || "New Option"
@@ -173,29 +204,95 @@ export function Combobox({
                 <CommandEmpty>No results</CommandEmpty>
                 <CommandGroup className="py-0 pr-0">
                   <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
-                    {options?.map((opt) => (
-                      <CommandItem
-                        value={opt.label}
-                        key={opt.value}
-                        onSelect={() => {
-                          form.setValue(name, opt.value)
-                        }}
-                        className="flex h-8 items-center justify-between px-2.5 text-xs"
-                        asChild
-                      >
-                        <PopoverClose className="w-full">
-                          {opt.label}
-                          <Check
-                            className={cn(
-                              "h-4 w-4",
-                              opt.value === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                        </PopoverClose>
-                      </CommandItem>
-                    ))}
+                    {options?.map((opt) => {
+                      const isEditing = editingOptionValue === opt.value
+
+                      return (
+                        <CommandItem
+                          value={opt.label}
+                          key={opt.value}
+                          onSelect={() => {
+                            form.setValue(name, opt.value)
+                          }}
+                          className={cn(
+                            "flex h-8 items-center justify-between px-2.5 text-xs",
+                            {
+                              "bg-zinc-900 pl-0 hover:bg-zinc-900": isEditing,
+                            }
+                          )}
+                          asChild
+                        >
+                          {!isEditing ? (
+                            <PopoverClose className="w-full">
+                              {opt.label}
+                              <div className="flex items-center gap-2">
+                                <Check
+                                  className={cn(
+                                    "h-4 w-4",
+                                    opt.value === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={
+                                    (e) => e.stopPropagation() //Prevent the popover from closing when the button is clicked
+                                  }
+                                >
+                                  <Pencil
+                                    onClick={() =>
+                                      handleOpenEditOption(opt.value)
+                                    }
+                                    size={14}
+                                    className="text-muted-foreground/80 transition-all duration-200 ease-in-out hover:text-white"
+                                  />
+                                </button>
+                              </div>
+                            </PopoverClose>
+                          ) : (
+                            <form
+                              onSubmit={editForm.handleSubmit(
+                                handleOnSaveEditOption
+                              )}
+                              className="flex items-center justify-between"
+                            >
+                              <Form {...editForm}>
+                                <InputSwitch
+                                  type="text"
+                                  name="editedOption"
+                                  autoFocus={true}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="h-8 w-full border-none bg-transparent pl-2.5 text-xs focus-visible:ring-0"
+                                />
+                              </Form>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleCloseOpenEditOption()
+                                  }}
+                                >
+                                  <X size={14} />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    editForm.handleSubmit(
+                                      handleOnSaveEditOption
+                                    )()
+                                  }}
+                                >
+                                  <Check size={14} />
+                                </button>
+                              </div>
+                            </form>
+                          )}
+                        </CommandItem>
+                      )
+                    })}
                   </CommandList>
                 </CommandGroup>
               </Command>
