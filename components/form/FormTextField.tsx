@@ -175,6 +175,7 @@ export default function FormTextField({
                         />
                         <Input
                           type="time"
+                          defaultValue={"00:00"}
                           value={form.watch(`${name}.fromTime`)}
                           onChange={(e) =>
                             form.setValue(`${name}.fromTime`, e.target.value)
@@ -205,7 +206,7 @@ export default function FormTextField({
                           onChange={(e) =>
                             form.setValue(`${name}.toTime`, e.target.value)
                           }
-                          className={cn(fieldClassName, "w-20")}
+                          className={cn(fieldClassName, "w-20 white")}
                           disabled={disabled}
                         />
                       </div>
@@ -213,7 +214,17 @@ export default function FormTextField({
                       <Calendar
                         mode="range"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(val) => {
+                          const fromTime = val?.from
+                            ? format(val?.from, "HH:mm")
+                            : "00:00"
+                          const toTime = val?.to
+                            ? format(val?.to, "HH:mm")
+                            : "00:00"
+                          field.onChange(val)
+                          form.setValue(`${name}.fromTime`, fromTime)
+                          form.setValue(`${name}.toTime`, toTime)
+                        }}
                         disabled={(date) => date < new Date()}
                         initialFocus
                       />
@@ -222,9 +233,9 @@ export default function FormTextField({
                           variant="ghost"
                           size="sm"
                           onClick={() => {
-                            field.onChange({ from: null, to: null });
-                            form.setValue(`${name}.fromTime`, "00:00");
-                            form.setValue(`${name}.toTime`, "00:00");
+                            field.onChange({ from: null, to: null })
+                            form.setValue(`${name}.fromTime`, "00:00")
+                            form.setValue(`${name}.toTime`, "00:00")
                           }}
                         >
                           Clear
@@ -233,7 +244,7 @@ export default function FormTextField({
                     </PopoverContent>
                   </Popover>
                 </div>
-              );
+              )
 
             case "radio":
               return (

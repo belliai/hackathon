@@ -16,7 +16,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import DateRangeTimePicker from "@/components/form/DateRangeTimePicker"
 import FormTextField from "@/components/form/FormTextField"
+
+import { CustomRecurringForm } from "./CustomRecurringForm"
 
 interface FlightMasterFormType {
   hookForm: UseFormReturn<any>
@@ -74,8 +77,13 @@ const recurringOption = [
   },
 ]
 
-function getOrdinalSuffix(day: number) {
-  if (day > 3 && day < 21) return "th" // catches 11th - 20th
+type EndOption =
+  | "never"
+  | { type: "date"; endDate: Date }
+  | { type: "occurrences"; occurrences: number }
+
+function getOrdinalSuffix(day: number): string {
+  if (day >= 11 && day <= 13) return "th"
   switch (day % 10) {
     case 1:
       return "st"
@@ -87,17 +95,42 @@ function getOrdinalSuffix(day: number) {
       return "th"
   }
 }
+type DayOfWeek = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun"
 
-function generateRecurringOptions(date: Date) {
+function getDayName(day: DayOfWeek): string {
+  switch (day) {
+    case "mon":
+      return "Monday"
+    case "tue":
+      return "Tuesday"
+    case "wed":
+      return "Wednesday"
+    case "thu":
+      return "Thursday"
+    case "fri":
+      return "Friday"
+    case "sat":
+      return "Saturday"
+    case "sun":
+      return "Sunday"
+  }
+}
+
+function generateRecurringOptions(
+  date: Date,
+  everyNumber?: number,
+  everyPeriod?: "day" | "week" | "month" | "year",
+  days?: DayOfWeek[], // Added days parameter
+  end?: EndOption
+) {
   const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" })
   const dayOfMonth = date.getDate()
-  const month = date.toLocaleString("en-US", { month: "long" })
   const monthDay = date.toLocaleString("en-US", {
     month: "long",
     day: "numeric",
   })
 
-  return [
+  const options = [
     {
       label: "Does not repeat",
       value: "no-repeat",
@@ -127,6 +160,69 @@ function generateRecurringOptions(date: Date) {
       value: "custom",
     },
   ]
+
+  let periodLabel: string
+  let periodValue: string
+  let generatedOption
+
+  if (everyNumber && everyPeriod) {
+    switch (everyPeriod) {
+      case "day":
+        periodLabel = `Every ${everyNumber} day${everyNumber > 1 ? "s" : ""}`
+        periodValue = `every-${everyNumber}-day`
+        break
+      case "week":
+        periodLabel = `Every ${everyNumber} week${everyNumber > 1 ? "s" : ""}`
+        if (days && days.length > 0) {
+          const daysOfWeek = days.map((day) => getDayName(day)).join(", ")
+          periodLabel = `Every ${everyNumber} week${everyNumber > 1 ? "s" : ""} on ${daysOfWeek}`
+          periodValue = `every-${everyNumber}-week-${days.join("-")}`
+        } else {
+          periodValue = `every-${everyNumber}-week`
+        }
+        break
+      case "month":
+        periodLabel = `Every ${everyNumber} month${everyNumber > 1 ? "s" : ""}`
+        periodValue = `every-${everyNumber}-month`
+        break
+      case "year":
+        periodLabel = `Every ${everyNumber} year${everyNumber > 1 ? "s" : ""}`
+        periodValue = `every-${everyNumber}-year`
+        break
+      default:
+        periodLabel = `Every ${everyNumber} ${everyPeriod}`
+        periodValue = `every-${everyNumber}-${everyPeriod}`
+    }
+
+    // Add the period option
+    generatedOption = { label: periodLabel, value: periodValue }
+
+    if (end) {
+      if (end === "never") {
+        generatedOption.label += " (Never)"
+        generatedOption.value += "-never"
+      } else if ("type" in end) {
+        switch (end.type) {
+          case "date":
+            const endDate = end.endDate.toLocaleDateString("en-US")
+            generatedOption.label += ` (End on ${endDate})`
+            generatedOption.value += `-end-on-${endDate.replace(/ /g, "-")}`
+            break
+          case "occurrences":
+            generatedOption.label += ` (After ${end.occurrences} occurrence${end.occurrences > 1 ? "s" : ""})`
+            generatedOption.value += `-after-${end.occurrences}-occurrences`
+            break
+        }
+      }
+    }
+
+    options.push(generatedOption)
+  }
+
+  return {
+    options,
+    generatedOption,
+  }
 }
 
 export default function FlightMasterFormRecurring({
@@ -135,6 +231,11 @@ export default function FlightMasterFormRecurring({
   const [tailNoOptions, setTailNoOptions] = useState<Array<TailNoType>>([])
   const [recurrings, setRecurrings] =
     useState<Array<TailNoType>>(recurringOption)
+  const [selectedRecurring, setSelectedRecurring] = useState<
+    string | undefined
+  >("no-repeat")
+
+  const [openCustomRecurring, setOpenCustomRecurring] = useState<boolean>(false)
   const formData = hookForm.watch()
 
   const { data: locations } = useLocations()
@@ -183,6 +284,35 @@ export default function FlightMasterFormRecurring({
     label: list.aircraft_type,
   }))
 
+  const onSaveCustomRecurring = (data: any) => {
+    const { everyNumber, everyPeriod, endsOn, afterOccurence, days } = data
+
+    const end =
+      (endsOn && { type: "date", endDate: endsOn }) ||
+      (afterOccurence && {
+        type: "occurrences",
+        occurrences: afterOccurence,
+      }) ||
+      "never"
+
+    const { options, generatedOption } = generateRecurringOptions(
+      formData.rangeDate.from,
+      everyNumber,
+      everyPeriod,
+      days,
+      end
+    )
+
+    setRecurrings(options)
+    hookForm.setValue("recurring", generatedOption?.value, {
+      shouldValidate: true,
+      shouldDirty: true,
+    })
+    // hookForm.trigger("recurring");
+    //setSelectedRecurring(generatedOption?.value)
+    // console.log(options, generatedOption)
+  }
+
   useEffect(() => {
     const selectedAircraftType = aircraftTypeList?.find(
       (item: any) => item.id === formData.aircraftType
@@ -199,15 +329,34 @@ export default function FlightMasterFormRecurring({
 
   useEffect(() => {
     if (formData.rangeDate?.from) {
-      const recurrings = generateRecurringOptions(formData.rangeDate.from)
-      setRecurrings(recurrings)
+      if (formData.rangeDate?.from instanceof Date) {
+        const { options } = generateRecurringOptions(formData.rangeDate.from)
+        setRecurrings(options)
+      }
     }
   }, [formData.rangeDate])
+
+  useEffect(() => {
+    if (formData.recurring === "custom") {
+      setOpenCustomRecurring(true)
+    } else {
+      setOpenCustomRecurring(false)
+    }
+  
+  }, [formData.recurring])
+
+  useEffect(() => {
+  }, [recurrings])
 
   return (
     <div className="flex flex-col gap-4">
       <Form {...hookForm}>
         <div className="grid grid-cols-3 gap-2">
+          <CustomRecurringForm
+            open={openCustomRecurring}
+            setOpen={setOpenCustomRecurring}
+            onSave={onSaveCustomRecurring}
+          />
           <FormTextField
             name="flightNo"
             form={hookForm}
