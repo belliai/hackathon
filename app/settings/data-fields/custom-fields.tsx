@@ -1,6 +1,11 @@
 "use client"
 
+import { useState } from "react"
+
 import { useCustomFields } from "@/lib/hooks/custom-fields"
+import { slugify } from "@/lib/utils/slugify-utils"
+import { toast } from "@/components/ui/use-toast"
+import { ComboboxProps } from "@/components/form/combobox"
 
 import CrudTable from "./components/crud-table"
 
@@ -17,8 +22,50 @@ interface CustomFieldsProps {
   data: CustomFieldsType[]
 }
 
+const DUMMY_FIELD_GROUPS = [
+  {
+    label: "Aircraft",
+    value: "Aircraft",
+  },
+  {
+    label: "Crew",
+    value: "Crew",
+  },
+  {
+    label: "Passenger",
+    value: "Passenger",
+  },
+]
+
 export default function CustomFields({ title, data }: CustomFieldsProps) {
+  const [fieldGroups, setFieldGroups] = useState(DUMMY_FIELD_GROUPS)
+
   const { deleteCustomField, addCustomField } = useCustomFields()
+
+  function handleAddCustomField(newField: string, close: () => void) {
+    const isExist = fieldGroups.some((field) => field.label === newField)
+
+    if (isExist) {
+      toast({
+        title: "Field Group already exists",
+        description: "Please select the existing field group",
+      })
+      return
+    }
+
+    // TODO: Call the API to add the new option
+    setFieldGroups((prev) => [
+      ...prev,
+      { label: newField, value: slugify(newField) },
+    ])
+
+    toast({
+      title: "Success",
+      description: `${newField} has been added to Field Groups`,
+    })
+
+    close()
+  }
 
   return (
     <CrudTable
@@ -52,21 +99,9 @@ export default function CustomFields({ title, data }: CustomFieldsProps) {
           type: "combobox",
           label: "Field Group",
           placeholder: "Field Group",
+          onAddOption: handleAddCustomField,
           className: "min-w-[200px]",
-          selectOptions: [
-            {
-              label: "Aircraft",
-              value: "Aircraft",
-            },
-            {
-              label: "Crew",
-              value: "Crew",
-            },
-            {
-              label: "Passenger",
-              value: "Passenger",
-            },
-          ],
+          selectOptions: fieldGroups, // Hardcoded value, should be replaced with the actual value
         },
         {
           name: "field_type",

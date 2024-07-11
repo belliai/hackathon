@@ -21,7 +21,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Combobox } from "./combobox"
+import { Combobox, ComboboxProps } from "./combobox"
+
+export type BaseSelectProps<DataType> = {
+  name: Path<DataType>
+  names?: Path<DataType>[]
+  label?: string
+  selectOptions?: { value: string; label: string }[]
+  withDialog?: boolean
+}
 
 export type InputSwitchProps<DataType> = InputProps &
   (
@@ -31,14 +39,8 @@ export type InputSwitchProps<DataType> = InputProps &
         label?: string
         withDialog?: boolean
       }
-    | {
-        type: "select" | "combobox"
-        name: Path<DataType>
-        names?: Path<DataType>[]
-        label?: string
-        selectOptions?: { value: string; label: string }[]
-        withDialog?: boolean
-      }
+    | BaseSelectProps<DataType> & { type: "select" }
+    | (BaseSelectProps<DataType> & ComboboxProps & { type: "combobox" })
   )
 
 export default function InputSwitch<DataType extends FieldValues>(
@@ -50,11 +52,14 @@ export default function InputSwitch<DataType extends FieldValues>(
       case "combobox":
         return (
           <Combobox
+            {...props}
             name={props.name}
             label={props.label}
             options={props.selectOptions}
-            placeholder={props.placeholder}
-            className={cn("h-9 rounded-sm border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",props.className)}
+            className={cn(
+              "h-9 rounded-sm border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+              props.className
+            )}
           />
         )
 

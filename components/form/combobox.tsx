@@ -1,9 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { PopoverClose } from "@radix-ui/react-popover"
-import { Check, ChevronDown, ChevronsUpDown, List } from "lucide-react"
-import { useFormContext } from "react-hook-form"
+import { Check, ChevronDown, PlusCircle } from "lucide-react"
+import { useForm, useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -32,20 +33,26 @@ import {
 
 import { Separator } from "../ui/separator"
 import { FormTextFieldProps } from "./FormTextField"
+import InputSwitch from "./InputSwitch"
 
-/**
- * TODO:
- * We might need to switch over to extend the InputSwitchProps type from the InputSwitch component
- * since it is better maintained and is more widely used in the codebase.
- */
-interface ComboboxFormProps extends Omit<FormTextFieldProps, "form" | "type"> {
+export type ComboboxProps = {
+  name: string
   options?: { label: string; value: string }[]
   className?: string
   popoverClassName?: string
   editLink?: string
   info?: string
   searchPlaceholder?: string
+  onAddOption?: (newOption: string, close: () => void) => void
 }
+
+/**
+ * TODO:
+ * We might need to switch over to extend the InputSwitchProps type from the InputSwitch component
+ * since it is better maintained and is more widely used in the codebase.
+ */
+export type ComboboxFormProps = Omit<FormTextFieldProps, "form" | "type"> &
+  ComboboxProps
 
 /**
  * Combobox component.
@@ -53,7 +60,7 @@ interface ComboboxFormProps extends Omit<FormTextFieldProps, "form" | "type"> {
  * @component
  * @example
  * ```tsx
- * <Form {...hookForm}> // Should always be a children of <Form> component from `@components/ui/form`
+ * <Form {...hookForm}> // Should always be a decendant of <Form> component from `@components/ui/form`
  *  <Combobox
  *   name="language"
  *   label="Language"
@@ -82,11 +89,41 @@ export function Combobox({
   popoverClassName,
   editLink,
   searchPlaceholder = "Search",
+  onAddOption, // Show the add option button if this is provided
 }: ComboboxFormProps) {
+  const [isAdding, setIsAdding] = useState<boolean>(false)
+
   const form = useFormContext()
+
+  const addForm = useForm({
+    defaultValues: {
+      newOption: "",
+    },
+  })
+
+  const comboboxButtonFooterClassName = cn(
+    "h-fit px-2 py-1 text-button-primary hover:text-button-primary/50 hover:no-underline"
+  )
 
   // Determine if the search input should be shown
   const showSearchInput = options.length > 10
+
+  function handleOpenAddOption() {
+    setIsAdding(true)
+  }
+
+  function handleCloseAddOptionAndReset() {
+    setIsAdding(false)
+    addForm.reset({ newOption: "" })
+  }
+
+  function handleSubmitAddOption(data: { newOption: string }) {
+    if (onAddOption) {
+      onAddOption(data.newOption, handleCloseAddOptionAndReset)
+    }
+  }
+
+  const addOptionLabel = label || "New Option"
 
   return (
     <FormField
@@ -162,21 +199,78 @@ export function Combobox({
                   </CommandList>
                 </CommandGroup>
               </Command>
-              {editLink && (
+              {(editLink || onAddOption) && (
                 <>
                   <Separator />
                   <div className="px-2 py-1">
-                    <Button
-                      variant="link"
-                      size="sm"
-                      asChild
-                      className="h-fit px-2 py-1 text-button-primary hover:text-button-primary/50 hover:no-underline"
-                    >
-                      <Link href={editLink} target="_blank">
-                        {/* <List className="mr-2 h-4 w-4" /> */}
-                        Edit dropdown
-                      </Link>
-                    </Button>
+                    {!isAdding ? (
+                      <div className="flex justify-between">
+                        {onAddOption && (
+                          <Button
+                            variant="link"
+                            size="sm"
+                            type="button" // This is required to prevent form submission
+                            onClick={handleOpenAddOption}
+                            className={cn(
+                              comboboxButtonFooterClassName,
+                              "text-xs"
+                            )}
+                          >
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            {addOptionLabel}
+                          </Button>
+                        )}
+                        {editLink && (
+                          <Button
+                            variant="link"
+                            size="sm"
+                            type="button"
+                            asChild
+                            className={comboboxButtonFooterClassName}
+                          >
+                            <Link href={editLink} target="_blank">
+                              {onAddOption ? "Edit" : "Edit dropdown"}
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
+                    ) : (
+                      <Form {...addForm}>
+                        <form
+                          className="flex flex-col gap-2 py-1"
+                          onSubmit={addForm.handleSubmit(handleSubmitAddOption)}
+                        >
+                          <InputSwitch
+                            type="text"
+                            placeholder={addOptionLabel}
+                            className="h-8 w-full text-xs"
+                            name="newOption"
+                          />
+                          <div className="flex justify-end gap-1">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={handleCloseAddOptionAndReset}
+                              size="sm"
+                              className="h-6 px-2 py-1 text-xs"
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="button-primary"
+                              size="sm"
+                              onClick={addForm.handleSubmit(
+                                handleSubmitAddOption
+                              )}
+                              className="h-6 px-2 py-1 text-xs"
+                            >
+                              Save
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
+                    )}
                   </div>
                 </>
               )}
