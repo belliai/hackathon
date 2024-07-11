@@ -35,9 +35,15 @@ import { Separator } from "../ui/separator"
 import { FormTextFieldProps } from "./FormTextField"
 import InputSwitch from "./InputSwitch"
 
+export type ComboboxOption = {
+  icon?: React.ReactNode
+  label: string
+  value: string
+}
+
 export type ComboboxProps = {
   name: string
-  options?: { label: string; value: string }[]
+  options?: ComboboxOption[]
   className?: string
   popoverClassName?: string
   editLink?: string
@@ -52,7 +58,10 @@ export type ComboboxProps = {
  * We might need to switch over to extend the InputSwitchProps type from the InputSwitch component
  * since it is better maintained and is more widely used in the codebase.
  */
-export type ComboboxFormProps = Omit<FormTextFieldProps, "form" | "type"> &
+export type ComboboxFormProps = Omit<
+  FormTextFieldProps,
+  "form" | "type" | "options"
+> &
   ComboboxProps
 
 /**
@@ -224,7 +233,10 @@ export function Combobox({
                         >
                           {!isEditing ? (
                             <PopoverClose className="w-full">
-                              {opt.label}
+                              <div className="flex items-center gap-3 [&>svg]:h-4 [&>svg]:w-4">
+                                {opt.icon}
+                                {opt.label}
+                              </div>
                               <div className="flex items-center gap-2">
                                 <Check
                                   className={cn(
@@ -234,20 +246,22 @@ export function Combobox({
                                       : "opacity-0"
                                   )}
                                 />
-                                <button
-                                  type="button"
-                                  onClick={
-                                    (e) => e.stopPropagation() //Prevent the popover from closing when the button is clicked
-                                  }
-                                >
-                                  <Pencil
-                                    onClick={() =>
-                                      handleOpenEditOption(opt.value)
+                                {!!onSaveEditOption && (
+                                  <button
+                                    type="button"
+                                    onClick={
+                                      (e) => e.stopPropagation() //Prevent the popover from closing when the button is clicked
                                     }
-                                    size={14}
-                                    className="text-muted-foreground/80 transition-all duration-200 ease-in-out hover:text-white"
-                                  />
-                                </button>
+                                  >
+                                    <Pencil
+                                      onClick={() =>
+                                        handleOpenEditOption(opt.value)
+                                      }
+                                      size={14}
+                                      className="text-muted-foreground/80 transition-all duration-200 ease-in-out hover:text-white"
+                                    />
+                                  </button>
+                                )}
                               </div>
                             </PopoverClose>
                           ) : (

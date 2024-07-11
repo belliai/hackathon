@@ -1,6 +1,18 @@
 "use client"
 
 import { useState } from "react"
+import {
+  Binary,
+  Building2,
+  CalendarDays,
+  CaseUpper,
+  DollarSign,
+  Home,
+  ListChecks,
+  Phone,
+  User2,
+  ListCheck
+} from "lucide-react"
 
 import { useCustomFields } from "@/lib/hooks/custom-fields"
 import { slugify } from "@/lib/utils/slugify-utils"
@@ -34,6 +46,59 @@ const DUMMY_FIELD_GROUPS = [
   {
     label: "Passenger",
     value: "Passenger",
+  },
+]
+
+const DUMMY_FIELD_TYPES: ComboboxProps["options"] = [
+  {
+    icon: <CaseUpper />,
+    label: "Text",
+    value: "text",
+  },
+  {
+    icon: <Binary />,
+    label: "Numerical",
+    value: "number",
+  },
+  {
+    icon: <ListCheck />,
+    label: "Single Option",
+    value: "single_option",
+  },
+  {
+    icon: <ListChecks />,
+    label: "Multiple Option",
+    value: "multiple_option",
+  },
+  {
+    icon: <DollarSign />,
+    label: "Monetary",
+    value: "monetary",
+  },
+  {
+    icon: <User2 />,
+    label: "User",
+    value: "user",
+  },
+  {
+    icon: <Building2 />,
+    label: "Organization",
+    value: "organization",
+  },
+  {
+    icon: <Phone />,
+    label: "Phone",
+    value: "phone",
+  },
+  {
+    icon: <CalendarDays />,
+    label: "Date & Time",
+    value: "date_time",
+  },
+  {
+    icon: <Home />,
+    label: "Address",
+    value: "address",
   },
 ]
 
@@ -157,16 +222,7 @@ export default function CustomFields({ title, data }: CustomFieldsProps) {
           label: "Field Type",
           placeholder: "Field Type*",
           className: "min-w-[200px]",
-          selectOptions: [
-            {
-              label: "Text",
-              value: "text",
-            },
-            {
-              label: "Number",
-              value: "number",
-            },
-          ],
+          selectOptions: DUMMY_FIELD_TYPES,
         },
       ]}
       data={data}
