@@ -91,6 +91,7 @@ const formDefaultValues = {
   aircraftType: "",
   tailNo: "",
   capacity: "",
+  recurring: "",
   uom: "",
   sector: "",
   status: "",

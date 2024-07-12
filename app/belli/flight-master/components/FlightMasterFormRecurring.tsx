@@ -303,13 +303,10 @@ export default function FlightMasterFormRecurring({
     )
 
     setRecurrings(options)
-    hookForm.setValue("recurring", generatedOption?.value, {
-      shouldValidate: true,
-      shouldDirty: true,
-    })
-    // hookForm.trigger("recurring");
-    //setSelectedRecurring(generatedOption?.value)
-    // console.log(options, generatedOption)
+    setSelectedRecurring(generatedOption?.value)
+
+   
+   
   }
 
   useEffect(() => {
@@ -341,14 +338,20 @@ export default function FlightMasterFormRecurring({
     } else {
       setOpenCustomRecurring(false)
     }
-  
+    console.log(formData.recurring)
+    
   }, [formData.recurring])
 
-  useEffect(() => {
-  }, [recurrings])
+  useEffect(()=>{
+    hookForm.setValue("recurring",selectedRecurring, {
+      shouldValidate: true,
+      shouldDirty: true,
+    })
+  },[recurrings,selectedRecurring])
 
   return (
     <div className="flex flex-col gap-4">
+     
       <Form {...hookForm}>
         <div className="grid grid-cols-3 gap-2">
           <CustomRecurringForm
