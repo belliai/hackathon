@@ -25,7 +25,7 @@ type SettingsTabName =
   | "Aircrafts"
 
 // Map of hooks based on TabName
-const hooksMap: Record<SettingsTabName, () => any> = {
+const hooksMap: Record<SettingsTabName, (args?: any) => any> = {
   "Booking Type": useAddBookingType,
   "Partner Prefix": useAddPartnerPrefix,
   "Partner Code": useAddPartnerCode,

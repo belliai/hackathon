@@ -75,6 +75,7 @@ type CrudTableProps<T extends FieldValues> = {
   form: InputSwitchProps<T>[]
   onSave: (data: T) => void
   onDelete: (data: T) => void
+  hideAddForm?: boolean
 }
 
 const FormDialog = <T extends FieldValues>(
@@ -258,7 +259,9 @@ export default function CrudTable<T extends FieldValues>(
 
   return (
     <section id={props.id} className="space-y-4">
-      <FormDropdown form={props.form} onSave={props.onSave} />
+      {!props.hideAddForm && (
+        <FormDropdown form={props.form} onSave={props.onSave} />
+      )}
       <Card className="overflow-clip rounded-md">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-card px-4 py-2">
           <CardTitle className="text-lg font-bold">{title}</CardTitle>
@@ -345,3 +348,5 @@ export default function CrudTable<T extends FieldValues>(
     </section>
   )
 }
+
+export { FormDialog, FormDropdown }
