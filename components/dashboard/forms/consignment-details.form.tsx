@@ -59,7 +59,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
       value: location.ID,
     }))
 
-    const commodityCodeOptions = commodityCodes.map((code: any) => ({
+    const commodityCodeOptions = commodityCodes?.map((code: any) => ({
       value: code.ID,
       label: code.name,
     }));
@@ -81,7 +81,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
 
 
     return (
-      <Card className="grid grid-cols-2 gap-x-3 gap-y-2 p-4" ref={ref}>
+      <Card className="grid grid-cols-3 gap-x-3 gap-y-2 p-4" ref={ref}>
         <Combobox
           name="origin_id"
           options={locationsOptions}

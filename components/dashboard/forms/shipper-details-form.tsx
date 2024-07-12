@@ -125,116 +125,119 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
             <TabsContent
               key={field.id}
               value={field.id}
-              className="mt-0 grid grid-cols-2 gap-x-3 gap-y-2"
+              className="mt-0 grid grid-cols-1 gap-x-3 gap-y-2"
             >
-              <FormField
-                name={`shipper_details[${index}].ID`}
-                render={({ field }) => (
-                  <FormItem className="hidden">
-                    <Input
-                      type="hidden"
-                      {...field}
-                      defaultValue={field.value ?? undefined}
-                      className="border-2 border-foreground/30"
-                    />
-                  </FormItem>
-                )}
-              />
-              <Combobox
-                name="transport_method_id"
-                options={transportMethodOptions}
-                label="Transport Method"
-                info="Select the Transport Method"
-                editLink="/settings/data-fields?tab=transport-method"
-              />
-              <Combobox
-                name="origin_id"
-                options={locationOptions}
-                label="Origin *"
-                info="Select the Location"
-                editLink="/settings/data-fields?tab=location"
-              />
-              <Combobox
-                name="destination_id"
-                options={locationOptions}
-                label="Destination *"
-                info="Select the Location"
-                editLink="/settings/data-fields?tab=location"
-              />
-              <Combobox
-                name="destination_id"
-                options={locationOptions}
-                label="Destination *"
-                info="Select the Location"
-                editLink="/settings/data-fields?tab=location"
-              />
-              <Combobox
-                name="partner_type_id"
-                options={partnerTypeOptions}
-                label="Partner Type"
-                info="Select the Partner Type"
-                editLink="/settings/data-fields?tab=partner-type"
-              />
-              <Combobox
-                name="partner_code_id"
-                options={partnerCodeOptions}
-                label="Partner Code"
-                info="Select the Partner Code"
-                editLink="/settings/data-fields?tab=partner-code"
-              />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].date`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date</FormLabel>
-                    <DateInput
-                      {...field}
-                      className="border-2 border-foreground/30"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].flight_code`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Flight Code *</FormLabel>
-                    <FormControl>
+              <div className="grid grid-cols-3 gap-x-3 gap-y-2">
+                <FormField
+                  name={`shipper_details[${index}].ID`}
+                  render={({ field }) => (
+                    <FormItem className="hidden">
                       <Input
+                        type="hidden"
+                        {...field}
+                        defaultValue={field.value ?? undefined}
+                        className="border-2 border-foreground/30"
+                      />
+                    </FormItem>
+                  )}
+                />
+                <Combobox
+                  name="transport_method_id"
+                  options={transportMethodOptions}
+                  label="Transport Method"
+                  info="Select the Transport Method"
+                  editLink="/settings/data-fields?tab=transport-method"
+                />
+                <Combobox
+                  name="origin_id"
+                  options={locationOptions}
+                  label="Origin *"
+                  info="Select the Location"
+                  editLink="/settings/data-fields?tab=location"
+                />
+                <Combobox
+                  name="destination_id"
+                  options={locationOptions}
+                  label="Destination *"
+                  info="Select the Location"
+                  editLink="/settings/data-fields?tab=location"
+                />
+                <Combobox
+                  name="destination_id"
+                  options={locationOptions}
+                  label="Destination *"
+                  info="Select the Location"
+                  editLink="/settings/data-fields?tab=location"
+                />
+                <Combobox
+                  name="partner_type_id"
+                  options={partnerTypeOptions}
+                  label="Partner Type"
+                  info="Select the Partner Type"
+                  editLink="/settings/data-fields?tab=partner-type"
+                />
+                <Combobox
+                  name="partner_code_id"
+                  options={partnerCodeOptions}
+                  label="Partner Code"
+                  info="Select the Partner Code"
+                  editLink="/settings/data-fields?tab=partner-code"
+                />
+                <FormField
+                  control={form.control}
+                  name={`shipper_details[${index}].date`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date</FormLabel>
+                      <DateInput
                         {...field}
                         className="border-2 border-foreground/30"
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`shipper_details[${index}].allotment_code`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Allotment Code</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="border-2 border-foreground/30"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Combobox
-                name="status_id"
-                options={statusOptions}
-                label="AWB Status"
-                info="Select the AWB Status"
-                editLink="/settings/data-fields?tab=status"
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`shipper_details[${index}].flight_code`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Flight Code *</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="border-2 border-foreground/30"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`shipper_details[${index}].allotment_code`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Allotment Code</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="border-2 border-foreground/30"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Combobox
+                  name="status_id"
+                  options={statusOptions}
+                  label="AWB Status"
+                  info="Select the AWB Status"
+                    editLink="/settings/data-fields?tab=status"
+                  />
+              </div>
+
               <div className="col-span-2 mt-3 inline-flex items-center gap-3">
                 <Button
                   onClick={appendField}

@@ -36,7 +36,7 @@ export const orderSchema = z.object({
   destination_id: z.string().min(1),
   freight_forwarder_id: z.string(),
   gs_weight_kg: z.string(),
-  is_physical: z.boolean().optional(),
+  is_physical: z.string().optional(),
   mode: z.string(),
   organization_id: z.string(),
   origin_id: z.string().min(1),
@@ -46,15 +46,15 @@ export const orderSchema = z.object({
     .array(
       z.object({
         ID: z.string().optional(),
-        transport_method_id: z.string().min(1),
-        origin_id: z.string().min(1),
-        destination_id: z.string().min(1),
-        partner_type_id: z.string(),
-        partner_code_id: z.string(),
+        transport_method_id: z.string().min(1).optional(),
+        origin_id: z.string().min(1).optional(),
+        destination_id: z.string().min(1).optional(),
+        partner_type_id: z.string().optional(),
+        partner_code_id: z.string().optional(),
         date: z.union([z.date(), z.string()]),
-        flight_code: z.string(),
-        allotment_code: z.string(),
-        status_id: z.string(),
+        flight_code: z.string().optional(),
+        allotment_code: z.string().optional(),
+        status_id: z.string().optional(),
       })
     )
     .min(1),

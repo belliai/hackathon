@@ -57,6 +57,7 @@ import CreateBookingForm from "./forms/create-booking-form"
 import ProcessRatesForm from "./forms/process-rates-form"
 import ShipperDetailsForm from "./forms/shipper-details-form"
 import OrderSummaryCard from "./order-summary-card"
+import { CheckIcon } from "@radix-ui/react-icons"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange?: (open: boolean) => void
@@ -71,7 +72,8 @@ const initialValues = getDefaults(schemas)
 
 const steps = [
   {
-    label: "Shipping Type",
+    label: "Booking Type",
+    icon: SquarePenIcon,
     descriptionContent: (
       <div className="space-y-4">
         <div className="flex w-fit flex-row items-start justify-start gap-4">
@@ -105,6 +107,7 @@ const steps = [
   },
   {
     label: "Consignment Details",
+    icon: PlaneIcon,
     descriptionContent: (
       <p className="text-xs text-muted-foreground">
         An air waybill or AWB is a document that accompanies goods shipped by an
@@ -114,6 +117,7 @@ const steps = [
   },
   {
     label: "Shipper Details",
+    icon: UserIcon,
     descriptionContent: (
       <p className="text-xs text-muted-foreground">
         An air waybill or AWB is a document that accompanies goods shipped by an
@@ -123,6 +127,7 @@ const steps = [
   },
   {
     label: "Process Rates",
+    icon: PackageIcon,
     descriptionContent: (
       <p className="text-xs text-muted-foreground">
         An air waybill or AWB is a document that accompanies goods shipped by an
@@ -263,47 +268,32 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                     </p>
                   </div>
                   <div className="flex flex-1 flex-col justify-between">
-                    <div className="p-4">
+                    <div className="p-2 bg-zinc-950 flex flex-col rounded-md gap-1">
                       {steps.map((step, index) => {
                         const isLast = index + 1 === steps.length
-                        const isActive = index < currentStep
+                        const isActive = index+1 === currentStep
                         const isComplete = index + 1 < currentStep
+                        const subMenu = index === 0 && selectedShipmentType === 'axb' ? (
+                          <div
+                            className={`flex gap-2 items-center p-2 pl-8`}
+                          >
+                            Booking Details
+                            {isComplete && (
+                              <CheckIcon className="h-4 w-4" />
+                            )}
+                          </div>
+                        ) : null;
+
                         return (
-                          <div key={index} className="relative h-10">
-                            {!isLast && (
-                              <div
-                                className={cn(
-                                  "absolute left-1.5 top-1/2 z-[30] h-full w-1 bg-muted-foreground",
-                                  isComplete && "bg-button-primary"
-                                )}
-                              ></div>
-                            )}
-
-                            {!isLast && (
-                              <div
-                                className={cn(
-                                  "absolute left-1.5 top-1/2 z-[31] h-0 w-1 bg-button-primary transition-transform",
-                                  isComplete && "h-full"
-                                )}
-                              ></div>
-                            )}
-
-                            <div
-                              data-state={isActive ? "active" : "inactive"}
-                              className={cn(
-                                "absolute top-1/2 z-40 flex h-4 w-4 -translate-y-1/2 items-center justify-center rounded-full bg-muted-foreground transition-all data-[state=active]:bg-button-primary"
-                              )}
-                            >
-                              <div className="relative h-2 w-2 rounded-full bg-white"></div>
-                            </div>
-                            <p
-                              className={cn(
-                                "absolute left-8 top-1/2 -translate-y-1/2 transition-colors",
-                                !isActive && "text-muted-foreground"
-                              )}
-                            >
+                          <div className={`flex flex-col rounded-sm text-sm ${isActive ? "bg-accent" : ""}`} key={index}>
+                            <div className={`flex gap-2 items-center p-2 px-3 `} >
+                              <step.icon className={`w-4-4 h-4 ${isActive ? "text-[#FB5727]" : "text-white"}`} />
                               {step.label}
-                            </p>
+                              {isComplete && (
+                                <CheckIcon className="h-4 w-4" />
+                              )}
+                            </div>
+                            {subMenu}
                           </div>
                         )
                       })}
@@ -454,7 +444,6 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                           onClick={() => {
                             form
                               .trigger([
-                                "booking_type_id",
                                 "awb",
                                 "partner_prefix_id",
                                 "partner_code_id",
@@ -462,6 +451,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                                 "status_id",
                               ])
                               .then((success) => {
+                                console.log(success)
                                 success && helpers.goToNextStep()
                               })
                           }}
@@ -540,6 +530,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                     <Button
                       onClick={() => {
                         form.trigger(["shipper_details"]).then((success) => {
+                          console.log(form.getValues())
                           success && helpers.goToNextStep()
                         })
                       }}
