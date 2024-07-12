@@ -33,13 +33,6 @@ export const operationsNavigation: TSidebarItem[] = [
         isCanCreate: false,
       },
       {
-        name: "Flight Planning",
-        href: "/belli/flight-planning",
-        icon: ClipboardIcon,
-        current: false,
-        isCanCreate: false,
-      },
-      {
         name: "Flight Master",
         href: "/belli/flight-master",
         icon: PaperPlaneIcon,
