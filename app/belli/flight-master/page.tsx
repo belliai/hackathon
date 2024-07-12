@@ -39,13 +39,17 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Form } from "@/components/ui/form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal"
 import { DataTable } from "@/components/data-table/data-table"
+import DataTableFilterForm from "@/components/data-table/data-table-filter-form"
+import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
 import { columns } from "./components/column"
+import { formFilters, listViewFilters } from "./components/filter"
 import FlightMasterForm from "./components/FlightMasterForm"
 import FlightMasterFormRecurring from "./components/FlightMasterFormRecurring"
 
@@ -145,6 +149,11 @@ const recurringFlightSchema = flightMasterFormSchema.pick({
   recurring: true,
 })
 
+const filtersSchema = flightMasterFormSchema.pick({
+  period: true,
+  fromDate: true,
+})
+
 export default function Page() {
   const [openModal, setOpenModal] = useState<string | boolean>(false)
   const [openModalRecurring, setOpenModalRecurring] = useState<
@@ -183,6 +192,14 @@ export default function Page() {
     resolver: zodResolver(recurringFlightSchema),
   })
 
+  const filtersHookForm = useForm({
+    resolver: zodResolver(filtersSchema),
+    defaultValues: {
+      period: "daily",
+      fromDate: new Date(),
+    },
+  })
+
   const findDays = (data: string[], key: string): boolean => {
     return (data && data.includes(key)) || false
   }
@@ -193,60 +210,40 @@ export default function Page() {
 
   const handleCreateFlightRecurring = async (param: FlightMasterFormValue) => {
     const { rangeDate, recurring } = param
-    const payloadList: Array<CreateRecurringFlightMasterPayload> = []
 
     if (rangeDate) {
-      const recurringDates = generateRecurringDates(
-        new Date(rangeDate?.from),
-        new Date(rangeDate?.to),
-        rangeDate.fromTime,
-        rangeDate.toTime,
-        recurring
-      )
-      console.log("Recurring Dates:", recurringDates)
+      const [fromHour, fromMinutes] = rangeDate.fromTime.split(":")
+      const [toHour, toMinutes] = rangeDate.fromTime.split(":")
 
-      recurringDates.forEach((dateObject) => {
-        const { fromDate, toDate, fromHour, fromMinutes, toHour, toMinutes } =
-          dateObject
-
-        const payload: CreateRecurringFlightMasterPayload = {
-          aircraft_id: param.aircraftType,
-          destination_id: param.destination,
-          flight_no: param.flightNo,
-          source_id: param.source,
-          status_id: param.status,
-          from_date: moment(fromDate).format("YYYY-MM-DD"),
-          to_date: moment(toDate).format("YYYY-MM-DD"),
-          arrival_h: toHour,
-          arrival_m: toMinutes,
-          departure_h: fromHour,
-          departure_m: fromMinutes,
-        }
-
-        payloadList.push(payload)
-      })
-
-      console.log({ payloadList })
-
-      // Loop to send requests to the API
-      for (const payload of payloadList) {
-        try {
-          await createFlight(payload as CreateFlightMasterPayload, {
-            onError: (error) => {
-              throw error
-            },
-          })
-        } catch (error) {
-          console.error("Error creating flight recurring:", error)
-        } finally {
-          setOpenModal(false)
-          setOpenModalRecurring(false)
-          sectionedHookRecurringForm.reset(formDefaultValues)
-          toast({
-            title: "Success!",
-            description: "Recurring Flights created successfully",
-          })
-        }
+      const payload: CreateRecurringFlightMasterPayload = {
+        aircraft_id: param.aircraftType,
+        destination_id: param.destination,
+        flight_no: param.flightNo,
+        source_id: param.source,
+        status_id: param.status,
+        from_date: moment(rangeDate?.from).format("YYYY-MM-DD"),
+        to_date: moment(rangeDate?.to).format("YYYY-MM-DD"),
+        arrival_h: parseInt(toHour),
+        arrival_m: parseInt(toMinutes),
+        departure_h: parseInt(fromHour),
+        departure_m: parseInt(fromMinutes),
+      }
+      try {
+        await createFlight(payload as CreateFlightMasterPayload, {
+          onError: (error) => {
+            throw error
+          },
+        })
+      } catch (error) {
+        console.error("Error creating flight recurring:", error)
+      } finally {
+        setOpenModal(false)
+        setOpenModalRecurring(false)
+        sectionedHookRecurringForm.reset(formDefaultValues)
+        toast({
+          title: "Success!",
+          description: "Recurring Flights created successfully",
+        })
       }
     }
   }
@@ -456,7 +453,7 @@ export default function Page() {
       variant={"button-primary"}
       className="p-2 text-xs"
       onClick={() => setOpenModal(true)}
-      style={{ fontSize: '0.875rem' }}
+      style={{ fontSize: "0.875rem" }}
     >
       <PlusIcon className="mr-2 size-4" />
       Create New Flight
@@ -469,7 +466,7 @@ export default function Page() {
       variant={"button-primary"}
       className="p-2 text-xs"
       onClick={() => setOpenModalRecurring(true)}
-      style={{ fontSize: '0.875rem' }}
+      style={{ fontSize: "0.875rem" }}
     >
       <PlusIcon className="mr-2 size-4" />
       Create Recurring Flight
@@ -493,22 +490,50 @@ export default function Page() {
                 onRowClick={openDetailFlight}
                 extraRightComponents={createButtonFlight}
                 extraLeftComponents={
-                  <TabsList className="gap-2 bg-transparent p-0">
-                    <TabsTrigger
-                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-                      value="list-view"
-                      style={{ fontSize: '0.875rem' }}
-                    >
-                      List View
-                    </TabsTrigger>
-                    <TabsTrigger
-                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-                      value="create-recurring-flight"
-                      style={{ fontSize: '0.875rem' }}
-                    >
-                      Recurring Flights
-                    </TabsTrigger>
-                  </TabsList>
+                  <div className="flex h-10 items-end">
+                    <TabsList className="gap-2 bg-transparent p-0">
+                      <TabsTrigger
+                        className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                        value="list-view"
+                        style={{ fontSize: "0.875rem" }}
+                      >
+                        List View
+                      </TabsTrigger>
+                      <TabsTrigger
+                        className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                        value="create-recurring-flight"
+                        style={{ fontSize: "0.875rem" }}
+                      >
+                        Recurring Flights
+                      </TabsTrigger>
+                      <Form {...filtersHookForm}>
+                        <InputSwitch
+                          name="period"
+                          type="select"
+                          className=""
+                          selectOptions={[
+                            {
+                              label: "Daily",
+                              value: "daily",
+                            },
+                            {
+                              label: "Weekly",
+                              value: "weekly",
+                            },
+                            {
+                              label: "Monthly",
+                              value: "monthly",
+                            },
+                            {
+                              label: "Yearly",
+                              value: "yearly",
+                            },
+                          ]}
+                        />
+                        <InputSwitch name="fromDate" type="date" className="" />
+                      </Form>
+                    </TabsList>
+                  </div>
                 }
                 pageCount={
                   isLoading ? 1 : (flightData && flightData.total_pages) || 1
