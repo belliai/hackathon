@@ -5,7 +5,9 @@ import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
-import ComboBoxInput, { ComboBoxInputProps } from "../ui/combobox-input"
+import ComboBoxInput, {
+  ComboAdminBoxInputProps,
+} from "../ui/combobox-admin-input"
 import { Command } from "../ui/command"
 import DateInput from "../ui/date-input"
 import {
@@ -44,9 +46,9 @@ export type InputSwitchProps<DataType extends FieldValues> =
       selectOptions?: SelectOptions
     })
   | ((BaseInputProps<DataType> & {
-      type: "combobox"
+      type: "combobox-admin"
     }) &
-      Omit<ComboBoxInputProps<DataType, Path<DataType>>, "field">)
+      Omit<ComboAdminBoxInputProps<DataType, Path<DataType>>, "field">)
 
 export default function InputSwitch<DataType extends FieldValues>(
   props: InputSwitchProps<DataType>
@@ -54,7 +56,7 @@ export default function InputSwitch<DataType extends FieldValues>(
   const form = useFormContext<DataType>()
   const input = () => {
     switch (props.type) {
-      case "combobox":
+      case "combobox-admin":
         return (
           <FormField
             key={props.name}

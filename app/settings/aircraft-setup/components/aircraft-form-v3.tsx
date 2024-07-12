@@ -17,6 +17,21 @@ import { Path, useFieldArray, UseFormReturn } from "react-hook-form"
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
 import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
+  useAircraftManufacturers,
+  useDeleteAircraftManufacturers,
+  useUpsertAircraftManufacturers,
+} from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
+import {
+  useAircraftTypes,
+  useDeleteAircraftTypes,
+  useUpsertAircraftTypes,
+} from "@/lib/hooks/aircrafts/aircraft-type/types"
+import {
+  useAircraftVersions,
+  useDeleteAircraftVersions,
+  useUpsertAircraftVersions,
+} from "@/lib/hooks/aircrafts/aircraft-type/versions"
+import {
   useCreateAircraft,
   useDeleteAircraft,
   useUpdateAircraft,
@@ -81,21 +96,37 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { mutateAsync: updateMutateAsync, isPending: isPendingUpdate } =
     useUpdateAircraft()
 
-  const { data: aircraftBodyTypes, isLoading: isLoadingAircraftBodyTypes } =
-    useAircraftBodyTypes()
+  const { data: aircraftBodyTypes } = useAircraftBodyTypes()
 
-  const { data: aircraftStatuses, isLoading: isLoadingAircraftStatuses } =
-    useAircraftStatuses()
+  const { data: aircraftStatuses } = useAircraftStatuses()
 
-  const { data: unitsW, isLoading: isLoadingUnits } = useUnits({
+  // manufacturers
+  const { data: aircraftManufacturers, isLoading: isLoadingManufacturers } =
+    useAircraftManufacturers()
+  const { mutate: upsertAircraftManufacturer } =
+    useUpsertAircraftManufacturers()
+  const { mutate: deleteAircraftManufacturer } =
+    useDeleteAircraftManufacturers()
+
+  // types
+  const { data: aircraftTypes } = useAircraftTypes()
+  const { mutate: upsertAircraftType } = useUpsertAircraftTypes()
+  const { mutate: deleteAircraftType } = useDeleteAircraftTypes()
+
+  // versions
+  const { data: aircraftVersions } = useAircraftVersions()
+  const { mutate: upsertAircraftVersion } = useUpsertAircraftVersions()
+  const { mutate: deleteAircraftVersion } = useDeleteAircraftVersions()
+
+  const { data: unitsW } = useUnits({
     category: "weight",
   })
 
-  const { data: unitsVol, isLoading: isLoadingUnitsVol } = useUnits({
+  const { data: unitsVol } = useUnits({
     category: "volume",
   })
 
-  const { data: unitsLen, isLoading: isLoadingUnitsLen } = useUnits({
+  const { data: unitsLen } = useUnits({
     category: "length",
   })
 
@@ -124,43 +155,42 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     label: `${unit.Name} - ${unit.Symbol}`,
   }))
 
-  const aircraftManufacturerOptions = aircraftTypes.map((item) => ({
-    value: item.manufacturer,
-    label: item.manufacturer,
-  }))
-
-  const selectedManufacturer = aircraftTypes.find(
-    (item) => item.manufacturer === form.watch("manufacturer")
-  )
-
-  const aircraftTypeOptions =
-    selectedManufacturer?.types?.map((item) => ({
-      value: item.type,
-      label: item.type,
+  const aircraftManufacturerOptions =
+    aircraftManufacturers?.map((item) => ({
+      value: item.ID,
+      label: item.name,
     })) ?? []
 
-  const selectedType = selectedManufacturer?.types.find(
-    (item) => item.type === form.watch("aircraft_type")
-  )
-
-  const aircraftVersionOptions =
-    selectedType?.versions?.map((item) => ({
-      value: item.version,
-      label: item.version,
+  const aircraftTypesOptions =
+    aircraftTypes?.map((item) => ({
+      value: item.ID,
+      label: item.name,
     })) ?? []
 
-  const selectedVersion = selectedType?.versions.find(
-    (item) => item.version === form.watch("version")
+  const aircraftVersionsOptions =
+    aircraftVersions?.map((item) => ({
+      value: item.ID,
+      label: item.name,
+    })) ?? []
+
+  const selectedManufacturer = aircraftManufacturerOptions.find(
+    (item) => item.value === form.watch("manufacturer")
   )
 
-  const selectedAircraftDetails = selectedVersion?.details
+  const selectedType = aircraftTypesOptions.find(
+    (item) => item.value === form.watch("aircraft_type")
+  )
 
-  useEffect(() => {
-    if (!selectedAircraftDetails || isEdit) return
-    Object.entries(selectedAircraftDetails).forEach(([key, value]) => {
-      form.setValue(key as Path<AircraftFormValues>, value)
-    })
-  }, [selectedAircraftDetails, form, isEdit])
+  const selectedVersion = aircraftVersionsOptions.find(
+    (item) => item.value === form.watch("version")
+  )
+
+  // useEffect(() => {
+  //   if (!selectedAircraftDetails || isEdit) return
+  //   Object.entries(selectedAircraftDetails).forEach(([key, value]) => {
+  //     form.setValue(key as Path<AircraftFormValues>, value)
+  //   })
+  // }, [selectedAircraftDetails, form, isEdit])
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
     const payload: CreateAircraftRequest = {
@@ -326,25 +356,65 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     <InputSwitch<AircraftFormValues>
                       label="Manufacturer"
                       name="manufacturer"
-                      type="combobox"
+                      type="combobox-admin"
                       selectOptions={aircraftManufacturerOptions}
-                      enableAdminControl
+                      isLoading={isLoadingManufacturers}
+                      onDelete={(option) => {
+                        deleteAircraftManufacturer(option.value)
+                      }}
+                      onCreate={(name) => {
+                        upsertAircraftManufacturer({
+                          name,
+                        })
+                      }}
+                      onEdit={(option) => {
+                        upsertAircraftManufacturer({
+                          name: option.label,
+                          ID: option.value,
+                        })
+                      }}
                     />
                     <InputSwitch<AircraftFormValues>
                       label="Type"
                       name="aircraft_type"
-                      type="combobox"
-                      selectOptions={aircraftTypeOptions}
-                      disabled={aircraftTypeOptions.length < 1}
-                      enableAdminControl
+                      type="combobox-admin"
+                      selectOptions={aircraftTypesOptions}
+                      disabled={!selectedManufacturer}
+                      onDelete={(option) => {
+                        deleteAircraftType(option.value)
+                      }}
+                      onCreate={(name) => {
+                        upsertAircraftType({
+                          name,
+                        })
+                      }}
+                      onEdit={(option) => {
+                        upsertAircraftType({
+                          name: option.label,
+                          ID: option.value,
+                        })
+                      }}
                     />
                     <InputSwitch<AircraftFormValues>
                       label="Version"
                       name="version"
-                      type="combobox"
-                      selectOptions={aircraftVersionOptions}
-                      disabled={aircraftVersionOptions.length < 1}
-                      enableAdminControl
+                      type="combobox-admin"
+                      selectOptions={aircraftVersionsOptions}
+                      disabled={!selectedType}
+                      onDelete={(option) => {
+                        deleteAircraftVersion(option.value)
+                      }}
+                      onCreate={(name) => {
+                        upsertAircraftVersion({
+                          name,
+                        })
+                      }}
+                      onEdit={(option) => {
+                        upsertAircraftVersion({
+                          name: option.label,
+                          ID: option.value,
+                        })
+                      }}
                     />
                   </CardContent>
                 </Card>
@@ -648,8 +718,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                         Are you absolutely sure?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        This will delete {selectedManufacturer?.manufacturer}{" "}
-                        {selectedType?.type} {selectedVersion?.version}
+                        This will delete {selectedManufacturer?.label}{" "}
+                        {selectedType?.label} {selectedVersion?.label}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
