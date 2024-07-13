@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form"
 import FormTextField from "@/components/form/FormTextField"
 
-import { CustomRecurringForm } from "./CustomRecurringForm"
+import { CustomRecurringForm } from "./custom-recurring-form"
 
 interface FlightMasterFormType {
   hookForm: UseFormReturn<any>
@@ -34,37 +34,6 @@ type LocationListType = {
   name: string
 }
 
-const frequencyItems = [
-  {
-    id: "mon",
-    label: "Monday",
-  },
-  {
-    id: "tue",
-    label: "Tuesday",
-  },
-  {
-    id: "wed",
-    label: "Wednesday",
-  },
-  {
-    id: "thu",
-    label: "Thursday",
-  },
-  {
-    id: "fri",
-    label: "Friday",
-  },
-  {
-    id: "sat",
-    label: "Saturday",
-  },
-  {
-    id: "sun",
-    label: "Sunday",
-  },
-]
-
 const recurringOption = [
   {
     label: "Does not repeat",
@@ -76,153 +45,139 @@ const recurringOption = [
   },
 ]
 
+import { RRule, Weekday, Frequency, Options } from 'rrule';
+
+// Define EndOption type
 type EndOption =
   | "never"
   | { type: "date"; endDate: Date }
-  | { type: "occurrences"; occurrences: number }
+  | { type: "occurrences"; occurrences: number };
 
-function getOrdinalSuffix(day: number): string {
-  if (day >= 11 && day <= 13) return "th"
-  switch (day % 10) {
-    case 1:
-      return "st"
-    case 2:
-      return "nd"
-    case 3:
-      return "rd"
-    default:
-      return "th"
-  }
-}
-type DayOfWeek = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun"
+// Define DayOfWeek type
+type DayOfWeek = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";
 
-function getDayName(day: DayOfWeek): string {
-  switch (day) {
-    case "mon":
-      return "Monday"
-    case "tue":
-      return "Tuesday"
-    case "wed":
-      return "Wednesday"
-    case "thu":
-      return "Thursday"
-    case "fri":
-      return "Friday"
-    case "sat":
-      return "Saturday"
-    case "sun":
-      return "Sunday"
-  }
+// Define the parameters for the function
+interface RecurringOptionsParams {
+  startAt: Date;
+  everyNumber?: number;
+  everyPeriod?: "day" | "week" | "month" | "year";
+  days?: DayOfWeek[];
+  end?: EndOption;
 }
 
-function generateRecurringOptions(
-  date: Date,
-  everyNumber?: number,
-  everyPeriod?: "day" | "week" | "month" | "year",
-  days?: DayOfWeek[], // Added days parameter
-  end?: EndOption
-) {
-  const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" })
-  const dayOfMonth = date.getDate()
-  const monthDay = date.toLocaleString("en-US", {
-    month: "long",
-    day: "numeric",
-  })
+// Map DayOfWeek to RRule Weekdays
+const dayMapping: { [key in DayOfWeek]: Weekday } = {
+  MO: RRule.MO,
+  TU: RRule.TU,
+  WE: RRule.WE,
+  TH: RRule.TH,
+  FR: RRule.FR,
+  SA: RRule.SA,
+  SU: RRule.SU,
+};
 
+// Calculate the duration between two dates
+function getDuration(startAt: Date, endAt: Date): string {
+  const durationMs = endAt.getTime() - startAt.getTime();
+  const hours = Math.floor(durationMs / (1000 * 60 * 60));
+  const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+  return `PT${hours}H${minutes}M`;
+}
+
+// Generate recurring options based on the provided parameters
+function generateRecurringOptions({
+  startAt,
+  everyNumber,
+  everyPeriod,
+  days,
+  end
+}: RecurringOptionsParams) {
+  const dayOfMonth = startAt.getDate();
+
+  // Define the recurring options
   const options = [
     {
-      label: "Does not repeat",
-      value: "no-repeat",
+      label: `Does not repeat`,
+      value: `no-repeat`,
     },
     {
-      label: "Daily",
-      value: "daily",
+      label: `${new RRule({ freq: RRule.DAILY, dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.DAILY, dtstart: startAt }).toString(),
     },
     {
-      label: `Weekly on ${dayOfWeek}`,
-      value: `weekly-${dayOfWeek.toLowerCase()}`,
+      label: `${new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO], dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO], dtstart: startAt }).toString(),
     },
     {
-      label: `Monthly on the ${dayOfMonth}${getOrdinalSuffix(dayOfMonth)}`,
-      value: `monthly-${dayOfMonth}`,
+      label: `${new RRule({ freq: RRule.MONTHLY, bymonthday: [dayOfMonth], dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.MONTHLY, bymonthday: [dayOfMonth], dtstart: startAt }).toString(),
     },
     {
-      label: `Annually on ${monthDay}`,
-      value: `annually-${monthDay.replace(/ /g, "-")}`,
+      label: `${new RRule({ freq: RRule.YEARLY, bymonthday: [dayOfMonth], bymonth: [startAt.getMonth() + 1], dtstart: startAt }).toText()} `,
+      value: new RRule({ freq: RRule.YEARLY, bymonthday: [dayOfMonth], bymonth: [startAt.getMonth() + 1], dtstart: startAt }).toString(),
     },
     {
-      label: "Every weekday (Monday to Friday)",
-      value: "every-weekday",
+      label: `${new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR], dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR], dtstart: startAt }).toString(),
     },
     {
       label: "Custom...",
       value: "custom",
     },
-  ]
+  ];
 
-  let periodLabel: string
-  let periodValue: string
-  let generatedOption
+  // Initialize the variable for the generated option
+  let generatedOption: { label: string, value: string } | null = null;
 
+  // If everyNumber and everyPeriod are provided, generate a custom recurring option
   if (everyNumber && everyPeriod) {
-    switch (everyPeriod) {
-      case "day":
-        periodLabel = `Every ${everyNumber} day${everyNumber > 1 ? "s" : ""}`
-        periodValue = `every-${everyNumber}-day`
-        break
-      case "week":
-        periodLabel = `Every ${everyNumber} week${everyNumber > 1 ? "s" : ""}`
-        if (days && days.length > 0) {
-          const daysOfWeek = days.map((day) => getDayName(day)).join(", ")
-          periodLabel = `Every ${everyNumber} week${everyNumber > 1 ? "s" : ""} on ${daysOfWeek}`
-          periodValue = `every-${everyNumber}-week-${days.join("-")}`
-        } else {
-          periodValue = `every-${everyNumber}-week`
-        }
-        break
-      case "month":
-        periodLabel = `Every ${everyNumber} month${everyNumber > 1 ? "s" : ""}`
-        periodValue = `every-${everyNumber}-month`
-        break
-      case "year":
-        periodLabel = `Every ${everyNumber} year${everyNumber > 1 ? "s" : ""}`
-        periodValue = `every-${everyNumber}-year`
-        break
-      default:
-        periodLabel = `Every ${everyNumber} ${everyPeriod}`
-        periodValue = `every-${everyNumber}-${everyPeriod}`
+    let rruleOptions: Partial<Options> = {
+      interval: everyNumber,
+      dtstart: startAt,
+      until: undefined,
+      count: undefined,
+      freq: RRule[everyPeriod.toUpperCase() as keyof typeof RRule] as Frequency,
+    };
+
+    // Define the RRule options
+    if (everyPeriod === "week" && days && days.length > 0) {
+      const daysOfWeek = days.map(day => dayMapping[day]);
+      rruleOptions.byweekday = daysOfWeek;
     }
 
-    // Add the period option
-    generatedOption = { label: periodLabel, value: periodValue }
-
+    // Set the end option
     if (end) {
       if (end === "never") {
-        generatedOption.label += " (Never)"
-        generatedOption.value += "-never"
-      } else if ("type" in end) {
-        switch (end.type) {
-          case "date":
-            const endDate = end.endDate.toLocaleDateString("en-US")
-            generatedOption.label += ` (End on ${endDate})`
-            generatedOption.value += `-end-on-${endDate.replace(/ /g, "-")}`
-            break
-          case "occurrences":
-            generatedOption.label += ` (After ${end.occurrences} occurrence${end.occurrences > 1 ? "s" : ""})`
-            generatedOption.value += `-after-${end.occurrences}-occurrences`
-            break
-        }
+        rruleOptions.until = undefined;
+        rruleOptions.count = undefined;
+      } else if (end.type === "date") {
+        rruleOptions.until = end.endDate;
+        rruleOptions.count = undefined;
+      } else if (end.type === "occurrences") {
+        rruleOptions.until = undefined;
+        rruleOptions.count = end.occurrences;
       }
     }
 
-    options.push(generatedOption)
+    // Create the RRule instance
+    const rrule = new RRule(rruleOptions);
+
+    // Generate the custom option with duration
+    generatedOption = {
+      label: `${rrule.toText()}`,
+      value: rrule.toString(),
+    };
+
+    // Add the generated option to the options list
+    options.push(generatedOption);
   }
 
   return {
     options,
     generatedOption,
-  }
+  };
 }
+
 
 export default function FlightMasterFormRecurring({
   hookForm,
@@ -285,7 +240,6 @@ export default function FlightMasterFormRecurring({
 
   const onSaveCustomRecurring = (data: any) => {
     const { everyNumber, everyPeriod, endsOn, afterOccurence, days } = data
-
     const end =
       (endsOn && { type: "date", endDate: endsOn }) ||
       (afterOccurence && {
@@ -294,13 +248,20 @@ export default function FlightMasterFormRecurring({
       }) ||
       "never"
 
-    const { options, generatedOption } = generateRecurringOptions(
-      formData.rangeDate.from,
+
+      const date = new Date(formData.rangeDate.from)
+      const [hour,minute] = formData.rangeDate.fromTime.split(":")
+      date.setHours(parseInt(hour))
+      date.setSeconds(0)
+      date.setMinutes(parseInt(minute))
+
+    const { options, generatedOption } = generateRecurringOptions({
+      startAt : date,
       everyNumber,
       everyPeriod,
       days,
       end
-    )
+    })
 
     setRecurrings(options)
     setSelectedRecurring(generatedOption?.value)
@@ -323,7 +284,15 @@ export default function FlightMasterFormRecurring({
   useEffect(() => {
     if (formData.rangeDate?.from) {
       if (formData.rangeDate?.from instanceof Date) {
-        const { options } = generateRecurringOptions(formData.rangeDate.from)
+        const date = new Date(formData.rangeDate.from)
+        const [hour,minute] = formData.rangeDate.fromTime.split(":")
+        date.setHours(parseInt(hour))
+        date.setSeconds(0)
+        date.setMinutes(parseInt(minute))
+
+        const { options } = generateRecurringOptions({
+           startAt: date
+          })
         setRecurrings(options)
       }
     }
@@ -335,7 +304,7 @@ export default function FlightMasterFormRecurring({
     } else {
       setOpenCustomRecurring(false)
     }
-    console.log(formData.recurring)
+   
   }, [formData.recurring])
 
   useEffect(() => {
@@ -380,7 +349,7 @@ export default function FlightMasterFormRecurring({
             name="rangeDate"
             form={hookForm}
             type="date-range-time"
-            label="Range Date"
+            label="Start From"
           />
           <FormTextField
             form={hookForm}

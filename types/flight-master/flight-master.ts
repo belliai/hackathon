@@ -13,6 +13,8 @@ interface UOMType extends IDNameType {
 }
 
 interface Flight {
+  recurring : string
+  next_at: Date,
   aircraft: Aircraft
   arrival_d: number
   arrival_h: number

@@ -7,6 +7,8 @@ import {
 } from "@/schemas/flight-master/flight-master"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PaginationState } from "@tanstack/react-table"
+import { filter } from "d3-array"
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns"
 import {
   PackageIcon,
   PlaneIcon,
@@ -18,6 +20,7 @@ import {
 } from "lucide-react"
 import moment from "moment"
 import { useForm } from "react-hook-form"
+import { RRule } from "rrule"
 
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
 import {
@@ -48,10 +51,12 @@ import DataTableFilterForm from "@/components/data-table/data-table-filter-form"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
-import { columns } from "./components/column"
+import { columns, columnsListView } from "./components/column"
 import { formFilters, listViewFilters } from "./components/filter"
-import FlightMasterForm from "./components/FlightMasterForm"
-import FlightMasterFormRecurring from "./components/FlightMasterFormRecurring"
+import FlightMasterForm from "./components/flight-master-form"
+import FlightMasterFormRecurring from "./components/flight-master-form-recurring"
+import WeeklyDateStepper from "./components/weekly-date-stepper"
+import MonthlyDateStepper from "./components/monthly-date-stepper"
 
 type FlightDetailFormValues = {
   flightNo: string
@@ -154,6 +159,14 @@ const filtersSchema = flightMasterFormSchema.pick({
   fromDate: true,
 })
 
+const initialWeeklyFromDate = startOfWeek(new Date(), { weekStartsOn: 1 })
+const initialWeeklyToDate = endOfWeek(initialWeeklyFromDate, {
+  weekStartsOn: 1,
+})
+
+const initialMonthlyFromDate = startOfMonth(new Date()) // Start of the current month
+const initialMonthlyToDate = endOfMonth(initialMonthlyFromDate) // End of the current month
+
 export default function Page() {
   const [openModal, setOpenModal] = useState<string | boolean>(false)
   const [openModalRecurring, setOpenModalRecurring] = useState<
@@ -164,6 +177,17 @@ export default function Page() {
     pageIndex: 0,
     pageSize: 10,
   })
+
+  const [filterWeekly, setFilterWeekly] = useState<{ from: Date; to: Date }>({
+    from: initialWeeklyFromDate,
+    to: initialWeeklyToDate,
+  })
+  const [filterMonthly, setFilterMonthly] = useState<{ from: Date; to: Date }>({
+    from: initialMonthlyFromDate,
+    to: initialMonthlyToDate,
+  })
+
+  const [flightDataRecurring, setFlightDataRecurring] = useState<Flight[]>([])
 
   const paginationDetails = useMemo(
     () => ({
@@ -199,6 +223,66 @@ export default function Page() {
       fromDate: new Date(),
     },
   })
+
+  const filterData = filtersHookForm.watch()
+
+  useEffect(() => {
+    if (flightData && flightData.data) {
+      const flightDataRecurring = flightData.data.map((item) => ({
+        ...item,
+        // Temporary recurring value following this rule standard
+        // https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html
+        recurring: `DTSTART:20240701T040000Z
+RRULE:FREQ=DAILY;WKST=MO`,
+      }))
+
+      console.log(flightDataRecurring)
+
+      const flightDataNew = flightDataRecurring.flatMap((item) => {
+        const rruleString = item.recurring || ""
+        let occurrences: Date[] = []
+
+        try {
+          const rrule = RRule.fromString(rruleString)
+          const now = new Date(filterData.fromDate)
+
+          let rangeDate = new Date(now)
+          switch (filterData.period) {
+            case "daily":
+              rangeDate.setDate(now.getDate() + 1)
+              occurrences = rrule.between(now, rangeDate)
+              break
+            case "weekly":
+              occurrences = rrule.between(filterWeekly.from, filterWeekly.to)
+              break
+            case "monthly":
+              occurrences = rrule.between(filterMonthly.from, filterMonthly.to)
+              break
+            default:
+              rangeDate.setDate(now.getDate() + 10)
+              break
+          }
+
+        } catch (error) {
+          console.error("Invalid RRule string:", rruleString, error)
+        }
+
+        return occurrences.map((date) => ({
+          ...item,
+          recurring: rruleString,
+          next_at: date,
+        }))
+      })
+
+      setFlightDataRecurring(flightDataNew)
+    }
+  }, [
+    flightData,
+    filterData.fromDate,
+    filterData.period,
+    filterWeekly,
+    filterMonthly,
+  ])
 
   const findDays = (data: string[], key: string): boolean => {
     return (data && data.includes(key)) || false
@@ -485,8 +569,8 @@ export default function Page() {
             <div className="">
               <DataTable
                 showToolbarOnlyOnHover={true}
-                columns={columns(openDetailFlight, onShowDelete)}
-                data={isLoading ? [] : (flightData && flightData.data) || []}
+                columns={columnsListView(openDetailFlight, onShowDelete)}
+                data={isLoading ? [] : flightDataRecurring}
                 onRowClick={openDetailFlight}
                 extraRightComponents={createButtonFlight}
                 extraLeftComponents={
@@ -510,6 +594,7 @@ export default function Page() {
                         <InputSwitch
                           name="period"
                           type="select"
+                          defaultValue="daily"
                           className=""
                           selectOptions={[
                             {
@@ -524,21 +609,34 @@ export default function Page() {
                               label: "Monthly",
                               value: "monthly",
                             },
-                            {
-                              label: "Yearly",
-                              value: "yearly",
-                            },
                           ]}
                         />
-                        <InputSwitch name="fromDate" type="date" className="" />
+                        {filterData.period === "daily" && (
+                          <InputSwitch
+                            name="fromDate"
+                            type="date"
+                            className=""
+                          />
+                        )}
+                        {filterData.period === "weekly" && (
+                          <WeeklyDateStepper
+                            value={filterWeekly}
+                            onChange={setFilterWeekly}
+                          />
+                        )}
+                        {filterData.period === "monthly" && (
+                          <MonthlyDateStepper
+                            value={filterMonthly}
+                            onChange={setFilterMonthly}
+                          />
+                        )}
                       </Form>
                     </TabsList>
                   </div>
                 }
-                pageCount={
-                  isLoading ? 1 : (flightData && flightData.total_pages) || 1
-                }
+                pageCount={1}
                 manualPagination={true}
+                hidePagination
                 tableState={tableState}
                 menuId="flight-master-list-view"
                 isCanExport

@@ -28,7 +28,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select } from "@/components/ui/select"
 import FormTextField from "@/components/form/FormTextField"
 
-import NumberInputStepper from "./NumberInputStepper"
+import NumberInputStepper from "./number-input-stepper"
 
 type CustomRecurringFormProps = {
   open: boolean
@@ -40,10 +40,10 @@ type CustomRecurringFormProps = {
 const getSchema = (everyPeriod: string, repeatEnd: string) => {
   let schema = z.object({
     everyNumber: z.number().min(1).max(100),
-    everyPeriod: z.enum(["day", "week", "month", "year"]),
+    everyPeriod: z.enum(["daily", "weekly", "monthly", "yealy"]),
   })
 
-  if (everyPeriod === "week") {
+  if (everyPeriod === "weekly") {
     schema = schema.extend({
       days: z.array(z.string()).nonempty({ message: "At least select 1 day" }),
     })
@@ -73,27 +73,6 @@ const getSchema = (everyPeriod: string, repeatEnd: string) => {
   return schema
 }
 
-const schema = z.object({
-  everyNumber: z.number().min(1).max(100),
-  everyPeriod: z.enum(["day", "week", "month", "year"]),
-  days: z.array(z.string()).optional(),
-  endsOn: z.date().optional(),
-  afterOccurence: z.number().optional(),
-})
-
-// Add custom validation to ensure 'days' is required and non-empty if 'everyPeriod' is 'week'
-const validatedSchema = schema.refine(
-  (data) => {
-    if (data.everyPeriod === "week") {
-      return data.days && data.days.length > 0
-    }
-    return true
-  },
-  {
-    message: "At least select 1 day",
-    path: ["days"], // This path helps indicate where the error should appear
-  }
-)
 
 const periods = (val: number) => {
   const addition = val > 1 ? "s" : ""
@@ -101,19 +80,19 @@ const periods = (val: number) => {
   const list = [
     {
       label: "Day",
-      value: "day",
+      value: "daily",
     },
     {
       label: "Week",
-      value: "week",
+      value: "weekly",
     },
     {
       label: "Month",
-      value: "month",
+      value: "monthly",
     },
     {
       label: "Year",
-      value: "year",
+      value: "yearly",
     },
   ]
 
@@ -130,7 +109,7 @@ export function CustomRecurringForm({
 }: CustomRecurringFormProps) {
 
   const [repeatCount, setRepeatCount] = useState<number>(1)
-  const [repeatPeriod, setRepeatPeriod] = useState<string>("day")
+  const [repeatPeriod, setRepeatPeriod] = useState<string>("daily")
   const [repeatEnd, setRepeatEnd] = useState<string>("never")
   const [repeatOccurrence, setRepeatOccurrence] = useState<number>(1)
 
@@ -140,7 +119,7 @@ export function CustomRecurringForm({
     resolver: zodResolver(getSchema(repeatPeriod, repeatEnd)),
     defaultValues: {
       everyNumber: 1,
-      everyPeriod: "day",
+      everyPeriod: "daily",
       days: [] as string[],
       endsOn: "",
       afterOccurence: 1,
@@ -150,7 +129,7 @@ export function CustomRecurringForm({
   useEffect(() => {
     form.setValue("everyNumber", repeatCount)
     form.setValue("afterOccurence", repeatOccurrence)
-    form.setValue("everyPeriod", "day")
+    form.setValue("everyPeriod", "daily")
   }, [])
 
   useEffect(() => {
