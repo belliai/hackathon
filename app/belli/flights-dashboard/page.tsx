@@ -5,7 +5,7 @@ import { PaginationState } from "@tanstack/react-table"
 
 import { useFlightList } from "@/lib/hooks/flight-master/flight-master"
 import { DataTable } from "@/components/data-table/data-table"
-import { columns } from "@/app/belli/flight-master/components/column"
+import { columns } from "@/app/belli/flight-schedule-editor/components/column"
 
 export default function FlightsDashboardPage() {
   const [pagination, setPagination] = useState<PaginationState>({
