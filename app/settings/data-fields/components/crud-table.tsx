@@ -76,6 +76,7 @@ type CrudTableProps<T extends FieldValues> = {
   onSave: (data: T) => void
   onDelete: (data: T) => void
   hideAddForm?: boolean
+  hideCardHeader?: boolean
 }
 
 const FormDialog = <T extends FieldValues>(
@@ -262,13 +263,20 @@ export default function CrudTable<T extends FieldValues>(
       {!props.hideAddForm && (
         <FormDropdown form={props.form} onSave={props.onSave} />
       )}
-      <Card className="overflow-clip rounded-md">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-card px-4 py-2">
-          <CardTitle className="text-lg font-bold">{title}</CardTitle>
-        </CardHeader>
-
-        <Separator />
-        <CardContent className="p-0">
+      <Card
+        className={cn("overflow-clip rounded-md", {
+          "rounded-t-none": props.hideCardHeader,
+        })}
+      >
+        {!props.hideCardHeader && (
+          <>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-card px-4 py-2">
+              <CardTitle className="text-lg font-bold">{title}</CardTitle>
+            </CardHeader>
+            <Separator />
+          </>
+        )}
+        <CardContent className={"p-0"}>
           {props.isLoading ? (
             <div className="flex items-center justify-center py-24">
               <Loader className="h-6 w-6 animate-spin text-zinc-600" />

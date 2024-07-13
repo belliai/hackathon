@@ -15,8 +15,13 @@ import {
 } from "lucide-react"
 
 import { useCustomFields } from "@/lib/hooks/custom-fields"
-import { slugify } from "@/lib/utils/slugify-utils"
-import { toast } from "@/components/ui/use-toast"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { CardHeader, CardTitle } from "@/components/ui/card"
 import { ComboboxProps } from "@/components/form/combobox"
 import { InputSwitchProps } from "@/components/form/InputSwitch"
 
@@ -141,42 +146,58 @@ export default function CustomFieldsSettings({
     },
   ]
 
-  console.log("customFields", customFields)
-
   return (
     <div className="flex flex-col gap-8">
       <FormDropdown form={form} onSave={addCustomField} />
-      {customFields.map((fieldGroup) => {
-        return (
-          <CrudTable
-            key={fieldGroup.id}
-            title={fieldGroup.name}
-            columns={[
-              {
-                accessorKey: "field_name",
-                header: "Field Name",
-              },
-              {
-                accessorKey: "field_group",
-                header: "Field Group",
-                cell: ({ row }) =>
-                  fieldGroups.find(
-                    (field) => field.value === row.original.field_group
-                  )?.label,
-              },
-              {
-                accessorKey: "field_type",
-                header: "Field Type",
-              },
-            ]}
-            hideAddForm
-            form={form}
-            data={fieldGroup.data}
-            onDelete={deleteCustomField}
-            onSave={addCustomField}
-          />
-        )
-      })}
+      <Accordion type="multiple" className="flex flex-col gap-4">
+        {customFields.map((fieldGroup) => {
+          return (
+            <AccordionItem
+              value={fieldGroup.id}
+              className="border-none"
+              key={fieldGroup.id}
+            >
+              <AccordionTrigger
+                className="flex flex-row items-center justify-between space-y-0 rounded-md border bg-card px-4 py-2 data-[state=open]:rounded-b-none data-[state=open]:border-b-0"
+                value={fieldGroup.id}
+              >
+                <CardTitle className="text-lg font-bold">
+                  {fieldGroup.name}
+                </CardTitle>
+              </AccordionTrigger>
+              <AccordionContent>
+                <CrudTable
+                  title={fieldGroup.name}
+                  hideCardHeader
+                  columns={[
+                    {
+                      accessorKey: "field_name",
+                      header: "Field Name",
+                    },
+                    {
+                      accessorKey: "field_group",
+                      header: "Field Group",
+                      cell: ({ row }) =>
+                        fieldGroups.find(
+                          (field) => field.value === row.original.field_group
+                        )?.label,
+                    },
+                    {
+                      accessorKey: "field_type",
+                      header: "Field Type",
+                    },
+                  ]}
+                  hideAddForm
+                  form={form}
+                  data={fieldGroup.data}
+                  onDelete={deleteCustomField}
+                  onSave={addCustomField}
+                />
+              </AccordionContent>
+            </AccordionItem>
+          )
+        })}
+      </Accordion>
     </div>
   )
 }
