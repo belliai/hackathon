@@ -46,7 +46,7 @@ interface CustomFieldsSettingsProps {
   groups: Required<ComboboxProps>["options"]
 }
 
-const DUMMY_FIELD_TYPES: ComboboxProps["options"] = [
+const DUMMY_FIELD_TYPES: Required<ComboboxProps>["options"] = [
   {
     icon: <CaseUpper />,
     label: "Text",
@@ -185,6 +185,10 @@ export default function CustomFieldsSettings({
                     {
                       accessorKey: "field_type",
                       header: "Field Type",
+                      cell: ({ row }) =>
+                        DUMMY_FIELD_TYPES.find(
+                          (field) => field.value === row.original.field_type
+                        )?.label,
                     },
                   ]}
                   hideAddForm
