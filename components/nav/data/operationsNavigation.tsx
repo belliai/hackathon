@@ -14,7 +14,7 @@ import {
   ReceiptPercentIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline"
-import { CubeIcon, DashboardIcon, PaperPlaneIcon } from "@radix-ui/react-icons"
+import { CubeIcon, DashboardIcon, PaperPlaneIcon, ReaderIcon } from "@radix-ui/react-icons"
 import { PlaneIcon } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
@@ -50,6 +50,13 @@ export const operationsNavigation: TSidebarItem[] = [
         name: "Data Sync",
         href: "/belli/data-sync",
         icon: CubeIcon,
+        current: false,
+        isCanCreate: false,
+      },
+      {
+        name: "Load Planner",
+        href: "/belli/load-planner",
+        icon: ReaderIcon,
         current: false,
         isCanCreate: false,
       },
