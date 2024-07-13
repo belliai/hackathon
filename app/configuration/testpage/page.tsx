@@ -1,10 +1,12 @@
 "use client"
 
 import React, { useState } from "react"
+import { nanoid } from "nanoid"
 import * as XLSX from "xlsx"
 
 import { supabase } from "./supabaseClient"
-import { nanoid } from "nanoid"
+
+const SUPABASE_BUCKET_NAME = "excel-files"
 
 const UploadExcel: React.FC = () => {
   const [result, setResult] = useState<string | null>(null)
@@ -26,7 +28,7 @@ const UploadExcel: React.FC = () => {
 
       // Upload file to Supabase
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("excel-files")
+        .from(SUPABASE_BUCKET_NAME)
         .upload(`${file.name}/${nanoid()}`, file)
 
       if (uploadError) {
@@ -36,10 +38,10 @@ const UploadExcel: React.FC = () => {
       }
 
       const fileUrl = supabase.storage
-        .from("uploads")
+        .from(SUPABASE_BUCKET_NAME)
         .getPublicUrl(uploadData?.path).data.publicUrl
 
-      console.warn("fileUrl", fileUrl)
+      console.log("fileUrl", fileUrl)
 
       // Call AWS Lambda function via Lambda URL to process the file
       const response = await fetch(
