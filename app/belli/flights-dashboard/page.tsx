@@ -5,7 +5,7 @@ import { PaginationState } from "@tanstack/react-table"
 
 import { useFlightList } from "@/lib/hooks/flight-master/flight-master"
 import { DataTable } from "@/components/data-table/data-table"
-import { columns } from "@/app/belli/flight-schedule-editor/components/column"
+import { useRecurringFlightsColumns } from "@/app/belli/flight-schedule-editor/components/column"
 
 export default function FlightsDashboardPage() {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -29,17 +29,19 @@ export default function FlightsDashboardPage() {
 
   const flightsData = flights?.data || []
 
+  const columns = useRecurringFlightsColumns(
+    (data) => {},
+    (data) => {}
+  )
+
   return (
-    <div style={{ marginTop: '10px' }}>
+    <div style={{ marginTop: "10px" }}>
       <DataTable
         initialPinning={{
           left: [],
           right: ["actions"],
         }}
-        columns={columns(
-          (data) => {},
-          (data) => {}
-        )}
+        columns={columns}
         initialVisibility={{
           updated_at: false,
           updated_by: false,
@@ -55,5 +57,5 @@ export default function FlightsDashboardPage() {
         showToolbarOnlyOnHover={true}
       />
     </div>
-  )  
+  )
 }

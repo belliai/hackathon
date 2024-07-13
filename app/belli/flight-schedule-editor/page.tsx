@@ -51,12 +51,15 @@ import DataTableFilterForm from "@/components/data-table/data-table-filter-form"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
-import { columns, columnsListView } from "./components/column"
+import {
+  useListViewColumns,
+  useRecurringFlightsColumns,
+} from "./components/column"
 import { formFilters, listViewFilters } from "./components/filter"
 import FlightMasterForm from "./components/flight-master-form"
 import FlightMasterFormRecurring from "./components/flight-master-form-recurring"
-import WeeklyDateStepper from "./components/weekly-date-stepper"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
+import WeeklyDateStepper from "./components/weekly-date-stepper"
 
 type FlightDetailFormValues = {
   flightNo: string
@@ -262,7 +265,6 @@ RRULE:FREQ=DAILY;WKST=MO`,
               rangeDate.setDate(now.getDate() + 10)
               break
           }
-
         } catch (error) {
           console.error("Invalid RRule string:", rruleString, error)
         }
@@ -561,15 +563,21 @@ RRULE:FREQ=DAILY;WKST=MO`,
     setPagination(pagination)
   }, [])
 
+  const listViewColumns = useListViewColumns(openDetailFlight, onShowDelete)
+  const recurringFlightsColumns = useRecurringFlightsColumns(
+    openDetailFlight,
+    onShowDelete
+  )
+
   return (
     <>
-      <PageContainer className="gap-6">
+      <PageContainer>
         <Tabs defaultValue="list-view" className="w-full">
-          <TabsContent value="list-view">
+          <TabsContent value="list-view" className="mt-0">
             <div className="">
               <DataTable
                 showToolbarOnlyOnHover={true}
-                columns={columnsListView(openDetailFlight, onShowDelete)}
+                columns={listViewColumns}
                 data={isLoading ? [] : flightDataRecurring}
                 onRowClick={openDetailFlight}
                 extraRightComponents={createButtonFlight}
@@ -577,14 +585,14 @@ RRULE:FREQ=DAILY;WKST=MO`,
                   <div className="flex h-10 items-end">
                     <TabsList className="gap-2 bg-transparent p-0">
                       <TabsTrigger
-                        className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                        className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                         value="list-view"
                         style={{ fontSize: "0.875rem" }}
                       >
                         List View
                       </TabsTrigger>
                       <TabsTrigger
-                        className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                        className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                         value="create-recurring-flight"
                         style={{ fontSize: "0.875rem" }}
                       >
@@ -595,7 +603,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
                           name="period"
                           type="select"
                           defaultValue="daily"
-                          className=""
+                          className="h-8 w-24"
                           selectOptions={[
                             {
                               label: "Daily",
@@ -615,7 +623,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
                           <InputSwitch
                             name="fromDate"
                             type="date"
-                            className=""
+                            className="h-8 w-36"
                           />
                         )}
                         {filterData.period === "weekly" && (
@@ -644,23 +652,23 @@ RRULE:FREQ=DAILY;WKST=MO`,
             </div>
           </TabsContent>
 
-          <TabsContent value="create-recurring-flight">
+          <TabsContent value="create-recurring-flight" className="mt-0">
             <div className="">
               <DataTable
                 showToolbarOnlyOnHover={true}
-                columns={columns(openDetailFlight, onShowDelete)}
+                columns={recurringFlightsColumns}
                 data={isLoading ? [] : (flightData && flightData.data) || []}
                 extraRightComponents={createButtonRecurringFlight}
                 extraLeftComponents={
                   <TabsList className="gap-2 bg-transparent p-0">
                     <TabsTrigger
-                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                      className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="list-view"
                     >
                       List View
                     </TabsTrigger>
                     <TabsTrigger
-                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                      className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                       value="create-recurring-flight"
                     >
                       Recurring Flights
