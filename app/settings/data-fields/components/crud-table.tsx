@@ -265,7 +265,7 @@ export default function CrudTable<T extends FieldValues>(
       )}
       <Card
         className={cn("overflow-clip rounded-md", {
-          "rounded-t-none": props.hideCardHeader,
+          "rounded-t-none border-0 border-t": props.hideCardHeader,
         })}
       >
         {!props.hideCardHeader && (

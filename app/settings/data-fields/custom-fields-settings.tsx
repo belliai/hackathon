@@ -154,18 +154,18 @@ export default function CustomFieldsSettings({
           return (
             <AccordionItem
               value={fieldGroup.id}
-              className="border-none"
+              className="rounded-md border"
               key={fieldGroup.id}
             >
               <AccordionTrigger
-                className="flex flex-row items-center justify-between space-y-0 rounded-md border bg-card px-4 py-2 data-[state=open]:rounded-b-none data-[state=open]:border-b-0"
+                className="flex flex-row items-center justify-between space-y-0 rounded-md bg-card px-4 py-2 data-[state=open]:rounded-b-none"
                 value={fieldGroup.id}
               >
                 <CardTitle className="text-lg font-bold">
                   {fieldGroup.name}
                 </CardTitle>
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="pb-0">
                 <CrudTable
                   title={fieldGroup.name}
                   hideCardHeader
