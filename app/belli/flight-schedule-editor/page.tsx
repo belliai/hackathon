@@ -682,7 +682,6 @@ RRULE:FREQ=DAILY;WKST=MO`,
               manualPagination={true}
               tableState={tableState}
               menuId="flight-master-recurring-view"
-              isCanExport
             />
           </TabsContent>
         </Tabs>
