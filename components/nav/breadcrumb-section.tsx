@@ -23,6 +23,7 @@ import { settingNavigation } from "./data/settingNavigation"
 import { skNavigation } from "./data/skNavigation"
 import { Path, useFavorites } from "./favorites/favorites-provider"
 import { TSidebarItem } from "./SidebarItem"
+import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 
 const findCurrentPaths = (
   items: TSidebarItem[],
@@ -62,6 +63,7 @@ const getCurrentPaths = (pathname: string) => {
     ...k360Navigation,
     ...operationsNavigation,
     ...belliSettingsNavigation,
+    ...customDataFieldsNavigation,
   ]
 
   // Use the helper function to find the current path
