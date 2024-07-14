@@ -6,11 +6,15 @@ import { paragon } from "@useparagon/connect"
 
 import { paragonToken } from "../utils/paragon"
 
-export function useParagonAuthenticate() {
+export function useParagonGlobal() {
   const { user } = useUser()
 
   const userId = user?.id
   const projectId = process.env.NEXT_PUBLIC_PARAGON_PROJECT_ID
+
+  if (!projectId) {
+    throw new Error("Missing Paragon project ID")
+  }
 
   const query = useQuery({
     queryKey: ["paragonAuthKey", userId],
@@ -19,19 +23,15 @@ export function useParagonAuthenticate() {
         throw new Error("Missing user ID")
       }
 
-      const res = await paragonToken(userId)
+      const token = await paragonToken(userId)
 
-      return res
+      await paragon.authenticate(projectId, token)
+
+      const user = paragon.getUser()
+
+      return { paragon, token, user }
     },
   })
 
-  if (!projectId) {
-    throw new Error("Missing Paragon project ID")
-  }
-
-  if (query.data) {
-    paragon.authenticate(projectId, query.data)
-  }
-
-  return { token: query.data, query }
+  return { ...query.data, query }
 }
