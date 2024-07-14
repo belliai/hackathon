@@ -100,7 +100,12 @@ export default function SideBar() {
             <ul role="list" className="-mx-2">
               {sidebarType === SIDEBAR_TYPE.DEFAULT && (
                 <li>
-                  <NewOrderModal>
+                  <NewOrderModal
+                    open={isDialogOpen}
+                    onOpenChange={(open) => {
+                      setDialogOpen(open)
+                    }}
+                  >
                     <Button
                       variant="ghost"
                       onClick={() => setDialogOpen(true)}

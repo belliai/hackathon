@@ -790,7 +790,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                 isLoading={isPendingCreate || isPendingUpdate}
               >
                 <SaveIcon className="mr-2 size-4" />
-                Save Aircraft Type
+                Save
               </Button>
             </DialogFooter>
           </form>

@@ -27,7 +27,7 @@ export const orderSchema = z.object({
   bill_to_id: z.string(),
   bill_to_old_name: z.string().optional().nullable(),
   bill_to_name: z.string().optional().nullable(),
-  booking_type_id: z.string().min(1),
+  booking_type_id: z.string().min(1, { message: "Please select Booking Type" }),
   ch_weight_kg: z.string(),
   commodity_code_id: z.string().optional(),
   consignee_id: z.string(),
@@ -65,7 +65,7 @@ export const orderSchema = z.object({
   s_rate: z.string(),
   shipper_id: z.string(),
   spot_id: z.string(),
-  status_id: z.string(),
+  status_id: z.string().min(1),
   total: z.string(),
   volume_kg: z.string(),
 })
