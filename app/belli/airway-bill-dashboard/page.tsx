@@ -42,6 +42,8 @@ export default function Home() {
   } = useOrders({ pagination })
   const remove = useRemoveOrder()
 
+
+
   const openModal = (data: Order) => {
     setSelectedBooking(data)
     setModalOpen(true)
@@ -65,9 +67,7 @@ export default function Home() {
     setPagination(pagination)
   }, [])
 
-  const columnWithActions = [
-    ...columns,
-  ]
+  const columnWithActions = [...columns]
 
   return (
     <div>

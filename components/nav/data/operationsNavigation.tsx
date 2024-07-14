@@ -14,8 +14,13 @@ import {
   ReceiptPercentIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline"
-import { CubeIcon, DashboardIcon, PaperPlaneIcon, ReaderIcon } from "@radix-ui/react-icons"
-import { PlaneIcon } from "lucide-react"
+import {
+  CubeIcon,
+  DashboardIcon,
+  PaperPlaneIcon,
+  ReaderIcon,
+} from "@radix-ui/react-icons"
+import { PlaneIcon, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -59,6 +64,14 @@ export const operationsNavigation: TSidebarItem[] = [
         icon: ReaderIcon,
         current: false,
         isCanCreate: false,
+      },
+      {
+        name: "Integrations",
+        href: "/belli/integrations",
+        icon: Waypoints,
+        current: false,
+        isCanCreate: false,
+
       },
     ],
   },

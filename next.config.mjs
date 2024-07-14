@@ -21,6 +21,11 @@ const nextConfig = {
         hostname: "tailwindui.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.useparagon.com",
+        port: "",
+      }
     ],
     dangerouslyAllowSVG: true,
   },
