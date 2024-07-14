@@ -55,7 +55,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
           options={currencyOptions}
           label="Currency"
           info="Select the Currency"
-          editLink="/settings/data-fields?tab=currency"
+          editLink="/data-fields/payments?tab=currency"
         />
         <FormField
           control={form.control}

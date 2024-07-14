@@ -23,6 +23,7 @@ import { k360Navigation } from "./data/k360Navigation"
 import FavoritesMenu from "./favorites/favorites-menu"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
+import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -129,6 +130,10 @@ export default function SideBar() {
                     <FavoritesMenu />
                     <SidebarMenu items={operationsNavigation} collapsible />
                     <SidebarMenu items={belliSettingsNavigation} collapsible />
+                    <SidebarMenu
+                      items={customDataFieldsNavigation}
+                      collapsible
+                    />
                   </>
                 ) : (
                   <SidebarMenu items={settingNavigation[0].children ?? []} />
