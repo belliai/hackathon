@@ -40,13 +40,11 @@ export default function SidebarItem({
   active,
   disabled,
 }: SidebarItemProps) {
-  function getBaseItemClassName(currentActive: boolean, isParent: boolean = false) {
+  function getBaseItemClassName(currentActive: boolean) {
     const className = cn(
       "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-sm px-2 py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-800",
       currentActive
-        ? isParent
-          ? "text-white bg-zinc-900 [&_svg]:text-white [&_span]:bg-button-primary/25"
-          : "text-white bg-button-primary hover:bg-button-primary/80 [&_svg]:text-white [&[data-state=open]>svg]:text-white"
+        ? "text-white bg-zinc-900 [&_svg]:text-white"
         : ""
     )
 
@@ -60,7 +58,7 @@ export default function SidebarItem({
       {item.children ? (
         <AccordionTrigger
           className={cn(
-            getBaseItemClassName(!!item.current || active, true),
+            getBaseItemClassName(!!item.current || active),
             "[&[data-state=open]>svg]:rotate-90"
           )}
           customarrow={
