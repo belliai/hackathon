@@ -23,6 +23,7 @@ import { settingNavigation } from "./data/settingNavigation"
 import { skNavigation } from "./data/skNavigation"
 import { Path, useFavorites } from "./favorites/favorites-provider"
 import { TSidebarItem } from "./SidebarItem"
+import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 
 const findCurrentPaths = (
   items: TSidebarItem[],
@@ -35,7 +36,7 @@ const findCurrentPaths = (
       ...path,
       { name: item.name, href: item.href, children: undefined },
     ]
-
+    
     // Check if the current item's href matches the pathname
     if (item.href === pathname) {
       return currentPath
@@ -62,6 +63,7 @@ const getCurrentPaths = (pathname: string) => {
     ...k360Navigation,
     ...operationsNavigation,
     ...belliSettingsNavigation,
+    ...customDataFieldsNavigation,
   ]
 
   // Use the helper function to find the current path
@@ -109,7 +111,10 @@ export default function BreadCrumbSection() {
                 {index !== 0 && <BreadcrumbSeparator />}
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    className={cn(index === 0 && "text-foreground")}
+                    className={cn(
+                      index === 0 && "text-foreground",
+                      index === currentPaths.length - 1 && "text-button-primary"
+                    )}
                     href={path.href}
                   >
                     {path.name}

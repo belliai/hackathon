@@ -70,8 +70,12 @@ export default function Home() {
   const columnWithActions = [...columns]
 
   return (
-    <div style={{ marginTop: "10px" }}>
-      <ClientSideSuspense fallback={<></>}>
+    <div>
+      <ClientSideSuspense
+        fallback={
+          <></>
+        }
+      >
         <LiveCursorHoc />
       </ClientSideSuspense>
       <DataTable

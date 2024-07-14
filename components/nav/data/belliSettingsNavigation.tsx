@@ -1,5 +1,5 @@
 import { CursorArrowRippleIcon, UserIcon } from "@heroicons/react/24/outline"
-import { PlaneIcon } from "lucide-react"
+import { PlaneIcon, Users } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -15,15 +15,9 @@ export const belliSettingsNavigation: TSidebarItem[] = [
         icon: UserIcon,
       },
       {
-        name: "Data Fields",
-        href: "/settings/data-fields",
-        icon: CursorArrowRippleIcon,
-        isCanCreate: true,
-      },
-      {
         name: "Users",
         href: "/settings/users",
-        icon: UserIcon,
+        icon: Users,
       },
       {
         name: "Aircraft Setup",

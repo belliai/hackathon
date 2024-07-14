@@ -11,6 +11,9 @@ import { ColumnDef } from "@tanstack/react-table"
 import { PlaneIcon, PlusIcon, ScrollTextIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
+import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
+import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-type/types"
+import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -131,9 +134,16 @@ export default function MasterAircraftPage() {
     handleRowClick(aircraft)
   }
 
+  const { data: manufacturers } = useAircraftManufacturers()
+  const { data: types } = useAircraftTypes()
+  const { data: versions } = useAircraftVersions()
+
   const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     {
       accessorKey: "manufacturer",
+      cell: ({ row }) =>
+        manufacturers?.find((item) => item.ID === row.original.manufacturer)
+          ?.name ?? <span className="text-destructive">Deleted</span>,
       header: () => (
         <TableHeaderWithTooltip
           header="Manufacturer"
@@ -143,6 +153,10 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "aircraft_type",
+      cell: ({ row }) =>
+        types?.find((item) => item.ID === row.original.aircraft_type)?.name ?? (
+          <span className="text-destructive">Deleted</span>
+        ),
       header: () => (
         <TableHeaderWithTooltip
           header="Aircraft Type"
@@ -152,6 +166,10 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "version",
+      cell: ({ row }) =>
+        versions?.find((item) => item.ID === row.original.version)?.name ?? (
+          <span className="text-destructive">Deleted</span>
+        ),
       header: () => (
         <TableHeaderWithTooltip header="Version" tooltipId="aircraft-version" />
       ),
@@ -262,12 +280,18 @@ export default function MasterAircraftPage() {
           tooltipId="aircraft-aircraft-type"
         />
       ),
-      cell: ({ row }) =>
-        [
-          row.original.manufacturer,
-          row.original.aircraft_type,
-          row.original.version,
-        ].join(" "),
+      cell: ({ row }) => {
+        const manufacturer = manufacturers?.find(
+          (item) => item.ID === row.original.manufacturer
+        )?.name
+        const type = types?.find(
+          (item) => item.ID === row.original.aircraft_type
+        )?.name
+        const version = versions?.find(
+          (item) => item.ID === row.original.version
+        )?.name
+        return [manufacturer, type, version].join(" ")
+      },
     },
     {
       accessorKey: "mtow",

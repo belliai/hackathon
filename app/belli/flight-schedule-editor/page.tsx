@@ -10,6 +10,7 @@ import { PaginationState } from "@tanstack/react-table"
 import { filter } from "d3-array"
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns"
 import {
+  ListIcon,
   PackageIcon,
   PlaneIcon,
   Plus,
@@ -51,12 +52,16 @@ import DataTableFilterForm from "@/components/data-table/data-table-filter-form"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
-import { columns, columnsListView } from "./components/column"
+import {
+  useListViewColumns,
+  useRecurringFlightsColumns,
+} from "./components/column"
 import { formFilters, listViewFilters } from "./components/filter"
 import FlightMasterForm from "./components/flight-master-form"
 import FlightMasterFormRecurring from "./components/flight-master-form-recurring"
-import WeeklyDateStepper from "./components/weekly-date-stepper"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
+import WeeklyDateStepper from "./components/weekly-date-stepper"
+import { LoopIcon } from "@radix-ui/react-icons"
 
 type FlightDetailFormValues = {
   flightNo: string
@@ -262,7 +267,6 @@ RRULE:FREQ=DAILY;WKST=MO`,
               rangeDate.setDate(now.getDate() + 10)
               break
           }
-
         } catch (error) {
           console.error("Invalid RRule string:", rruleString, error)
         }
@@ -561,121 +565,124 @@ RRULE:FREQ=DAILY;WKST=MO`,
     setPagination(pagination)
   }, [])
 
+  const listViewColumns = useListViewColumns(openDetailFlight, onShowDelete)
+  const recurringFlightsColumns = useRecurringFlightsColumns(
+    openDetailFlight,
+    onShowDelete
+  )
+
   return (
     <>
-      <PageContainer className="gap-6">
+      <PageContainer>
         <Tabs defaultValue="list-view" className="w-full">
-          <TabsContent value="list-view">
-            <div className="">
-              <DataTable
-                showToolbarOnlyOnHover={true}
-                columns={columnsListView(openDetailFlight, onShowDelete)}
-                data={isLoading ? [] : flightDataRecurring}
-                onRowClick={openDetailFlight}
-                extraRightComponents={createButtonFlight}
-                extraLeftComponents={
-                  <div className="flex h-10 items-end">
-                    <TabsList className="gap-2 bg-transparent p-0">
-                      <TabsTrigger
-                        className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-                        value="list-view"
-                        style={{ fontSize: "0.875rem" }}
-                      >
-                        List View
-                      </TabsTrigger>
-                      <TabsTrigger
-                        className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-                        value="create-recurring-flight"
-                        style={{ fontSize: "0.875rem" }}
-                      >
-                        Recurring Flights
-                      </TabsTrigger>
-                      <Form {...filtersHookForm}>
-                        <InputSwitch
-                          name="period"
-                          type="select"
-                          defaultValue="daily"
-                          className=""
-                          selectOptions={[
-                            {
-                              label: "Daily",
-                              value: "daily",
-                            },
-                            {
-                              label: "Weekly",
-                              value: "weekly",
-                            },
-                            {
-                              label: "Monthly",
-                              value: "monthly",
-                            },
-                          ]}
-                        />
-                        {filterData.period === "daily" && (
-                          <InputSwitch
-                            name="fromDate"
-                            type="date"
-                            className=""
-                          />
-                        )}
-                        {filterData.period === "weekly" && (
-                          <WeeklyDateStepper
-                            value={filterWeekly}
-                            onChange={setFilterWeekly}
-                          />
-                        )}
-                        {filterData.period === "monthly" && (
-                          <MonthlyDateStepper
-                            value={filterMonthly}
-                            onChange={setFilterMonthly}
-                          />
-                        )}
-                      </Form>
-                    </TabsList>
-                  </div>
-                }
-                pageCount={1}
-                manualPagination={true}
-                hidePagination
-                tableState={tableState}
-                menuId="flight-master-list-view"
-                isCanExport
-              />
-            </div>
+          <TabsContent value="list-view" className="mt-0">
+            <DataTable
+              showToolbarOnlyOnHover={true}
+              columns={listViewColumns}
+              data={isLoading ? [] : flightDataRecurring}
+              onRowClick={openDetailFlight}
+              extraRightComponents={createButtonFlight}
+              extraLeftComponents={
+                <TabsList className="gap-2 bg-transparent p-0">
+                  <TabsTrigger
+                    className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                    value="list-view"
+                    style={{ fontSize: "0.875rem" }}
+                  >
+                    <ListIcon className="mr-2 size-4" />
+                    List View
+                  </TabsTrigger>
+                  <TabsTrigger
+                    className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                    value="create-recurring-flight"
+                    style={{ fontSize: "0.875rem" }}
+                  >
+                    <LoopIcon className="mr-2 size-4" />
+                    Recurring Flights
+                  </TabsTrigger>
+                  <Form {...filtersHookForm}>
+                    <InputSwitch
+                      name="period"
+                      type="select"
+                      defaultValue="daily"
+                      className="h-8 w-24"
+                      selectOptions={[
+                        {
+                          label: "Daily",
+                          value: "daily",
+                        },
+                        {
+                          label: "Weekly",
+                          value: "weekly",
+                        },
+                        {
+                          label: "Monthly",
+                          value: "monthly",
+                        },
+                      ]}
+                    />
+                    {filterData.period === "daily" && (
+                      <InputSwitch
+                        name="fromDate"
+                        type="date"
+                        className="h-8 w-36"
+                      />
+                    )}
+                    {filterData.period === "weekly" && (
+                      <WeeklyDateStepper
+                        value={filterWeekly}
+                        onChange={setFilterWeekly}
+                      />
+                    )}
+                    {filterData.period === "monthly" && (
+                      <MonthlyDateStepper
+                        value={filterMonthly}
+                        onChange={setFilterMonthly}
+                      />
+                    )}
+                  </Form>
+                </TabsList>
+              }
+              pageCount={1}
+              manualPagination={true}
+              hidePagination
+              tableState={tableState}
+              menuId="flight-master-list-view"
+              isCanExport
+            />
           </TabsContent>
 
-          <TabsContent value="create-recurring-flight">
-            <div className="">
-              <DataTable
-                showToolbarOnlyOnHover={true}
-                columns={columns(openDetailFlight, onShowDelete)}
-                data={isLoading ? [] : (flightData && flightData.data) || []}
-                extraRightComponents={createButtonRecurringFlight}
-                extraLeftComponents={
-                  <TabsList className="gap-2 bg-transparent p-0">
-                    <TabsTrigger
-                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-                      value="list-view"
-                    >
-                      List View
-                    </TabsTrigger>
-                    <TabsTrigger
-                      className="border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-                      value="create-recurring-flight"
-                    >
-                      Recurring Flights
-                    </TabsTrigger>
-                  </TabsList>
-                }
-                pageCount={
-                  isLoading ? 1 : (flightData && flightData.total_pages) || 1
-                }
-                manualPagination={true}
-                tableState={tableState}
-                menuId="flight-master-recurring-view"
-                isCanExport
-              />
-            </div>
+          <TabsContent value="create-recurring-flight" className="mt-0">
+            <DataTable
+              showToolbarOnlyOnHover={true}
+              columns={recurringFlightsColumns}
+              data={isLoading ? [] : (flightData && flightData.data) || []}
+              extraRightComponents={createButtonRecurringFlight}
+              extraLeftComponents={
+                <TabsList className="gap-2 bg-transparent p-0">
+                  <TabsTrigger
+                    className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                    value="list-view"
+                  >
+                    <ListIcon className="mr-2 size-4" />
+                    List View
+                  </TabsTrigger>
+                  <TabsTrigger
+                    className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                    value="create-recurring-flight"
+                  >
+                    <LoopIcon className="mr-2 size-4" />
+                    Recurring Flights
+                  </TabsTrigger>
+                </TabsList>
+              }
+              pageCount={
+                isLoading ? 1 : (flightData && flightData.total_pages) || 1
+              }
+              manualPagination={true}
+              tableState={tableState}
+              menuId="flight-master-recurring-view"
+            />
           </TabsContent>
         </Tabs>
       </PageContainer>

@@ -1,6 +1,8 @@
 "use client"
 
+import { count } from "console"
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
 import {
   FileClockIcon,
@@ -15,6 +17,7 @@ import {
 import { Path, useFieldArray, UseFormReturn } from "react-hook-form"
 
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
+import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
   useAircraftManufacturers,
@@ -72,6 +75,7 @@ import InputSwitch from "@/components/form/InputSwitch"
 
 import { formDefaultValues } from "../constants"
 import { aircraftTypes } from "../constants/aircraft-types"
+import { detailsFields } from "../constants/validation-steps"
 
 type AircraftTypeFormProps = {
   currentOpen: string | boolean
@@ -83,6 +87,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
 
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
+
+  const [hasDelete, setHasDelete] = useState(false)
 
   const fieldArray = useFieldArray({
     control: form.control,
@@ -99,6 +105,43 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { data: aircraftBodyTypes } = useAircraftBodyTypes()
 
   const { data: aircraftStatuses } = useAircraftStatuses()
+
+  // default values
+  const { aircraftDefaults, updateAircraftDefaults } = useAircraftDefaults()
+
+  const saveDefaults = async () => {
+    const validation = await form.trigger(detailsFields)
+    if (!validation) return
+    await updateAircraftDefaults(form.getValues(), {
+      onSuccess: () => {
+        toast({
+          title: "Success!",
+          description: "Aircraft default values has been updated!",
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        toast({
+          title: "Error!",
+          description: "An error occurred while saving aircraft default values",
+        })
+      },
+    })
+  }
+
+  useEffect(() => {
+    if (aircraftDefaults && !isEdit) {
+      const newDefaults = {
+        ...aircraftDefaults,
+        ID: undefined,
+        created_at: undefined,
+        updated_at: undefined,
+      }
+      Object.entries(newDefaults).forEach(([key, value]) => {
+        value && form.setValue(key as Path<AircraftFormValues>, value)
+      })
+    }
+  }, [aircraftDefaults, currentOpen])
 
   // manufacturers
   const { data: aircraftManufacturers, isLoading: isLoadingManufacturers } =
@@ -184,13 +227,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const selectedVersion = aircraftVersionsOptions.find(
     (item) => item.value === form.watch("version")
   )
-
-  // useEffect(() => {
-  //   if (!selectedAircraftDetails || isEdit) return
-  //   Object.entries(selectedAircraftDetails).forEach(([key, value]) => {
-  //     form.setValue(key as Path<AircraftFormValues>, value)
-  //   })
-  // }, [selectedAircraftDetails, form, isEdit])
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
     const payload: CreateAircraftRequest = {
@@ -279,15 +315,13 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }
 
   return (
-    <Dialog open={!!currentOpen} onOpenChange={onOpenChange}>
-      <DialogContent
-        hideCloseButton
-        className="h-[90dvh] min-w-[1100px]"
-        onInteractOutside={(e) => {
-          e.preventDefault()
-          setCloseWarningOpen(true)
-        }}
-      >
+    <Dialog
+      open={!!currentOpen}
+      onOpenChange={(_open) => {
+        if (!_open) setCloseWarningOpen(true)
+      }}
+    >
+      <DialogContent hideCloseButton className="h-[90dvh] min-w-[1100px]">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmitAircraft, (data) =>
@@ -361,6 +395,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       isLoading={isLoadingManufacturers}
                       onDelete={(option) => {
                         deleteAircraftManufacturer(option.value)
+                        setHasDelete(true)
                       }}
                       onCreate={(name) => {
                         upsertAircraftManufacturer({
@@ -382,6 +417,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       disabled={!selectedManufacturer}
                       onDelete={(option) => {
                         deleteAircraftType(option.value)
+                        setHasDelete(true)
                       }}
                       onCreate={(name) => {
                         upsertAircraftType({
@@ -403,6 +439,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       disabled={!selectedType}
                       onDelete={(option) => {
                         deleteAircraftVersion(option.value)
+                        setHasDelete(true)
                       }}
                       onCreate={(name) => {
                         upsertAircraftVersion({
@@ -498,10 +535,22 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                 value="aircraft-details"
               >
                 <Card className="flex h-full flex-col divide-y rounded-md">
-                  <CardHeader>
+                  <CardHeader className="flex w-full flex-row items-center justify-between space-y-0">
                     <CardTitle className="font-semibold">
                       Aircraft Details
                     </CardTitle>
+                    <div className="inline-flex items-center gap-1">
+                      <Button
+                        onClick={saveDefaults}
+                        type="button"
+                        size={"sm"}
+                        className="h-7"
+                        variant={"secondary"}
+                      >
+                        <SaveIcon className="mr-2 size-3" />
+                        Save as default
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent className="w-full flex-1 p-0">
                     <div className="custom-scrollbar h-5 min-h-full space-y-4 overflow-y-auto p-4">
@@ -741,7 +790,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                 isLoading={isPendingCreate || isPendingUpdate}
               >
                 <SaveIcon className="mr-2 size-4" />
-                Save Aircraft Type
+                Save
               </Button>
             </DialogFooter>
           </form>
@@ -762,6 +811,32 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
             >
               Yes, discard changes
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog
+        open={!currentOpen && hasDelete}
+        onOpenChange={(_open) => {
+          if (!_open) setHasDelete(false)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              You have deleted an aircraft type or tail number that is assigned
+              to an upcoming flight
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This flight needs a new aircraft assigned to it
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Ignore</AlertDialogCancel>
+            <Link href={"/belli/flight-master"}>
+              <AlertDialogAction variant={"button-primary"}>
+                Fix This
+              </AlertDialogAction>
+            </Link>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

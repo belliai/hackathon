@@ -116,7 +116,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                   disabled={props.disabled}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className={props.className}>
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
@@ -149,7 +149,11 @@ export default function InputSwitch<DataType extends FieldValues>(
                     {props.label}
                   </FormLabel>
                 )}
-                <DateInput {...field} />
+                <DateInput
+                  {...field}
+                  className={props.className}
+                  disabled={props.disabled}
+                />
                 <FormMessage />
               </FormItem>
             )}

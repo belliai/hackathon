@@ -218,7 +218,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {!hidePagination && (
-        <DataTablePagination table={table} isCanExport={isCanExport} />
+        <DataTablePagination table={table} isCanExport={isCanExport} isHover={isHover} />
       )}
     </div>
   )
