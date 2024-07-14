@@ -141,7 +141,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
         value && form.setValue(key as Path<AircraftFormValues>, value)
       })
     }
-  }, [aircraftDefaults])
+  }, [aircraftDefaults, currentOpen])
 
   // manufacturers
   const { data: aircraftManufacturers, isLoading: isLoadingManufacturers } =
