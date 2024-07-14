@@ -22,7 +22,7 @@ const columnLabels = [
   "Perishable",
   "Explosive",
 ]
-
+//upload excel file
 const UploadExcel: React.FC = () => {
   const [spreadsheetData, setSpreadsheetData] = useState<any[]>([])
   const [error, setError] = useState<string | null>(null)
