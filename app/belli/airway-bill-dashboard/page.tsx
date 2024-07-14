@@ -8,6 +8,7 @@ import { Loader } from "lucide-react"
 
 import { getData } from "@/lib/data"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
+import { useParagonToken } from "@/lib/hooks/paragon"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,6 +43,10 @@ export default function Home() {
   } = useOrders({ pagination })
   const remove = useRemoveOrder()
 
+  const { token } = useParagonToken()
+
+  console.log("Paragon user token", token)
+
   const openModal = (data: Order) => {
     setSelectedBooking(data)
     setModalOpen(true)
@@ -65,17 +70,11 @@ export default function Home() {
     setPagination(pagination)
   }, [])
 
-  const columnWithActions = [
-    ...columns,
-  ]
+  const columnWithActions = [...columns]
 
   return (
-    <div style={{ marginTop: '10px' }}>
-      <ClientSideSuspense
-        fallback={
-          <></>
-        }
-      >
+    <div style={{ marginTop: "10px" }}>
+      <ClientSideSuspense fallback={<></>}>
         <LiveCursorHoc />
       </ClientSideSuspense>
       <DataTable
