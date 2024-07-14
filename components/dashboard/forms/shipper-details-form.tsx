@@ -33,8 +33,6 @@ import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs"
 import { TabsList } from "@/components/ui/vertical-tabs"
 import { Combobox } from "@/components/form/combobox"
 
-
-
 const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext()
   const { data: partnerCodes } = usePartnerCodes()
@@ -46,27 +44,27 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const transportMethodOptions = transportMethods?.map((method: any) => ({
     value: method.ID,
     label: method.name,
-  }));
+  }))
 
   const locationOptions = locations?.map((loc: any) => ({
     value: loc.ID,
     label: loc.name,
-  }));
+  }))
 
   const partnerTypeOptions = partnerTypes?.map((type: any) => ({
     value: type.ID,
     label: type.name,
-  }));
+  }))
 
   const partnerCodeOptions = partnerCodes?.map((code: any) => ({
     value: code.ID,
     label: code.name,
-  }));
+  }))
 
   const statusOptions = statuses?.map((status: any) => ({
     value: status.ID,
     label: status.name,
-  }));
+  }))
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     { control: form.control, name: "shipper_details" }
@@ -146,42 +144,42 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   options={transportMethodOptions}
                   label="Transport Method"
                   info="Select the Transport Method"
-                  editLink="/settings/data-fields?tab=transport-method"
+                  editLink="/data-fields/shipments?tab=transport-method"
                 />
                 <Combobox
                   name="origin_id"
                   options={locationOptions}
                   label="Origin *"
                   info="Select the Location"
-                  editLink="/settings/data-fields?tab=location"
+                  editLink="/data-fields/shipments?tab=location"
                 />
                 <Combobox
                   name="destination_id"
                   options={locationOptions}
                   label="Destination *"
                   info="Select the Location"
-                  editLink="/settings/data-fields?tab=location"
+                  editLink="/data-fields/shipments?tab=location"
                 />
                 <Combobox
                   name="destination_id"
                   options={locationOptions}
                   label="Destination *"
                   info="Select the Location"
-                  editLink="/settings/data-fields?tab=location"
+                  editLink="/data-fields/shipments?tab=location"
                 />
                 <Combobox
                   name="partner_type_id"
                   options={partnerTypeOptions}
                   label="Partner Type"
                   info="Select the Partner Type"
-                  editLink="/settings/data-fields?tab=partner-type"
+                  editLink="/data-fields/organizations?tab=partner-type"
                 />
                 <Combobox
                   name="partner_code_id"
                   options={partnerCodeOptions}
                   label="Partner Code"
                   info="Select the Partner Code"
-                  editLink="/settings/data-fields?tab=partner-code"
+                  editLink="/data-fields/organizations?tab=partner-code"
                 />
                 <FormField
                   control={form.control}
@@ -234,8 +232,8 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   options={statusOptions}
                   label="AWB Status"
                   info="Select the AWB Status"
-                    editLink="/settings/data-fields?tab=status"
-                  />
+                  editLink="/data-fields/shipments?tab=status"
+                />
               </div>
 
               <div className="col-span-2 mt-3 inline-flex items-center gap-3">
