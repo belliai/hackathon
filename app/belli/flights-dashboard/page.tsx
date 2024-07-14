@@ -35,7 +35,7 @@ export default function FlightsDashboardPage() {
   )
 
   return (
-    <div style={{ marginTop: "10px" }}>
+    <div>
       <DataTable
         initialPinning={{
           left: [],

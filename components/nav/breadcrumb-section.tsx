@@ -36,7 +36,7 @@ const findCurrentPaths = (
       ...path,
       { name: item.name, href: item.href, children: undefined },
     ]
-
+    
     // Check if the current item's href matches the pathname
     if (item.href === pathname) {
       return currentPath
@@ -111,7 +111,10 @@ export default function BreadCrumbSection() {
                 {index !== 0 && <BreadcrumbSeparator />}
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    className={cn(index === 0 && "text-foreground")}
+                    className={cn(
+                      index === 0 && "text-foreground",
+                      index === currentPaths.length - 1 && "text-white bg-button-primary hover:bg-button-primary/80 rounded-sm px-2 pt-0 pb-1 text-sm"
+                    )}
                     href={path.href}
                   >
                     {path.name}

@@ -18,6 +18,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { usePathname } from "next/navigation"
 
 export type TSidebarItem = {
   name: string
@@ -39,28 +40,31 @@ export default function SidebarItem({
   active,
   disabled,
 }: SidebarItemProps) {
-  function getBaseItemClassName(currentActive: boolean) {
+  function getBaseItemClassName(currentActive: boolean, isParent: boolean = false) {
     const className = cn(
-      "group flex [&_svg]:text-[#949496]  [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-md px-[5px] py-0 font-medium leading-normal hover:no-underline",
-      {
-        "text-white bg-zinc-900 [&_svg]:text-button-primary [&_span]:bg-button-primary/25":
-          currentActive,
-      }
+      "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-sm px-2 py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-800",
+      currentActive
+        ? isParent
+          ? "text-white bg-zinc-900 [&_svg]:text-white [&_span]:bg-button-primary/25"
+          : "text-white bg-button-primary hover:bg-button-primary/80 [&_svg]:text-white [&[data-state=open]>svg]:text-white"
+        : ""
     )
 
     return className
   }
+
+  const pathname = usePathname()
 
   return (
     <AccordionItem value={item.name} className="border-none">
       {item.children ? (
         <AccordionTrigger
           className={cn(
-            getBaseItemClassName(!!item.current || active),
+            getBaseItemClassName(!!item.current || active, true),
             "[&[data-state=open]>svg]:rotate-90"
           )}
           customarrow={
-            <ChevronRight className="h-4 w-4 shrink-0 !text-[#949496] transition-transform duration-200" />
+            <ChevronRight className="h-4 w-4 shrink-0 text-[#949496] transition-transform duration-200" />
           }
         >
           <div className="flex items-center gap-x-[7px]">
@@ -109,7 +113,7 @@ export default function SidebarItem({
                 <AccordionItem value={childMenu.name} className="border-none">
                   <AccordionTrigger
                     className={cn(
-                      getBaseItemClassName(!!childMenu.current),
+                      getBaseItemClassName(!!childMenu.current || active),
                       "pl-6",
                       "[&[data-state=open]>svg]:rotate-90"
                     )}
@@ -211,8 +215,8 @@ export default function SidebarItem({
               key={childMenu.name}
               href={childMenu.href}
               className={cn(
-                getBaseItemClassName(!!childMenu.current),
-                "gap-2.5 pl-6"
+                getBaseItemClassName(childMenu.href === pathname),
+                "gap-2.5 pl-6 my-1"
               )}
             >
               {childMenu.icon && (

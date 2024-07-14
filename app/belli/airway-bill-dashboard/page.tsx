@@ -70,7 +70,7 @@ export default function Home() {
   ]
 
   return (
-    <div style={{ marginTop: '10px' }}>
+    <div>
       <ClientSideSuspense
         fallback={
           <></>

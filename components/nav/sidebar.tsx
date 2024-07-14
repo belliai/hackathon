@@ -64,6 +64,7 @@ export default function SideBar() {
   const pathname = usePathname()
   const activeItem = findActiveItem(
     [
+      ...belliSettingsNavigation,
       ...accountNavigation,
       ...operationsNavigation,
       ...settingNavigation,

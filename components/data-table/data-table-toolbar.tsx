@@ -124,119 +124,124 @@ export function DataTableToolbar<TData>({
         ))}
         {props.extraLeftComponents}
       </div>
-      <div
-        className={cn(
-          "inline-flex gap-2 text-muted-foreground opacity-0 transition-opacity delay-0 duration-200",
-          props.isHover === undefined
-            ? "opacity-100"
-            : props.isHover || filterOpen || viewOpen
+      <div className="flex gap-2">
+        <div
+          className={cn(
+            "inline-flex gap-2 text-muted-foreground opacity-0 transition-opacity delay-0 duration-200",
+            props.isHover === undefined
               ? "opacity-100"
-              : "opacity-0"
-        )}
-      >
-        <Tooltip delayDuration={100}>
-          <DataTableFilterOptions
-            onOpenChange={setFilterOpen}
-            table={table}
-            isLocked={isLockedView}
-            lockedPageFilters={lockedPageFilters}
-          >
-            <TooltipTrigger asChild>
-              <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
-                <ListFilterIcon
-                  className={`h-4 w-4 ${isFilterActive ? "text-button-primary" : ""}`}
-                />
-              </Button>
-            </TooltipTrigger>
-          </DataTableFilterOptions>
-          <TooltipContent
-            side="top"
-            className="border bg-background text-foreground"
-          >
-            <p>Filter</p>
-          </TooltipContent>
-        </Tooltip>
-        <div className="inline-flex items-center">
+              : props.isHover || filterOpen || viewOpen
+                ? "opacity-100"
+                : "opacity-0"
+          )}
+        >
           <Tooltip delayDuration={100}>
+            <DataTableFilterOptions
+              onOpenChange={setFilterOpen}
+              table={table}
+              isLocked={isLockedView}
+              lockedPageFilters={lockedPageFilters}
+            >
+              <TooltipTrigger asChild>
+                <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
+                  <ListFilterIcon
+                    className={`h-4 w-4 ${isFilterActive ? "text-button-primary" : ""}`}
+                  />
+                </Button>
+              </TooltipTrigger>
+            </DataTableFilterOptions>
+            <TooltipContent
+              side="top"
+              className="border bg-background text-foreground"
+            >
+              <p>Filter</p>
+            </TooltipContent>
+          </Tooltip>
+          <div className="inline-flex items-center">
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={toggleSearchOpen}
+                  size={"icon"}
+                  variant={"outline"}
+                  className={"h-8 w-8"}
+                >
+                  <SearchIcon
+                    className={`h-4 w-4 ${isGlobalFiltered ? "text-button-primary" : ""}`}
+                  />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                className="border bg-background text-foreground"
+              >
+                <p>Search</p>
+              </TooltipContent>
+              <div
+                className={cn(
+                  "w-0 opacity-0 transition-all",
+                  searchOpen && "ml-1 w-[150px] opacity-100"
+                )}
+              >
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className={"h-8 min-w-0 text-xs"}
+                  placeholder="Type to search..."
+                />
+              </div>
+            </Tooltip>
+          </div>
+          <Tooltip delayDuration={100}>
+            <DataTableViewOptions
+              onOpenChange={setViewOpen}
+              table={table}
+              initialVisibility={props.initialVisibility ?? {}}
+            >
+              <TooltipTrigger asChild>
+                <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
+                  <EyeIcon
+                    className={`h-4 w-4 ${isCustomVisibility ? "text-button-primary" : ""}`}
+                  />
+                </Button>
+              </TooltipTrigger>
+            </DataTableViewOptions>
+            <TooltipContent
+              side="top"
+              className="border bg-background text-foreground"
+            >
+              <p>Columns</p>
+            </TooltipContent>
+          </Tooltip>
+          {/* lock button */}
+          {/* <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
               <Button
-                onClick={toggleSearchOpen}
                 size={"icon"}
                 variant={"outline"}
                 className={"h-8 w-8"}
+                onClick={() => toggleLockedView(isLockedView)}
               >
-                <SearchIcon
-                  className={`h-4 w-4 ${isGlobalFiltered ? "text-button-primary" : ""}`}
-                />
+                {isLockedView && (
+                  <LockIcon
+                    className={`h-4 w-4 ${isLockedView ? "text-button-primary" : ""}`}
+                  />
+                )}
+                {!isLockedView && <UnlockIcon className={`h-4 w-4`} />}
               </Button>
             </TooltipTrigger>
             <TooltipContent
               side="top"
               className="border bg-background text-foreground"
             >
-              <p>Search</p>
+              <p>{isLockedView ? "Unlock Filter" : "Lock Filter"}</p>
             </TooltipContent>
-            <div
-              className={cn(
-                "w-0 opacity-0 transition-all",
-                searchOpen && "ml-1 w-[150px] opacity-100"
-              )}
-            >
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className={"h-8 min-w-0 text-xs"}
-                placeholder="Type to search..."
-              />
-            </div>
-          </Tooltip>
+          </Tooltip> */}
+          
         </div>
-        <Tooltip delayDuration={100}>
-          <DataTableViewOptions
-            onOpenChange={setViewOpen}
-            table={table}
-            initialVisibility={props.initialVisibility ?? {}}
-          >
-            <TooltipTrigger asChild>
-              <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
-                <EyeIcon
-                  className={`h-4 w-4 ${isCustomVisibility ? "text-button-primary" : ""}`}
-                />
-              </Button>
-            </TooltipTrigger>
-          </DataTableViewOptions>
-          <TooltipContent
-            side="top"
-            className="border bg-background text-foreground"
-          >
-            <p>Columns</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip delayDuration={100}>
-          <TooltipTrigger asChild>
-            <Button
-              size={"icon"}
-              variant={"outline"}
-              className={"h-8 w-8"}
-              onClick={() => toggleLockedView(isLockedView)}
-            >
-              {isLockedView && (
-                <LockIcon
-                  className={`h-4 w-4 ${isLockedView ? "text-button-primary" : ""}`}
-                />
-              )}
-              {!isLockedView && <UnlockIcon className={`h-4 w-4`} />}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent
-            side="top"
-            className="border bg-background text-foreground"
-          >
-            <p>{isLockedView ? "Unlock Filter" : "Lock Filter"}</p>
-          </TooltipContent>
-        </Tooltip>
         {props.extraRightComponents}
       </div>
+      
     </div>
   )
 }
