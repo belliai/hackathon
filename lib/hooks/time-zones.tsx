@@ -1,16 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
+import momentTZ from "moment-timezone"
 
 import { useBelliApi } from "@/lib/utils/network"
 
-const route = "locations"
+const route = "time-zones"
 
-export const fetchLocations = async (belliApi: AxiosInstance) => {
-  const { data } = await belliApi.get(`/${route}`)
+export const fetchTimeZones = async (belliApi: AxiosInstance) => {
+  //const { data } = await belliApi.get(`/${route}`)
+  // temp static
+  const data = momentTZ.tz.names().map((tz) => ({ TZ: tz, ID: tz }))
   return data
 }
 
-export const updateLocation = async (
+export const updateTimeZone = async (
   belliApi: AxiosInstance,
   prop: { id: string; name: string }
 ) => {
@@ -19,7 +22,7 @@ export const updateLocation = async (
   return data
 }
 
-export const addLocation = async (
+export const addTimeZone = async (
   belliApi: AxiosInstance,
   prop: { name: string }
 ) => {
@@ -28,7 +31,7 @@ export const addLocation = async (
   return data
 }
 
-export const removeLocation = async (
+export const removeTimeZone = async (
   belliApi: AxiosInstance,
   prop: { id: string }
 ) => {
@@ -36,46 +39,48 @@ export const removeLocation = async (
   return resp
 }
 
-export const useLocations = () => {
+export const useTimeZones = () => {
   const belliApi = useBelliApi()
   return useQuery({
     queryKey: [route],
-    queryFn: async () => await fetchLocations(await belliApi),
+    queryFn: async () => await fetchTimeZones(await belliApi),
   })
 }
 
-export const useUpdateLocation = () => {
+export const useUpdateTimeZone = () => {
   const queryClient = useQueryClient()
   const belliApi = useBelliApi()
-  return useMutation({
-    mutationFn: async (prop: { id: string; name: string, time_zone_id: string }) =>
-      await updateLocation(await belliApi, prop),
+  const mutation = useMutation({
+    mutationFn: async (prop: { id: string; name: string }) =>
+      await updateTimeZone(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
+  return mutation
 }
 
-export const useAddLocation = () => {
+export const useAddTimeZone = () => {
   const queryClient = useQueryClient()
   const belliApi = useBelliApi()
-  return useMutation({
-    mutationFn: async (prop: { name: string, time_zone_id: string }) =>
-      await addLocation(await belliApi, prop),
+  const mutation = useMutation({
+    mutationFn: async (prop: { name: string }) =>
+      await addTimeZone(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
     },
   })
+  return mutation
 }
 
-export const useRemoveLocation = () => {
+export const useRemoveTimeZone = () => {
   const queryClient = useQueryClient()
   const belliApi = useBelliApi()
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async (prop: { id: string }) =>
-      await removeLocation(await belliApi, prop),
+      await removeTimeZone(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -84,4 +89,5 @@ export const useRemoveLocation = () => {
       console.log(e)
     },
   })
+  return mutation
 }
