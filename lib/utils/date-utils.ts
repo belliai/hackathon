@@ -76,3 +76,22 @@ export const generateRecurringDates = (
 
   return dates
 }
+
+export function getCurrentTimestamp(): string {
+  const date = new Date()
+
+  // Convert to ISO string (e.g., "2024-07-13T10:15:30.000Z")
+  const isoString = date.toISOString()
+
+  // Remove the milliseconds and trailing 'Z'
+  const isoWithoutMillis = isoString.split(".")[0]
+
+  // Get the time zone offset in hours and minutes
+  const offset = -date.getTimezoneOffset()
+  const sign = offset >= 0 ? "+" : "-"
+  const hours = String(Math.floor(Math.abs(offset) / 60)).padStart(2, "0")
+  const minutes = String(Math.abs(offset) % 60).padStart(2, "0")
+  const timezone = `${sign}${hours}:${minutes}`
+
+  return `${isoWithoutMillis}${timezone}`
+}

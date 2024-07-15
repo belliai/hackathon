@@ -36,7 +36,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
 
   return (
     <Card className="p-4" ref={ref}>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+      <div className="grid grid-cols-3 gap-x-3 gap-y-2">
         <FormField
           control={form.control}
           name="volume_kg"
@@ -55,7 +55,7 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
           options={currencyOptions}
           label="Currency"
           info="Select the Currency"
-          editLink="/settings/data-fields?tab=currency"
+          editLink="/data-fields/payments?tab=currency"
         />
         <FormField
           control={form.control}
@@ -135,53 +135,55 @@ const ProcessRatesForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="amount_due"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel info="hellow world!, this is info">
-                Amount Due
-              </FormLabel>
-              <FormControl>
-                <div className="relative h-fit">
-                  <Input {...field} className="border-2 border-foreground/30" />
-                  <div className="absolute right-0 top-0 inline-flex h-full items-center justify-center px-3">
-                    <ListIcon className="h-3 w-3" />
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="mode"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel info="Mode">Mode</FormLabel>
-              <FormControl>
-                <Input {...field} className="border-2 border-foreground/30" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="total"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel info="Total">Total</FormLabel>
-              <FormControl>
-                <Input {...field} className="border-2 border-foreground/30" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </div>
+      <div className="grid grid-cols-3 gap-x-3">
+          <FormField
+            control={form.control}
+            name="amount_due"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormLabel info="hellow world!, this is info">
+                  Amount Due
+                </FormLabel>
+                <FormControl>
+                  <div className="relative h-fit">
+                    <Input {...field} className="border-2 border-foreground/30" />
+                    <div className="absolute right-0 top-0 inline-flex h-full items-center justify-center px-3">
+                      <ListIcon className="h-3 w-3" />
+                    </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="mode"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormLabel info="Mode">Mode</FormLabel>
+                <FormControl>
+                  <Input {...field} className="border-2 border-foreground/30" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="total"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormLabel info="Total">Total</FormLabel>
+                <FormControl>
+                  <Input {...field} className="border-2 border-foreground/30" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
     </Card>
   )
 })

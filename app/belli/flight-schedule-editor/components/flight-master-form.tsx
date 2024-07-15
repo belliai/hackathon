@@ -1,9 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { UseFormReturn } from "react-hook-form"
 
+import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
+import { useAircraftTypes as useAircraftManufacturerType } from "@/lib/hooks/aircrafts/aircraft-type/types"
+import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
+import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useEnums } from "@/lib/hooks/enums"
 import { useLocations } from "@/lib/hooks/locations"
 import { useUnits } from "@/lib/hooks/units/units"
@@ -16,9 +20,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import FormTextField from "@/components/form/FormTextField"
 import { Combobox } from "@/components/form/combobox"
-
+import FormTextField from "@/components/form/FormTextField"
 
 interface FlightMasterFormType {
   hookForm: UseFormReturn<any>
@@ -66,7 +69,6 @@ const frequencyItems = [
 ]
 
 export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
-  const [tailNoOptions, setTailNoOptions] = useState<Array<TailNoType>>([])
   const formData = hookForm.watch()
 
   const { data: locations } = useLocations()
@@ -82,7 +84,24 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
   const { data: flightTypeList } = useEnums({
     category: "flight_type",
   })
-  const { data: aircraftTypeList } = useAircraftTypes()
+  const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
+
+  const { data: manufacturers } = useAircraftManufacturers()
+  const { data: types } = useAircraftManufacturerType()
+  const { data: versions } = useAircraftVersions()
+
+  const getAircraftTypeLabel = useCallback(
+    (data: Aircraft) => {
+      const manufacturer = manufacturers?.find(
+        (item) => item.ID === data.manufacturer
+      )?.name
+      const type = types?.find((item) => item.ID === data.aircraft_type)?.name
+      const version = versions?.find((item) => item.ID === data.version)?.name
+      if (!manufacturer || !type || !version) return "Deleted"
+      return [manufacturer, type, version].join(" ")
+    },
+    [manufacturers, types, versions]
+  )
 
   const formattedLocation =
     locations?.map((locationList: LocationListType) => ({
@@ -110,24 +129,21 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
     label: list.value,
   }))
 
-  const aircraftTypeOptions = aircraftTypeList?.map((list) => ({
-    value: list.id,
-    label: list.aircraft_type,
+  const aircraftTypeOptions = aircraftsList?.data.map((list) => ({
+    value: list.ID,
+    label: getAircraftTypeLabel(list),
   }))
 
-  useEffect(() => {
-    const selectedAircraftType = aircraftTypeList?.find(
-      (item: any) => item.id === formData.aircraftType
-    )
-    const tailNo =
-      selectedAircraftType &&
-      selectedAircraftType.aircraft_tail_numbers?.map((list) => ({
-        value: String(list.id),
-        label: list.tail_number,
-      }))
+  const selectedAircraftType = aircraftsList?.data.find(
+    (item) => item.ID === formData.aircraftType
+  )
 
-    setTailNoOptions(tailNo || [])
-  }, [formData.aircraftType])
+  const tailNumberOptions = selectedAircraftType?.aircraft_tail_numbers.map(
+    (list) => ({
+      value: String(list.ID),
+      label: list.tail_number,
+    })
+  )
 
   return (
     <div className="flex flex-col gap-4">
@@ -144,14 +160,14 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
             options={formattedLocation}
             label="Source"
             info="Select the source location"
-            editLink="/settings/data-fields?tab=location"
+            editLink="/data-fields/shipments?tab=location"
           />
           <Combobox
             name="destination"
             options={formattedLocation}
             label="Destination"
             info="Select the destination location"
-            editLink="/settings/data-fields?tab=location"
+            editLink="/data-fields/shipments?tab=location"
           />
         </div>
         <div className="grid grid-cols-2 gap-2">
@@ -273,14 +289,14 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
             name="aircraftType"
             label="Aircraft Type"
             type="select"
-            options={aircraftTypeOptions}
+            options={aircraftTypeOptions ?? []}
           />
           <FormTextField
             form={hookForm}
             name="tailNo"
             label="Tail No"
             type="select"
-            options={tailNoOptions}
+            options={tailNumberOptions}
           />
           <FormTextField
             name="capacity"

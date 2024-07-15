@@ -14,8 +14,13 @@ import {
   ReceiptPercentIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline"
-import { CubeIcon, DashboardIcon, PaperPlaneIcon } from "@radix-ui/react-icons"
-import { PlaneIcon } from "lucide-react"
+import {
+  CubeIcon,
+  DashboardIcon,
+  PaperPlaneIcon,
+  ReaderIcon,
+} from "@radix-ui/react-icons"
+import { PlaneIcon, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -33,15 +38,8 @@ export const operationsNavigation: TSidebarItem[] = [
         isCanCreate: false,
       },
       {
-        name: "Flight Planning",
-        href: "/belli/flight-planning",
-        icon: ClipboardIcon,
-        current: false,
-        isCanCreate: false,
-      },
-      {
-        name: "Flight Master",
-        href: "/belli/flight-master",
+        name: "Flight Schedule Editor",
+        href: "/belli/flight-schedule-editor",
         icon: PaperPlaneIcon,
         current: false,
         isCanCreate: true,
@@ -59,6 +57,21 @@ export const operationsNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
         isCanCreate: false,
+      },
+      {
+        name: "Load Planner",
+        href: "/belli/load-planner",
+        icon: ReaderIcon,
+        current: false,
+        isCanCreate: false,
+      },
+      {
+        name: "Integrations",
+        href: "/belli/integrations",
+        icon: Waypoints,
+        current: false,
+        isCanCreate: false,
+
       },
     ],
   },

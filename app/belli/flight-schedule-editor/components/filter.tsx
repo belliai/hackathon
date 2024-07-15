@@ -1,15 +1,41 @@
 "use client"
 
+import { FlightMasterFormValue } from "@/schemas/flight-master/flight-master"
+
 import DataTableFilterForm, {
   FormFieldOption,
 } from "@/components/data-table/data-table-filter-form"
 
 import { FlightMasterDataType } from "./column"
 
-export type FilterDataType = Partial<FlightMasterDataType> & {
-  date_from?: string
-  date_to?: string
+export type FilterDataType = Partial<FlightMasterFormValue> & {
+  fromDate?: string
+  period?: Date
 }
+
+type FilterData = {
+  fromDate: Date
+  period: string
+}
+
+export const listViewFilters: FormFieldOption<FilterData>[] = [
+  {
+    key: "period",
+    type: "select",
+    label: "Period",
+    selectOptions: [
+      { value: "daily", label: "Daily" },
+      { value: "weekly", label: "Weekly" },
+      { value: "monthly", label: "Monthly" },
+    ],
+    placeholder: "Select Period",
+  },
+  {
+    key: "fromDate",
+    type: "date",
+    label: "Choose From Date",
+  },
+]
 
 export const formFilters: FormFieldOption<FilterDataType>[] = [
   {
@@ -37,23 +63,13 @@ export const formFilters: FormFieldOption<FilterDataType>[] = [
     placeholder: "Select Destination",
   },
   {
-    key: "flight_no",
+    key: "flightNo",
     type: "text",
     label: "Flight No",
     placeholder: "Enter Flight No",
   },
   {
-    key: "date_from",
-    type: "date",
-    label: "Choose From Date",
-  },
-  {
-    key: "date_to",
-    type: "date",
-    label: "Choose To Date",
-  },
-  {
-    key: "aircraft_type",
+    key: "aircraftType",
     type: "select",
     label: "Aircraft Type",
     selectOptions: [
@@ -71,7 +87,7 @@ export const formFilters: FormFieldOption<FilterDataType>[] = [
     placeholder: "Enter Sector",
   },
   {
-    key: "flight_type",
+    key: "flightType",
     type: "select",
     label: "Flight Type",
     selectOptions: [

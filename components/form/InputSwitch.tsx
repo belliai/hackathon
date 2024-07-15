@@ -1,10 +1,14 @@
-import { ListIcon, SearchIcon } from "lucide-react"
+import { ChevronDown, ListIcon, SearchIcon } from "lucide-react"
 import { FieldValues, Path, PathValue, useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
+import ComboBoxInput, {
+  ComboAdminBoxInputProps,
+} from "../ui/combobox-admin-input"
+import { Command } from "../ui/command"
 import DateInput from "../ui/date-input"
 import {
   FormControl,
@@ -14,6 +18,7 @@ import {
   FormMessage,
 } from "../ui/form"
 import { Input, InputProps } from "../ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import {
   Select,
   SelectContent,
@@ -31,17 +36,28 @@ export type BaseSelectProps<DataType> = {
   withDialog?: boolean
 }
 
-export type InputSwitchProps<DataType> = InputProps &
-  (
-    | {
-        type: "date" | "search" | "text" | "checkbox" | "hidden"
-        name: Path<DataType>
-        label?: string
-        withDialog?: boolean
-      }
-    | BaseSelectProps<DataType> & { type: "select" }
-    | (BaseSelectProps<DataType> & ComboboxProps & { type: "combobox" })
-  )
+type BaseInputProps<DataType> = InputProps & {
+  name: Path<DataType>
+  label?: string
+  withDialog?: boolean
+  info?: string
+}
+
+type SelectOptions = { value: string; label: string }[]
+
+export type InputSwitchProps<DataType extends FieldValues> =
+  | (BaseInputProps<DataType> & {
+      type: "date" | "search" | "text" | "checkbox" | "hidden"
+    })
+  | (BaseInputProps<DataType> & {
+      type: "select"
+      names?: Path<DataType>[]
+      selectOptions?: SelectOptions
+    })
+  | ((BaseInputProps<DataType> & {
+      type: "combobox-admin"
+    }) &
+      Omit<ComboAdminBoxInputProps<DataType, Path<DataType>>, "field">)
 
 export default function InputSwitch<DataType extends FieldValues>(
   props: InputSwitchProps<DataType>
@@ -72,7 +88,10 @@ export default function InputSwitch<DataType extends FieldValues>(
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
                 {!!props.label && (
-                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
                     {props.label}
                   </FormLabel>
                 )}
@@ -127,11 +146,18 @@ export default function InputSwitch<DataType extends FieldValues>(
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
                 {!!props.label && (
-                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
                     {props.label}
                   </FormLabel>
                 )}
-                <DateInput {...field} className={props.className} />
+                <DateInput
+                  {...field}
+                  className={props.className}
+                  disabled={props.disabled}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -146,7 +172,10 @@ export default function InputSwitch<DataType extends FieldValues>(
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
                 {!!props.label && (
-                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
                     {props.label}
                   </FormLabel>
                 )}
@@ -180,7 +209,10 @@ export default function InputSwitch<DataType extends FieldValues>(
                   />
                 </FormControl>
                 {!!props.label && (
-                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
                     {props.label}
                   </FormLabel>
                 )}
@@ -208,7 +240,10 @@ export default function InputSwitch<DataType extends FieldValues>(
             render={({ field }) => (
               <FormItem className="flex-grow space-y-1">
                 {!!props.label && (
-                  <FormLabel className="text-xs font-semibold text-muted-foreground">
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
                     {props.label}
                   </FormLabel>
                 )}

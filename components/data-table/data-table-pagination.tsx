@@ -20,17 +20,20 @@ import {
 import { Table } from "@tanstack/react-table"
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import { cn } from "@/lib/utils"
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
   showSelectedCount?: boolean
   isCanExport?: boolean
+  isHover?: boolean
 }
 
 export function DataTablePagination<TData>({
   table,
   showSelectedCount,
   isCanExport,
+  isHover
 }: DataTablePaginationProps<TData>) {
   const router = useRouter()
   const pathname = usePathname()
@@ -79,8 +82,11 @@ export function DataTablePagination<TData>({
     }
     setSearchParams("pageSize", String(currentPageSize))
   }, [currentPageSize])
+
   return (
-    <div className="!mt-1 flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
+    <div
+      className="!mt-1 flex flex-col items-center justify-between gap-4 px-2 md:flex-row"
+    >
       {showSelectedCount ? (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -89,8 +95,17 @@ export function DataTablePagination<TData>({
       ) : (
         <div />
       )}
-      <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-8">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-8 text-muted-foreground">
+        <div
+          className={cn(
+            "flex items-center space-x-2 opacity-0 transition-opacity delay-0 duration-200",
+            isHover === undefined
+              ? "opacity-100"
+              : isHover
+                ? "opacity-100"
+                : "opacity-0"
+          )}
+        >
           <p className="text-sm font-medium">Rows per page</p>
           <Select
             value={`${currentPageSize}`}

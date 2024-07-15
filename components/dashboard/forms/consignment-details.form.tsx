@@ -59,7 +59,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
       value: location.ID,
     }))
 
-    const commodityCodeOptions = commodityCodes.map((code: any) => ({
+    const commodityCodeOptions = commodityCodes?.map((code: any) => ({
       value: code.ID,
       label: code.name,
     }));
@@ -81,27 +81,27 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
 
 
     return (
-      <Card className="grid grid-cols-2 gap-x-3 gap-y-2 p-4" ref={ref}>
+      <Card className="grid grid-cols-3 gap-x-3 gap-y-2 p-4" ref={ref}>
         <Combobox
           name="origin_id"
           options={locationsOptions}
           label="Origin"
           info="Select the origin location"
-          editLink="/settings/data-fields?tab=location"
+          editLink="/data-fields/shipments?tab=location"
         />
         <Combobox
           name="destination_id"
           options={locationsOptions}
           label="Destination"
           info="Select the Destination location"
-          editLink="/settings/data-fields?tab=location"
+          editLink="/data-fields/shipments?tab=location"
         />
         <Combobox
           name="commodity_code_id"
           options={commodityCodeOptions}
           label="Commodity Code *"
           info="Select the Commodity Code"
-          editLink="/settings/data-fields?tab=commodity-code"
+          editLink="/data-fields/shipments?tab=commodity-code"
         />
         <FormField
           control={form.control}
@@ -128,7 +128,7 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           options={paymentOptions}
           label="Payment Mode"
           info="Select the Payment Mode"
-          editLink="/settings/data-fields?tab=payment-mode"
+          editLink="/data-fields/payments?tab=payment-mode"
         />
         <Combobox
           name="bill_to_id"

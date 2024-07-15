@@ -8,15 +8,17 @@ import {
 } from "@/schemas/aircraft/aircraft"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ColumnDef } from "@tanstack/react-table"
-import { PlaneIcon, Plus, PlusIcon, ScrollTextIcon } from "lucide-react"
-import { useForm, UseFormReturn } from "react-hook-form"
+import { PlaneIcon, PlusIcon, ScrollTextIcon } from "lucide-react"
+import { useForm } from "react-hook-form"
 
+import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
+import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-type/types"
+import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useToast } from "@/components/ui/use-toast"
 import { DataTable } from "@/components/data-table/data-table"
 import PageContainer from "@/components/layout/PageContainer"
 
@@ -89,6 +91,8 @@ export default function MasterAircraftPage() {
   })
 
   function handleRowClick(data: Aircraft) {
+    console.log({ data })
+
     setCurrentOpenModal(data.ID)
 
     form.reset({
@@ -130,9 +134,16 @@ export default function MasterAircraftPage() {
     handleRowClick(aircraft)
   }
 
+  const { data: manufacturers } = useAircraftManufacturers()
+  const { data: types } = useAircraftTypes()
+  const { data: versions } = useAircraftVersions()
+
   const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     {
       accessorKey: "manufacturer",
+      cell: ({ row }) =>
+        manufacturers?.find((item) => item.ID === row.original.manufacturer)
+          ?.name ?? <span className="text-destructive">Deleted</span>,
       header: () => (
         <TableHeaderWithTooltip
           header="Manufacturer"
@@ -142,6 +153,10 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "aircraft_type",
+      cell: ({ row }) =>
+        types?.find((item) => item.ID === row.original.aircraft_type)?.name ?? (
+          <span className="text-destructive">Deleted</span>
+        ),
       header: () => (
         <TableHeaderWithTooltip
           header="Aircraft Type"
@@ -151,6 +166,10 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "version",
+      cell: ({ row }) =>
+        versions?.find((item) => item.ID === row.original.version)?.name ?? (
+          <span className="text-destructive">Deleted</span>
+        ),
       header: () => (
         <TableHeaderWithTooltip header="Version" tooltipId="aircraft-version" />
       ),
@@ -221,6 +240,11 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "status",
+      sortingFn: (a, b) => {
+        const nameA = a.original.status.Name
+        const nameB = b.original.status.Name
+        return nameA > nameB ? 1 : nameA < nameB ? -1 : 0
+      },
       header: () => (
         <TableHeaderWithTooltip header="Status" tooltipId="aircraft-status" />
       ),
@@ -256,12 +280,18 @@ export default function MasterAircraftPage() {
           tooltipId="aircraft-aircraft-type"
         />
       ),
-      cell: ({ row }) =>
-        [
-          row.original.manufacturer,
-          row.original.aircraft_type,
-          row.original.version,
-        ].join(" "),
+      cell: ({ row }) => {
+        const manufacturer = manufacturers?.find(
+          (item) => item.ID === row.original.manufacturer
+        )?.name
+        const type = types?.find(
+          (item) => item.ID === row.original.aircraft_type
+        )?.name
+        const version = versions?.find(
+          (item) => item.ID === row.original.version
+        )?.name
+        return [manufacturer, type, version].join(" ")
+      },
     },
     {
       accessorKey: "mtow",
@@ -314,7 +344,7 @@ export default function MasterAircraftPage() {
       variant={"button-primary"}
       className="p-2 text-xs"
       onClick={() => setCurrentOpenModal(true)}
-      style={{ fontSize: '0.875rem' }}
+      style={{ fontSize: "0.875rem" }}
     >
       <PlusIcon className="mr-2 size-4" />
       Create Aircraft
@@ -324,7 +354,7 @@ export default function MasterAircraftPage() {
   const tabsList = (
     <TabsList className="gap-2 bg-transparent p-0">
       <TabsTrigger
-        style={{ fontSize: '0.875rem' }}
+        style={{ fontSize: "0.875rem" }}
         className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
         value="aircraft-types"
       >
@@ -332,7 +362,7 @@ export default function MasterAircraftPage() {
         Aircraft Types
       </TabsTrigger>
       <TabsTrigger
-        style={{ fontSize: '0.875rem' }}
+        style={{ fontSize: "0.875rem" }}
         className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
         value="list-of-aircrafts"
       >
@@ -344,36 +374,36 @@ export default function MasterAircraftPage() {
 
   return (
     <PageContainer>
-      <div style={{ marginTop: '9px' }}>
-      <Tabs
-        onValueChange={setTabSearchParams}
-        className="space-y-4"
-        defaultValue={searchParams.get("tab") ?? "aircraft-types"}
-      >
-        <TabsContent value="aircraft-types" asChild>
-          <DataTable
-            showToolbarOnlyOnHover={true}
-            columns={aircraftTypeColumns}
-            data={aircraftsData ?? []}
-            onRowClick={handleRowClick}
-            menuId="aircraft"
-            extraRightComponents={createButton}
-            extraLeftComponents={tabsList}
-          />
-        </TabsContent>
-        <TabsContent value="list-of-aircrafts" asChild>
-          <DataTable
-            showToolbarOnlyOnHover={true}
-            columns={aircraftTailNumbersColumns}
-            data={aircraftTailNumbersData ?? []}
-            onRowClick={({ aircraft_id }) => {
-              handleTailNumberRowClick(aircraft_id)
-            }}
-            extraRightComponents={createButton}
-            extraLeftComponents={tabsList}
-          />
-        </TabsContent>
-      </Tabs>
+      <div>
+        <Tabs
+          onValueChange={setTabSearchParams}
+          className="space-y-4"
+          defaultValue={searchParams.get("tab") ?? "aircraft-types"}
+        >
+          <TabsContent value="aircraft-types" asChild>
+            <DataTable
+              showToolbarOnlyOnHover={true}
+              columns={aircraftTypeColumns}
+              data={aircraftsData ?? []}
+              onRowClick={handleRowClick}
+              menuId="aircraft"
+              extraRightComponents={createButton}
+              extraLeftComponents={tabsList}
+            />
+          </TabsContent>
+          <TabsContent value="list-of-aircrafts" asChild>
+            <DataTable
+              showToolbarOnlyOnHover={true}
+              columns={aircraftTailNumbersColumns}
+              data={aircraftTailNumbersData ?? []}
+              onRowClick={({ aircraft_id }) => {
+                handleTailNumberRowClick(aircraft_id)
+              }}
+              extraRightComponents={createButton}
+              extraLeftComponents={tabsList}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
       <AircraftTypeForm
         form={form}

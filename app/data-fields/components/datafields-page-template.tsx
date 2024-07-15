@@ -2,20 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import {
-  BadgeDollarSignIcon,
-  BookUserIcon,
-  CreditCardIcon,
-  FileBoxIcon,
-  HandshakeIcon,
-  LucideIcon,
-  MapPinIcon,
-  Plane,
-  PlaneTakeoffIcon,
-  ReceiptTextIcon,
-  TruckIcon,
-  UserRoundCogIcon,
-} from "lucide-react"
+import { LucideIcon } from "lucide-react"
 
 import { getTooltipContents } from "@/lib/contentful"
 import { SettingsTabName } from "@/lib/hooks/useSettingsDynamicHook"
@@ -27,93 +14,20 @@ import {
 } from "@/components/ui/tooltip"
 import PageContainer from "@/components/layout/PageContainer"
 
-import CrudAircraft from "./aircraft"
-import CrudBookingType from "./booking-type"
-import CrudCommodityCode from "./commodity-code"
-import CrudCurrency from "./currency"
-import CrudLocation from "./location"
-import CrudPartnerCode from "./partner-code"
-import CrudPartnerPrefix from "./partner-prefix"
-import CrudPartnerType from "./partner-type"
-import CrudPaymentMode from "./payment-mode"
-import CrudStatus from "./status"
-import CrudTransportMethod from "./transport-method"
-
-const tabs: {
+export interface DataFieldsTab {
   name: SettingsTabName
   component: JSX.Element
   icon: LucideIcon
   tooltipId: string
-}[] = [
-  {
-    name: "Booking Type",
-    component: <CrudBookingType />,
-    icon: ReceiptTextIcon,
-    tooltipId: "aircraft-settings-booking-type",
-  },
-  {
-    name: "Partner Prefix",
-    component: <CrudPartnerPrefix />,
-    icon: UserRoundCogIcon,
-    tooltipId: "aircraft-settings-partner-prefix",
-  },
-  {
-    name: "Partner Code",
-    component: <CrudPartnerCode />,
-    icon: BookUserIcon,
-    tooltipId: "aircraft-settings-partner-code",
-  },
-  {
-    name: "Partner Type",
-    component: <CrudPartnerType />,
-    icon: HandshakeIcon,
-    tooltipId: "aircraft-settings-partner-type",
-  },
-  {
-    name: "Status",
-    component: <CrudStatus />,
-    icon: PlaneTakeoffIcon,
-    tooltipId: "aircraft-settings-status",
-  },
-  {
-    name: "Location",
-    component: <CrudLocation />,
-    icon: MapPinIcon,
-    tooltipId: "aircraft-settings-location",
-  },
-  {
-    name: "Commodity Code",
-    component: <CrudCommodityCode />,
-    icon: FileBoxIcon,
-    tooltipId: "aircraft-settings-commodity-code",
-  },
-  {
-    name: "Payment Mode",
-    component: <CrudPaymentMode />,
-    icon: CreditCardIcon,
-    tooltipId: "aircraft-settings-payment-mode",
-  },
-  {
-    name: "Transport Method",
-    component: <CrudTransportMethod />,
-    icon: TruckIcon,
-    tooltipId: "aircraft-settings-transport-method",
-  },
-  {
-    name: "Currency",
-    component: <CrudCurrency />,
-    icon: BadgeDollarSignIcon,
-    tooltipId: "aircraft-settings-currency",
-  },
-  {
-    name: "Aircrafts",
-    component: <CrudAircraft />,
-    icon: Plane,
-    tooltipId: "aircraft", // TODO: add tooltip content
-  },
-]
+}
 
-export default function Page() {
+interface DataFieldsPageTemplateProps {
+  tabs: DataFieldsTab[]
+}
+
+export default function DataFieldsPageTemplate({
+  tabs,
+}: DataFieldsPageTemplateProps) {
   const tooltips = getTooltipContents()
 
   const router = useRouter()

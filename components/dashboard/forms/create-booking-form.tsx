@@ -51,42 +51,52 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const bookingTypeOptions = bookingTypes?.map((type: any) => ({
     value: type.ID,
     label: type.name,
-  }));
+  }))
 
   const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
     value: prefix.ID,
     label: prefix.name,
-  }));
+  }))
 
   const partnerCodesOptions = partnerCodes?.map((code: any) => ({
     value: code.ID,
     label: code.name,
-  }));
+  }))
 
   const statusOptions = statuses?.map((status: any) => ({
     value: status.ID,
     label: status.name,
-  }));
+  }))
 
+  const IS_PHYSICAL_LIST = [
+    {
+      value: 'yes',
+      label: 'Yes',
+    },
+    {
+      value: 'no',
+      label: 'No',
+    }
+  ]
 
   useEffect(() => {}, [form.formState])
 
   return (
     <Card className="space-y-2 p-4" ref={ref}>
-      <div className="grid grid-cols-4 gap-2">
-      <Combobox
+      <div className="grid grid-cols-3 gap-2">
+        {/* <Combobox
           name="booking_type_id"
           options={bookingTypeOptions}
           label="Booking Type"
           info="Select the Booking Type"
-          editLink="/settings/data-fields?tab=booking-type"
-        />
+          editLink="/data-fields/shipments?tab=booking-type"
+        /> */}
         <Combobox
           name="partner_prefix_id"
           options={partnerPrefixesOptions}
           label="Partner Prefix"
           info="Select the Partner Prefix"
-          editLink="/settings/data-fields?tab=partner-prefix"
+          editLink="/data-fields/organizations?tab=partner-prefix"
         />
         <FormField
           control={form.control}
@@ -106,44 +116,22 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={partnerCodesOptions}
           label="Partner Code"
           info="Select the Partner Code"
-          editLink="/settings/data-fields?tab=partner-code"
+          editLink="/data-fields/organizations?tab=partner-code"
         />
-      </div>
-      <div className="flex w-full flex-row items-center justify-between">
-        <FormField
-          control={form.control}
+        <Combobox
           name="is_physical"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row items-center gap-2">
-                <FormControl>
-                  <Checkbox
-                    checked={!!field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <FormLabel>Is Physical</FormLabel>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+          options={IS_PHYSICAL_LIST}
+          label="Is Physical"
+          info="Select is Physical"
         />
-        <div className="inline-flex gap-2">
-          <Button type="button" size={"icon"} variant={"button-secondary"}>
-            <SearchIcon className="size-4" />
-          </Button>
-          <Button type="button" size={"icon"} variant={"button-secondary"}>
-            <RotateCcwIcon className="size-4" />
-          </Button>
-        </div>
-      </div>
-      <Combobox
+        <Combobox
           name="status_id"
           options={statusOptions}
           label="Status"
           info="Select the Status"
-          editLink="/settings/data-fields?tab=status"
+          editLink="/data-fields/shipments?tab=status"
         />
+      </div>
     </Card>
   )
 })
