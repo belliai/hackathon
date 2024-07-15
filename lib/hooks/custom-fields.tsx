@@ -2,12 +2,9 @@ import { useState } from "react"
 
 import { toast } from "@/components/ui/use-toast"
 import { ComboboxOption } from "@/components/form/combobox"
-import {
-  CustomFieldsSettingsType,
-  FieldGroupType,
-} from "@/app/settings/data-fields/custom-fields-settings"
 
 import { slugify } from "../utils/slugify-utils"
+import { CustomFieldsSettingsType, FieldGroupType } from "@/app/data-fields/custom-fields-settings"
 
 interface CustomFieldsHook {
   defaultFieldGroups: ComboboxOption[]
@@ -84,7 +81,7 @@ export function useCustomFields({
 
   const updateCustomField = () => {}
 
-  const addFieldGroup = (newField: string, close: () => void) => {
+  const addFieldGroup = (newField: string) => {
     const isExist = fieldGroups.some((field) => field.label === newField)
 
     if (isExist) {
@@ -114,8 +111,6 @@ export function useCustomFields({
       title: "Success",
       description: `${newField} has been added to Field Groups`,
     })
-
-    close()
   }
 
   const updateFieldGroup = (newOption: string, targetValue: string) => {

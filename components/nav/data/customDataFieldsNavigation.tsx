@@ -23,11 +23,11 @@ export const customDataFieldsNavigation: TSidebarItem[] = [
         href: "/data-fields/payments",
         icon: CreditCard,
       },
-      // {
-      //   name: "Aircrafts",
-      //   href: "/data-fields/aircrafts",
-      //   icon: Plane,
-      // },
+      {
+        name: "Aircrafts",
+        href: "/data-fields/aircrafts",
+        icon: Plane,
+      },
     ],
   },
 ]

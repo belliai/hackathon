@@ -8,8 +8,8 @@ import {
   CaseUpper,
   DollarSign,
   Home,
-  ListCheck,
   ListChecks,
+  ListTodo,
   Phone,
   User2,
 } from "lucide-react"
@@ -58,7 +58,7 @@ const DUMMY_FIELD_TYPES: Required<ComboboxProps>["options"] = [
     value: "number",
   },
   {
-    icon: <ListCheck />,
+    icon: <ListTodo />,
     label: "Single Option",
     value: "single_option",
   },
@@ -128,11 +128,13 @@ export default function CustomFieldsSettings({
     },
     {
       name: "field_group",
-      type: "combobox",
+      type: "combobox-admin",
       label: "Field Group",
       placeholder: "Field Group",
-      onAddOption: addFieldGroup,
-      onSaveEditOption: updateCustomField,
+      onCreate: addFieldGroup,
+      onEdit: updateCustomField,
+      onDelete: () => {},
+      itemName: "Field Group",
       className: "min-w-[200px]",
       selectOptions: fieldGroups, // Hardcoded value, should be replaced with the actual value
     },

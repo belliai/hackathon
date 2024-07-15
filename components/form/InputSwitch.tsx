@@ -28,14 +28,6 @@ import {
 } from "../ui/select"
 import { Combobox, ComboboxProps } from "./combobox"
 
-export type BaseSelectProps<DataType> = {
-  name: Path<DataType>
-  names?: Path<DataType>[]
-  label?: string
-  selectOptions?: { value: string; label: string }[]
-  withDialog?: boolean
-}
-
 type BaseInputProps<DataType> = InputProps & {
   name: Path<DataType>
   label?: string
@@ -58,6 +50,10 @@ export type InputSwitchProps<DataType extends FieldValues> =
       type: "combobox-admin"
     }) &
       Omit<ComboAdminBoxInputProps<DataType, Path<DataType>>, "field">)
+  | (BaseInputProps<DataType> & {
+      type: "combobox"
+      selectOptions: SelectOptions
+    } & ComboboxProps)
 
 export default function InputSwitch<DataType extends FieldValues>(
   props: InputSwitchProps<DataType>
@@ -79,6 +75,32 @@ export default function InputSwitch<DataType extends FieldValues>(
           />
         )
 
+      case "combobox-admin":
+        return (
+          <FormField
+            key={props.name}
+            control={form.control}
+            name={props.name}
+            render={({ field }) => (
+              <FormItem className="flex-grow space-y-1">
+                {!!props.label && (
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
+                    {props.label}
+                  </FormLabel>
+                )}
+                <ComboBoxInput
+                  field={field}
+                  itemName={props.label}
+                  {...props}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )
       case "select":
         return (
           <FormField
