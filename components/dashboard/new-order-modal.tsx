@@ -191,8 +191,6 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     }
   }, [props.open])
 
-  useEffect(() => {}, [selectedBooking])
-
   useEffect(() => {
     if (selectedBooking) {
       form.reset(defaultValues)

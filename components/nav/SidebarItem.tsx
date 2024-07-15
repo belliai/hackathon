@@ -58,7 +58,7 @@ export default function SidebarItem({
       {item.children ? (
         <AccordionTrigger
           className={cn(
-            getBaseItemClassName(!!item.current || active),
+            getBaseItemClassName(!!item.current),
             "[&[data-state=open]>svg]:rotate-90"
           )}
           customarrow={

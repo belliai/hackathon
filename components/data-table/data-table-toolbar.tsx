@@ -109,7 +109,7 @@ export function DataTableToolbar<TData>({
   }, [lockedPageFilters.isLocked])
 
   return (
-    <div className={cn("flex items-center justify-between", props.className)}>
+    <div className={cn("flex items-center justify-between h-9", props.className)}>
       <div className="flex flex-row items-center gap-3">
         {props.extraButtons?.map((button, index) => (
           <Button

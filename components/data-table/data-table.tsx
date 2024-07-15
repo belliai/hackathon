@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
   }, [pagination])
 
   return (
-    <div className="space-y-4" ref={hoverRef}>
+    <div className="flex flex-col gap-4" ref={hoverRef}>
       {!hideToolbar && (
         <DataTableToolbar
           isHover={showToolbarOnlyOnHover ? isHover : undefined}
