@@ -140,9 +140,9 @@ export const useRecurringFlightsColumns = (
       ),
       cell: ({ row }) => {
         const isDeleted = [
-          row.original.aircraft?.manufacturer.is_deleted,
-          row.original.aircraft?.aircraft_type.is_deleted,
-          row.original.aircraft?.version.is_deleted,
+          row.original.aircraft?.manufacturer?.is_deleted,
+          row.original.aircraft?.aircraft_type?.is_deleted,
+          row.original.aircraft?.version?.is_deleted,
         ].some((isDeleted) => !!isDeleted) ? (
           <span className="text-destructive"> (deleted)</span>
         ) : (
@@ -392,9 +392,9 @@ export const useListViewColumns = (
       ),
       cell: ({ row }) => {
         const isDeleted = [
-          row.original.aircraft?.manufacturer.is_deleted,
-          row.original.aircraft?.aircraft_type.is_deleted,
-          row.original.aircraft?.version.is_deleted,
+          row.original.aircraft?.manufacturer?.is_deleted,
+          row.original.aircraft?.aircraft_type?.is_deleted,
+          row.original.aircraft?.version?.is_deleted,
         ].some((isDeleted) => !!isDeleted) ? (
           <span className="text-destructive"> (deleted)</span>
         ) : (
