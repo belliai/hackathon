@@ -653,7 +653,6 @@ RRULE:FREQ=DAILY;WKST=MO`,
               hidePagination
               tableState={tableState}
               menuId="flight-master-list-view"
-              isCanExport
             />
           </TabsContent>
 

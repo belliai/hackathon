@@ -10,6 +10,7 @@ import {
   EditIcon,
   Loader,
   PlusCircleIcon,
+  PlusIcon,
   SaveIcon,
   TrashIcon,
 } from "lucide-react"
@@ -57,6 +58,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
+import { DataTable } from "@/components/data-table/data-table"
 
 type CrudTableProps<T extends FieldValues> = {
   title: string
@@ -152,7 +154,7 @@ const FormDropdown = <T extends FieldValues>(
       <AccordionItem value="item" className="space-y-4 border-b-0">
         <div className="flex w-full flex-row justify-end">
           <PrimitiveTrigger asChild>
-            <Button variant={"button-primary"} style={{ fontSize: '0.875rem' }}>Add new</Button>
+            <Button variant={"button-primary"} style={{ fontSize: '0.875rem' }}>Add New</Button>
           </PrimitiveTrigger>
         </div>
         <AccordionContent className="border-none p-0">
@@ -199,26 +201,19 @@ export default function CrudTable<T extends FieldValues>(
   const { data, title } = props
 
   const columns: ColumnDef<T>[] = [
-    {
-      id: "number",
-      header: ({ table }) => <>No.</>,
-      cell: ({ row }) => <>{row.index + 1}</>,
-      enableSorting: false,
-      enableHiding: false,
-    },
     ...props.columns,
     {
       accessorKey: "action",
       header: "Action",
       cell: ({ row }) => (
-        <div className="flex w-full flex-row items-center justify-end">
+        <div className="flex w-full flex-row items-center gap-3">
           <FormDialog
             title={title}
             form={props.form}
             onSave={props.onSave}
             data={row.original as DefaultValues<T>}
           >
-            <Button variant={"ghost"} size={"sm"}>
+            <Button variant={"ghost"} size={"fit"}>
               <EditIcon className="mr-2 size-4" />
               Edit
             </Button>
@@ -226,7 +221,7 @@ export default function CrudTable<T extends FieldValues>(
           <Button
             onClick={() => props.onDelete(row.original)}
             variant={"ghost"}
-            size={"sm"}
+            size={"fit"}
           >
             <TrashIcon className="mr-2 size-4" />
             Delete
@@ -236,64 +231,30 @@ export default function CrudTable<T extends FieldValues>(
     },
   ]
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  })
-
   return (
     <section id={props.id} className="space-y-4">
-      <FormDropdown form={props.form} onSave={props.onSave} />
-      <Card className="overflow-clip rounded-md">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-card px-4 py-2">
-          <CardTitle className="text-lg font-bold">{title}</CardTitle>
-        </CardHeader>
-
-        <Separator />
-        <CardContent className="p-0">
-          {props.isLoading ? (
-            <div className="flex items-center justify-center py-24">
-              <Loader className="h-6 w-6 animate-spin text-zinc-600" />
-            </div>
-          ) : (
-            <Table>
-              <TableBody className="leading-6 text-zinc-400">
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell, index) => (
-                        <TableCell
-                          className={cn("px-4 py-1", index === 0 && "w-10")}
-                          style={{ width: `${cell.column.getSize()}` }}
-                          key={cell.id}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 px-4 py-1 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+      {props.isLoading ? (
+        <div className="flex items-center justify-center py-24">
+          <Loader className="h-6 w-6 animate-spin text-zinc-600" />
+        </div>
+      ) : (
+        <DataTable
+          showToolbarOnlyOnHover={true}
+          columns={columns}
+          data={data}
+          extraRightComponents={<FormDialog
+            title={title}
+            form={props.form}
+            onSave={props.onSave}
+          >
+            <Button variant="button-primary" size="sm">
+              <PlusIcon className="size-4" />
+              Add New
+            </Button>
+          </FormDialog>}
+          className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
+        />
+      )}
     </section>
   )
 }

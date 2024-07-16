@@ -19,7 +19,7 @@ const CommodityCode = () => {
     <CrudTable
       isLoading={isPending}
       title="Commodity Code"
-      columns={[{ accessorKey: "name" }, { accessorKey: "description" }]}
+      columns={[{ accessorKey: "name", header: 'Name' }, { accessorKey: "description", header: 'Description' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "name", type: "text", label: "Name" },

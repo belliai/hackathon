@@ -28,7 +28,7 @@ const Location = () => {
       isLoading={isPending}
       id="location"
       title="Location"
-      columns={[{ accessorKey: "option" }, { accessorKey: "time_zone.name" }]}
+      columns={[{ accessorKey: "option", header: 'Name' }, { accessorKey: "time_zone.name", header: 'Timezone' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Location" },

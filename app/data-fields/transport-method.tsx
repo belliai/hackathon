@@ -21,7 +21,7 @@ const TransportMethod = () => {
     <CrudTable
       isLoading={isPending}
       title="Transport Method"
-      columns={[{ accessorKey: "option" }]}
+      columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Transport Method" },

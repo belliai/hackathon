@@ -156,8 +156,12 @@ export function DataTable<TData, TValue>({
                       <TableHead
                         key={header.id}
                         colSpan={header.colSpan}
-                        className={cn("min-w-10 whitespace-nowrap")}
+                        className={cn("whitespace-nowrap")}
                         onClick={header.column.getToggleSortingHandler()}
+                        style={{
+                          maxWidth: header.column.columnDef.size,
+                          width: header.column.columnDef.size,
+                        }}
                       >
                         {header.isPlaceholder ? null : (
                           <div className="flex cursor-pointer items-center justify-between gap-1">
@@ -192,6 +196,10 @@ export function DataTable<TData, TValue>({
                       <TableCell
                         className={cn("whitespace-nowrap")}
                         key={cell.id}
+                        style={{
+                          maxWidth: cell.column.columnDef.size,
+                          width: cell.column.columnDef.size,
+                        }}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,

@@ -323,7 +323,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                     options={statusOptions}
                     label="Status"
                     info="Select the Status"
-                    editLink="/settings/data-fields?tab=status"
+                    editLink="/data-fields/shipments?tab=status"
                   />
                 </div>
                 <div className="grid flex-1">

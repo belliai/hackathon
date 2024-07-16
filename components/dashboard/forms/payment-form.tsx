@@ -113,7 +113,7 @@ const PaymentForm = React.forwardRef<HTMLDivElement, any>(
             options={currencyOptions}
             label="Currency"
             info="Select the Currency"
-            editLink="/settings/data-fields?tab=currency"
+            editLink="/data-fields/payments?tab=currency"
           />
         </div>
 

@@ -60,7 +60,7 @@ export default function DataFieldsPageTemplate({
 
   // Handle tab change
   const handleTabChange = (val: any) => {
-    setActiveTab(val)
+    // setActiveTab(val)
     router.push(
       pathname +
         "?" +
@@ -99,7 +99,6 @@ export default function DataFieldsPageTemplate({
     <PageContainer>
       <Tabs
         value={activeTab}
-        //onValueChange={(val) => setActiveTab(val as SettingsTabName)}
         onValueChange={handleTabChange}
         className="flex h-full w-full flex-row items-start justify-start gap-4 space-y-0"
       >

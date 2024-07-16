@@ -19,7 +19,7 @@ const PaymentMode = () => {
     <CrudTable
       isLoading={isPending}
       title="Payment Mode"
-      columns={[{ accessorKey: "option" }]}
+      columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Payment Mode" },

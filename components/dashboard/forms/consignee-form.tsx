@@ -29,7 +29,7 @@ const ConsigneeForm = React.forwardRef<HTMLDivElement, any>(
           options={locationsOptions}
           label="Destination"
           info="Select the Destination location"
-          editLink="/settings/data-fields?tab=location"
+          editLink="/data-fields/shipments?tab=location"
         />
         <Combobox
           name="consignee_id"

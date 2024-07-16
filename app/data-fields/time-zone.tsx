@@ -19,7 +19,7 @@ const TimeZone = () => {
     <CrudTable
       isLoading={isPending}
       title="Time Zone"
-      columns={[{ accessorKey: "option" }]}
+      columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Time Zone" },
