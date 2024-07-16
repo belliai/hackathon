@@ -139,21 +139,30 @@ export const useRecurringFlightsColumns = (
         />
       ),
       cell: ({ row }) => {
-        const isDeleted = [
+        if (!row.original.aircraft)
+          return <span className="text-destructive">(deleted)</span>
+        const deleted = [
           row.original.aircraft?.manufacturer?.is_deleted,
           row.original.aircraft?.aircraft_type?.is_deleted,
           row.original.aircraft?.version?.is_deleted,
-        ].some((isDeleted) => !!isDeleted) ? (
+        ].some((isDeleted) => !!isDeleted || isDeleted === undefined) ? (
           <span className="text-destructive"> (deleted)</span>
         ) : (
           ""
         )
+        const label = (
+          <span>
+            {[
+              row.original.aircraft?.manufacturer?.name,
+              row.original.aircraft?.aircraft_type?.name,
+              row.original.aircraft?.version?.version,
+            ].join(" ")}
+          </span>
+        )
         return (
-          [
-            row.original.aircraft?.manufacturer?.name,
-            row.original.aircraft?.aircraft_type?.name,
-            row.original.aircraft?.version?.version,
-          ].join(" ") + isDeleted
+          <p>
+            {label} {deleted}
+          </p>
         )
       },
     },
@@ -391,21 +400,30 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const isDeleted = [
+        if (!row.original.aircraft)
+          return <span className="text-destructive">(deleted)</span>
+        const deleted = [
           row.original.aircraft?.manufacturer?.is_deleted,
           row.original.aircraft?.aircraft_type?.is_deleted,
           row.original.aircraft?.version?.is_deleted,
-        ].some((isDeleted) => !!isDeleted) ? (
+        ].some((isDeleted) => !!isDeleted || isDeleted === undefined) ? (
           <span className="text-destructive"> (deleted)</span>
         ) : (
           ""
         )
+        const label = (
+          <span>
+            {[
+              row.original.aircraft?.manufacturer?.name,
+              row.original.aircraft?.aircraft_type?.name,
+              row.original.aircraft?.version?.version,
+            ].join(" ")}
+          </span>
+        )
         return (
-          [
-            row.original.aircraft?.manufacturer?.name,
-            row.original.aircraft?.aircraft_type?.name,
-            row.original.aircraft?.version?.version,
-          ].join(" ") + isDeleted
+          <p>
+            {label} {deleted}
+          </p>
         )
       },
     },

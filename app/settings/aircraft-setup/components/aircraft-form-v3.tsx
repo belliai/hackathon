@@ -75,6 +75,7 @@ import InputSwitch from "@/components/form/InputSwitch"
 
 import { formDefaultValues } from "../constants"
 import { detailsFields } from "../constants/validation-steps"
+import OptionDeleteWarning, { Deletee } from "./option-delete-warning"
 
 type AircraftTypeFormProps = {
   currentOpen: string | boolean
@@ -86,6 +87,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
 
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
+
+  const [deleteWarning, setDeleteWarning] = useState<Deletee | null>(null)
 
   const [hasDelete, setHasDelete] = useState(false)
 
@@ -228,9 +231,13 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }))
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
+    const tailNumberCount = data.aircraft_tail_numbers.length
+    if (form.getValues("count") > tailNumberCount) {
+      setHasDelete(true)
+    }
     const payload: CreateAircraftRequest = {
       ...data,
-      count: Number(data.aircraft_tail_numbers.length),
+      count: tailNumberCount,
       // Generate uuid for tail numbers
       aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
         ...tailNumber,
@@ -341,6 +348,10 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     <Dialog
       open={!!currentOpen}
       onOpenChange={(_open) => {
+        if (form.formState.isDirty) {
+          onOpenChange(false)
+          return
+        }
         if (!_open) setCloseWarningOpen(true)
       }}
     >
@@ -417,8 +428,11 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       selectOptions={aircraftManufacturerOptions}
                       isLoading={isLoadingManufacturers}
                       onDelete={(option) => {
-                        deleteAircraftManufacturer(option.value)
-                        setHasDelete(true)
+                        setDeleteWarning({
+                          type: "manufacturer",
+                          id: option.value,
+                          label: option.label,
+                        })
                       }}
                       onCreate={(name) => {
                         upsertAircraftManufacturer({
@@ -439,8 +453,11 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       selectOptions={aircraftTypesOptions}
                       disabled={!selectedManufacturer}
                       onDelete={(option) => {
-                        deleteAircraftType(option.value)
-                        setHasDelete(true)
+                        setDeleteWarning({
+                          type: "type",
+                          id: option.value,
+                          label: option.label,
+                        })
                       }}
                       onCreate={(name) => {
                         if (!selectedManufacturer) return
@@ -465,8 +482,11 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       selectOptions={aircraftVersionsOptions}
                       disabled={!selectedType}
                       onDelete={(option) => {
-                        deleteAircraftVersion(option.value)
-                        setHasDelete(true)
+                        setDeleteWarning({
+                          type: "version",
+                          id: option.value,
+                          label: option.label,
+                        })
                       }}
                       onCreate={(name) => {
                         if (!selectedType) return
@@ -855,8 +875,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              You have deleted an aircraft type or tail number that is assigned
-              to an upcoming flight
+              You may have deleted an aircraft type or tail number that is
+              assigned to an upcoming flight
             </AlertDialogTitle>
             <AlertDialogDescription>
               This flight needs a new aircraft assigned to it
@@ -864,7 +884,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Ignore</AlertDialogCancel>
-            <Link href={"/belli/flight-master"}>
+            <Link href={"/belli/flight-schedule-editor"}>
               <AlertDialogAction variant={"button-primary"}>
                 Fix This
               </AlertDialogAction>
@@ -872,6 +892,39 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <OptionDeleteWarning
+        open={!!deleteWarning}
+        onOpenChange={(_open) => {
+          !_open && setDeleteWarning(null)
+        }}
+        onConfirm={({ id, type }) => {
+          switch (type) {
+            case "manufacturer":
+              deleteAircraftManufacturer(id)
+              if (id === form.watch("manufacturer_id")) {
+                form.setValue("manufacturer_id", "")
+              }
+              break
+            case "type":
+              deleteAircraftType(id)
+              if (id === form.watch("aircraft_type_id")) {
+                form.setValue("aircraft_type_id", "")
+              }
+              break
+            case "version":
+              deleteAircraftVersion(id)
+              if (id === form.watch("version_id")) {
+                form.setValue("version_id", "")
+              }
+              break
+          }
+          // should check whether tail numbers with the deleted (manufacturer | type | version) is assigned a flight or not
+          // when the flights API is ready maybe?
+          // if yes then set to true, else false
+          setHasDelete(true)
+        }}
+        deletee={deleteWarning}
+      />
     </Dialog>
   )
 }
