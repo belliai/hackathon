@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
 
+import { Aircraft, CreateAircraftRequest } from "@/types/aircraft/aircraft"
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
 import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
@@ -126,44 +127,36 @@ export default function MasterAircraftPage() {
         tail_number: "",
       },
     ],
-    aircraft_type: "",
+    aircraft_type_id: "",
     body_type_id: "",
     bulk: "",
-    bulk_cubic_id: "",
     bulk_h: "",
-    bulk_unit_id: "",
     bulk_w: "",
     cargo_capacity: "",
-    cargo_capacity_unit_id: "",
-    count: "",
     fwd: "",
     fwd_h: "",
     fwd_w: "",
+    count: 0,
     fwt: "",
     gl_code_id: "",
     landing_weight: "",
-    landing_weight_unit_id: "",
     max_bulk_capacity_volume: "",
-    max_bulk_capacity_volume_unit_id: "",
     max_bulk_capacity_weight: "",
-    max_bulk_capacity_weight_unit_id: "",
     max_dimension_breadth: "",
     max_dimension_height: "",
-    manufacturer: "",
+    manufacturer_id: "",
     max_dimension_length: "",
-    max_dimension_unit_id: "",
     max_volume: "",
-    max_volume_unit_id: "",
     max_zero_fuel_weight: "",
-    max_zero_fuel_weight_unit_id: "",
     mtow: "",
-    mtow_unit_id: "",
     passenger_capacity: "",
     restricted_weight_piece: "",
-    restricted_weight_piece_unit_id: "",
     status_id: "",
     uld_position: "",
-    version: "",
+    version_id: "",
+    dimension_unit_id: "",
+    volume_unit_id: "",
+    weight_unit_id: "",
   }
 
   const sectionedHookForm = useForm<AircraftFormValues>({
@@ -446,36 +439,25 @@ export default function MasterAircraftPage() {
   ]
 
   function handleRowClick(data: Aircraft) {
-    setOpenModal(data.ID)
+    setOpenModal(data.id)
 
     sectionedHookForm.reset({
       ...data,
-      aircraft_tail_numbers: data.aircraft_tail_numbers.map((tailNumber) => ({
-        id: tailNumber.ID,
-        status_id: String(tailNumber.status.ID),
-        tail_number: tailNumber.tail_number,
+      manufacturer_id: data.manufacturer.id,
+      aircraft_type_id: data.aircraft_type.id,
+      version_id: data.version.id,
+      aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
+        id: tailNumber.id,
+        status_id: tailNumber.status.id,
+        tail_number: tailNumber?.tail_number,
       })),
-      body_type_id: String(data.body_type.ID),
-      bulk_cubic_id: String(data.bulk_cubic.ID),
-      bulk_unit_id: String(data.bulk_unit.ID),
-      cargo_capacity_unit_id: String(data.cargo_capacity_unit.ID),
-      landing_weight_unit_id: String(data.landing_weight_unit.ID),
-      max_bulk_capacity_volume_unit_id: String(
-        data.max_bulk_capacity_volume_unit.ID
-      ),
-      max_bulk_capacity_weight_unit_id: String(
-        data.max_bulk_capacity_weight_unit.ID
-      ),
-      max_dimension_unit_id: String(data.max_dimension_unit.ID),
-      max_volume_unit_id: String(data.max_volume_unit.ID),
-      max_zero_fuel_weight_unit_id: String(data.max_zero_fuel_weight_unit.ID),
-      mtow_unit_id: String(data.mtow_unit.ID),
-      status_id: String(data.status.ID),
-      gl_code_id: String(data.gl_code.ID),
-      restricted_weight_piece_unit_id: String(
-        data.restricted_weight_piece_unit.ID
-      ),
-      count: String(data.count),
+      body_type_id: data.body_type.id,
+      volume_unit_id: data.volume_unit.id,
+      dimension_unit_id: data.dimension_unit.id,
+      weight_unit_id: data.weight_unit.id,
+      status_id: data.status.id,
+      gl_code_id: data.gl_code.id,
+      count: data.count,
     })
   }
 
@@ -530,8 +512,8 @@ export default function MasterAircraftPage() {
       header: "Status",
       cell: ({ row }) => (
         <StatusBadge
-          statusText={row.original.status.Name}
-          severity={row.original.status.Name === "Active" ? "default" : "error"}
+          statusText={row.original.status.name}
+          severity={row.original.status.name === "Active" ? "default" : "error"}
         />
       ),
     },
@@ -560,7 +542,7 @@ export default function MasterAircraftPage() {
   async function onDelete(data: Aircraft) {
     if (data) {
       await deleteMutateAsync(
-        { id: data.ID },
+        { id: data.id },
         {
           onError: (error) => {
             console.error(error)

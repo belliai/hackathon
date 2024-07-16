@@ -4,3 +4,8 @@ interface Enums {
   ID: string
   value: string
 }
+
+interface IDName {
+  ID: string
+  Name: string
+}

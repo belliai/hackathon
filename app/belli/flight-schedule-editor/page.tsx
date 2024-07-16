@@ -6,6 +6,7 @@ import {
   FlightMasterFormValue,
 } from "@/schemas/flight-master/flight-master"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoopIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import { filter } from "d3-array"
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns"
@@ -23,6 +24,11 @@ import moment from "moment"
 import { useForm } from "react-hook-form"
 import { RRule } from "rrule"
 
+import {
+  CreateFlightMasterPayload,
+  CreateRecurringFlightMasterPayload,
+  Flight,
+} from "@/types/flight-master/flight-master"
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
 import {
   useCreateFlight,
@@ -61,7 +67,6 @@ import FlightMasterForm from "./components/flight-master-form"
 import FlightMasterFormRecurring from "./components/flight-master-form-recurring"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
 import WeeklyDateStepper from "./components/weekly-date-stepper"
-import { LoopIcon } from "@radix-ui/react-icons"
 
 type FlightDetailFormValues = {
   flightNo: string
@@ -458,7 +463,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
       toDate: new Date(data.to_date),
       frequencyItems: reformatDays(data) || [],
       aircraftType: aircraftTypeId?.id,
-      tailNo: data.tail?.ID,
+      tailNo: data.tail?.id,
       capacity: data.capacity?.toString(),
       uom: data.uom?.ID,
       sector: data.sector?.ID,

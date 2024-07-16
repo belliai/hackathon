@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import momentTZ from "moment-timezone"
 import { UseFormReturn } from "react-hook-form"
 
+import { Aircraft } from "@/types/aircraft/aircraft"
 import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
 import { useAircraftTypes as useAircraftManufacturerType } from "@/lib/hooks/aircrafts/aircraft-type/types"
 import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
@@ -94,11 +95,9 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
 
   const getAircraftTypeLabel = useCallback(
     (data: Aircraft) => {
-      const manufacturer = manufacturers?.find(
-        (item) => item.ID === data.manufacturer
-      )?.name
-      const type = types?.find((item) => item.ID === data.aircraft_type)?.name
-      const version = versions?.find((item) => item.ID === data.version)?.name
+      const manufacturer = data?.manufacturer?.name
+      const type = data?.aircraft_type?.name
+      const version = data?.version?.version
       if (!manufacturer || !type || !version) return "Deleted"
       return [manufacturer, type, version].join(" ")
     },
@@ -132,17 +131,17 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
   }))
 
   const aircraftTypeOptions = aircraftsList?.data.map((list) => ({
-    value: list.ID,
+    value: list.id,
     label: getAircraftTypeLabel(list),
   }))
 
   const selectedAircraftType = aircraftsList?.data.find(
-    (item) => item.ID === formData.aircraftType
+    (item) => item.id === formData.aircraftType
   )
 
   const tailNumberOptions = selectedAircraftType?.aircraft_tail_numbers.map(
     (list) => ({
-      value: String(list.ID),
+      value: String(list.id),
       label: list.tail_number,
     })
   )

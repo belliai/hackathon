@@ -1,3 +1,5 @@
+import { Aircraft, AircraftTailNumber } from "../aircraft/aircraft"
+
 interface IDNameType {
   ID: string
   name: string
@@ -12,9 +14,9 @@ interface UOMType extends IDNameType {
   symbol: string
 }
 
-interface Flight {
-  recurring : string
-  next_at: Date,
+export interface Flight {
+  recurring: string
+  next_at: Date
   aircraft: Aircraft
   arrival_d: number
   arrival_h: number
@@ -45,7 +47,7 @@ interface Flight {
   updated_at: string
 }
 
-interface CreateFlightMasterPayload {
+export interface CreateFlightMasterPayload {
   aircraft_id: string
   capacity: number
   destination_id: string
@@ -73,8 +75,7 @@ interface CreateFlightMasterPayload {
   sun: boolean
 }
 
-
-interface CreateRecurringFlightMasterPayload {
+export interface CreateRecurringFlightMasterPayload {
   aircraft_id: string
   destination_id: string
   flight_no: string
@@ -86,6 +87,4 @@ interface CreateRecurringFlightMasterPayload {
   arrival_m: number
   departure_h: number
   departure_m: number
-
 }
-
