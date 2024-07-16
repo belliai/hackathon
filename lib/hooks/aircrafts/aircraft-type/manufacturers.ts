@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { useBelliApi } from "@/lib/utils/network"
 
-const route = "manufacturers"
+const route = "aircraft-manufacturers"
 
-type ManufacturerResponse = { ID: string; name: string }[]
+type ManufacturerResponse = { id: string; name: string }[]
 
 export const useAircraftManufacturers = () => {
   const belliApi = useBelliApi()

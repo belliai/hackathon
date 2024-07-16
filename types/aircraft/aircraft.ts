@@ -1,17 +1,57 @@
-interface IDName {
-  ID: string
-  Name: string
+import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
+
+export interface Aircraft {
+  id: string
+  manufacturer: OptionEntity
+  aircraft_type: OptionEntity
+  version: Version
+  weight_unit: Unit
+  volume_unit: Unit
+  dimension_unit: Unit
+  mtow: string
+  max_zero_fuel_weight: string
+  body_type: OptionEntity
+  passenger_capacity: string
+  uld_position: string
+  landing_weight: string
+  cargo_capacity: string
+  max_bulk_capacity_weight: string
+  max_bulk_capacity_volume: string
+  max_volume: string
+  restricted_weight_piece: string
+  max_dimension_length: string
+  max_dimension_breadth: string
+  max_dimension_height: string
+  status: OptionEntity
+  gl_code: OptionEntity
+  count: number
+  aircraft_tail_numbers: AircraftTailNumber[]
+  aft_h: string
+  aft_w: string
+  fwd_h: string
+  fwd_w: string
+  bulk_h: string
+  bulk_w: string
+  fwt: string
+  fwd: string
+  bulk: string
+  created_at: string
+  updated_at: string
 }
 
-interface Status {
-  ID: string
-  Name: string
+interface Version extends OptionEntity {
+  version: string
 }
 
-interface AircraftTailNumber {
-  ID: string
-  status: Status
+interface Unit extends OptionEntity {
+  symbol: string
+}
+
+export interface AircraftTailNumber {
+  id: string
   tail_number: string
+  status: OptionEntity
+  is_deleted: boolean
 }
 
 interface AircraftTailNumberRequest {
@@ -20,96 +60,9 @@ interface AircraftTailNumberRequest {
   tail_number: string
 }
 
-interface Aircraft {
-  aft_h: string
-  aft_w: string
-  aircraft_tail_numbers: AircraftTailNumber[]
-  aircraft_type: string
-  body_type: IDName
-  bulk: string
-  bulk_cubic: Unit
-  bulk_h: string
-  bulk_unit: Unit
-  bulk_w: string
-  cargo_capacity: string
-  cargo_capacity_unit: Unit
-  count: number
-  fwd: string
-  fwd_h: string
-  fwd_w: string
-  fwt: string
-  gl_code: IDName
-  ID: string
-  landing_weight: string
-  landing_weight_unit: Unit
-  manufacturer: string
-  max_bulk_capacity_volume: string
-  max_bulk_capacity_volume_unit: Unit
-  max_bulk_capacity_weight: string
-  max_bulk_capacity_weight_unit: Unit
-  max_dimension_breadth: string
-  max_dimension_height: string
-  max_dimension_length: string
-  max_dimension_unit: Unit
-  max_volume: string
-  max_volume_unit: Unit
-  max_zero_fuel_weight: string
-  max_zero_fuel_weight_unit: Unit
-  mtow: string
-  mtow_unit: Unit
-  passenger_capacity: string
-  restricted_weight_piece: string
-  restricted_weight_piece_unit: Unit
-  status: Status
-  uld_position: string
-  version: string
-}
+export type CreateAircraftRequest = AircraftFormValues
 
-interface CreateAircraftRequest {
-  aircraft_tail_numbers: AircraftTailNumberRequest[]
-  aircraft_type: string
-  manufacturer: string
-  aft_h: string
-  aft_w: string
-  body_type_id: string
-  bulk: string
-  bulk_cubic_id: string
-  bulk_h: string
-  bulk_unit_id: string
-  bulk_w: string
-  cargo_capacity: string
-  cargo_capacity_unit_id: string
-  count: number
-  fwd: string
-  fwd_h: string
-  fwd_w: string
-  fwt: string
-  gl_code_id: string
-  landing_weight: string
-  landing_weight_unit_id: string
-  max_bulk_capacity_volume: string
-  max_bulk_capacity_volume_unit_id: string
-  max_bulk_capacity_weight: string
-  max_bulk_capacity_weight_unit_id: string
-  max_dimension_breadth: string
-  max_dimension_height: string
-  max_dimension_length: string
-  max_dimension_unit_id: string
-  max_volume: string
-  max_volume_unit_id: string
-  max_zero_fuel_weight: string
-  max_zero_fuel_weight_unit_id: string
-  mtow: string
-  mtow_unit_id: string
-  passenger_capacity: string
-  restricted_weight_piece: string
-  restricted_weight_piece_unit_id: string
-  status_id: string
-  uld_position: string
-  version: string
-}
-
-interface AircraftTypeList {
+export interface AircraftTypeList {
   id: string
   aircraft_type: string
   aircraft_tail_numbers: AircraftTailNumberRequest[]
