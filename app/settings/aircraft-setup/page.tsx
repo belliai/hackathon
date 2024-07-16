@@ -235,7 +235,7 @@ export default function MasterAircraftPage() {
       ),
       cell: ({ row }) =>
         row.original?.aircraft_tail_numbers?.filter(
-          (item) => item.status.Name.toLowerCase() === "active"
+          (item) => item.status?.Name?.toLowerCase() === "active"
         ).length ?? 0,
     },
     {
