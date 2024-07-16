@@ -95,3 +95,8 @@ export function getCurrentTimestamp(): string {
 
   return `${isoWithoutMillis}${timezone}`
 }
+
+
+export function getDefaultTimeZone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
