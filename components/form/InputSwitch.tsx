@@ -34,7 +34,11 @@ type BaseInputProps<DataType> = InputProps & {
   info?: string
 }
 
-type SelectOptions = { value: string; label: string }[]
+export type SelectOptions = {
+  value: string
+  label: string
+  component?: React.ReactNode
+}[]
 
 export type InputSwitchProps<DataType extends FieldValues> =
   | (BaseInputProps<DataType> & {
@@ -123,7 +127,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                   <SelectContent>
                     {props.selectOptions?.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                        {option?.component ? option.component : option.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

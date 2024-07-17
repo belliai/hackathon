@@ -2,16 +2,18 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { ColumnDef, PaginationState } from "@tanstack/react-table"
-import * as changeCase from "change-case"
 import moment from "moment"
 import { useFieldArray, useForm } from "react-hook-form"
+import { useReadLocalStorage } from "usehooks-ts"
 
 import { Flight } from "@/types/flight-master/flight-master"
 import { useFlightList } from "@/lib/hooks/flight-master/flight-master"
 import { Input } from "@/components/ui/input"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { DataTable } from "@/components/data-table/data-table"
 import Modal from "@/components/modal/modal"
 import { useRecurringFlightsColumns } from "@/app/belli/flight-schedule-editor/components/column"
+import { DisplayOption } from "@/app/data-fields/display"
 
 interface FlightsActualInformation {
   detail: string
@@ -26,6 +28,11 @@ type FlightWithActualInformation = Flight & {
 }
 
 export default function FlightsDashboardPage() {
+  const displayOption: DisplayOption =
+    useReadLocalStorage("display_option", {
+      initializeWithValue: false, // For SSR compatibility
+    }) || "numbers"
+
   const [selectedFlight, setSelectedFlight] =
     useState<FlightWithActualInformation | null>(null)
 
@@ -91,48 +98,71 @@ export default function FlightsDashboardPage() {
     {
       accessorKey: "aircraft.mtow",
       header: "MTOW",
+      size: displayOption === "numbers-percentages" ? 240 : undefined,
       cell: ({ row }) => {
         return (
-          <div className="flex w-full">
-            <span className="w-full text-right">
-              {row.original.actual_mtow || "-"} /{" "}
-              {row.original?.aircraft?.mtow || "-"}
-            </span>
-          </div>
+          <ActualInformation
+            actual={Number(row.original.actual_mtow)}
+            maximum={Number(row.original?.aircraft?.mtow)}
+            displayOption={displayOption}
+            unit={String(row.original.uom?.name || "")}
+          />
         )
       },
     },
     {
       accessorKey: "aircraft.landing_weight",
       header: "Landing Weight",
+      size: displayOption === "numbers-percentages" ? 240 : undefined,
       cell: ({ row }) => {
         return (
-          <div className="flex w-full">
-            <span className="w-full text-right">
-              {row.original.actual_landing_weight || "-"} /{" "}
-              {row.original?.aircraft?.landing_weight || "-"}
-            </span>
-          </div>
+          <ActualInformation
+            actual={Number(row.original.actual_landing_weight)}
+            maximum={Number(row.original?.aircraft?.landing_weight)}
+            displayOption={displayOption}
+            unit={String(row.original.uom?.name || "")}
+          />
         )
       },
     },
     {
       accessorKey: "aircraft.cargo_capacity",
       header: "Cargo Capacity",
+      size: displayOption === "numbers-percentages" ? 240 : undefined,
       cell: ({ row }) => {
         return (
-          <div className="flex w-full">
-            <span className="w-full text-right">
-              {row.original.actual_cargo_capacity || "-"} /{" "}
-              {row.original?.aircraft?.cargo_capacity || "-"}
-            </span>
-          </div>
+          <ActualInformation
+            actual={Number(row.original.actual_cargo_capacity)}
+            maximum={Number(row.original?.aircraft?.cargo_capacity)}
+            displayOption={displayOption}
+            unit={String(row.original.uom?.name || "")}
+          />
         )
       },
     },
   ]
 
   function handleRowClick(flight: FlightWithActualInformation) {
+    actualInformationForm.reset({
+      infos: [
+        {
+          detail: "MTOW",
+          actual: flight?.actual_mtow || "",
+          maximum: flight?.aircraft?.mtow || "-",
+        },
+        {
+          detail: "Landing Weight",
+          actual: flight?.actual_landing_weight || "",
+          maximum: flight?.aircraft?.landing_weight || "-",
+        },
+        {
+          detail: "Cargo Capacity",
+          actual: flight?.actual_cargo_capacity || "",
+          maximum: flight?.aircraft?.cargo_capacity || "-",
+        },
+      ],
+    })
+
     setSelectedFlight(flight)
   }
 
@@ -162,30 +192,6 @@ export default function FlightsDashboardPage() {
     ],
     [actualInformationForm.getValues().infos]
   )
-
-  useEffect(() => {
-    if (selectedFlight) {
-      actualInformationForm.reset({
-        infos: [
-          {
-            detail: "MTOW",
-            actual: selectedFlight?.actual_mtow || "",
-            maximum: selectedFlight?.aircraft?.mtow || "-",
-          },
-          {
-            detail: "Landing Weight",
-            actual: selectedFlight?.actual_landing_weight || "",
-            maximum: selectedFlight?.aircraft?.landing_weight || "-",
-          },
-          {
-            detail: "Cargo Capacity",
-            actual: selectedFlight?.actual_cargo_capacity || "",
-            maximum: selectedFlight?.aircraft?.cargo_capacity || "-",
-          },
-        ],
-      })
-    }
-  }, [selectedFlight, actualInformationForm])
 
   function handleSaveActualInformation(data: FlightsActualInformation[]) {
     // Temporary solution to update the actual information, will be replaced with API call
@@ -257,4 +263,67 @@ export default function FlightsDashboardPage() {
       />
     </div>
   )
+}
+
+function ActualInformation({
+  actual,
+  maximum,
+  displayOption,
+  unit,
+}: {
+  actual: number
+  maximum: number
+  displayOption: DisplayOption
+  unit?: string
+}) {
+  switch (displayOption) {
+    case "numbers":
+      return (
+        <span>
+          {actual ? actual.toLocaleString() : "-"} /{" "}
+          {maximum ? maximum.toLocaleString() : "-"} {unit || ""}
+        </span>
+      )
+    case "percentage":
+      const percentage = ((actual / maximum) * 100).toFixed(1)
+
+      if (isNaN(Number(percentage))) {
+        return <span>-</span>
+      }
+
+      return (
+        <div className="flex w-full">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 py-0.5 text-center text-sm text-white">
+                {percentage}%
+              </span>
+            </TooltipTrigger>
+            <TooltipContent className="border bg-card text-foreground">
+              <span>
+                {actual.toLocaleString()} / {maximum.toLocaleString()} {unit || ""}
+              </span>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      )
+    case "numbers-percentages":
+      const percentage2 = ((actual / maximum) * 100).toFixed(1)
+
+      if (isNaN(Number(percentage2))) {
+        return <span>-</span>
+      }
+
+      return (
+        <div className="flex w-fit shrink-0 items-center gap-2">
+          <span className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 py-0.5 text-center text-sm text-white">
+            {percentage2}%
+          </span>
+          <span>
+            {" "}
+            {actual.toLocaleString()} / {maximum.toLocaleString()} {unit || ""}
+          </span>
+        </div>
+      )
+  }
 }
