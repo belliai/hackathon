@@ -295,6 +295,15 @@ export default function ComboBoxInput<
                           className="h-7 px-2.5 text-xs focus-visible:ring-0"
                           placeholder={`Input ${itemName} name...`}
                           {...field}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault(); // Prevent form submission on Enter key
+                              form.handleSubmit((data) => {
+                                onCreate(data.name)
+                                setShowCreateForm(false)
+                              })
+                              }
+                          }}
                         />
                       )}
                     />
