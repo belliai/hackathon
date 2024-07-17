@@ -38,7 +38,7 @@ type SelectOptions = { value: string; label: string }[]
 
 export type InputSwitchProps<DataType extends FieldValues> =
   | (BaseInputProps<DataType> & {
-      type: "date" | "search" | "text" | "checkbox" | "hidden"
+      type: "date" | "search" | "text" | "checkbox" | "hidden" | "number"
     })
   | (BaseInputProps<DataType> & {
       type: "select"
@@ -215,6 +215,36 @@ export default function InputSwitch<DataType extends FieldValues>(
             )}
           />
         )
+      // case "number":
+      //   // Destructure `type` and `rest` from `props`
+      //   const { type, ...rest } = props;
+      //   return (
+      //     <FormField
+      //       key={props.name}
+      //       control={form.control}
+      //       name={props.name}
+      //       render={({ field }) => (
+      //         <FormItem className="flex-grow space-y-1">
+      //           {!!props.label && (
+      //             <FormLabel
+      //               info={props.info}
+      //               className="text-xs font-semibold text-muted-foreground"
+      //             >
+      //               {props.label}
+      //             </FormLabel>
+      //           )}
+      //           <FormControl>
+      //             <Input
+      //               type="number"
+      //               {...field}
+      //               {...rest} 
+      //             />
+      //           </FormControl>
+      //           <FormMessage />
+      //         </FormItem>
+      //       )}
+      //     />
+      //   )
       case "hidden":
         return (
           <FormField

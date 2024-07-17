@@ -656,13 +656,13 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="MTOW"
                             name="mtow"
-                            type="text"
+                            type="number"
                             rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Zero Fuel Weight"
                             name="max_zero_fuel_weight"
-                            type="text"
+                            type="number"
                             rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
@@ -674,64 +674,64 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="Passenger Capacity"
                             name="passenger_capacity"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="ULD Positions"
                             name="uld_position"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Landing Weight"
                             name="landing_weight"
-                            type="text"
+                            type="number"
                             rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Cargo Capacity"
                             name="cargo_capacity"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Bulk Capacity Weight"
                             name="max_bulk_capacity_weight"
-                            type="text"
+                            type="number"
                             rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Bulk Capacity Volume"
                             name="max_bulk_capacity_volume"
-                            type="text"
+                            type="number"
                             rightIcon={selectedVolumeUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Volume"
                             name="max_volume"
-                            type="text"
+                            type="number"
                             rightIcon={selectedVolumeUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Restricted Weight Per Piece"
                             name="restricted_weight_piece"
-                            type="text"
+                            type="number"
                             rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Dimension per Piece (Length)"
                             name="max_dimension_length"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Dimension per Piece (Breadth)"
                             name="max_dimension_breadth"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Dimension per Piece (Height)"
                             name="max_dimension_height"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
@@ -752,37 +752,37 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="AFT (H)"
                             name="aft_h"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="AFT (W)"
                             name="aft_w"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="FWD (H)"
                             name="fwd_h"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="FWD (W)"
                             name="fwd_w"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Bulk (H)"
                             name="bulk_h"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Bulk (W)"
                             name="bulk_w"
-                            type="text"
+                            type="number"
                             rightIcon={selectedDimensionUnitSymbol}
                           />
                         </div>
@@ -793,17 +793,17 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="FWT"
                             name="fwt"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="FWD"
                             name="fwd"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Bulk"
                             name="bulk"
-                            type="text"
+                            type="number"
                           />
                         </div>
                       </div>
