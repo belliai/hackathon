@@ -9,17 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import {
   Banknote,
+  ChevronLeft,
   ChevronRight,
-  HistoryIcon,
   PackageIcon,
   PlaneIcon,
   PlaneLandingIcon,
   PlaneTakeoffIcon,
   SaveIcon,
-  ScrollTextIcon,
   SquarePenIcon,
-  Trash2Icon,
-  UserIcon,
   XCircle,
 } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -28,7 +25,6 @@ import { useUpdateCustomer } from "@/lib/hooks/customers"
 import { useAddOrder, useUpdateOrder } from "@/lib/hooks/orders"
 import { mapJsonToSchema, mapSchemaToJson } from "@/lib/mapper/order"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -42,28 +38,16 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Form } from "@/components/ui/form"
-import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 
 import ActivityLog from "./activity-log"
-import BalanceCard from "./balance-card"
-import DimensionsCard from "./dimensions-card"
-import ConsignmentDetailsForm from "./forms/consignment-details.form"
-import CreateBookingForm from "./forms/create-booking-form"
-import ProcessRatesForm from "./forms/process-rates-form"
-import ShipperDetailsForm from "./forms/shipper-details-form"
-import OrderSummaryCard from "./order-summary-card"
-import { PaperAirplaneIcon } from "@heroicons/react/20/solid"
-import { PaperPlaneIcon } from "@radix-ui/react-icons"
 import { useStatuses } from "@/lib/hooks/statuses"
 import { Combobox } from "@/components/form/combobox"
 import BookingTypeForm from "./forms/booking-type-form"
@@ -263,6 +247,10 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     }
   }
 
+  const getCurrentIndex = (id: string) => {
+    return TAB_LIST.findIndex(tab => tab.value === id)
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -305,26 +293,29 @@ export default function NewOrderModal(props: NewOrderModalProps) {
             <Tabs value={currentTab} onValueChange={(val) => { setCurrentTab(val) }} className="grow">
               <div className="flex w-full flex-row items-stretch gap-4">
                 <div className="min-w-[220px] flex flex-col gap-4 grow-0">
-                  <TabsList className="h-fit w-full flex-col">
-                    {TAB_LIST.map(list => (
+                  <TabsList className="h-fit w-full flex-col bg-black-background">
+                    {TAB_LIST.map((list, index) => (
                       <TabsTrigger
                         key={`list-${list.value}`}
-                        className="w-full justify-start py-1.5"
+                        className="w-full justify-start py-1.5 data-[state=active]:bg-accent data-[state=active]:text-white disabled:text-muted-foreground/45"
                         value={list.value}
-                        // disabled={!formValues.booking_type_id}
+                        disabled={index > getCurrentIndex(currentTab)}
                       >
                         <list.icon className="mr-2 h-4 w-4" />
                         {list.label}
                       </TabsTrigger>
                     ))}
                   </TabsList>
-                  <Combobox
-                    name="status_id"
-                    options={statusOptions}
-                    label="Status"
-                    info="Select the Status"
-                    editLink="/data-fields/shipments?tab=status"
-                  />
+                  {mode === 'edit' && (
+                    <Combobox
+                      name="status_id"
+                      options={statusOptions}
+                      label="Status"
+                      info="Select the Status"
+                      editLink="/data-fields/shipments?tab=status"
+                    />
+                  )}
+                  
                 </div>
                 <div className="grid flex-1">
                   {TAB_LIST.map(item => (
@@ -347,6 +338,19 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 <XCircle className="mr-2 size-4" />
                 Cancel
               </Button>
+              {getCurrentIndex(currentTab) > 0 && (
+                <Button
+                  type="button"
+                  variant={"secondary"}
+                  onClick={() => {
+                    const currentIndex = getCurrentIndex(currentTab)
+                    setCurrentTab(TAB_LIST[currentIndex - 1].value)
+                  }}
+                >
+                  <ChevronLeft className="mr-2 size-4" />
+                  Previous
+                </Button>
+              )}
               {renderSaveButtons()}
             </DialogFooter>
           </form>
