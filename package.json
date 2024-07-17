@@ -62,6 +62,7 @@
     "@visx/shape": "^3.5.0",
     "@visx/zoom": "^3.3.0",
     "axios": "^1.7.2",
+    "change-case": "^5.4.4",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
