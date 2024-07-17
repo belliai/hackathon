@@ -95,7 +95,7 @@ export function DataTablePagination<TData>({
       ) : (
         <div />
       )}
-      <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-8 text-muted-foreground">
+      <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-0.5 text-muted-foreground">
         <div
           className={cn(
             "flex items-center space-x-2 opacity-0 transition-opacity delay-0 duration-200",
