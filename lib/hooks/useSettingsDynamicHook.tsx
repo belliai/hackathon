@@ -23,6 +23,7 @@ type SettingsTabName =
   | "Partner Type"
   | "Currency"
   | "Time Zone"
+  | "Display"
 
 // Map of hooks based on TabName
 const hooksMap: Record<SettingsTabName, () => any> = {
@@ -36,7 +37,8 @@ const hooksMap: Record<SettingsTabName, () => any> = {
   "Transport Method": useAddTransportMethod,
   "Partner Type": useAddPartnerType,
   Currency: useAddCurrency,
-  "Time Zone" : useAddTimeZone
+  "Time Zone" : useAddTimeZone,
+  Display: () => null,
 }
 
 // Map of fields based on TabName
@@ -51,7 +53,8 @@ const fieldsMap: Record<SettingsTabName, string[]> = {
   "Transport Method": ["name"],
   "Partner Type": ["name"],
   Currency: ["name"],
-  "Time Zone" : ["name"]
+  "Time Zone" : ["name"],
+  Display: [],
 }
 
 const useSettingsDynamicHook = (activeTab: SettingsTabName) => {
