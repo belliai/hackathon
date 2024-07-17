@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
 import {
+  ChevronLeftCircleIcon,
+  ChevronRightCircleIcon,
   FileClockIcon,
   FileSlidersIcon,
   PlaneIcon,
@@ -40,6 +42,7 @@ import {
   useUpdateAircraft,
 } from "@/lib/hooks/aircrafts/aircrafts"
 import { useUnits } from "@/lib/hooks/units/units"
+import { cn } from "@/lib/utils"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -74,7 +77,7 @@ import { toast } from "@/components/ui/use-toast"
 import InputSwitch from "@/components/form/InputSwitch"
 
 import { formDefaultValues } from "../constants"
-import { detailsFields } from "../constants/validation-steps"
+import { detailsFields, tabValidations } from "../constants/validation-steps"
 import OptionDeleteWarning, { Deletee } from "./option-delete-warning"
 
 type AircraftTypeFormProps = {
@@ -82,6 +85,14 @@ type AircraftTypeFormProps = {
   onOpenChange: (open: boolean) => void
   form: UseFormReturn<AircraftFormValues>
 }
+
+type Tabs = "aircraft-type" | "aircraft-tail-numbers" | "aircraft-details"
+
+const stepsOrder = [
+  "aircraft-type",
+  "aircraft-tail-numbers",
+  "aircraft-details",
+]
 
 export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
@@ -108,6 +119,15 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
 
   const { data: aircraftStatuses } = useAircraftStatuses()
 
+  const [tabValue, setTabValue] = useState<Tabs>("aircraft-type")
+
+  const [validatedSteps, setValidatedSteps] = useState({
+    "aircraft-type": isEdit ? true : false,
+    "aircraft-tail-numbers": isEdit ? true : false,
+    "aircraft-details": isEdit ? true : false,
+  })
+
+  const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
   // default values
   const { aircraftDefaults, updateAircraftDefaults } = useAircraftDefaults()
 
@@ -323,14 +343,27 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   )
 
   useEffect(() => {
-    !currentOpen && form.reset(formDefaultValues)
-  }, [currentOpen, form, formDefaultValues])
+    if (!currentOpen) {
+      form.reset(formDefaultValues)
+      setTabValue("aircraft-type")
+      setHasDelete(false)
+    }
+  }, [currentOpen, form, formDefaultValues, isEdit])
+
+  useEffect(() => {
+    setValidatedSteps({
+      "aircraft-type": isEdit ? true : false,
+      "aircraft-tail-numbers": isEdit ? true : false,
+      "aircraft-details": isEdit ? true : false,
+    })
+  }, [isEdit])
 
   const { mutateAsync: deleteMutateAsync, isPending: isPendingDelete } =
     useDeleteAircraft()
 
   async function onDelete(id?: Aircraft["id"]) {
     if (!id) return
+    setHasDelete(true)
     await deleteMutateAsync(
       { id },
       {
@@ -370,7 +403,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     <Dialog
       open={!!currentOpen}
       onOpenChange={(_open) => {
-        if (form.formState.isDirty) {
+        if (!form.formState.isDirty) {
           onOpenChange(false)
           return
         }
@@ -391,7 +424,15 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
               </DialogTitle>
             </DialogHeader>
             <Tabs
-              defaultValue="aircraft-type"
+              value={tabValue}
+              onValueChange={async (val) => {
+                const isValidated = await form.trigger(tabValidations[tabValue])
+                setValidatedSteps((prev) => ({
+                  ...prev,
+                  [tabValue]: isValidated,
+                }))
+                if (isValidated) setTabValue(val as Tabs)
+              }}
               className="flex h-full flex-row items-start justify-start gap-4 space-y-0"
             >
               <div className="space-y-2">
@@ -404,7 +445,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     Aircraft Type
                   </TabsTrigger>
                   <TabsTrigger
-                    disabled={!selectedVersion}
+                    disabled={!validatedSteps["aircraft-type"]}
                     value="aircraft-tail-numbers"
                     className="w-full justify-start py-1.5"
                   >
@@ -412,7 +453,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     Tail Numbers
                   </TabsTrigger>
                   <TabsTrigger
-                    disabled={!selectedVersion}
+                    disabled={!validatedSteps["aircraft-tail-numbers"]}
                     value="aircraft-details"
                     className="w-full justify-start py-1.5"
                   >
@@ -859,13 +900,56 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
               )}
 
               <Button
-                type="submit"
-                variant={"button-primary"}
-                isLoading={isPendingCreate || isPendingUpdate}
+                disabled={tabValue === stepsOrder.at(0)}
+                type="button"
+                variant={"secondary"}
+                onClick={() => {
+                  const stepIndex = stepsOrder.findIndex(
+                    (item) => item === tabValue
+                  )
+                  setTabValue(stepsOrder[stepIndex - 1] as Tabs)
+                }}
               >
-                <SaveIcon className="mr-2 size-4" />
-                Save
+                <ChevronLeftCircleIcon className="mr-2 size-4" />
+                Prev
               </Button>
+
+              <Button
+                type="button"
+                className={cn(
+                  tabValue === stepsOrder.at(-1) && !isAllValidated && "hidden"
+                )}
+                disabled={tabValue === stepsOrder.at(-1)}
+                variant={isAllValidated ? "secondary" : "button-primary"}
+                onClick={async () => {
+                  const stepIndex = stepsOrder.findIndex(
+                    (item) => item === tabValue
+                  )
+                  const nextStepIndex = stepIndex + 1
+                  const isValidated = await form.trigger(
+                    tabValidations[tabValue]
+                  )
+                  setValidatedSteps((prev) => ({
+                    ...prev,
+                    [tabValue]: isValidated,
+                  }))
+                  isValidated && setTabValue(stepsOrder[nextStepIndex] as Tabs)
+                }}
+              >
+                <ChevronRightCircleIcon className="mr-2 size-4" />
+                Next
+              </Button>
+
+              {(tabValue === stepsOrder.at(-1) || isEdit || isAllValidated) && (
+                <Button
+                  type="submit"
+                  variant={"button-primary"}
+                  isLoading={isPendingCreate || isPendingUpdate}
+                >
+                  <SaveIcon className="mr-2 size-4" />
+                  Save
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </Form>

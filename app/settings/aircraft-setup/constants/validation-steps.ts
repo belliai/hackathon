@@ -3,6 +3,14 @@ import { Path } from "react-hook-form"
 
 type Fields = Path<AircraftFormValues>[]
 
+export const aircraftTypeFields: Fields = [
+  "manufacturer_id",
+  "aircraft_type_id",
+  "version_id",
+]
+
+export const tailNumbersFields: Fields = ["aircraft_tail_numbers"]
+
 export const detailsFields: Fields = [
   // Measurement Units
   "volume_unit_id",
@@ -39,3 +47,9 @@ export const detailsFields: Fields = [
   "fwd",
   "bulk",
 ]
+
+export const tabValidations: Record<string, Fields> = {
+  "aircraft-type": aircraftTypeFields,
+  "aircraft-tail-numbers": tailNumbersFields,
+  "aircraft-details": detailsFields,
+}

@@ -98,9 +98,17 @@ export default function MasterAircraftPage() {
 
     form.reset({
       ...data,
-      manufacturer_id: data.manufacturer.id,
-      aircraft_type_id: data.aircraft_type.id,
-      version_id: data.version.id,
+      manufacturer_id: data.manufacturer.is_deleted ? "" : data.manufacturer.id,
+      aircraft_type_id:
+        data.aircraft_type.is_deleted || data.manufacturer.is_deleted
+          ? ""
+          : data.aircraft_type.id,
+      version_id:
+        data.version.is_deleted ||
+        data.aircraft_type.is_deleted ||
+        data.manufacturer.is_deleted
+          ? ""
+          : data.version.id,
       aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
         id: tailNumber.id,
         status_id: tailNumber.status.id,
@@ -127,7 +135,16 @@ export default function MasterAircraftPage() {
   const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     {
       accessorKey: "manufacturer",
-      cell: ({ row }) => row.original.manufacturer.name,
+      cell: ({ row }) => {
+        const deleted = row.original.manufacturer.is_deleted ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
+        return (
+          <span>
+            {row.original.manufacturer.name} {deleted}
+          </span>
+        )
+      },
       header: () => (
         <TableHeaderWithTooltip
           header="Manufacturer"
@@ -137,7 +154,16 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "aircraft_type",
-      cell: ({ row }) => row.original.aircraft_type.name,
+      cell: ({ row }) => {
+        const deleted = row.original.aircraft_type.is_deleted ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
+        return (
+          <span>
+            {row.original.aircraft_type.name} {deleted}
+          </span>
+        )
+      },
       header: () => (
         <TableHeaderWithTooltip
           header="Aircraft Type"
@@ -147,7 +173,16 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "version",
-      cell: ({ row }) => row.original.version.version,
+      cell: ({ row }) => {
+        const deleted = row.original.version.is_deleted ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
+        return (
+          <span>
+            {row.original.version.version} {deleted}
+          </span>
+        )
+      },
       header: () => (
         <TableHeaderWithTooltip header="Version" tooltipId="aircraft-version" />
       ),
@@ -259,11 +294,27 @@ export default function MasterAircraftPage() {
         />
       ),
       cell: ({ row }) => {
-        return [
-          row.original.manufacturer.name,
-          row.original.aircraft_type.name,
-          row.original.version.version,
-        ].join(" ")
+        const deleted = [
+          row.original.manufacturer?.is_deleted,
+          row.original.aircraft_type?.is_deleted,
+          row.original.version?.is_deleted,
+        ].some((isDeleted) => !!isDeleted) ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : (
+          ""
+        )
+        return (
+          <p>
+            <span>
+              {[
+                row.original.manufacturer.name,
+                row.original.aircraft_type.name,
+                row.original.version.version,
+              ].join(" ")}
+            </span>
+            {deleted}
+          </p>
+        )
       },
     },
     {
