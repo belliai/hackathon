@@ -2,8 +2,8 @@ import { z } from "zod"
 
 export const aircraftTailNumberSchema = z.object({
   id: z.string().optional().or(z.undefined()),
-  status_id: z.string().min(1, "required"),
-  tail_number: z.string().min(1, "required"),
+  status_id: z.string().optional(),
+  tail_number: z.string().optional()
 })
 
 export const aircraftFormSchema = z.object({
