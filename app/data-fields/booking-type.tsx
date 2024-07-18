@@ -36,9 +36,9 @@ const BookingType = () => {
         const { id, option } = data
 
         if (id) {
-          update.mutate({ id, name: option, description: data.description, booking_type: data.booking_type })
+          update.mutate({ id, name: option })
         } else {
-          add.mutate({ name: option, description: data.description, booking_type: data.booking_type })
+          add.mutate({ name: option })
         }
       }}
       onDelete={(data) => {
