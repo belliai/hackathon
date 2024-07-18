@@ -48,31 +48,35 @@ export interface Flight {
 }
 
 export interface CreateFlightMasterPayload {
-  aircraft_id: string
-  capacity: number
+  ID?: string
+  aircraft_id?: string
+  aircraft_type?: string
+  capacity?: number
   destination_id: string
   flight_no: string
   flight_type_id: string
-  sector_id: string
+  sector_id?: string
   source_id: string
-  status_id: string
+  status_id?: string
   tail_id: string
   from_date: string
   to_date: string
-  uom_id: string
-  arrival_d: number
+  uom_id?: string
+  arrival_d?: number
   arrival_h: number
   arrival_m: number
-  departure_d: number
+  origin_timezone?: string
+  departure_d?: number
   departure_h: number
   departure_m: number
-  mon: boolean
-  tue: boolean
-  wed: boolean
-  thu: boolean
-  fri: boolean
-  sat: boolean
-  sun: boolean
+  destination_timezone?: string
+  mon?: boolean
+  tue?: boolean
+  wed?: boolean
+  thu?: boolean
+  fri?: boolean
+  sat?: boolean
+  sun?: boolean
 }
 
 export interface CreateRecurringFlightMasterPayload {

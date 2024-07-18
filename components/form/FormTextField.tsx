@@ -12,6 +12,7 @@ import { CalendarIcon, Info } from "lucide-react"
 import { UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
+import NumberInputStepper from "@/app/belli/flight-schedule-editor/components/number-input-stepper"
 
 import { Button } from "../ui/button"
 import { Calendar } from "../ui/calendar"
@@ -56,6 +57,8 @@ export interface FormTextFieldProps {
   disabled?: boolean
   orientation?: "horizontal" | "vertical"
   hideErrorMessage?: boolean
+  min?: number
+  max?: number
 }
 
 export default function FormTextField({
@@ -74,6 +77,8 @@ export default function FormTextField({
   disabled,
   orientation = "vertical",
   hideErrorMessage = false,
+  min,
+  max
 }: FormTextFieldProps) {
   const fieldClassName = cn(
     "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700 w-full",
@@ -206,7 +211,7 @@ export default function FormTextField({
                           onChange={(e) =>
                             form.setValue(`${name}.toTime`, e.target.value)
                           }
-                          className={cn(fieldClassName, "w-20 white")}
+                          className={cn(fieldClassName, "white w-20")}
                           disabled={disabled}
                         />
                       </div>
@@ -321,6 +326,40 @@ export default function FormTextField({
                   </SelectContent>
                 </Select>
               )
+            case "stepper-number":
+              return (
+                <FormControl>
+                  <div className="flex items-center gap-1">
+                    <div className="relative w-full">
+                      <Input
+                        {...field}
+                        disabled={disabled}
+                        type="number"
+                        className={cn(fieldClassName, "file:text-white")}
+                        placeholder={placeholder}
+                      />
+                      <span className="absolute right-2 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-zinc-400">
+                        <NumberInputStepper
+                          min={min}
+                          max={max}
+                          value={parseInt(field.value)}
+                          onChange={field.onChange}
+                        />
+                      </span>
+                    </div>
+                    {hasList && (
+                      <Button
+                        size="icon"
+                        type="button"
+                        className="text-zinc-400"
+                      >
+                        <ListBulletIcon className="h-6 w-6" />
+                      </Button>
+                    )}
+                  </div>
+                </FormControl>
+              )
+
             default:
               return (
                 <FormControl>
