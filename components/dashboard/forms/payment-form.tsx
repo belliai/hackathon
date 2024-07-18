@@ -56,6 +56,25 @@ const PaymentForm = React.forwardRef<HTMLDivElement, any>(
       <Card className="grid grid-cols-1 gap-x-3 gap-y-2 p-4" ref={ref}>
         <div className="grid grid-cols-3 gap-x-3 gap-y-2">
           <Combobox
+            name="use_freight_forwarder"
+            options={[{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }]}
+            label="Use Freight Forwarder"
+          />
+          {formValues.use_freight_forwarder === 'yes' && (
+            <Combobox
+              name="freight_forwarder_id"
+              options={customerOptions}
+              label="Freight Forwarder"
+            />
+          )}
+          <Combobox
+            name="organization_id"
+            options={customerOptions}
+            label="Organization"
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-x-3 gap-y-2">
+          <Combobox
             name="bill_to_id"
             options={customerOptions}
             label="Bill To"

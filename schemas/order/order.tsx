@@ -68,6 +68,7 @@ export const orderSchema = z.object({
   status_id: z.string().min(1),
   total: z.string(),
   volume_kg: z.string(),
+  use_freight_forwarder: z.string(),
 })
 
 export type Order = z.infer<typeof orderSchema>

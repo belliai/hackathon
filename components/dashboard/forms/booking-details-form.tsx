@@ -57,7 +57,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
   const commodityCodeOptions = commodityCodes?.map((code: any) => ({
     value: code.ID,
-    label: code.name,
+    label: `${code.name}: ${code.description}`,
   }));
 
   const IS_PHYSICAL_LIST = [
@@ -87,11 +87,11 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           name="awb"
           render={({ field }) => (
           <FormItem>
-              <FormLabel tooltipId="new-orders-awb-number">AWB#</FormLabel>
-              <FormControl>
-              <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
-              </FormControl>
-              <FormMessage />
+            <FormLabel tooltipId="new-orders-awb-number">AWB#</FormLabel>
+            <FormControl>
+            <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
+            </FormControl>
+            <FormMessage />
           </FormItem>
           )}
       />
@@ -117,25 +117,24 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       />
       <FormField
           control={form.control}
-          name="commodity_name"
+          name="pieces"
           render={({ field }) => (
           <FormItem>
-              <FormLabel info="hellow world!, this is info">
-              Commodity Description
-              </FormLabel>
-              <FormControl>
-              <Input
-                  readOnly
-                  defaultValue={commodity && commodity.description}
-                  {...field}
-                  className="border-2 border-foreground/30 h-[40px]"
-              />
-              </FormControl>
-              <FormMessage />
+            <FormLabel info="hellow world!, this is info">
+              Pieces
+            </FormLabel>
+            <FormControl>
+            <Input
+                {...field}
+                type="number"
+                className="border-2 border-foreground/30 h-[40px]"
+            />
+            </FormControl>
+            <FormMessage />
           </FormItem>
           )}
       />
-      <Combobox
+      {/* <Combobox
           name="pieces"
           options={[
           { label: "Origin Type 1", value: "origin-1" },
@@ -143,7 +142,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           { label: "Origin Type 3", value: "origin-3" }
           ]}
           label="Pieces"
-      />
+      /> */}
       <FormField
           control={form.control}
           name="gs_weight_kg"

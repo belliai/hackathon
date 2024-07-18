@@ -19,10 +19,18 @@ const Currency = () => {
     <CrudTable
       isLoading={isPending}
       title="Currency"
-      columns={[{ accessorKey: "option", header: 'Name' }]}
+      columns={[
+        { accessorKey: "option", header: 'Name' },
+        { accessorKey: "symbol", header: 'Symbol' },
+        { accessorKey: "description", header: 'Description' },
+        { accessorKey: "is_default", header: 'Default' },
+      ]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Currency" },
+        { name: "symbol", type: "text", label: "Symbol" },
+        { name: "description", type: "text", label: "Description" },
+        { name: "is_default", type: "select", label: "Default", selectOptions: [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }] },
       ]}
       data={data?.map((item: any) => ({ option: item.name, id: item.ID }))}
       onSave={(data) => {

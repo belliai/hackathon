@@ -152,19 +152,19 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       content: <ConsigneeForm />,
       fieldList: ['destination_id', 'consignee_id'],
     },
-    {
-      label: 'Freight Forwarder',
-      value: 'freight-forwarder',
-      icon: PackageIcon,
-      content: <FreightForwarderForm />,
-      fieldList: ['freight_forwarder_id', 'organization_id'],
-    },
+    // {
+    //   label: 'Freight Forwarder',
+    //   value: 'freight-forwarder',
+    //   icon: PackageIcon,
+    //   content: <FreightForwarderForm />,
+    //   fieldList: ['freight_forwarder_id', 'organization_id'],
+    // },
     {
       label: 'Payment',
       value: 'payment',
       icon: Banknote,
       content: <PaymentForm />,
-      fieldList: ['bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg']
+      fieldList: ['use_freight_forwarder', 'freight_forwarder_id', 'organization_id', 'bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg']
     }
   ]
 
