@@ -473,6 +473,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   name="status_id"
                   type="select"
                   className="rounded-md"
+                  defaultValue={"a2a781e6-c892-46e4-ab3e-fb344727cfd8"}
                   selectOptions={aircraftStatusOptions}
                 />
               </div>
@@ -602,6 +603,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                                 <InputSwitch<AircraftFormValues>
                                   name={`aircraft_tail_numbers.${index}.status_id`}
                                   type="select"
+                                  defaultValue={"a2a781e6-c892-46e4-ab3e-fb344727cfd8"}
                                   selectOptions={aircraftStatusOptions}
                                 />
                               </TableCell>
@@ -627,7 +629,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                               type="button"
                               onClick={() => {
                                 fieldArray.append({
-                                  status_id: "",
+                                  status_id: "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
                                   tail_number: "",
                                 })
                               }}
