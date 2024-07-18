@@ -125,7 +125,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     "aircraft-type": isEdit ? true : false,
     "aircraft-tail-numbers": isEdit ? true : false,
     "aircraft-details": isEdit ? true : false,
-  })
+  });
+
 
   const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
   // default values
@@ -399,6 +400,43 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     return false
   }
 
+  const handleTabChange = async (newTab: string) => {
+
+    const safeNewTab = newTab as Tabs;
+
+    if (safeNewTab === tabValue) return; // No change if the same tab is clicked
+
+    const currentIndex = stepsOrder.indexOf(tabValue);
+    const newIndex = stepsOrder.indexOf(safeNewTab);
+    const movingForward = newIndex > currentIndex;
+
+    // Direct navigation if moving backwards or to an already validated step
+    if (!movingForward || validatedSteps[safeNewTab]) {
+        setTabValue(safeNewTab);
+        return;
+    }
+
+    // Validate the current tab before moving forward
+    const isValidated = await form.trigger(tabValidations[tabValue]);
+    setValidatedSteps((prev) => ({
+        ...prev,
+        [tabValue]: isValidated,
+    }));
+
+    // If validation is successful, unlock the next tab and navigate to it
+    if (isValidated) {
+        // Unlock the next tab if available
+        const nextTab = stepsOrder[newIndex];
+        setValidatedSteps(prev => ({
+            ...prev,
+            [nextTab]: true // Ensure the next tab is set to true in validatedSteps
+        }));
+        setTabValue(safeNewTab);
+    }
+};
+
+
+
   return (
     <Dialog
       open={!!currentOpen}
@@ -425,14 +463,15 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
             </DialogHeader>
             <Tabs
               value={tabValue}
-              onValueChange={async (val) => {
-                const isValidated = await form.trigger(tabValidations[tabValue])
-                setValidatedSteps((prev) => ({
-                  ...prev,
-                  [tabValue]: isValidated,
-                }))
-                if (isValidated) setTabValue(val as Tabs)
-              }}
+              // onValueChange={async (val) => {
+              //   const isValidated = await form.trigger(tabValidations[tabValue])
+              //   setValidatedSteps((prev) => ({
+              //     ...prev,
+              //     [tabValue]: isValidated,
+              //   }))
+              //   if (isValidated) setTabValue(val as Tabs)
+              // }}
+              onValueChange={handleTabChange}
               className="flex h-full flex-row items-start justify-start gap-4 space-y-0"
             >
               <div className="space-y-2">
