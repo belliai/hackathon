@@ -27,6 +27,8 @@ const BookingType = () => {
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Booking Type" },
+        { name: "booking_type", type: "text", label: "Booking Type" },
+        { name: "description", type: "text", label: "Description" }
       ]}
       data={data?.map((item: any) => ({ option: item.name, id: item.ID }))}
       onSave={(data) => {
@@ -34,9 +36,9 @@ const BookingType = () => {
         const { id, option } = data
 
         if (id) {
-          update.mutate({ id, name: option })
+          update.mutate({ id, name: option, description: data.description, booking_type: data.booking_type })
         } else {
-          add.mutate({ name: option })
+          add.mutate({ name: option, description: data.description, booking_type: data.booking_type })
         }
       }}
       onDelete={(data) => {

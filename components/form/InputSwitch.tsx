@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { Combobox, ComboboxProps } from "./combobox"
 
 type BaseInputProps<DataType> = InputProps & {
   name: Path<DataType>
@@ -53,6 +54,10 @@ export type InputSwitchProps<DataType extends FieldValues> =
       type: "combobox-admin"
     }) &
       Omit<ComboAdminBoxInputProps<DataType, Path<DataType>>, "field">)
+  | (BaseInputProps<DataType> & {
+      type: "combobox"
+      selectOptions: SelectOptions
+    } & ComboboxProps)
 
 export default function InputSwitch<DataType extends FieldValues>(
   props: InputSwitchProps<DataType>
@@ -60,6 +65,22 @@ export default function InputSwitch<DataType extends FieldValues>(
   const form = useFormContext<DataType>()
   const input = () => {
     switch (props.type) {
+      case "combobox":
+        return (
+          <Combobox
+            {...props}
+            min={Number(props.min)}
+            max={Number(props.max)}
+            name={props.name}
+            label={props.label}
+            options={props.selectOptions}
+            className={cn(
+              "h-9 rounded-sm border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+              props.className
+            )}
+          />
+        )
+
       case "combobox-admin":
         return (
           <FormField
@@ -120,8 +141,15 @@ export default function InputSwitch<DataType extends FieldValues>(
                   disabled={props.disabled}
                 >
                   <FormControl>
-                    <SelectTrigger className={props.className}>
-                      <SelectValue />
+                    <SelectTrigger
+                      className={cn(
+                        {
+                          "text-muted-foreground": !field.value, // Placeholder styling
+                        },
+                        props.className
+                      )}
+                    >
+                      <SelectValue placeholder={props.placeholder} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -182,6 +210,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                 <FormControl>
                   <Input
                     {...field}
+                    className={props.className}
                     rightIcon={
                       <SearchIcon className="size-4 min-w-10 text-muted-foreground" />
                     }
@@ -204,7 +233,7 @@ export default function InputSwitch<DataType extends FieldValues>(
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    className="border-zinc-700"
+                    className={cn("border-zinc-700", props.className)}
                   />
                 </FormControl>
                 {!!props.label && (
@@ -241,7 +270,7 @@ export default function InputSwitch<DataType extends FieldValues>(
       //             <Input
       //               type="number"
       //               {...field}
-      //               {...rest} 
+      //               {...rest}
       //             />
       //           </FormControl>
       //           <FormMessage />

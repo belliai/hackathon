@@ -76,7 +76,7 @@
     "geist": "^1.2.2",
     "jotai": "^2.6.4",
     "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.334.0",
+    "lucide-react": "^0.407.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "nanoid": "^5.0.7",

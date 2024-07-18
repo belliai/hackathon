@@ -1,5 +1,6 @@
-import { PropsWithChildren, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import { Trigger as PrimitiveTrigger } from "@radix-ui/react-accordion"
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
 import {
   ColumnDef,
   flexRender,
@@ -56,9 +57,16 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
-import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { DataTable } from "@/components/data-table/data-table"
+import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
 
 type CrudTableProps<T extends FieldValues> = {
   title: string
@@ -69,6 +77,8 @@ type CrudTableProps<T extends FieldValues> = {
   form: InputSwitchProps<T>[]
   onSave: (data: T) => void
   onDelete: (data: T) => void
+  hideAddForm?: boolean
+  hideCardHeader?: boolean
 }
 
 const FormDialog = <T extends FieldValues>(
@@ -77,21 +87,29 @@ const FormDialog = <T extends FieldValues>(
     onSave: CrudTableProps<T>["onSave"]
     data?: DefaultValues<T>
     title: string
+    open: boolean
+    setOpen: (open: boolean) => void
+    onDelete?: (data: T) => void
   }
 ) => {
-  const [open, setOpen] = useState(false)
   const form = useForm<T>({
     defaultValues: props.data,
   })
 
   const onSubmit = (data: T) => {
     props.onSave(data)
-    setOpen(false)
+    props.setOpen(false)
     form.reset()
   }
 
+  useEffect(() => {
+    if (props.data) {
+      form.reset(props.data)
+    }
+  }, [props.data])
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={props.open} onOpenChange={props.setOpen}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent className="p-4">
         <Form {...form}>
@@ -108,11 +126,22 @@ const FormDialog = <T extends FieldValues>(
                 <InputSwitch<T> key={formField.name} {...formField} />
               ))}
             </div>
+            {props.onDelete && props.data && (
+              <Button
+                onClick={() => props.onDelete?.(props.data as T)}
+                variant={"ghost"}
+                size={"fit"}
+                className="mt-4"
+              >
+                <TrashIcon className="mr-2 size-4" />
+                Delete
+              </Button>
+            )}
             <DialogFooter>
               <Button
                 onClick={() => {
                   form.reset()
-                  setOpen(false)
+                  props.setOpen(false)
                 }}
                 type="button"
                 variant={"secondary"}
@@ -154,7 +183,9 @@ const FormDropdown = <T extends FieldValues>(
       <AccordionItem value="item" className="space-y-4 border-b-0">
         <div className="flex w-full flex-row justify-end">
           <PrimitiveTrigger asChild>
-            <Button variant={"button-primary"} style={{ fontSize: '0.875rem' }}>Add New</Button>
+            <Button variant={"button-primary"} style={{ fontSize: "0.875rem" }}>
+              Add New
+            </Button>
           </PrimitiveTrigger>
         </div>
         <AccordionContent className="border-none p-0">
@@ -198,38 +229,16 @@ const FormDropdown = <T extends FieldValues>(
 export default function CrudTable<T extends FieldValues>(
   props: CrudTableProps<T>
 ) {
+  const [openForm, setOpenForm] = useState<T | boolean>(false)
+
   const { data, title } = props
 
-  const columns: ColumnDef<T>[] = [
-    ...props.columns,
-    {
-      accessorKey: "action",
-      header: "Action",
-      cell: ({ row }) => (
-        <div className="flex w-full flex-row items-center gap-3">
-          <FormDialog
-            title={title}
-            form={props.form}
-            onSave={props.onSave}
-            data={row.original as DefaultValues<T>}
-          >
-            <Button variant={"ghost"} size={"fit"}>
-              <EditIcon className="mr-2 size-4" />
-              Edit
-            </Button>
-          </FormDialog>
-          <Button
-            onClick={() => props.onDelete(row.original)}
-            variant={"ghost"}
-            size={"fit"}
-          >
-            <TrashIcon className="mr-2 size-4" />
-            Delete
-          </Button>
-        </div>
-      ),
-    },
-  ]
+  const columns: ColumnDef<T>[] = props.columns
+
+  function handleRowClick(row: T) {}
+
+  // Check if any columns passed from props have explicitly defined headers
+  const hasExplicitHeaders = props.columns.some((column) => column.header)
 
   return (
     <section id={props.id} className="space-y-4">
@@ -238,23 +247,48 @@ export default function CrudTable<T extends FieldValues>(
           <Loader className="h-6 w-6 animate-spin text-zinc-600" />
         </div>
       ) : (
-        <DataTable
-          showToolbarOnlyOnHover={true}
-          columns={columns}
-          data={data}
-          extraRightComponents={<FormDialog
+        <>
+          <DataTable
+            showToolbarOnlyOnHover={true}
+            columns={columns}
+            data={data}
+            hidePagination={true}
+            pageCount={1}
+            pageSize={20}
+            onRowClick={(row) => setOpenForm(row)}
+            extraRightComponents={
+              !props.hideAddForm && (
+                <FormDialog
+                  title={title}
+                  form={props.form}
+                  onSave={props.onSave}
+                  open={openForm === true}
+                  setOpen={(open) => setOpenForm(open)}
+                >
+                  <Button variant="button-primary" size="sm">
+                    <PlusIcon className="size-4" />
+                    Add New
+                  </Button>
+                </FormDialog>
+              )
+            }
+            className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
+          />
+          <FormDialog
             title={title}
             form={props.form}
             onSave={props.onSave}
+            onDelete={props.onDelete}
+            open={typeof openForm !== "boolean"}
+            data={openForm as DefaultValues<T>}
+            setOpen={(open) => setOpenForm(open ? openForm : false)}
           >
-            <Button variant="button-primary" size="sm">
-              <PlusIcon className="size-4" />
-              Add New
-            </Button>
-          </FormDialog>}
-          className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
-        />
+            <></>
+          </FormDialog>
+        </>
       )}
     </section>
   )
 }
+
+export { FormDialog, FormDropdown }

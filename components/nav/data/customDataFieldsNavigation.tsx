@@ -27,12 +27,12 @@ export const customDataFieldsNavigation: TSidebarItem[] = [
         name: "Flights",
         href: "/data-fields/flights",
         icon: PlaneTakeoff
-      }
-      // {
-      //   name: "Aircrafts",
-      //   href: "/data-fields/aircrafts",
-      //   icon: Plane,
-      // },
+      },
+      {
+        name: "Aircrafts",
+        href: "/data-fields/aircrafts",
+        icon: Plane,
+      },
     ],
   },
 ]
