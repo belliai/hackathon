@@ -1,3 +1,5 @@
+import { Frequency, Options, RRule, Weekday } from "rrule"
+
 export function formatDate(dateString: string): string {
   const date = new Date(dateString)
 
@@ -99,4 +101,130 @@ export function getCurrentTimestamp(): string {
 
 export function getDefaultTimeZone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+
+
+// Define EndOption type
+type EndOption =
+  | "never"
+  | { type: "date"; endDate: Date }
+  | { type: "occurrences"; occurrences: number };
+
+// Define DayOfWeek type
+type DayOfWeek = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";
+
+// Define the parameters for the function
+interface RecurringOptionsParams {
+  startAt: Date;
+  everyNumber?: number;
+  everyPeriod?: "day" | "week" | "month" | "year";
+  days?: DayOfWeek[];
+  end?: EndOption;
+}
+
+// Map DayOfWeek to RRule Weekdays
+const dayMapping: { [key in DayOfWeek]: Weekday } = {
+  MO: RRule.MO,
+  TU: RRule.TU,
+  WE: RRule.WE,
+  TH: RRule.TH,
+  FR: RRule.FR,
+  SA: RRule.SA,
+  SU: RRule.SU,
+};
+
+
+
+export function generateRecurringOptions({
+  startAt,
+  everyNumber,
+  everyPeriod,
+  days,
+  end
+}: RecurringOptionsParams) {
+  const dayOfMonth = startAt.getDate();
+
+  // Define the recurring options
+  const options = [
+    {
+      label: `Does not repeat`,
+      value: `no-repeat`,
+    },
+    {
+      label: `${new RRule({ freq: RRule.DAILY, dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.DAILY, dtstart: startAt }).toString(),
+    },
+    {
+      label: `${new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO], dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO], dtstart: startAt }).toString(),
+    },
+    {
+      label: `${new RRule({ freq: RRule.MONTHLY, bymonthday: [dayOfMonth], dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.MONTHLY, bymonthday: [dayOfMonth], dtstart: startAt }).toString(),
+    },
+    {
+      label: `${new RRule({ freq: RRule.YEARLY, bymonthday: [dayOfMonth], bymonth: [startAt.getMonth() + 1], dtstart: startAt }).toText()} `,
+      value: new RRule({ freq: RRule.YEARLY, bymonthday: [dayOfMonth], bymonth: [startAt.getMonth() + 1], dtstart: startAt }).toString(),
+    },
+    {
+      label: `${new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR], dtstart: startAt }).toText()}`,
+      value: new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR], dtstart: startAt }).toString(),
+    },
+    {
+      label: "Custom...",
+      value: "custom",
+    },
+  ];
+
+  // Initialize the variable for the generated option
+  let generatedOption: { label: string, value: string } | null = null;
+
+  // If everyNumber and everyPeriod are provided, generate a custom recurring option
+  if (everyNumber && everyPeriod) {
+    let rruleOptions: Partial<Options> = {
+      interval: everyNumber,
+      dtstart: startAt,
+      until: undefined,
+      count: undefined,
+      freq: RRule[everyPeriod.toUpperCase() as keyof typeof RRule] as Frequency,
+    };
+
+    // Define the RRule options
+    if (everyPeriod === "week" && days && days.length > 0) {
+      const daysOfWeek = days.map(day => dayMapping[day]);
+      rruleOptions.byweekday = daysOfWeek;
+    }
+
+    // Set the end option
+    if (end) {
+      if (end === "never") {
+        rruleOptions.until = undefined;
+        rruleOptions.count = undefined;
+      } else if (end.type === "date") {
+        rruleOptions.until = end.endDate;
+        rruleOptions.count = undefined;
+      } else if (end.type === "occurrences") {
+        rruleOptions.until = undefined;
+        rruleOptions.count = end.occurrences;
+      }
+    }
+
+    // Create the RRule instance
+    const rrule = new RRule(rruleOptions);
+
+    // Generate the custom option with duration
+    generatedOption = {
+      label: `${rrule.toText()}`,
+      value: rrule.toString(),
+    };
+
+    // Add the generated option to the options list
+    options.push(generatedOption);
+  }
+
+  return {
+    options,
+    generatedOption,
+  };
 }

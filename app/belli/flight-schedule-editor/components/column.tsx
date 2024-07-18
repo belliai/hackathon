@@ -290,12 +290,12 @@ export const useListViewColumns = (
 ): ColumnDef<Flight>[] => {
   return [
     {
-      accessorKey: "next_at",
+      accessorKey: "from_date",
       header: () => (
         <TableHeaderWithTooltip header="Date" tooltipId="next_at" />
       ),
       cell: ({ row }) => {
-        const date = row.original.next_at || ""
+        const date = row.original.from_date || ""
         return moment(date).format("YYYY-MM-DD")
       },
     },
@@ -305,7 +305,7 @@ export const useListViewColumns = (
         <TableHeaderWithTooltip header="Day Of week" tooltipId="day-of-week" />
       ),
       cell: ({ row }) => {
-        const date = row.original.next_at || ""
+        const date = row.original.from_date || ""
         return moment(date).format("ddd")
       },
     },

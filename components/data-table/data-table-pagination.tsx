@@ -96,17 +96,7 @@ export function DataTablePagination<TData>({
         <div />
       )}
       <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-0.5 text-muted-foreground">
-        <div
-          className={cn(
-            "flex items-center space-x-2 opacity-0 transition-opacity delay-0 duration-200",
-            isHover === undefined
-              ? "opacity-100"
-              : isHover
-                ? "opacity-100"
-                : "opacity-0"
-          )}
-        >
-          <p className="text-sm font-medium">Rows per page</p>
+      <p className="text-sm font-medium">Rows per page</p>
           <Select
             value={`${currentPageSize}`}
             onValueChange={(value) => {
@@ -125,6 +115,16 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
+        <div
+          className={cn(
+            "flex items-center space-x-2 opacity-0 transition-opacity delay-0 duration-200",
+            isHover === undefined
+              ? "opacity-100"
+              : isHover
+                ? "opacity-100"
+                : "opacity-0"
+          )}
+        >
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
           Page {currentPage} of {table.getPageCount()}
         </div>
