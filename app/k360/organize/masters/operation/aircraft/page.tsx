@@ -569,7 +569,7 @@ export default function MasterAircraftPage() {
       ...data,
       count: Number(data.count),
       // Generate uuid for tail numbers
-      aircraft_tail_numbers: data.aircraft_tail_numbers.map((tailNumber) => ({
+      aircraft_tail_numbers: data?.aircraft_tail_numbers?.map((tailNumber) => ({
         ...tailNumber,
         id: tailNumber.id || undefined,
       })),

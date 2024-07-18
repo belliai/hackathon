@@ -252,9 +252,10 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }))
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
-    if (
-      checkForDuplicatesTail({
-        items: data.aircraft_tail_numbers,
+
+    if(!data.aircraft_tail_numbers) return;
+    if ( checkForDuplicatesTail({
+        items: data?.aircraft_tail_numbers ,
         keyToCheck: "tail_number",
         errorMsg: "There are duplicate tail numbers",
       })
@@ -262,8 +263,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
       return
     }
 
-    const tailNumberCount = data.aircraft_tail_numbers.length
-    if (form.getValues("count") > tailNumberCount) {
+    const tailNumberCount = data && data?.aircraft_tail_numbers?.length || 0
+    if (  form.getValues("count") ?? 0 > tailNumberCount){
       setHasDelete(true)
     }
     const payload: CreateAircraftRequest = {
