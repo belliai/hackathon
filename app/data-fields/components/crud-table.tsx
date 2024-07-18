@@ -165,6 +165,7 @@ const FormDropdown = <T extends FieldValues>(
     form: CrudTableProps<T>["form"]
     onSave: CrudTableProps<T>["onSave"]
     data?: DefaultValues<T>
+    className?: string
   }
 ) => {
   const [value, setValue] = useState("")
@@ -191,15 +192,22 @@ const FormDropdown = <T extends FieldValues>(
         <AccordionContent className="border-none p-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <Card className="flex flex-row items-center justify-start gap-3 rounded-md p-4 shadow-md">
-                {props.form.map((formField) => (
-                  <InputSwitch
-                    key={formField.name}
-                    {...formField}
-                    label={undefined}
-                    placeholder={formField.label}
-                  />
-                ))}
+              <Card
+                className={cn(
+                  "flex flex-row items-center justify-start gap-3 rounded-md p-4 shadow-md",
+                  props.className
+                )}
+              >
+                <div className="flex gap-3 items-center">
+                  {props.form.map((formField) => (
+                    <InputSwitch
+                      key={formField.name}
+                      {...formField}
+                      label={undefined}
+                      placeholder={formField.label}
+                    />
+                  ))}
+                </div>
                 <div className="flex gap-3">
                   <Button
                     type="button"

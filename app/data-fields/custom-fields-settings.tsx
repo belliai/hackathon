@@ -150,7 +150,7 @@ export default function CustomFieldsSettings({
 
   return (
     <div className="flex flex-col gap-8">
-      <FormDropdown form={form} onSave={addCustomField} />
+      <FormDropdown form={form} onSave={addCustomField} className="flex-wrap justify-end" />
       <Accordion type="multiple" className="flex flex-col gap-4">
         {customFields.map((fieldGroup) => {
           return (
