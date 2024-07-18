@@ -131,6 +131,7 @@ const FormDialog = <T extends FieldValues>(
                 onClick={() => props.onDelete?.(props.data as T)}
                 variant={"ghost"}
                 size={"fit"}
+                type="button"
                 className="mt-4"
               >
                 <TrashIcon className="mr-2 size-4" />
@@ -198,7 +199,7 @@ const FormDropdown = <T extends FieldValues>(
                   props.className
                 )}
               >
-                <div className="flex gap-3 items-center">
+                <div className="flex items-center gap-3">
                   {props.form.map((formField) => (
                     <InputSwitch
                       key={formField.name}
@@ -243,7 +244,14 @@ export default function CrudTable<T extends FieldValues>(
 
   const columns: ColumnDef<T>[] = props.columns
 
-  function handleRowClick(row: T) {}
+  function handleRowClick(row: T) {
+    setOpenForm(row)
+  }
+
+  function handleDelete(row: T) {
+    props.onDelete(row)
+    setOpenForm(false)
+  }
 
   // Check if any columns passed from props have explicitly defined headers
   const hasExplicitHeaders = props.columns.some((column) => column.header)
@@ -263,7 +271,7 @@ export default function CrudTable<T extends FieldValues>(
             hidePagination={true}
             pageCount={1}
             pageSize={20}
-            onRowClick={(row) => setOpenForm(row)}
+            onRowClick={handleRowClick}
             extraRightComponents={
               !props.hideAddForm && (
                 <FormDialog
@@ -286,7 +294,7 @@ export default function CrudTable<T extends FieldValues>(
             title={title}
             form={props.form}
             onSave={props.onSave}
-            onDelete={props.onDelete}
+            onDelete={handleDelete}
             open={typeof openForm !== "boolean"}
             data={openForm as DefaultValues<T>}
             setOpen={(open) => setOpenForm(open ? openForm : false)}

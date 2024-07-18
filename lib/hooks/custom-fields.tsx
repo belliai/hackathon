@@ -2,9 +2,12 @@ import { useState } from "react"
 
 import { toast } from "@/components/ui/use-toast"
 import { ComboboxOption } from "@/components/form/combobox"
+import {
+  CustomFieldsSettingsType,
+  FieldGroupType,
+} from "@/app/data-fields/custom-fields-settings"
 
 import { slugify } from "../utils/slugify-utils"
-import { CustomFieldsSettingsType, FieldGroupType } from "@/app/data-fields/custom-fields-settings"
 
 interface CustomFieldsHook {
   defaultFieldGroups: ComboboxOption[]
@@ -77,7 +80,24 @@ export function useCustomFields({
     }
   }
 
-  const deleteCustomField = () => {}
+  const deleteCustomField = (data: CustomFieldsSettingsType) => {
+    const updatedFieldGroups = customFields.map((field) => {
+      const updatedData = field.data.filter((f) => f.id !== data.id)
+
+      return {
+        id: field.id,
+        name: field.name,
+        data: updatedData,
+      }
+    })
+
+    setCustomFields(updatedFieldGroups)
+
+    toast({
+      title: "Success",
+      description: "Field deleted",
+    })
+  }
 
   const updateCustomField = () => {}
 
