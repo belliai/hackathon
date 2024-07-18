@@ -6,7 +6,7 @@ export const formDefaultValues: AircraftFormValues = {
   aircraft_tail_numbers: [
     {
       id: "",
-      status_id: "",
+      status_id: "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
       tail_number: "",
     },
   ],
