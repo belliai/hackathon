@@ -19,7 +19,11 @@ const BookingType = () => {
     <CrudTable
       isLoading={isPending}
       title="Booking Type"
-      columns={[{ accessorKey: "option" }]}
+      columns={[
+        { accessorKey: "option", header: 'Acronym' },
+        { accessorKey: "booking_type", header: 'Booking Type' },
+        { accessorKey: "description", header: 'Description' }
+      ]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Booking Type" },
@@ -28,6 +32,7 @@ const BookingType = () => {
       onSave={(data) => {
         // configure logic for add or edit, for edit the id will be zero
         const { id, option } = data
+
         if (id) {
           update.mutate({ id, name: option })
         } else {

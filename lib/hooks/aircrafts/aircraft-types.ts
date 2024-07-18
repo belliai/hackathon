@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
+import { AircraftTypeList } from "@/types/aircraft/aircraft"
 import { useBelliApi } from "@/lib/utils/network"
 
 const route = "aircrafts/types"

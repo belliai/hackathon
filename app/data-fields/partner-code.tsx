@@ -19,7 +19,7 @@ const PartnerCode = () => {
     <CrudTable
       isLoading={isPending}
       title="Partner Code"
-      columns={[{ accessorKey: "option" }]}
+      columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Partner Code" },

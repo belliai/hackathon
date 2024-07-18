@@ -1,8 +1,10 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import momentTZ from "moment-timezone"
 import { UseFormReturn } from "react-hook-form"
 
+import { Aircraft } from "@/types/aircraft/aircraft"
 import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
 import { useAircraftTypes as useAircraftManufacturerType } from "@/lib/hooks/aircrafts/aircraft-type/types"
 import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
@@ -11,6 +13,7 @@ import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useEnums } from "@/lib/hooks/enums"
 import { useLocations } from "@/lib/hooks/locations"
 import { useUnits } from "@/lib/hooks/units/units"
+import { getDefaultTimeZone } from "@/lib/utils/date-utils"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
@@ -92,11 +95,9 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
 
   const getAircraftTypeLabel = useCallback(
     (data: Aircraft) => {
-      const manufacturer = manufacturers?.find(
-        (item) => item.ID === data.manufacturer
-      )?.name
-      const type = types?.find((item) => item.ID === data.aircraft_type)?.name
-      const version = versions?.find((item) => item.ID === data.version)?.name
+      const manufacturer = data?.manufacturer?.name
+      const type = data?.aircraft_type?.name
+      const version = data?.version?.version
       if (!manufacturer || !type || !version) return "Deleted"
       return [manufacturer, type, version].join(" ")
     },
@@ -130,20 +131,42 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
   }))
 
   const aircraftTypeOptions = aircraftsList?.data.map((list) => ({
-    value: list.ID,
+    value: list.id,
     label: getAircraftTypeLabel(list),
   }))
 
   const selectedAircraftType = aircraftsList?.data.find(
-    (item) => item.ID === formData.aircraftType
+    (item) => item.id === formData.aircraftType
   )
 
   const tailNumberOptions = selectedAircraftType?.aircraft_tail_numbers.map(
     (list) => ({
-      value: String(list.ID),
+      value: String(list.id),
       label: list.tail_number,
     })
   )
+
+  const timeZoneOptions = momentTZ.tz.names().map((tz) => ({
+    value: tz,
+    label: tz,
+  }))
+
+  useEffect(() => {
+    //temp
+    if (formData.source) hookForm.setValue("deptTime.TZ", "Asia/Singapore")
+  }, [formData.source])
+
+  useEffect(() => {
+    //temp
+    if (formData.destination)
+      hookForm.setValue("arrivalTime.TZ", "Asia/Jakarta")
+  }, [formData.destination])
+
+  useEffect(() => {
+    const timeZone = getDefaultTimeZone()
+    hookForm.setValue("deptTime.TZ", timeZone)
+    hookForm.setValue("arrivalTime.TZ", timeZone)
+  }, [])
 
   return (
     <div className="flex flex-col gap-4">
@@ -158,7 +181,7 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
           <Combobox
             name="source"
             options={formattedLocation}
-            label="Source"
+            label="Origin"
             info="Select the source location"
             editLink="/data-fields/shipments?tab=location"
           />
@@ -187,7 +210,7 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
             <FormLabel className="text-sm">Dept Time (D H M)</FormLabel>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-4 gap-1">
               <FormTextField
                 name="deptTime.deptDay"
                 form={hookForm}
@@ -208,11 +231,18 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
                 label=""
                 hideErrorMessage
               />
+
+              <Combobox
+                name="deptTime.TZ"
+                options={timeZoneOptions}
+                label=""
+                info="Select the timezone"
+              />
             </div>
           </div>
           <div className="flex flex-col gap-2">
             <FormLabel className="text-sm">Arrival Time (D H M)</FormLabel>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-4 gap-1">
               <FormTextField
                 name="arrivalTime.arrivalDay"
                 form={hookForm}
@@ -232,6 +262,12 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
                 type="number"
                 label=""
                 hideErrorMessage
+              />
+              <Combobox
+                name="arrivalTime.TZ"
+                options={timeZoneOptions}
+                label=""
+                info="Select the timezone"
               />
             </div>
           </div>

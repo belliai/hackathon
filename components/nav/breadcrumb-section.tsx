@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useMemo } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { Loader, StarIcon } from "lucide-react"
 
@@ -55,7 +55,16 @@ const findCurrentPaths = (
   return null
 }
 
-const getCurrentPaths = (pathname: string) => {
+//Function to format the tab into a proper string
+const transformTabName = (tab: string) => {
+  return tab
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+
+const getCurrentPaths = (pathname: string, searchParams: URLSearchParams) => {
   let currentPaths: TSidebarItem[] = []
   const navMenus: TSidebarItem[] = [
     ...settingNavigation,
@@ -70,6 +79,11 @@ const getCurrentPaths = (pathname: string) => {
   const result = findCurrentPaths(navMenus, pathname)
   if (result) {
     currentPaths = result
+  }
+
+  const tab = searchParams.get('tab')
+  if (tab) {
+    currentPaths.push({ name: transformTabName(tab), href: `${pathname}?tab=${tab}`, children: undefined })
   }
 
   return currentPaths
@@ -91,6 +105,7 @@ const getSection = (pathname: string, items: TSidebarItem[]): boolean => {
 
 export default function BreadCrumbSection() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()  
   const { insertPath, isPathFavorited, deletePathByHref, favorites } =
     useFavorites()
 
@@ -99,7 +114,7 @@ export default function BreadCrumbSection() {
     [pathname, isPathFavorited]
   )
 
-  const currentPaths = getCurrentPaths(pathname)
+  const currentPaths = getCurrentPaths(pathname, searchParams)
 
   return (
     <div className="sticky top-0 z-10 flex h-12 w-full flex-row items-center justify-between gap-4 border-b bg-background/90 px-4 backdrop-blur-sm">

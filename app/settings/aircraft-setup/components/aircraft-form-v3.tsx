@@ -1,10 +1,11 @@
 "use client"
 
-import { count } from "console"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
 import {
+  ChevronLeftCircleIcon,
+  ChevronRightCircleIcon,
   FileClockIcon,
   FileSlidersIcon,
   PlaneIcon,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react"
 import { Path, useFieldArray, UseFormReturn } from "react-hook-form"
 
+import { Aircraft, CreateAircraftRequest } from "@/types/aircraft/aircraft"
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
 import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
@@ -40,6 +42,7 @@ import {
   useUpdateAircraft,
 } from "@/lib/hooks/aircrafts/aircrafts"
 import { useUnits } from "@/lib/hooks/units/units"
+import { cn } from "@/lib/utils"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -74,8 +77,8 @@ import { toast } from "@/components/ui/use-toast"
 import InputSwitch from "@/components/form/InputSwitch"
 
 import { formDefaultValues } from "../constants"
-import { aircraftTypes } from "../constants/aircraft-types"
-import { detailsFields } from "../constants/validation-steps"
+import { detailsFields, tabValidations } from "../constants/validation-steps"
+import OptionDeleteWarning, { Deletee } from "./option-delete-warning"
 
 type AircraftTypeFormProps = {
   currentOpen: string | boolean
@@ -83,10 +86,20 @@ type AircraftTypeFormProps = {
   form: UseFormReturn<AircraftFormValues>
 }
 
+type Tabs = "aircraft-type" | "aircraft-tail-numbers" | "aircraft-details"
+
+const stepsOrder = [
+  "aircraft-type",
+  "aircraft-tail-numbers",
+  "aircraft-details",
+]
+
 export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
 
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
+
+  const [deleteWarning, setDeleteWarning] = useState<Deletee | null>(null)
 
   const [hasDelete, setHasDelete] = useState(false)
 
@@ -106,6 +119,15 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
 
   const { data: aircraftStatuses } = useAircraftStatuses()
 
+  const [tabValue, setTabValue] = useState<Tabs>("aircraft-type")
+
+  const [validatedSteps, setValidatedSteps] = useState({
+    "aircraft-type": isEdit ? true : false,
+    "aircraft-tail-numbers": isEdit ? true : false,
+    "aircraft-details": isEdit ? true : false,
+  })
+
+  const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
   // default values
   const { aircraftDefaults, updateAircraftDefaults } = useAircraftDefaults()
 
@@ -151,15 +173,45 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { mutate: deleteAircraftManufacturer } =
     useDeleteAircraftManufacturers()
 
+  const aircraftManufacturerOptions =
+    aircraftManufacturers?.map((item) => ({
+      value: item.id,
+      label: item.name,
+    })) ?? []
+
+  const selectedManufacturer = aircraftManufacturerOptions.find(
+    (item) => item.value === form.watch("manufacturer_id")
+  )
+
   // types
-  const { data: aircraftTypes } = useAircraftTypes()
+  const { data: aircraftTypes } = useAircraftTypes(selectedManufacturer?.value)
   const { mutate: upsertAircraftType } = useUpsertAircraftTypes()
   const { mutate: deleteAircraftType } = useDeleteAircraftTypes()
 
+  const aircraftTypesOptions =
+    aircraftTypes?.map((item) => ({
+      value: item.id,
+      label: item.name,
+    })) ?? []
+
+  const selectedType = aircraftTypesOptions.find(
+    (item) => item.value === form.watch("aircraft_type_id")
+  )
+
   // versions
-  const { data: aircraftVersions } = useAircraftVersions()
+  const { data: aircraftVersions } = useAircraftVersions(selectedType?.value)
   const { mutate: upsertAircraftVersion } = useUpsertAircraftVersions()
   const { mutate: deleteAircraftVersion } = useDeleteAircraftVersions()
+
+  const aircraftVersionsOptions =
+    aircraftVersions?.map((item) => ({
+      value: item.id,
+      label: item.version,
+    })) ?? []
+
+  const selectedVersion = aircraftVersionsOptions.find(
+    (item) => item.value === form.watch("version_id")
+  )
 
   const { data: unitsW } = useUnits({
     category: "weight",
@@ -198,40 +250,23 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     label: `${unit.Name} - ${unit.Symbol}`,
   }))
 
-  const aircraftManufacturerOptions =
-    aircraftManufacturers?.map((item) => ({
-      value: item.ID,
-      label: item.name,
-    })) ?? []
-
-  const aircraftTypesOptions =
-    aircraftTypes?.map((item) => ({
-      value: item.ID,
-      label: item.name,
-    })) ?? []
-
-  const aircraftVersionsOptions =
-    aircraftVersions?.map((item) => ({
-      value: item.ID,
-      label: item.name,
-    })) ?? []
-
-  const selectedManufacturer = aircraftManufacturerOptions.find(
-    (item) => item.value === form.watch("manufacturer")
-  )
-
-  const selectedType = aircraftTypesOptions.find(
-    (item) => item.value === form.watch("aircraft_type")
-  )
-
-  const selectedVersion = aircraftVersionsOptions.find(
-    (item) => item.value === form.watch("version")
-  )
-
   async function handleSubmitAircraft(data: AircraftFormValues) {
+    if (checkForDuplicateTailNumbers(data.aircraft_tail_numbers)) {
+      toast({
+        title: "Error!",
+        description: "There are duplicate tail numbers",
+        variant: "destructive",
+      })
+      return
+    }
+
+    const tailNumberCount = data.aircraft_tail_numbers.length
+    if (form.getValues("count") > tailNumberCount) {
+      setHasDelete(true)
+    }
     const payload: CreateAircraftRequest = {
       ...data,
-      count: Number(data.aircraft_tail_numbers.length),
+      count: tailNumberCount,
       // Generate uuid for tail numbers
       aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
         ...tailNumber,
@@ -283,15 +318,52 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     }
   }
 
+  const selectedWeightUnitSymbol = (
+    <span className="text-xs text-muted-foreground">
+      {unitsW?.find((unit) => unit.ID === form.watch("weight_unit_id"))?.Symbol}
+    </span>
+  )
+
+  const selectedVolumeUnitSymbol = (
+    <span className="text-xs text-muted-foreground">
+      {
+        unitsVol?.find((unit) => unit.ID === form.watch("volume_unit_id"))
+          ?.Symbol
+      }
+    </span>
+  )
+
+  const selectedDimensionUnitSymbol = (
+    <span className="text-xs text-muted-foreground">
+      {
+        unitsLen?.find((unit) => unit.ID === form.watch("dimension_unit_id"))
+          ?.Symbol
+      }
+    </span>
+  )
+
   useEffect(() => {
-    !currentOpen && form.reset(formDefaultValues)
-  }, [currentOpen, form, formDefaultValues])
+    if (!currentOpen) {
+      form.reset(formDefaultValues)
+      setTabValue("aircraft-type")
+      setHasDelete(false)
+    }
+  }, [currentOpen, form, formDefaultValues, isEdit])
+
+  useEffect(() => {
+    setValidatedSteps({
+      "aircraft-type": isEdit ? true : false,
+      "aircraft-tail-numbers": isEdit ? true : false,
+      "aircraft-details": isEdit ? true : false,
+    })
+  }, [isEdit])
 
   const { mutateAsync: deleteMutateAsync, isPending: isPendingDelete } =
     useDeleteAircraft()
 
-  async function onDelete(id?: Aircraft["ID"]) {
+  async function onDelete(id?: Aircraft["id"]) {
     if (!id) return
+    setHasDelete(true)
     await deleteMutateAsync(
       { id },
       {
@@ -314,10 +386,27 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     )
   }
 
+  function checkForDuplicateTailNumbers(
+    tailNumbers: { tail_number: string }[]
+  ): boolean {
+    const seen = new Set()
+    for (const { tail_number } of tailNumbers) {
+      if (seen.has(tail_number)) {
+        return true
+      }
+      seen.add(tail_number)
+    }
+    return false
+  }
+
   return (
     <Dialog
       open={!!currentOpen}
       onOpenChange={(_open) => {
+        if (!form.formState.isDirty) {
+          onOpenChange(false)
+          return
+        }
         if (!_open) setCloseWarningOpen(true)
       }}
     >
@@ -325,7 +414,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmitAircraft, (data) =>
-              console.log(data)
+              console.log({ data })
             )}
             className="flex h-full w-full flex-col justify-start gap-6"
           >
@@ -335,7 +424,15 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
               </DialogTitle>
             </DialogHeader>
             <Tabs
-              defaultValue="aircraft-type"
+              value={tabValue}
+              onValueChange={async (val) => {
+                const isValidated = await form.trigger(tabValidations[tabValue])
+                setValidatedSteps((prev) => ({
+                  ...prev,
+                  [tabValue]: isValidated,
+                }))
+                if (isValidated) setTabValue(val as Tabs)
+              }}
               className="flex h-full flex-row items-start justify-start gap-4 space-y-0"
             >
               <div className="space-y-2">
@@ -348,7 +445,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     Aircraft Type
                   </TabsTrigger>
                   <TabsTrigger
-                    disabled={!selectedVersion}
+                    disabled={!validatedSteps["aircraft-type"]}
                     value="aircraft-tail-numbers"
                     className="w-full justify-start py-1.5"
                   >
@@ -356,7 +453,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     Tail Numbers
                   </TabsTrigger>
                   <TabsTrigger
-                    disabled={!selectedVersion}
+                    disabled={!validatedSteps["aircraft-tail-numbers"]}
                     value="aircraft-details"
                     className="w-full justify-start py-1.5"
                   >
@@ -376,6 +473,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   name="status_id"
                   type="select"
                   className="rounded-md"
+                  defaultValue={"a2a781e6-c892-46e4-ab3e-fb344727cfd8"}
                   selectOptions={aircraftStatusOptions}
                 />
               </div>
@@ -389,13 +487,16 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   <CardContent className="grid grid-cols-3 gap-2 pt-2">
                     <InputSwitch<AircraftFormValues>
                       label="Manufacturer"
-                      name="manufacturer"
+                      name="manufacturer_id"
                       type="combobox-admin"
                       selectOptions={aircraftManufacturerOptions}
                       isLoading={isLoadingManufacturers}
                       onDelete={(option) => {
-                        deleteAircraftManufacturer(option.value)
-                        setHasDelete(true)
+                        setDeleteWarning({
+                          type: "manufacturer",
+                          id: option.value,
+                          label: option.label,
+                        })
                       }}
                       onCreate={(name) => {
                         upsertAircraftManufacturer({
@@ -411,45 +512,59 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     />
                     <InputSwitch<AircraftFormValues>
                       label="Type"
-                      name="aircraft_type"
+                      name="aircraft_type_id"
                       type="combobox-admin"
                       selectOptions={aircraftTypesOptions}
                       disabled={!selectedManufacturer}
                       onDelete={(option) => {
-                        deleteAircraftType(option.value)
-                        setHasDelete(true)
+                        setDeleteWarning({
+                          type: "type",
+                          id: option.value,
+                          label: option.label,
+                        })
                       }}
                       onCreate={(name) => {
+                        if (!selectedManufacturer) return
                         upsertAircraftType({
                           name,
+                          aircraft_manufacturer_id: selectedManufacturer.value,
                         })
                       }}
                       onEdit={(option) => {
+                        if (!selectedManufacturer) return
                         upsertAircraftType({
                           name: option.label,
-                          ID: option.value,
+                          id: option.value,
+                          aircraft_manufacturer_id: selectedManufacturer.value,
                         })
                       }}
                     />
                     <InputSwitch<AircraftFormValues>
                       label="Version"
-                      name="version"
+                      name="version_id"
                       type="combobox-admin"
                       selectOptions={aircraftVersionsOptions}
                       disabled={!selectedType}
                       onDelete={(option) => {
-                        deleteAircraftVersion(option.value)
-                        setHasDelete(true)
+                        setDeleteWarning({
+                          type: "version",
+                          id: option.value,
+                          label: option.label,
+                        })
                       }}
                       onCreate={(name) => {
+                        if (!selectedType) return
                         upsertAircraftVersion({
-                          name,
+                          version: name,
+                          aircraft_type_id: selectedType.value,
                         })
                       }}
                       onEdit={(option) => {
+                        if (!selectedType) return
                         upsertAircraftVersion({
-                          name: option.label,
-                          ID: option.value,
+                          version: option.label,
+                          id: option.value,
+                          aircraft_type_id: selectedType.value,
                         })
                       }}
                     />
@@ -488,6 +603,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                                 <InputSwitch<AircraftFormValues>
                                   name={`aircraft_tail_numbers.${index}.status_id`}
                                   type="select"
+                                  defaultValue={"a2a781e6-c892-46e4-ab3e-fb344727cfd8"}
                                   selectOptions={aircraftStatusOptions}
                                 />
                               </TableCell>
@@ -513,7 +629,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                               type="button"
                               onClick={() => {
                                 fieldArray.append({
-                                  status_id: "",
+                                  status_id: "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
                                   tail_number: "",
                                 })
                               }}
@@ -559,33 +675,19 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                         <div className="grid grid-cols-3 gap-2">
                           <InputSwitch<AircraftFormValues>
                             label="Weight Unit"
-                            name="mtow"
-                            names={[
-                              "mtow_unit_id",
-                              "cargo_capacity_unit_id",
-                              "max_zero_fuel_weight_unit_id",
-                              "landing_weight_unit_id",
-                              "max_bulk_capacity_weight_unit_id",
-                              "restricted_weight_piece_unit_id",
-                            ]}
+                            name="weight_unit_id"
                             type="select"
                             selectOptions={weightUnitsOptions}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Volume Unit"
-                            name="mtow"
-                            names={[
-                              "max_volume_unit_id",
-                              "max_bulk_capacity_volume_unit_id",
-                              "bulk_cubic_id",
-                            ]}
+                            name="volume_unit_id"
                             type="select"
                             selectOptions={volumeUnitsOptions}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Dimension Unit"
-                            name="mtow"
-                            names={["max_dimension_unit_id", "bulk_unit_id"]}
+                            name="dimension_unit_id"
                             type="select"
                             selectOptions={lengthUnitsOptions}
                           />
@@ -597,12 +699,14 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="MTOW"
                             name="mtow"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Zero Fuel Weight"
                             name="max_zero_fuel_weight"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Body Type"
@@ -613,57 +717,65 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="Passenger Capacity"
                             name="passenger_capacity"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="ULD Positions"
                             name="uld_position"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Landing Weight"
                             name="landing_weight"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Cargo Capacity"
                             name="cargo_capacity"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Bulk Capacity Weight"
                             name="max_bulk_capacity_weight"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Bulk Capacity Volume"
                             name="max_bulk_capacity_volume"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedVolumeUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Volume"
                             name="max_volume"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedVolumeUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Restricted Weight Per Piece"
                             name="restricted_weight_piece"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedWeightUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Dimension per Piece (Length)"
                             name="max_dimension_length"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Dimension per Piece (Breadth)"
                             name="max_dimension_breadth"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Max Dimension per Piece (Height)"
                             name="max_dimension_height"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="GL Code"
@@ -671,10 +783,9 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                             type="select"
                             selectOptions={aircraftBodyTypesOptions}
                           />
-                          <input
+                          <InputSwitch<AircraftFormValues>
                             name="count"
                             type="hidden"
-                            value={fieldArray.fields.length}
                           />
                         </div>
                       </div>
@@ -684,32 +795,38 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="AFT (H)"
                             name="aft_h"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="AFT (W)"
                             name="aft_w"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="FWD (H)"
                             name="fwd_h"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="FWD (W)"
                             name="fwd_w"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Bulk (H)"
                             name="bulk_h"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Bulk (W)"
                             name="bulk_w"
-                            type="text"
+                            type="number"
+                            rightIcon={selectedDimensionUnitSymbol}
                           />
                         </div>
                       </div>
@@ -719,17 +836,17 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                           <InputSwitch<AircraftFormValues>
                             label="FWT"
                             name="fwt"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="FWD"
                             name="fwd"
-                            type="text"
+                            type="number"
                           />
                           <InputSwitch<AircraftFormValues>
                             label="Bulk"
                             name="bulk"
-                            type="text"
+                            type="number"
                           />
                         </div>
                       </div>
@@ -785,13 +902,56 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
               )}
 
               <Button
-                type="submit"
-                variant={"button-primary"}
-                isLoading={isPendingCreate || isPendingUpdate}
+                disabled={tabValue === stepsOrder.at(0)}
+                type="button"
+                variant={"secondary"}
+                onClick={() => {
+                  const stepIndex = stepsOrder.findIndex(
+                    (item) => item === tabValue
+                  )
+                  setTabValue(stepsOrder[stepIndex - 1] as Tabs)
+                }}
               >
-                <SaveIcon className="mr-2 size-4" />
-                Save
+                <ChevronLeftCircleIcon className="mr-2 size-4" />
+                Prev
               </Button>
+
+              <Button
+                type="button"
+                className={cn(
+                  tabValue === stepsOrder.at(-1) && !isAllValidated && "hidden"
+                )}
+                disabled={tabValue === stepsOrder.at(-1)}
+                variant={isAllValidated ? "secondary" : "button-primary"}
+                onClick={async () => {
+                  const stepIndex = stepsOrder.findIndex(
+                    (item) => item === tabValue
+                  )
+                  const nextStepIndex = stepIndex + 1
+                  const isValidated = await form.trigger(
+                    tabValidations[tabValue]
+                  )
+                  setValidatedSteps((prev) => ({
+                    ...prev,
+                    [tabValue]: isValidated,
+                  }))
+                  isValidated && setTabValue(stepsOrder[nextStepIndex] as Tabs)
+                }}
+              >
+                <ChevronRightCircleIcon className="mr-2 size-4" />
+                Next
+              </Button>
+
+              {(tabValue === stepsOrder.at(-1) || isEdit || isAllValidated) && (
+                <Button
+                  type="submit"
+                  variant={"button-primary"}
+                  isLoading={isPendingCreate || isPendingUpdate}
+                >
+                  <SaveIcon className="mr-2 size-4" />
+                  Save
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </Form>
@@ -823,8 +983,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              You have deleted an aircraft type or tail number that is assigned
-              to an upcoming flight
+              You may have deleted an aircraft type or tail number that is
+              assigned to an upcoming flight
             </AlertDialogTitle>
             <AlertDialogDescription>
               This flight needs a new aircraft assigned to it
@@ -832,7 +992,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Ignore</AlertDialogCancel>
-            <Link href={"/belli/flight-master"}>
+            <Link href={"/belli/flight-schedule-editor"}>
               <AlertDialogAction variant={"button-primary"}>
                 Fix This
               </AlertDialogAction>
@@ -840,6 +1000,39 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <OptionDeleteWarning
+        open={!!deleteWarning}
+        onOpenChange={(_open) => {
+          !_open && setDeleteWarning(null)
+        }}
+        onConfirm={({ id, type }) => {
+          switch (type) {
+            case "manufacturer":
+              deleteAircraftManufacturer(id)
+              if (id === form.watch("manufacturer_id")) {
+                form.setValue("manufacturer_id", "")
+              }
+              break
+            case "type":
+              deleteAircraftType(id)
+              if (id === form.watch("aircraft_type_id")) {
+                form.setValue("aircraft_type_id", "")
+              }
+              break
+            case "version":
+              deleteAircraftVersion(id)
+              if (id === form.watch("version_id")) {
+                form.setValue("version_id", "")
+              }
+              break
+          }
+          // should check whether tail numbers with the deleted (manufacturer | type | version) is assigned a flight or not
+          // when the flights API is ready maybe?
+          // if yes then set to true, else false
+          setHasDelete(true)
+        }}
+        deletee={deleteWarning}
+      />
     </Dialog>
   )
 }

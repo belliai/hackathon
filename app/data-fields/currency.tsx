@@ -19,7 +19,7 @@ const Currency = () => {
     <CrudTable
       isLoading={isPending}
       title="Currency"
-      columns={[{ accessorKey: "option" }]}
+      columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Currency" },

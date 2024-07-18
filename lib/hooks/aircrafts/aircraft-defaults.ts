@@ -90,7 +90,7 @@ function convertToAircraftDefaultsData(
   rawData: AircraftFormValues
 ): AircraftDefaults {
   return {
-    id: rawData.version || "",
+    id: rawData.version_id || "",
     created_at: getCurrentTimestamp(),
     updated_at: getCurrentTimestamp(),
     mtow: rawData.mtow || null,

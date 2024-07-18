@@ -17,6 +17,10 @@ import {
 import moment from "moment"
 import { useForm } from "react-hook-form"
 
+import {
+  CreateFlightMasterPayload,
+  Flight,
+} from "@/types/flight-master/flight-master"
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
 import {
   useCreateFlight,
@@ -255,7 +259,7 @@ export default function Page() {
       toDate: new Date(data.to_date),
       frequencyItems: reformatDays(data) || [],
       aircraftType: aircraftTypeId?.id,
-      tailNo: data.tail.ID,
+      tailNo: data.tail.id,
       capacity: data.capacity.toString(),
       uom: data.uom.ID,
       sector: data.sector.ID,

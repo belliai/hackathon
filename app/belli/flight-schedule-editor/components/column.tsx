@@ -3,11 +3,8 @@
 import { ColumnDef } from "@tanstack/react-table"
 import moment from "moment"
 
-import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
-import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-type/types"
-import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
+import { Flight } from "@/types/flight-master/flight-master"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
-import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
 
 export type FlightMasterDataType = {
   entry_type: string
@@ -30,9 +27,6 @@ export const useRecurringFlightsColumns = (
   onRowClick: (data: Flight) => void,
   onDelete: (data: Flight) => void
 ): ColumnDef<Flight>[] => {
-  const { data: manufacturers } = useAircraftManufacturers()
-  const { data: types } = useAircraftTypes()
-  const { data: versions } = useAircraftVersions()
   return [
     {
       accessorKey: "from_date",
@@ -145,18 +139,31 @@ export const useRecurringFlightsColumns = (
         />
       ),
       cell: ({ row }) => {
-        const manufacturer = manufacturers?.find(
-          (item) => item.ID === row.original.aircraft?.manufacturer
-        )?.name
-        const type = types?.find(
-          (item) => item.ID === row.original.aircraft?.aircraft_type
-        )?.name
-        const version = versions?.find(
-          (item) => item.ID === row.original.aircraft?.version
-        )?.name
-        if (!manufacturer || !type || !version)
-          return <span className="text-destructive">Deleted</span>
-        return [manufacturer, type, version].join(" ")
+        if (!row.original.aircraft)
+          return <span className="text-destructive">(deleted)</span>
+        const deleted = [
+          row.original.aircraft?.manufacturer?.is_deleted,
+          row.original.aircraft?.aircraft_type?.is_deleted,
+          row.original.aircraft?.version?.is_deleted,
+        ].some((isDeleted) => !!isDeleted || isDeleted === undefined) ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : (
+          ""
+        )
+        const label = (
+          <span>
+            {[
+              row.original.aircraft?.manufacturer?.name,
+              row.original.aircraft?.aircraft_type?.name,
+              row.original.aircraft?.version?.version,
+            ].join(" ")}
+          </span>
+        )
+        return (
+          <p>
+            {label} {deleted}
+          </p>
+        )
       },
     },
 
@@ -281,17 +288,14 @@ export const useListViewColumns = (
   onRowClick: (data: Flight) => void,
   onDelete: (data: Flight) => void
 ): ColumnDef<Flight>[] => {
-  const { data: manufacturers } = useAircraftManufacturers()
-  const { data: types } = useAircraftTypes()
-  const { data: versions } = useAircraftVersions()
   return [
     {
-      accessorKey: "next_at",
+      accessorKey: "from_date",
       header: () => (
         <TableHeaderWithTooltip header="Date" tooltipId="next_at" />
       ),
       cell: ({ row }) => {
-        const date = row.original.next_at || ""
+        const date = row.original.from_date || ""
         return moment(date).format("YYYY-MM-DD")
       },
     },
@@ -301,7 +305,7 @@ export const useListViewColumns = (
         <TableHeaderWithTooltip header="Day Of week" tooltipId="day-of-week" />
       ),
       cell: ({ row }) => {
-        const date = row.original.next_at || ""
+        const date = row.original.from_date || ""
         return moment(date).format("ddd")
       },
     },
@@ -396,18 +400,31 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const manufacturer = manufacturers?.find(
-          (item) => item.ID === row.original.aircraft?.manufacturer
-        )?.name
-        const type = types?.find(
-          (item) => item.ID === row.original.aircraft?.aircraft_type
-        )?.name
-        const version = versions?.find(
-          (item) => item.ID === row.original.aircraft?.version
-        )?.name
-        if (!manufacturer || !type || !version)
-          return <span className="text-destructive">Deleted</span>
-        return [manufacturer, type, version].join(" ")
+        if (!row.original.aircraft)
+          return <span className="text-destructive">(deleted)</span>
+        const deleted = [
+          row.original.aircraft?.manufacturer?.is_deleted,
+          row.original.aircraft?.aircraft_type?.is_deleted,
+          row.original.aircraft?.version?.is_deleted,
+        ].some((isDeleted) => !!isDeleted || isDeleted === undefined) ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : (
+          ""
+        )
+        const label = (
+          <span>
+            {[
+              row.original.aircraft?.manufacturer?.name,
+              row.original.aircraft?.aircraft_type?.name,
+              row.original.aircraft?.version?.version,
+            ].join(" ")}
+          </span>
+        )
+        return (
+          <p>
+            {label} {deleted}
+          </p>
+        )
       },
     },
 

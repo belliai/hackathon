@@ -48,7 +48,7 @@ export const useUpdateLocation = () => {
   const queryClient = useQueryClient()
   const belliApi = useBelliApi()
   return useMutation({
-    mutationFn: async (prop: { id: string; name: string }) =>
+    mutationFn: async (prop: { id: string; name: string, time_zone_id: string }) =>
       await updateLocation(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch
@@ -61,7 +61,7 @@ export const useAddLocation = () => {
   const queryClient = useQueryClient()
   const belliApi = useBelliApi()
   return useMutation({
-    mutationFn: async (prop: { name: string }) =>
+    mutationFn: async (prop: { name: string, time_zone_id: string }) =>
       await addLocation(await belliApi, prop),
     onSuccess: () => {
       // Invalidate and refetch

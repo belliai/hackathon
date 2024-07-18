@@ -100,13 +100,14 @@ export default function SideBar() {
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
             <ul role="list" className="-mx-2">
-              {sidebarType === SIDEBAR_TYPE.DEFAULT && (
+              {/* {sidebarType === SIDEBAR_TYPE.DEFAULT && (
                 <li>
                   <NewOrderModal
                     open={isDialogOpen}
                     onOpenChange={(open) => {
                       setDialogOpen(open)
                     }}
+                    mode="create"
                   >
                     <Button
                       variant="ghost"
@@ -118,7 +119,7 @@ export default function SideBar() {
                     </Button>
                   </NewOrderModal>
                 </li>
-              )}
+              )} */}
               {sidebarType === SIDEBAR_TYPE.SETTING && (
                 <li className="mb-2 flex items-center gap-x-[7px] text-zinc-500">
                   <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">

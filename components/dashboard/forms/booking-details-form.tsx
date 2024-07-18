@@ -80,7 +80,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={partnerPrefixesOptions}
           label="Partner Prefix"
           info="Select the Partner Prefix"
-          editLink="/settings/data-fields?tab=partner-prefix"
+          editLink="/data-fields/organizations?tab=partner-prefix"
       />
       <FormField
           control={form.control}
@@ -100,7 +100,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={partnerCodesOptions}
           label="Partner Code"
           info="Select the Partner Code"
-          editLink="/settings/data-fields?tab=partner-code"
+          editLink="/data-fields/organizations?tab=partner-code"
       />
       <Combobox
           name="is_physical"
@@ -113,7 +113,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={commodityCodeOptions}
           label="Commodity Code *"
           info="Select the Commodity Code"
-          editLink="/settings/data-fields?tab=commodity-code"
+          editLink="/data-fields/shipments?tab=commodity-code"
       />
       <FormField
           control={form.control}

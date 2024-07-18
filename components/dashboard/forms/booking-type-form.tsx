@@ -28,7 +28,7 @@ const BookingTypeForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         type="button"
         className="h-fit w-full whitespace-normal p-0 text-start"
       >
-        <Card className={`cursor-pointer transition-colors hover:bg-muted ${form.getValues('booking_type_id') === '41eca8ed-1c69-4e0b-9434-130546e175ac' ? 'bg-muted' : ''}`}>
+        <Card className={`cursor-pointer transition-colors hover:bg-muted ${form.getValues('booking_type_id') === '41eca8ed-1c69-4e0b-9434-130546e175ac' ? 'bg-accent' : ''}`}>
           <CardHeader className="flex flex-row gap-4 space-y-0">
             <FileTextIcon className="size-5" />
             <div className="flex-1 space-y-2">

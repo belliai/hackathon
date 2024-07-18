@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
+import {
+  CreateFlightMasterPayload,
+  Flight,
+} from "@/types/flight-master/flight-master"
 import { useBelliApi } from "@/lib/utils/network"
 
 const route = "flights"

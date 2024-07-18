@@ -23,11 +23,14 @@ import { columns, Order } from "@/components/dashboard/columns"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
+import { Button } from "@/components/ui/button"
+import { PlusIcon } from "@radix-ui/react-icons"
 
 export default function Home() {
   const data = getData()
   const { selectedBooking, setSelectedBooking } = useBookingContext()
   const [modalOpen, setModalOpen] = useState(false)
+  const [modalType, setModalType] = useState<"edit" | "create">("create")
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -47,6 +50,7 @@ export default function Home() {
   const openModal = (data: Order) => {
     setSelectedBooking(data)
     setModalOpen(true)
+    if (data) setModalType("edit")
   }
 
   const onShowDelete = (data: any) => {
@@ -66,6 +70,22 @@ export default function Home() {
   const tableState = useCallback(async ({ pagination }: any) => {
     setPagination(pagination)
   }, [])
+
+  const generateButton = (
+    <Button
+      size={"sm"}
+      variant={"button-primary"}
+      className="p-2 text-xs"
+      onClick={() => {
+        setModalOpen(true)
+        setModalType("create")
+      }}
+      style={{ fontSize: "0.875rem" }}
+    >
+      <PlusIcon className="mr-2 size-4" />
+      New Order
+    </Button>
+  )
 
   const columnWithActions = [...columns]
 
@@ -92,8 +112,9 @@ export default function Home() {
         className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
         menuId="airway-bill-dashboard"
         showToolbarOnlyOnHover={true}
+        extraRightComponents={generateButton}
       />
-      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode="edit" />
+      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode={modalType} />
       <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>

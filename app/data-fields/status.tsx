@@ -19,7 +19,7 @@ const Status = () => {
     <CrudTable
       isLoading={isLoading}
       title="Status"
-      columns={[{ accessorKey: "option" }]}
+      columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Status" },

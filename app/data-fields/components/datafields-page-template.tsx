@@ -19,6 +19,7 @@ export interface DataFieldsTab {
   component: JSX.Element
   icon: LucideIcon
   tooltipId: string
+  disabled?: boolean
 }
 
 interface DataFieldsPageTemplateProps {
@@ -30,10 +31,12 @@ export default function DataFieldsPageTemplate({
 }: DataFieldsPageTemplateProps) {
   const tooltips = getTooltipContents()
 
+  const defaultTab = tabs.filter((tab) => !tab.disabled)[0]
+
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState(tabs[0].name)
+  const [activeTab, setActiveTab] = useState(defaultTab.name)
 
   // Get the tab from the search params on initial load
   useEffect(() => {
@@ -60,7 +63,7 @@ export default function DataFieldsPageTemplate({
 
   // Handle tab change
   const handleTabChange = (val: any) => {
-    setActiveTab(val)
+    // setActiveTab(val)
     router.push(
       pathname +
         "?" +
@@ -103,6 +106,7 @@ export default function DataFieldsPageTemplate({
               key={tab.name}
               id={tab.name.toLowerCase().replace(/\s+/g, "-")}
               value={tab.name}
+              disabled={tab?.disabled}
               className="w-full justify-start px-2 py-1.5"
             >
               <tab.icon className="mr-2 size-4" />

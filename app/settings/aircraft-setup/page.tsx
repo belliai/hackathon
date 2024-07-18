@@ -11,6 +11,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { PlaneIcon, PlusIcon, ScrollTextIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
+import { Aircraft } from "@/types/aircraft/aircraft"
 import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-type/types"
 import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
@@ -60,7 +61,7 @@ export default function MasterAircraftPage() {
           (aircraft) =>
             aircraft.aircraft_tail_numbers?.map((tailNumber) => ({
               ...tailNumber,
-              aircraft_id: aircraft.ID,
+              aircraft_id: aircraft.id,
               manufacturer: aircraft.manufacturer,
               aircraft_type: aircraft.aircraft_type,
               version: aircraft.version,
@@ -70,8 +71,8 @@ export default function MasterAircraftPage() {
             })) ?? []
         )
         .sort((a, b) => {
-          if (a.status.Name < b.status.Name) return -1
-          if (a.status.Name > b.status.Name) return 1
+          if (a.status.name < b.status.name) return -1
+          if (a.status.name > b.status.name) return 1
           if (a.manufacturer < b.manufacturer) return -1
           if (a.manufacturer > b.manufacturer) return 1
           if (a.aircraft_type < b.aircraft_type) return -1
@@ -93,57 +94,57 @@ export default function MasterAircraftPage() {
   function handleRowClick(data: Aircraft) {
     console.log({ data })
 
-    setCurrentOpenModal(data.ID)
+    setCurrentOpenModal(data.id)
 
     form.reset({
       ...data,
+      manufacturer_id: data.manufacturer.is_deleted ? "" : data.manufacturer.id,
+      aircraft_type_id:
+        data.aircraft_type.is_deleted || data.manufacturer.is_deleted
+          ? ""
+          : data.aircraft_type.id,
+      version_id:
+        data.version.is_deleted ||
+        data.aircraft_type.is_deleted ||
+        data.manufacturer.is_deleted
+          ? ""
+          : data.version.id,
       aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
-        id: tailNumber.ID,
-        status_id: String(tailNumber.status.ID),
+        id: tailNumber.id,
+        status_id: tailNumber.status.id,
         tail_number: tailNumber?.tail_number,
       })),
-      body_type_id: String(data.body_type.ID),
-      bulk_cubic_id: String(data.bulk_cubic.ID),
-      bulk_unit_id: String(data.bulk_unit.ID),
-      cargo_capacity_unit_id: String(data.cargo_capacity_unit.ID),
-      landing_weight_unit_id: String(data.landing_weight_unit.ID),
-      max_bulk_capacity_volume_unit_id: String(
-        data.max_bulk_capacity_volume_unit.ID
-      ),
-      max_bulk_capacity_weight_unit_id: String(
-        data.max_bulk_capacity_weight_unit.ID
-      ),
-      max_dimension_unit_id: String(data.max_dimension_unit.ID),
-      max_volume_unit_id: String(data.max_volume_unit.ID),
-      max_zero_fuel_weight_unit_id: String(data.max_zero_fuel_weight_unit.ID),
-      mtow_unit_id: String(data.mtow_unit.ID),
-      status_id: String(data.status.ID),
-      gl_code_id: String(data.gl_code.ID),
-      restricted_weight_piece_unit_id: String(
-        data.restricted_weight_piece_unit.ID
-      ),
-      count: String(data.count),
+      body_type_id: data.body_type.id,
+      volume_unit_id: data.volume_unit.id,
+      dimension_unit_id: data.dimension_unit.id,
+      weight_unit_id: data.weight_unit.id,
+      status_id: data.status.id,
+      gl_code_id: data.gl_code.id,
+      count: data.count,
     })
   }
 
-  const handleTailNumberRowClick = (aircraft_id: Aircraft["ID"]) => {
-    const aircraft = aircraftsData?.find((item) => item.ID === aircraft_id)
+  const handleTailNumberRowClick = (aircraft_id: Aircraft["id"]) => {
+    const aircraft = aircraftsData?.find((item) => item.id === aircraft_id)
 
     if (!aircraft) return
 
     handleRowClick(aircraft)
   }
 
-  const { data: manufacturers } = useAircraftManufacturers()
-  const { data: types } = useAircraftTypes()
-  const { data: versions } = useAircraftVersions()
-
   const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     {
       accessorKey: "manufacturer",
-      cell: ({ row }) =>
-        manufacturers?.find((item) => item.ID === row.original.manufacturer)
-          ?.name ?? <span className="text-destructive">Deleted</span>,
+      cell: ({ row }) => {
+        const deleted = row.original.manufacturer.is_deleted ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
+        return (
+          <span>
+            {row.original.manufacturer.name} {deleted}
+          </span>
+        )
+      },
       header: () => (
         <TableHeaderWithTooltip
           header="Manufacturer"
@@ -153,10 +154,16 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "aircraft_type",
-      cell: ({ row }) =>
-        types?.find((item) => item.ID === row.original.aircraft_type)?.name ?? (
-          <span className="text-destructive">Deleted</span>
-        ),
+      cell: ({ row }) => {
+        const deleted = row.original.aircraft_type.is_deleted ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
+        return (
+          <span>
+            {row.original.aircraft_type.name} {deleted}
+          </span>
+        )
+      },
       header: () => (
         <TableHeaderWithTooltip
           header="Aircraft Type"
@@ -166,10 +173,16 @@ export default function MasterAircraftPage() {
     },
     {
       accessorKey: "version",
-      cell: ({ row }) =>
-        versions?.find((item) => item.ID === row.original.version)?.name ?? (
-          <span className="text-destructive">Deleted</span>
-        ),
+      cell: ({ row }) => {
+        const deleted = row.original.version.is_deleted ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
+        return (
+          <span>
+            {row.original.version.version} {deleted}
+          </span>
+        )
+      },
       header: () => (
         <TableHeaderWithTooltip header="Version" tooltipId="aircraft-version" />
       ),
@@ -235,14 +248,14 @@ export default function MasterAircraftPage() {
       ),
       cell: ({ row }) =>
         row.original?.aircraft_tail_numbers?.filter(
-          (item) => item.status.Name.toLowerCase() === "active"
+          (item) => item.status?.name?.toLowerCase() === "active"
         ).length ?? 0,
     },
     {
       accessorKey: "status",
       sortingFn: (a, b) => {
-        const nameA = a.original.status.Name
-        const nameB = b.original.status.Name
+        const nameA = a.original.status.name
+        const nameB = b.original.status.name
         return nameA > nameB ? 1 : nameA < nameB ? -1 : 0
       },
       header: () => (
@@ -251,10 +264,10 @@ export default function MasterAircraftPage() {
       cell: ({ row }) => (
         <Badge
           variant={
-            row.original.status.Name === "Active" ? "success" : "destructive"
+            row.original.status.name === "Active" ? "success" : "destructive"
           }
         >
-          {row.original.status.Name}
+          {row.original.status.name}
         </Badge>
       ),
     },
@@ -273,7 +286,7 @@ export default function MasterAircraftPage() {
       ),
     },
     {
-      accessorKey: "aircraft_type",
+      accessorKey: "manufacturer",
       header: () => (
         <TableHeaderWithTooltip
           header="Aircraft Type"
@@ -281,16 +294,27 @@ export default function MasterAircraftPage() {
         />
       ),
       cell: ({ row }) => {
-        const manufacturer = manufacturers?.find(
-          (item) => item.ID === row.original.manufacturer
-        )?.name
-        const type = types?.find(
-          (item) => item.ID === row.original.aircraft_type
-        )?.name
-        const version = versions?.find(
-          (item) => item.ID === row.original.version
-        )?.name
-        return [manufacturer, type, version].join(" ")
+        const deleted = [
+          row.original.manufacturer?.is_deleted,
+          row.original.aircraft_type?.is_deleted,
+          row.original.version?.is_deleted,
+        ].some((isDeleted) => !!isDeleted) ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : (
+          ""
+        )
+        return (
+          <p>
+            <span>
+              {[
+                row.original.manufacturer.name,
+                row.original.aircraft_type.name,
+                row.original.version.version,
+              ].join(" ")}
+            </span>
+            {deleted}
+          </p>
+        )
       },
     },
     {
@@ -325,10 +349,10 @@ export default function MasterAircraftPage() {
       cell: ({ row }) => (
         <Badge
           variant={
-            row.original.status.Name === "Active" ? "success" : "destructive"
+            row.original.status.name === "Active" ? "success" : "destructive"
           }
         >
-          {row.original.status.Name}
+          {row.original.status.name}
         </Badge>
       ),
     },

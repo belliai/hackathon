@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import moment from "moment"
 
+import { Flight } from "@/types/flight-master/flight-master"
 import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
 
 export type FlightMasterDataType = {

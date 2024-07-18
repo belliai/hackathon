@@ -6,6 +6,7 @@ import {
   FlightMasterFormValue,
 } from "@/schemas/flight-master/flight-master"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoopIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import { filter } from "d3-array"
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns"
@@ -23,6 +24,11 @@ import moment from "moment"
 import { useForm } from "react-hook-form"
 import { RRule } from "rrule"
 
+import {
+  CreateFlightMasterPayload,
+  CreateRecurringFlightMasterPayload,
+  Flight,
+} from "@/types/flight-master/flight-master"
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
 import {
   useCreateFlight,
@@ -60,8 +66,8 @@ import { formFilters, listViewFilters } from "./components/filter"
 import FlightMasterForm from "./components/flight-master-form"
 import FlightMasterFormRecurring from "./components/flight-master-form-recurring"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
+import NewFlightModal from "./components/new-flight-form"
 import WeeklyDateStepper from "./components/weekly-date-stepper"
-import { LoopIcon } from "@radix-ui/react-icons"
 
 type FlightDetailFormValues = {
   flightNo: string
@@ -173,7 +179,9 @@ const initialMonthlyFromDate = startOfMonth(new Date()) // Start of the current 
 const initialMonthlyToDate = endOfMonth(initialMonthlyFromDate) // End of the current month
 
 export default function Page() {
-  const [openModal, setOpenModal] = useState<string | boolean>(false)
+  const [openModal, setOpenModal] = useState<boolean>(false)
+  const [modalType, setModalType] = useState<"edit" | "create">("create")
+
   const [openModalRecurring, setOpenModalRecurring] = useState<
     string | boolean
   >(false)
@@ -182,6 +190,8 @@ export default function Page() {
     pageIndex: 0,
     pageSize: 10,
   })
+
+  const [selectedData, setSelectedData] = useState<Flight | null>(null)
 
   const [filterWeekly, setFilterWeekly] = useState<{ from: Date; to: Date }>({
     from: initialWeeklyFromDate,
@@ -240,8 +250,6 @@ export default function Page() {
         recurring: `DTSTART:20240701T040000Z
 RRULE:FREQ=DAILY;WKST=MO`,
       }))
-
-      console.log(flightDataRecurring)
 
       const flightDataNew = flightDataRecurring.flatMap((item) => {
         const rruleString = item.recurring || ""
@@ -452,17 +460,17 @@ RRULE:FREQ=DAILY;WKST=MO`,
 
     const formattedPayload: FlightDetailFormValues = {
       flightNo: data.flight_no,
-      source: data.source.ID,
-      destination: data.destination.ID,
+      source: data.source?.ID,
+      destination: data.destination?.ID,
       fromDate: new Date(data.from_date),
       toDate: new Date(data.to_date),
       frequencyItems: reformatDays(data) || [],
       aircraftType: aircraftTypeId?.id,
-      tailNo: data.tail?.ID,
+      tailNo: data.tail?.id,
       capacity: data.capacity?.toString(),
       uom: data.uom?.ID,
       sector: data.sector?.ID,
-      status: data.status.ID,
+      status: data.status?.ID,
       flightType: data.flight_type?.ID,
       rangeDate: {
         from: new Date(data.from_date),
@@ -490,9 +498,9 @@ RRULE:FREQ=DAILY;WKST=MO`,
   }
 
   const openDetailFlight = (data: Flight) => {
-    const formValue = reformatDetailToForm(data)
-    setOpenModal(data.ID)
-    sectionedHookForm.reset(formValue as FlightDetailFormValues) // Ensure correct type assertion
+    setSelectedData(data)
+    setOpenModal(true)
+    if (data) setModalType("edit")
   }
 
   const openDetailRecurringFlight = (data: Flight) => {
@@ -535,12 +543,19 @@ RRULE:FREQ=DAILY;WKST=MO`,
     setDeleteConfirm(data)
   }
 
+  const onOpenChange = useCallback((open: boolean) => {
+    setOpenModal(open)
+  }, [])
+
   const createButtonFlight = (
     <Button
       size={"sm"}
       variant={"button-primary"}
       className="p-2 text-xs"
-      onClick={() => setOpenModal(true)}
+      onClick={() => {
+        setOpenModal(true)
+        setModalType("create")
+      }}
       style={{ fontSize: "0.875rem" }}
     >
       <PlusIcon className="mr-2 size-4" />
@@ -579,7 +594,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
             <DataTable
               showToolbarOnlyOnHover={true}
               columns={listViewColumns}
-              data={isLoading ? [] : flightDataRecurring}
+              data={isLoading ? [] : flightData && flightData.data || []}
               onRowClick={openDetailFlight}
               extraRightComponents={createButtonFlight}
               extraLeftComponents={
@@ -592,14 +607,14 @@ RRULE:FREQ=DAILY;WKST=MO`,
                     <ListIcon className="mr-2 size-4" />
                     List View
                   </TabsTrigger>
-                  <TabsTrigger
+                  {/* <TabsTrigger
                     className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                     value="create-recurring-flight"
                     style={{ fontSize: "0.875rem" }}
                   >
                     <LoopIcon className="mr-2 size-4" />
                     Recurring Flights
-                  </TabsTrigger>
+                  </TabsTrigger> */}
                   <Form {...filtersHookForm}>
                     <InputSwitch
                       name="period"
@@ -643,12 +658,13 @@ RRULE:FREQ=DAILY;WKST=MO`,
                   </Form>
                 </TabsList>
               }
-              pageCount={1}
+              pageCount={
+                isLoading ? 1 : (flightData && flightData.total_pages) || 1
+              }
               manualPagination={true}
-              hidePagination
+         
               tableState={tableState}
               menuId="flight-master-list-view"
-              isCanExport
             />
           </TabsContent>
 
@@ -667,13 +683,13 @@ RRULE:FREQ=DAILY;WKST=MO`,
                     <ListIcon className="mr-2 size-4" />
                     List View
                   </TabsTrigger>
-                  <TabsTrigger
+                  {/* <TabsTrigger
                     className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                     value="create-recurring-flight"
                   >
                     <LoopIcon className="mr-2 size-4" />
                     Recurring Flights
-                  </TabsTrigger>
+                  </TabsTrigger> */}
                 </TabsList>
               }
               pageCount={
@@ -686,7 +702,14 @@ RRULE:FREQ=DAILY;WKST=MO`,
           </TabsContent>
         </Tabs>
       </PageContainer>
-      <CreateEditModal
+      <NewFlightModal
+        data={selectedData}
+        open={openModal}
+        mode={modalType}
+        onOpenChange={onOpenChange}
+        resetData={setSelectedData}
+      />
+      {/* <CreateEditModal
         title={
           typeof openModal === "string"
             ? "Edit Flight"
@@ -723,8 +746,8 @@ RRULE:FREQ=DAILY;WKST=MO`,
             </CardFooter>
           </Card>
         }
-      />
-      <CreateEditModal
+      /> */}
+      {/* <CreateEditModal
         title={
           typeof openModalRecurring === "string"
             ? "Edit Flight"
@@ -763,7 +786,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
             </CardFooter>
           </Card>
         }
-      />
+      /> */}
       <AlertDialog
         open={deleteConfirm !== null}
         onOpenChange={(open) => {
