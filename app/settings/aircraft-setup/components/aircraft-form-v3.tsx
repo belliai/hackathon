@@ -473,7 +473,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   name="status_id"
                   type="select"
                   className="rounded-md"
-                  defaultValue={"a2a781e6-c892-46e4-ab3e-fb344727cfd8"}
                   selectOptions={aircraftStatusOptions}
                 />
               </div>

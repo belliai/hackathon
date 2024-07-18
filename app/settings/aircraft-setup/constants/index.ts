@@ -34,7 +34,7 @@ export const formDefaultValues: AircraftFormValues = {
   mtow: "",
   passenger_capacity: "",
   restricted_weight_piece: "",
-  status_id: "",
+  status_id: "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
   uld_position: "",
   version_id: "",
   dimension_unit_id: "",
