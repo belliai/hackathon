@@ -401,41 +401,30 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }
 
   const handleTabChange = async (newTab: string) => {
-
+    // As newTab is expected to be a Tabs type, assert it safely
     const safeNewTab = newTab as Tabs;
 
     if (safeNewTab === tabValue) return; // No change if the same tab is clicked
 
-    const currentIndex = stepsOrder.indexOf(tabValue);
-    const newIndex = stepsOrder.indexOf(safeNewTab);
-    const movingForward = newIndex > currentIndex;
+    const movingForward = stepsOrder.indexOf(safeNewTab) > stepsOrder.indexOf(tabValue);
 
-    // Direct navigation if moving backwards or to an already validated step
-    if (!movingForward || validatedSteps[safeNewTab]) {
+    // Allow backward navigation without validation
+    if (!movingForward) {
         setTabValue(safeNewTab);
         return;
     }
 
-    // Validate the current tab before moving forward
+    // Proceed with validation only if moving forward
     const isValidated = await form.trigger(tabValidations[tabValue]);
     setValidatedSteps((prev) => ({
         ...prev,
         [tabValue]: isValidated,
     }));
 
-    // If validation is successful, unlock the next tab and navigate to it
     if (isValidated) {
-        // Unlock the next tab if available
-        const nextTab = stepsOrder[newIndex];
-        setValidatedSteps(prev => ({
-            ...prev,
-            [nextTab]: true // Ensure the next tab is set to true in validatedSteps
-        }));
         setTabValue(safeNewTab);
     }
 };
-
-
 
   return (
     <Dialog
@@ -463,14 +452,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
             </DialogHeader>
             <Tabs
               value={tabValue}
-              // onValueChange={async (val) => {
-              //   const isValidated = await form.trigger(tabValidations[tabValue])
-              //   setValidatedSteps((prev) => ({
-              //     ...prev,
-              //     [tabValue]: isValidated,
-              //   }))
-              //   if (isValidated) setTabValue(val as Tabs)
-              // }}
               onValueChange={handleTabChange}
               className="flex h-full flex-row items-start justify-start gap-4 space-y-0"
             >

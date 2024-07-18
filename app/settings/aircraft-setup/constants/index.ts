@@ -4,11 +4,11 @@ export const formDefaultValues: AircraftFormValues = {
   aft_h: "",
   aft_w: "",
   aircraft_tail_numbers: [
-    {
-      id: "",
-      status_id: "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
-      tail_number: "",
-    },
+    // {
+    //   id: "",
+    //   status_id: "",
+    //   tail_number: "",
+    // },
   ],
   aircraft_type_id: "",
   body_type_id: "",
