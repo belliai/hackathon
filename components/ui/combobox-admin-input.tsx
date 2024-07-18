@@ -36,7 +36,7 @@ import { Input } from "./input"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 import { Separator } from "./separator"
 
-type Option = { label: string; value: string }
+export type Option = { label: string; value: string }
 
 export type ComboAdminBoxInputProps<
   T extends FieldValues,

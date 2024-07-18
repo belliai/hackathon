@@ -56,6 +56,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Option } from "@/components/ui/combobox-admin-input"
 import {
   Dialog,
   DialogContent,
@@ -125,8 +126,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     "aircraft-type": isEdit ? true : false,
     "aircraft-tail-numbers": isEdit ? true : false,
     "aircraft-details": isEdit ? true : false,
-  });
-
+  })
 
   const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
   // default values
@@ -252,12 +252,13 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }))
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
-    if (checkForDuplicateTailNumbers(data.aircraft_tail_numbers)) {
-      toast({
-        title: "Error!",
-        description: "There are duplicate tail numbers",
-        variant: "destructive",
+    if (
+      checkForDuplicatesTail({
+        items: data.aircraft_tail_numbers,
+        keyToCheck: "tail_number",
+        errorMsg: "There are duplicate tail numbers",
       })
+    ) {
       return
     }
 
@@ -387,55 +388,96 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     )
   }
 
-  function checkForDuplicateTailNumbers(
-    tailNumbers: { tail_number: string }[]
-  ): boolean {
-    const seen = new Set()
-    for (const { tail_number } of tailNumbers) {
-      if (seen.has(tail_number)) {
+  // Check duplicate and show toast error message
+  const showErrorToast = (errorMsg: string) => {
+    toast({
+      title: "Error!",
+      description: errorMsg,
+      variant: "destructive",
+    })
+  }
+
+  type CheckForDuplicatesParams<T> = {
+    items: T[]
+    keyToCheck: keyof T
+    errorMsg: string
+  }
+
+  function checkForDuplicatesTail<T extends Record<string, any>>({
+    items,
+    keyToCheck,
+    errorMsg,
+  }: CheckForDuplicatesParams<T>): boolean {
+    const seen = new Set<string>()
+    for (const item of items) {
+      const value = item[keyToCheck]
+      if (typeof value === "string" && seen.has(value.toLowerCase())) {
+        showErrorToast(errorMsg)
         return true
       }
-      seen.add(tail_number)
+      if (typeof value === "string") {
+        seen.add(value.toLowerCase())
+      }
+    }
+    return false
+  }
+
+  enum OptionType {
+    Manufacturer = "Manufacturer",
+    Type = "Type",
+    Version = "Version",
+  }
+
+  const optionsMap: Record<OptionType, Option[]> = {
+    [OptionType.Manufacturer]: aircraftManufacturerOptions,
+    [OptionType.Type]: aircraftTypesOptions,
+    [OptionType.Version]: aircraftVersionsOptions,
+  }
+
+  function checkDuplicate(option: OptionType, newLabel: string): boolean {
+    const items = optionsMap[option]
+    if (
+      items.some((item) => item.label.toLowerCase() === newLabel.toLowerCase())
+    ) {
+      showErrorToast(`${option} ${newLabel} already exists`)
+      return true
     }
     return false
   }
 
   const handleTabChange = async (newTab: string) => {
+    const safeNewTab = newTab as Tabs
 
-    const safeNewTab = newTab as Tabs;
+    if (safeNewTab === tabValue) return // No change if the same tab is clicked
 
-    if (safeNewTab === tabValue) return; // No change if the same tab is clicked
-
-    const currentIndex = stepsOrder.indexOf(tabValue);
-    const newIndex = stepsOrder.indexOf(safeNewTab);
-    const movingForward = newIndex > currentIndex;
+    const currentIndex = stepsOrder.indexOf(tabValue)
+    const newIndex = stepsOrder.indexOf(safeNewTab)
+    const movingForward = newIndex > currentIndex
 
     // Direct navigation if moving backwards or to an already validated step
     if (!movingForward || validatedSteps[safeNewTab]) {
-        setTabValue(safeNewTab);
-        return;
+      setTabValue(safeNewTab)
+      return
     }
 
     // Validate the current tab before moving forward
-    const isValidated = await form.trigger(tabValidations[tabValue]);
+    const isValidated = await form.trigger(tabValidations[tabValue])
     setValidatedSteps((prev) => ({
-        ...prev,
-        [tabValue]: isValidated,
-    }));
+      ...prev,
+      [tabValue]: isValidated,
+    }))
 
     // If validation is successful, unlock the next tab and navigate to it
     if (isValidated) {
-        // Unlock the next tab if available
-        const nextTab = stepsOrder[newIndex];
-        setValidatedSteps(prev => ({
-            ...prev,
-            [nextTab]: true // Ensure the next tab is set to true in validatedSteps
-        }));
-        setTabValue(safeNewTab);
+      // Unlock the next tab if available
+      const nextTab = stepsOrder[newIndex]
+      setValidatedSteps((prev) => ({
+        ...prev,
+        [nextTab]: true, // Ensure the next tab is set to true in validatedSteps
+      }))
+      setTabValue(safeNewTab)
     }
-};
-
-
+  }
 
   return (
     <Dialog
@@ -537,11 +579,19 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                         })
                       }}
                       onCreate={(name) => {
+                        if (checkDuplicate(OptionType.Manufacturer, name)) {
+                          return
+                        }
                         upsertAircraftManufacturer({
                           name,
                         })
                       }}
                       onEdit={(option) => {
+                        if (
+                          checkDuplicate(OptionType.Manufacturer, option.label)
+                        ) {
+                          return
+                        }
                         upsertAircraftManufacturer({
                           name: option.label,
                           ID: option.value,
@@ -563,6 +613,9 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       }}
                       onCreate={(name) => {
                         if (!selectedManufacturer) return
+                        if (checkDuplicate(OptionType.Type, name)) {
+                          return
+                        }
                         upsertAircraftType({
                           name,
                           aircraft_manufacturer_id: selectedManufacturer.value,
@@ -570,6 +623,9 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       }}
                       onEdit={(option) => {
                         if (!selectedManufacturer) return
+                        if (checkDuplicate(OptionType.Type, option.label)) {
+                          return
+                        }
                         upsertAircraftType({
                           name: option.label,
                           id: option.value,
@@ -592,6 +648,9 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       }}
                       onCreate={(name) => {
                         if (!selectedType) return
+                        if (checkDuplicate(OptionType.Version, name)) {
+                          return
+                        }
                         upsertAircraftVersion({
                           version: name,
                           aircraft_type_id: selectedType.value,
@@ -599,6 +658,9 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       }}
                       onEdit={(option) => {
                         if (!selectedType) return
+                        if (checkDuplicate(OptionType.Version, option.label)) {
+                          return
+                        }
                         upsertAircraftVersion({
                           version: option.label,
                           id: option.value,
@@ -641,7 +703,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                                 <InputSwitch<AircraftFormValues>
                                   name={`aircraft_tail_numbers.${index}.status_id`}
                                   type="select"
-                                  defaultValue={"a2a781e6-c892-46e4-ab3e-fb344727cfd8"}
                                   selectOptions={aircraftStatusOptions}
                                 />
                               </TableCell>
@@ -667,7 +728,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                               type="button"
                               onClick={() => {
                                 fieldArray.append({
-                                  status_id: "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
+                                  status_id:
+                                    "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
                                   tail_number: "",
                                 })
                               }}
