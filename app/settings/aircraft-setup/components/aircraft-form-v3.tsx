@@ -458,7 +458,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
         return;
     }
 
-    // Proceed with validation only if moving forward
+    // Proceed with validation only if moving forward 
     const isValidated = await form.trigger(tabValidations[tabValue]);
     setValidatedSteps((prev) => ({
       ...prev,
