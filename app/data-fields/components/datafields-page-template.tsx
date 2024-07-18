@@ -6,6 +6,7 @@ import { LucideIcon } from "lucide-react"
 
 import { getTooltipContents } from "@/lib/contentful"
 import { SettingsTabName } from "@/lib/hooks/useSettingsDynamicHook"
+import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Tooltip,
@@ -86,7 +87,10 @@ export default function DataFieldsPageTemplate({
         <TooltipTrigger asChild>
           <div>{tabName}</div>
         </TooltipTrigger>
-        <TooltipContent side="right" className="border bg-card text-foreground">
+        <TooltipContent
+          side="bottom"
+          className="border bg-card text-foreground"
+        >
           <p>{content}</p>
         </TooltipContent>
       </Tooltip>
@@ -98,32 +102,35 @@ export default function DataFieldsPageTemplate({
       <Tabs
         value={activeTab}
         onValueChange={handleTabChange}
-        className="flex h-full w-full flex-row items-start justify-start gap-4 space-y-0"
+        className="flex h-full w-full flex-col items-start justify-start gap-2"
       >
-        <TabsList className="h-fit w-52 flex-col">
+        <TabsList className="h-fit w-full justify-start gap-4 overflow-auto bg-transparent">
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.name}
               id={tab.name.toLowerCase().replace(/\s+/g, "-")}
               value={tab.name}
               disabled={tab?.disabled}
-              className="w-full justify-start px-2 py-1.5"
+              className="w-fit px-2 py-1.5"
             >
-              <tab.icon className="mr-2 size-4" />
-
               {renderTooltip(tab.name)}
             </TabsTrigger>
           ))}
         </TabsList>
-        {tabs.map((tab) => (
-          <TabsContent
-            key={tab.name}
-            className="w-full flex-1 space-y-4"
-            value={tab.name}
-          >
-            {tab.component}
-          </TabsContent>
-        ))}
+        <Separator />
+        <div className="mt-6 flex w-full flex-col items-center">
+          <div className="flex w-full max-w-screen-sm">
+            {tabs.map((tab) => (
+              <TabsContent
+                key={tab.name}
+                className="w-full flex-1 space-y-4"
+                value={tab.name}
+              >
+                {tab.component}
+              </TabsContent>
+            ))}
+          </div>
+        </div>
       </Tabs>
     </PageContainer>
   )
