@@ -4,9 +4,9 @@ import {
   useRemoveLocation,
   useUpdateLocation,
 } from "@/lib/hooks/locations"
+import { useTimeZones } from "@/lib/hooks/time-zones"
 
 import CrudTable from "./components/crud-table"
-import { useTimeZones } from "@/lib/hooks/time-zones"
 
 const Location = () => {
   const { isLoading, isPending, error, data } = useLocations()
@@ -21,7 +21,6 @@ const Location = () => {
     label: timeZone.TZ,
   }))
 
-
   if (isPending) return "Loading..."
 
   if (error) return "An error has occurred: " + error.message
@@ -34,21 +33,28 @@ const Location = () => {
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Location" },
         {
-          name: "time_zone_id",
+          name: "timezone.ID",
           type: "select",
           label: "Default Time Zone",
           selectOptions: timeZoneOptions,
-       
         },
       ]}
-      data={data.map((item: any) => ({ option: item.name, id: item.ID, time_zone_id : "" }))}
-      onSave={(data) => {
+      data={data.map((item: any) => ({
+        option: item.name,
+        id: item.ID,
+        timezone: item.timezone,
+      }))}
+      onSave={async (data) => {
         // configure logic for add or edit, for edit the id will be zero
-        const { id, option, time_zone_id } = data
+        const { id, option, timezone } = data
         if (id) {
-          update.mutate({ id, name: option,  time_zone_id})
+          await update.mutateAsync({
+            id,
+            name: option,
+            timezone_id: timezone.ID,
+          })
         } else {
-          add.mutate({ name: option, time_zone_id })
+          await add.mutateAsync({ name: option, timezone_id: timezone.ID })
         }
       }}
       onDelete={(data) => {

@@ -240,7 +240,7 @@ export default function CrudTable<T extends FieldValues>(
 ) {
   const [openForm, setOpenForm] = useState<T | boolean>(false)
 
-  const { data, title } = props
+  const { data, title, ...tableProps } = props
 
   const columns: ColumnDef<T>[] = props.columns
 
@@ -265,12 +265,13 @@ export default function CrudTable<T extends FieldValues>(
       ) : (
         <>
           <DataTable
-            showToolbarOnlyOnHover={true}
-            columns={columns}
-            data={data}
             hidePagination={true}
             pageCount={1}
             pageSize={20}
+            showToolbarOnlyOnHover={true}
+            {...tableProps}
+            columns={columns}
+            data={data}
             onRowClick={handleRowClick}
             extraRightComponents={
               !props.hideAddForm && (

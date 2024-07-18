@@ -1,3 +1,6 @@
+import { useMemo, useState } from "react"
+import { PaginationState } from "@tanstack/react-table"
+
 import {
   useAddLocation,
   useLocations,
@@ -9,6 +12,7 @@ import { useTimeZones } from "@/lib/hooks/time-zones"
 import CrudTable from "./components/crud-table"
 
 const Location = () => {
+
   const { isLoading, isPending, error, data } = useLocations()
   const update = useUpdateLocation()
   const add = useAddLocation()
@@ -16,10 +20,12 @@ const Location = () => {
 
   const { data: timeZones, isLoading: isLoadingTimeZones } = useTimeZones()
 
-  const timeZoneOptions = timeZones?.map((timeZone: any) => ({
-    value: String(timeZone.ID),
-    label: timeZone.TZ,
-  }))
+  const timeZoneOptions =
+    timeZones &&
+    timeZones?.data?.map((tz: any) => ({
+      value: String(tz.ID),
+      label: tz.name,
+    }))
 
   if (error) return "An error has occurred: " + error.message
 
@@ -28,30 +34,40 @@ const Location = () => {
       isLoading={isPending}
       id="location"
       title="Location"
-      columns={[{ accessorKey: "option", header: 'Name' }, { accessorKey: "time_zone.name", header: 'Timezone' }]}
+      columns={[
+        { accessorKey: "option", header: "Name" },
+        { accessorKey: "timezone.name", header: "Timezone" },
+      ]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Location" },
         {
-          name: "time_zone_id",
+          name: "timezone.ID",
           type: "select",
           label: "Default Time Zone",
           selectOptions: timeZoneOptions,
           placeholder: "Time Zone",
         },
       ]}
-      data={data?.map((item: any) => ({
-        option: item.name,
-        id: item.ID,
-        time_zone_id: item.time_zone?.ID,
-      }))}
-      onSave={(data) => {
+      data={
+        data &&
+        data?.map((item: any) => ({
+          option: item.name,
+          id: item.ID,
+          timezone: item.timezone,
+        }))
+      }
+      onSave={async (data) => {
         // configure logic for add or edit, for edit the id will be zero
-        const { id, option, time_zone_id } = data
+        const { id, option, timezone } = data
         if (id) {
-          update.mutate({ id, name: option, time_zone_id })
+          await update.mutateAsync({
+            id,
+            name: option,
+            timezone_id: timezone.ID,
+          })
         } else {
-          add.mutate({ name: option, time_zone_id })
+          await add.mutateAsync({ name: option, timezone_id: timezone.ID })
         }
       }}
       onDelete={(data) => {

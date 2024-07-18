@@ -4,12 +4,16 @@ import momentTZ from "moment-timezone"
 
 import { useBelliApi } from "@/lib/utils/network"
 
-const route = "time-zones"
+const route = "timezones"
 
-export const fetchTimeZones = async (belliApi: AxiosInstance) => {
-  //const { data } = await belliApi.get(`/${route}`)
-  // temp static
-  const data = momentTZ.tz.names().map((tz) => ({ TZ: tz, ID: tz }))
+
+type FilterTimezone = {
+  page: number
+  page_size: number
+}
+
+export const fetchTimeZones = async (belliApi: AxiosInstance, params? : FilterTimezone) => {
+  const { data } = await belliApi.get(`/${route}`, { params })
   return data
 }
 
@@ -39,11 +43,12 @@ export const removeTimeZone = async (
   return resp
 }
 
-export const useTimeZones = () => {
+
+export const useTimeZones = (params?: FilterTimezone) => {
   const belliApi = useBelliApi()
   return useQuery({
-    queryKey: [route],
-    queryFn: async () => await fetchTimeZones(await belliApi),
+    queryKey: [route, params],
+    queryFn: async () => await fetchTimeZones(await belliApi, params),
   })
 }
 
