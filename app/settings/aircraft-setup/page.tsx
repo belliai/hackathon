@@ -1,47 +1,55 @@
 "use client"
 
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   aircraftFormSchema,
   AircraftFormValues,
 } from "@/schemas/aircraft/aircraft"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ColumnDef } from "@tanstack/react-table"
 import { PlaneIcon, PlusIcon, ScrollTextIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
-import { useAircraftManufacturers } from "@/lib/hooks/aircrafts/aircraft-type/manufacturers"
-import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-type/types"
-import { useAircraftVersions } from "@/lib/hooks/aircrafts/aircraft-type/versions"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { TableHeaderWithTooltip } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/data-table/data-table"
 import PageContainer from "@/components/layout/PageContainer"
 
 import AircraftTypeForm from "./components/aircraft-form-v3"
+import { aircraftTailNumbersColumns } from "./components/aircraft-tail-number-columns"
+import { aircraftTypeColumns } from "./components/aircraft-type-columns"
 import { formDefaultValues } from "./constants"
+import { TailNumberData } from "./types"
 
 export default function MasterAircraftPage() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
+  const [tabValue, setTabValue] = useState(
+    searchParams.get("tab") ?? "aircraft-types"
+  )
+
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString())
       params.set(name, value)
-
       return params.toString()
     },
     [searchParams]
   )
+
+  const setSearchParams = (key: string, value: string) => {
+    console.log({ key, value })
+    // i have no idea why this is not working
+    router.push(pathname + "?" + createQueryString(key, value))
+  }
+
+  useEffect(() => {
+    setSearchParams("tab", tabValue)
+  }, [tabValue])
 
   const [currentOpenModal, setCurrentOpenModal] = useState<string | boolean>(
     false
@@ -54,7 +62,7 @@ export default function MasterAircraftPage() {
 
   const aircraftsData = aircrafts?.data
 
-  const aircraftTailNumbersData = useMemo(
+  const aircraftTailNumbersData: TailNumberData[] = useMemo(
     () =>
       aircraftsData
         ?.flatMap(
@@ -84,16 +92,12 @@ export default function MasterAircraftPage() {
     [aircraftsData]
   )
 
-  console.log({ aircraftTailNumbersData })
-
   const form = useForm<AircraftFormValues>({
     resolver: zodResolver(aircraftFormSchema),
     defaultValues: formDefaultValues,
   })
 
   function handleRowClick(data: Aircraft) {
-    console.log({ data })
-
     setCurrentOpenModal(data.id)
 
     form.reset({
@@ -132,266 +136,21 @@ export default function MasterAircraftPage() {
     handleRowClick(aircraft)
   }
 
-  const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
-    {
-      accessorKey: "manufacturer",
-      cell: ({ row }) => {
-        const deleted = row.original.manufacturer.is_deleted ? (
-          <span className="text-destructive"> (deleted)</span>
-        ) : null
-        return (
-          <span>
-            {row.original.manufacturer.name} {deleted}
-          </span>
-        )
-      },
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Manufacturer"
-          tooltipId="aircraft-manufacturer"
-        />
-      ),
-    },
-    {
-      accessorKey: "aircraft_type",
-      cell: ({ row }) => {
-        const deleted = row.original.aircraft_type.is_deleted ? (
-          <span className="text-destructive"> (deleted)</span>
-        ) : null
-        return (
-          <span>
-            {row.original.aircraft_type.name} {deleted}
-          </span>
-        )
-      },
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Aircraft Type"
-          tooltipId="aircraft-aircraft-type"
-        />
-      ),
-    },
-    {
-      accessorKey: "version",
-      cell: ({ row }) => {
-        const deleted = row.original.version.is_deleted ? (
-          <span className="text-destructive"> (deleted)</span>
-        ) : null
-        return (
-          <span>
-            {row.original.version.version} {deleted}
-          </span>
-        )
-      },
-      header: () => (
-        <TableHeaderWithTooltip header="Version" tooltipId="aircraft-version" />
-      ),
-    },
-    {
-      accessorKey: "passenger_capacity",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Passenger Capacity"
-          tooltipId="aircraft-passenger-capacity"
-        />
-      ),
-    },
-    {
-      accessorKey: "landing_weight",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Landing Wt"
-          tooltipId="aircraft-landing-weight"
-        />
-      ),
-    },
-    {
-      accessorKey: "cargo_capacity",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Cargo Cap"
-          tooltipId="aircraft-cargo-capacity"
-        />
-      ),
-    },
-    {
-      accessorKey: "mtow",
-      header: () => (
-        <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
-      ),
-    },
-    {
-      accessorKey: "max_zero_fuel_weight",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Max Zero Fuel Wt"
-          tooltipId="aircraft-max-zero-fuel-wt"
-        />
-      ),
-    },
-    {
-      accessorKey: "body_type.Name",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Body Type"
-          tooltipId="aircraft-body-type"
-        />
-      ),
-    },
-    {
-      accessorKey: "count",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Active Count"
-          tooltipId="aircraft-active-count"
-        />
-      ),
-      cell: ({ row }) =>
-        row.original?.aircraft_tail_numbers?.filter(
-          (item) => item.status?.name?.toLowerCase() === "active"
-        ).length ?? 0,
-    },
-    {
-      accessorKey: "status",
-      sortingFn: (a, b) => {
-        const nameA = a.original.status.name
-        const nameB = b.original.status.name
-        return nameA > nameB ? 1 : nameA < nameB ? -1 : 0
-      },
-      header: () => (
-        <TableHeaderWithTooltip header="Status" tooltipId="aircraft-status" />
-      ),
-      cell: ({ row }) => (
-        <Badge
-          variant={
-            row.original.status.name === "Active" ? "success" : "destructive"
-          }
-        >
-          {row.original.status.name}
-        </Badge>
-      ),
-    },
-  ]
-
-  const aircraftTailNumbersColumns: ColumnDef<
-    ArrayElement<typeof aircraftTailNumbersData>
-  >[] = [
-    {
-      accessorKey: "tail_number",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Tail Number"
-          tooltipId="aircraft-manufacturer"
-        />
-      ),
-    },
-    {
-      accessorKey: "manufacturer",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Aircraft Type"
-          tooltipId="aircraft-aircraft-type"
-        />
-      ),
-      cell: ({ row }) => {
-        const deleted = [
-          row.original.manufacturer?.is_deleted,
-          row.original.aircraft_type?.is_deleted,
-          row.original.version?.is_deleted,
-        ].some((isDeleted) => !!isDeleted) ? (
-          <span className="text-destructive"> (deleted)</span>
-        ) : (
-          ""
-        )
-        return (
-          <p>
-            <span>
-              {[
-                row.original.manufacturer.name,
-                row.original.aircraft_type.name,
-                row.original.version.version,
-              ].join(" ")}
-            </span>
-            {deleted}
-          </p>
-        )
-      },
-    },
-    {
-      accessorKey: "mtow",
-      header: () => (
-        <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
-      ),
-    },
-    {
-      accessorKey: "landing_weight",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Landing Wt"
-          tooltipId="aircraft-landing-weight"
-        />
-      ),
-    },
-    {
-      accessorKey: "cargo_capacity",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Cargo Cap"
-          tooltipId="aircraft-cargo-capacity"
-        />
-      ),
-    },
-    {
-      accessorKey: "status",
-      header: () => (
-        <TableHeaderWithTooltip header="Status" tooltipId="aircraft-status" />
-      ),
-      cell: ({ row }) => (
-        <Badge
-          variant={
-            row.original.status.name === "Active" ? "success" : "destructive"
-          }
-        >
-          {row.original.status.name}
-        </Badge>
-      ),
-    },
-  ]
-
-  const setTabSearchParams = (value: string) => {
-    router.push(pathname + "?" + createQueryString("tab", value))
-  }
-
-  const createButton = (
-    <Button
-      size={"sm"}
-      variant={"button-primary"}
-      className="p-2 text-xs"
-      onClick={() => setCurrentOpenModal(true)}
-      style={{ fontSize: "0.875rem" }}
-    >
-      <PlusIcon className="mr-2 size-4" />
-      Create Aircraft
-    </Button>
-  )
-
   const tabsList = (
     <TabsList className="gap-2 bg-transparent p-0">
       <TabsTrigger
-        style={{ fontSize: "0.875rem" }}
-        className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+        className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
         value="aircraft-types"
       >
         <PlaneIcon className="mr-2 size-4" />
         Aircraft Types
       </TabsTrigger>
       <TabsTrigger
-        style={{ fontSize: "0.875rem" }}
-        className="h-8 border border-secondary text-xs data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-        value="list-of-aircrafts"
+        className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+        value="tail-numbers"
       >
         <ScrollTextIcon className="mr-2 size-4" />
-        List of Aircrafts
+        Tail Numbers
       </TabsTrigger>
     </TabsList>
   )
@@ -400,9 +159,9 @@ export default function MasterAircraftPage() {
     <PageContainer>
       <div>
         <Tabs
-          onValueChange={setTabSearchParams}
+          value={tabValue}
+          onValueChange={setTabValue}
           className="space-y-4"
-          defaultValue={searchParams.get("tab") ?? "aircraft-types"}
         >
           <TabsContent value="aircraft-types" asChild>
             <DataTable
@@ -411,11 +170,22 @@ export default function MasterAircraftPage() {
               data={aircraftsData ?? []}
               onRowClick={handleRowClick}
               menuId="aircraft"
-              extraRightComponents={createButton}
+              extraRightComponents={
+                <Button
+                  size={"sm"}
+                  variant={"button-primary"}
+                  className="p-2 text-xs"
+                  onClick={() => setCurrentOpenModal(true)}
+                  style={{ fontSize: "0.875rem" }}
+                >
+                  <PlusIcon className="mr-2 size-4" />
+                  Create Aircraft
+                </Button>
+              }
               extraLeftComponents={tabsList}
             />
           </TabsContent>
-          <TabsContent value="list-of-aircrafts" asChild>
+          <TabsContent value="tail-numbers" asChild>
             <DataTable
               showToolbarOnlyOnHover={true}
               columns={aircraftTailNumbersColumns}
@@ -423,7 +193,18 @@ export default function MasterAircraftPage() {
               onRowClick={({ aircraft_id }) => {
                 handleTailNumberRowClick(aircraft_id)
               }}
-              extraRightComponents={createButton}
+              extraRightComponents={
+                <Button
+                  size={"sm"}
+                  variant={"button-primary"}
+                  className="p-2 text-xs"
+                  onClick={() => setCurrentOpenModal(true)}
+                  style={{ fontSize: "0.875rem" }}
+                >
+                  <PlusIcon className="mr-2 size-4" />
+                  Create Tail Number
+                </Button>
+              }
               extraLeftComponents={tabsList}
             />
           </TabsContent>

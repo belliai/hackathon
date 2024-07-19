@@ -39,7 +39,7 @@ export interface Aircraft {
   updated_at: string
 }
 
-interface Version extends OptionEntity {
+export interface Version extends OptionEntity {
   version: string
 }
 

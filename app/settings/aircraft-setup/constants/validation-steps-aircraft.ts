@@ -1,6 +1,17 @@
 import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
 import { Path } from "react-hook-form"
 
+import { AircraftFormTabs } from "../types"
+
+export const stepsOrder: AircraftFormTabs[] = [
+  "aircraft-type",
+  "measurement-units",
+  "aircraft-details",
+  "door-dimensions",
+  "volume",
+  "aircraft-tail-numbers",
+]
+
 type Fields = Path<AircraftFormValues>[]
 
 export const aircraftTypeFields: Fields = [
@@ -11,13 +22,13 @@ export const aircraftTypeFields: Fields = [
 
 export const tailNumbersFields: Fields = ["aircraft_tail_numbers"]
 
-export const detailsFields: Fields = [
-  // Measurement Units
+export const measurementUnitFields: Fields = [
   "volume_unit_id",
   "weight_unit_id",
   "dimension_unit_id",
+]
 
-  // Details
+export const detailsFields: Fields = [
   "mtow",
   "max_zero_fuel_weight",
   "body_type_id",
@@ -33,23 +44,24 @@ export const detailsFields: Fields = [
   "max_dimension_breadth",
   "max_dimension_height",
   "gl_code_id",
+]
 
-  // Door Dimensions
+export const doorDimensionFields: Fields = [
   "aft_h",
   "aft_w",
   "fwd_h",
   "fwd_w",
   "bulk_h",
   "bulk_w",
-
-  // Volume
-  "fwt",
-  "fwd",
-  "bulk",
 ]
 
-export const tabValidations: Record<string, Fields> = {
+export const volumeFields: Fields = ["fwt", "fwd", "bulk"]
+
+export const tabValidations: Record<AircraftFormTabs, Fields> = {
   "aircraft-type": aircraftTypeFields,
-  "aircraft-tail-numbers": tailNumbersFields,
+  "measurement-units": measurementUnitFields,
+  "door-dimensions": doorDimensionFields,
+  volume: volumeFields,
   "aircraft-details": detailsFields,
+  "aircraft-tail-numbers": tailNumbersFields,
 }

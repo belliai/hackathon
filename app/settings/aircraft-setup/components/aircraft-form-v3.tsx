@@ -4,12 +4,14 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
 import {
+  BoxesIcon,
   ChevronLeftCircleIcon,
   ChevronRightCircleIcon,
-  FileClockIcon,
+  DoorClosedIcon,
   FileSlidersIcon,
   PlaneIcon,
   PlusIcon,
+  RulerIcon,
   SaveIcon,
   ScrollTextIcon,
   Trash,
@@ -78,7 +80,11 @@ import { toast } from "@/components/ui/use-toast"
 import InputSwitch from "@/components/form/InputSwitch"
 
 import { formDefaultValues } from "../constants"
-import { detailsFields, tabValidations } from "../constants/validation-steps"
+import {
+  stepsOrder,
+  tabValidations,
+} from "../constants/validation-steps-aircraft"
+import { AircraftFormTabs } from "../types"
 import OptionDeleteWarning, { Deletee } from "./option-delete-warning"
 
 type AircraftTypeFormProps = {
@@ -86,14 +92,6 @@ type AircraftTypeFormProps = {
   onOpenChange: (open: boolean) => void
   form: UseFormReturn<AircraftFormValues>
 }
-
-type Tabs = "aircraft-type" | "aircraft-tail-numbers" | "aircraft-details"
-
-const stepsOrder = [
-  "aircraft-type",
-  "aircraft-tail-numbers",
-  "aircraft-details",
-]
 
 export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
@@ -120,38 +118,44 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
 
   const { data: aircraftStatuses } = useAircraftStatuses()
 
-  const [tabValue, setTabValue] = useState<Tabs>("aircraft-type")
+  const [tabValue, setTabValue] = useState<AircraftFormTabs>("aircraft-type")
 
-  const [validatedSteps, setValidatedSteps] = useState({
+  const [validatedSteps, setValidatedSteps] = useState<
+    Record<AircraftFormTabs, boolean>
+  >({
     "aircraft-type": isEdit ? true : false,
-    "aircraft-tail-numbers": isEdit ? true : false,
+    "measurement-units": isEdit ? true : false,
     "aircraft-details": isEdit ? true : false,
+    "door-dimensions": isEdit ? true : false,
+    volume: isEdit ? true : false,
+    "aircraft-tail-numbers": isEdit ? true : false,
   })
 
   const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
   // default values
   const { aircraftDefaults, updateAircraftDefaults } = useAircraftDefaults()
 
-  const saveDefaults = async () => {
-    const validation = await form.trigger(detailsFields)
-    if (!validation) return
-    await updateAircraftDefaults(form.getValues(), {
-      onSuccess: () => {
-        toast({
-          title: "Success!",
-          description: "Aircraft default values has been updated!",
-        })
-      },
-      onError: (error) => {
-        console.error(error)
-        toast({
-          title: "Error!",
-          description: "An error occurred while saving aircraft default values",
-        })
-      },
-    })
-  }
+  // const saveDefaults = async () => {
+  //   const validation = await form.trigger(detailsFields)
+  //   if (!validation) return
+  //   await updateAircraftDefaults(form.getValues(), {
+  //     onSuccess: () => {
+  //       toast({
+  //         title: "Success!",
+  //         description: "Aircraft default values has been updated!",
+  //       })
+  //     },
+  //     onError: (error) => {
+  //       console.error(error)
+  //       toast({
+  //         title: "Error!",
+  //         description: "An error occurred while saving aircraft default values",
+  //       })
+  //     },
+  //   })
+  // }
 
+  // this is to set default values on create
   useEffect(() => {
     if (aircraftDefaults && !isEdit) {
       const newDefaults = {
@@ -252,10 +256,10 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }))
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
-
-    if(!data.aircraft_tail_numbers) return;
-    if ( checkForDuplicatesTail({
-        items: data?.aircraft_tail_numbers ,
+    if (!data.aircraft_tail_numbers) return
+    if (
+      checkForDuplicatesTail({
+        items: data?.aircraft_tail_numbers,
         keyToCheck: "tail_number",
         errorMsg: "There are duplicate tail numbers",
       })
@@ -263,8 +267,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
       return
     }
 
-    const tailNumberCount = data && data?.aircraft_tail_numbers?.length || 0
-    if (  form.getValues("count") ?? 0 > tailNumberCount){
+    const tailNumberCount = (data && data?.aircraft_tail_numbers?.length) || 0
+    if (form.getValues("count") ?? 0 > tailNumberCount) {
       setHasDelete(true)
     }
     const payload: CreateAircraftRequest = {
@@ -345,21 +349,22 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     </span>
   )
 
+  // this is to reset the form states on modal close
   useEffect(() => {
     if (!currentOpen) {
       form.reset(formDefaultValues)
       setTabValue("aircraft-type")
       setHasDelete(false)
     }
-  }, [currentOpen, form, formDefaultValues, isEdit])
-
-  useEffect(() => {
     setValidatedSteps({
       "aircraft-type": isEdit ? true : false,
-      "aircraft-tail-numbers": isEdit ? true : false,
+      "measurement-units": isEdit ? true : false,
       "aircraft-details": isEdit ? true : false,
+      "door-dimensions": isEdit ? true : false,
+      volume: isEdit ? true : false,
+      "aircraft-tail-numbers": isEdit ? true : false,
     })
-  }, [isEdit])
+  }, [currentOpen, form, formDefaultValues, isEdit])
 
   const { mutateAsync: deleteMutateAsync, isPending: isPendingDelete } =
     useDeleteAircraft()
@@ -447,29 +452,30 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }
 
   const handleTabChange = async (newTab: string) => {
-    const safeNewTab = newTab as Tabs
+    const safeNewTab = newTab as AircraftFormTabs
 
     if (safeNewTab === tabValue) return // No change if the same tab is clicked
 
-    const movingForward = stepsOrder.indexOf(safeNewTab) > stepsOrder.indexOf(tabValue);
+    const movingForward =
+      stepsOrder.indexOf(safeNewTab) > stepsOrder.indexOf(tabValue)
 
     // Allow backward navigation without validation
     if (!movingForward) {
-        setTabValue(safeNewTab);
-        return;
+      setTabValue(safeNewTab)
+      return
     }
 
-    // Proceed with validation only if moving forward 
-    const isValidated = await form.trigger(tabValidations[tabValue]);
+    // Proceed with validation only if moving forward
+    const isValidated = await form.trigger(tabValidations[tabValue])
     setValidatedSteps((prev) => ({
       ...prev,
       [tabValue]: isValidated,
     }))
 
     if (isValidated) {
-        setTabValue(safeNewTab);
+      setTabValue(safeNewTab)
     }
-};
+  }
 
   return (
     <Dialog
@@ -511,14 +517,14 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   </TabsTrigger>
                   <TabsTrigger
                     disabled={!validatedSteps["aircraft-type"]}
-                    value="aircraft-tail-numbers"
+                    value="measurement-units"
                     className="w-full justify-start py-1.5"
                   >
-                    <ScrollTextIcon className="mr-2 size-4" />
-                    Tail Numbers
+                    <RulerIcon className="mr-2 size-4" />
+                    Measurement Units
                   </TabsTrigger>
                   <TabsTrigger
-                    disabled={!validatedSteps["aircraft-tail-numbers"]}
+                    disabled={!validatedSteps["measurement-units"]}
                     value="aircraft-details"
                     className="w-full justify-start py-1.5"
                   >
@@ -526,20 +532,30 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     Aircraft Details
                   </TabsTrigger>
                   <TabsTrigger
-                    disabled={!isEdit}
-                    value="activity-log"
+                    disabled={!validatedSteps["aircraft-details"]}
+                    value="door-dimensions"
                     className="w-full justify-start py-1.5"
                   >
-                    <FileClockIcon className="mr-2 size-4" /> Activity Log
+                    <DoorClosedIcon className="mr-2 size-4" />
+                    Door Dimensions
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={!validatedSteps["door-dimensions"]}
+                    value="volume"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <BoxesIcon className="mr-2 size-4" />
+                    Volume
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={!validatedSteps["volume"]}
+                    value="aircraft-tail-numbers"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <ScrollTextIcon className="mr-2 size-4" />
+                    Tail Numbers
                   </TabsTrigger>
                 </TabsList>
-                <InputSwitch<AircraftFormValues>
-                  label="Aircraft Status"
-                  name="status_id"
-                  type="select"
-                  className="rounded-md"
-                  selectOptions={aircraftStatusOptions}
-                />
               </div>
               <TabsContent className="w-full flex-1" value="aircraft-type">
                 <Card className="divide-y rounded-md">
@@ -548,7 +564,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       Aircraft Type
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-3 gap-2 pt-2">
+                  <CardContent className="grid grid-cols-4 gap-2 pt-2">
                     <InputSwitch<AircraftFormValues>
                       label="Manufacturer"
                       name="manufacturer_id"
@@ -652,6 +668,13 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                         })
                       }}
                     />
+                    <InputSwitch<AircraftFormValues>
+                      label="Aircraft Status"
+                      name="status_id"
+                      type="select"
+                      className="rounded-md"
+                      selectOptions={aircraftStatusOptions}
+                    />
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -732,14 +755,120 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
               </TabsContent>
               <TabsContent
                 className="h-full w-full flex-1"
+                value="measurement-units"
+              >
+                <Card className="flex flex-col divide-y rounded-md">
+                  <CardHeader className="w-full">
+                    <CardTitle className="font-semibold">
+                      Measurement Units
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
+                    <InputSwitch<AircraftFormValues>
+                      label="Weight Unit"
+                      name="weight_unit_id"
+                      type="select"
+                      selectOptions={weightUnitsOptions}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Volume Unit"
+                      name="volume_unit_id"
+                      type="select"
+                      selectOptions={volumeUnitsOptions}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Dimension Unit"
+                      name="dimension_unit_id"
+                      type="select"
+                      selectOptions={lengthUnitsOptions}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent
+                className="h-full w-full flex-1"
+                value="door-dimensions"
+              >
+                <Card className="flex flex-col divide-y rounded-md">
+                  <CardHeader className="w-full">
+                    <CardTitle className="font-semibold">
+                      DoorDimension
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
+                    <InputSwitch<AircraftFormValues>
+                      label="AFT (H)"
+                      name="aft_h"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="AFT (W)"
+                      name="aft_w"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="FWD (H)"
+                      name="fwd_h"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="FWD (W)"
+                      name="fwd_w"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Bulk (H)"
+                      name="bulk_h"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Bulk (W)"
+                      name="bulk_w"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent className="h-full w-full flex-1" value="volume">
+                <Card className="flex flex-col divide-y rounded-md">
+                  <CardHeader className="w-full">
+                    <CardTitle className="font-semibold">Volume</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
+                    <InputSwitch<AircraftFormValues>
+                      label="FWT"
+                      name="fwt"
+                      type="number"
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="FWD"
+                      name="fwd"
+                      type="number"
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Bulk"
+                      name="bulk"
+                      type="number"
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent
+                className="h-full w-full flex-1"
                 value="aircraft-details"
               >
-                <Card className="flex h-full flex-col divide-y rounded-md">
-                  <CardHeader className="flex w-full flex-row items-center justify-between space-y-0">
+                <Card className="flex flex-col divide-y rounded-md">
+                  <CardHeader>
                     <CardTitle className="font-semibold">
                       Aircraft Details
                     </CardTitle>
-                    <div className="inline-flex items-center gap-1">
+                    {/* <div className="inline-flex items-center gap-1">
                       <Button
                         onClick={saveDefaults}
                         type="button"
@@ -750,191 +879,100 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                         <SaveIcon className="mr-2 size-3" />
                         Save as default
                       </Button>
-                    </div>
+                    </div> */}
                   </CardHeader>
-                  <CardContent className="w-full flex-1 p-0">
-                    <div className="custom-scrollbar h-5 min-h-full space-y-4 overflow-y-auto p-4">
-                      <div className="space-y-2">
-                        <span className="font-semibold">Measurement Units</span>
-                        <div className="grid grid-cols-3 gap-2">
-                          <InputSwitch<AircraftFormValues>
-                            label="Weight Unit"
-                            name="weight_unit_id"
-                            type="select"
-                            selectOptions={weightUnitsOptions}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Volume Unit"
-                            name="volume_unit_id"
-                            type="select"
-                            selectOptions={volumeUnitsOptions}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Dimension Unit"
-                            name="dimension_unit_id"
-                            type="select"
-                            selectOptions={lengthUnitsOptions}
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <span className="font-semibold">Details</span>
-                        <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-                          <InputSwitch<AircraftFormValues>
-                            label="MTOW"
-                            name="mtow"
-                            type="number"
-                            rightIcon={selectedWeightUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Max Zero Fuel Weight"
-                            name="max_zero_fuel_weight"
-                            type="number"
-                            rightIcon={selectedWeightUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Body Type"
-                            name="body_type_id"
-                            type="select"
-                            selectOptions={aircraftBodyTypesOptions}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Passenger Capacity"
-                            name="passenger_capacity"
-                            type="number"
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="ULD Positions"
-                            name="uld_position"
-                            type="number"
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Landing Weight"
-                            name="landing_weight"
-                            type="number"
-                            rightIcon={selectedWeightUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Cargo Capacity"
-                            name="cargo_capacity"
-                            type="number"
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Max Bulk Capacity Weight"
-                            name="max_bulk_capacity_weight"
-                            type="number"
-                            rightIcon={selectedWeightUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Max Bulk Capacity Volume"
-                            name="max_bulk_capacity_volume"
-                            type="number"
-                            rightIcon={selectedVolumeUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Max Volume"
-                            name="max_volume"
-                            type="number"
-                            rightIcon={selectedVolumeUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Restricted Weight Per Piece"
-                            name="restricted_weight_piece"
-                            type="number"
-                            rightIcon={selectedWeightUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Max Dimension per Piece (Length)"
-                            name="max_dimension_length"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Max Dimension per Piece (Breadth)"
-                            name="max_dimension_breadth"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Max Dimension per Piece (Height)"
-                            name="max_dimension_height"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="GL Code"
-                            name="gl_code_id"
-                            type="select"
-                            selectOptions={aircraftBodyTypesOptions}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            name="count"
-                            type="hidden"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <span className="font-semibold">Door Dimensions</span>
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-                          <InputSwitch<AircraftFormValues>
-                            label="AFT (H)"
-                            name="aft_h"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="AFT (W)"
-                            name="aft_w"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="FWD (H)"
-                            name="fwd_h"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="FWD (W)"
-                            name="fwd_w"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Bulk (H)"
-                            name="bulk_h"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Bulk (W)"
-                            name="bulk_w"
-                            type="number"
-                            rightIcon={selectedDimensionUnitSymbol}
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <span className="font-semibold">Volume</span>
-                        <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-                          <InputSwitch<AircraftFormValues>
-                            label="FWT"
-                            name="fwt"
-                            type="number"
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="FWD"
-                            name="fwd"
-                            type="number"
-                          />
-                          <InputSwitch<AircraftFormValues>
-                            label="Bulk"
-                            name="bulk"
-                            type="number"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
+                    <InputSwitch<AircraftFormValues>
+                      label="MTOW"
+                      name="mtow"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Max Zero Fuel Weight"
+                      name="max_zero_fuel_weight"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Body Type"
+                      name="body_type_id"
+                      type="select"
+                      selectOptions={aircraftBodyTypesOptions}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Passenger Capacity"
+                      name="passenger_capacity"
+                      type="number"
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="ULD Positions"
+                      name="uld_position"
+                      type="number"
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Landing Weight"
+                      name="landing_weight"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Cargo Capacity"
+                      name="cargo_capacity"
+                      type="number"
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Max Bulk Capacity Weight"
+                      name="max_bulk_capacity_weight"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Max Bulk Capacity Volume"
+                      name="max_bulk_capacity_volume"
+                      type="number"
+                      rightIcon={selectedVolumeUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Max Volume"
+                      name="max_volume"
+                      type="number"
+                      rightIcon={selectedVolumeUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Restricted Weight Per Piece"
+                      name="restricted_weight_piece"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Max Dimension per Piece (Length)"
+                      name="max_dimension_length"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Max Dimension per Piece (Breadth)"
+                      name="max_dimension_breadth"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="Max Dimension per Piece (Height)"
+                      name="max_dimension_height"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      label="GL Code"
+                      name="gl_code_id"
+                      type="select"
+                      selectOptions={aircraftBodyTypesOptions}
+                    />
+                    <InputSwitch<AircraftFormValues>
+                      name="count"
+                      type="hidden"
+                    />
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -993,7 +1031,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   const stepIndex = stepsOrder.findIndex(
                     (item) => item === tabValue
                   )
-                  setTabValue(stepsOrder[stepIndex - 1] as Tabs)
+                  setTabValue(stepsOrder[stepIndex - 1])
                 }}
               >
                 <ChevronLeftCircleIcon className="mr-2 size-4" />
@@ -1019,7 +1057,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     ...prev,
                     [tabValue]: isValidated,
                   }))
-                  isValidated && setTabValue(stepsOrder[nextStepIndex] as Tabs)
+                  isValidated && setTabValue(stepsOrder[nextStepIndex])
                 }}
               >
                 <ChevronRightCircleIcon className="mr-2 size-4" />
