@@ -13,9 +13,8 @@ import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const k360Navigation: TSidebarItem[] = [
   {
-    name: "K360",
+    name: "K360 (Jun 2024)",
     href: "/k360",
-    icon: CubeIcon,
     current: false,
     children: [
       {

@@ -1,5 +1,5 @@
-import { CursorArrowRippleIcon, UserIcon } from "@heroicons/react/24/outline"
-import { PlaneIcon, Users } from "lucide-react"
+import { PaperPlaneIcon } from "@radix-ui/react-icons"
+import { PlaneIcon, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -10,21 +10,25 @@ export const belliSettingsNavigation: TSidebarItem[] = [
     current: false,
     children: [
       {
-        name: "Profile",
-        href: "/settings/profile",
-        icon: UserIcon,
-      },
-      {
-        name: "Users",
-        href: "/settings/users",
-        icon: Users,
-      },
-      {
         name: "Aircraft Setup",
         href: "/settings/aircraft-setup",
         icon: PlaneIcon,
         current: false,
         isCanCreate: true,
+      },
+      {
+        name: "Flight Schedule Editor",
+        href: "/belli/flight-schedule-editor",
+        icon: PaperPlaneIcon,
+        current: false,
+        isCanCreate: true,
+      },
+      {
+        name: "Integrations",
+        href: "/belli/integrations",
+        icon: Waypoints,
+        current: false,
+        isCanCreate: false,
       },
     ],
   },

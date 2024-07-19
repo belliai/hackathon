@@ -1,26 +1,5 @@
-import {
-  BanknotesIcon,
-  BoltIcon,
-  CalendarIcon,
-  ChartBarIcon,
-  CircleStackIcon,
-  ClipboardIcon,
-  CurrencyDollarIcon,
-  CursorArrowRippleIcon,
-  GlobeAmericasIcon,
-  HandThumbUpIcon,
-  HomeIcon,
-  PresentationChartLineIcon,
-  ReceiptPercentIcon,
-  ServerStackIcon,
-} from "@heroicons/react/24/outline"
-import {
-  CubeIcon,
-  DashboardIcon,
-  PaperPlaneIcon,
-  ReaderIcon,
-} from "@radix-ui/react-icons"
-import { PlaneIcon, Waypoints } from "lucide-react"
+import { HomeIcon } from "@heroicons/react/24/outline"
+import { CubeIcon, DashboardIcon, ReaderIcon } from "@radix-ui/react-icons"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -31,23 +10,16 @@ export const operationsNavigation: TSidebarItem[] = [
     current: false,
     children: [
       {
-        name: "Airway Bill Dashboard",
-        href: "/belli/airway-bill-dashboard",
-        icon: HomeIcon,
+        name: "Flights Dashboard",
+        href: "/belli/flights-dashboard",
+        icon: DashboardIcon,
         current: false,
         isCanCreate: false,
       },
       {
-        name: "Flight Schedule Editor",
-        href: "/belli/flight-schedule-editor",
-        icon: PaperPlaneIcon,
-        current: false,
-        isCanCreate: true,
-      },
-      {
-        name: "Flights Dashboard",
-        href: "/belli/flights-dashboard",
-        icon: DashboardIcon,
+        name: "Airway Bill Dashboard",
+        href: "/belli/airway-bill-dashboard",
+        icon: HomeIcon,
         current: false,
         isCanCreate: false,
       },
@@ -64,14 +36,6 @@ export const operationsNavigation: TSidebarItem[] = [
         icon: ReaderIcon,
         current: false,
         isCanCreate: false,
-      },
-      {
-        name: "Integrations",
-        href: "/belli/integrations",
-        icon: Waypoints,
-        current: false,
-        isCanCreate: false,
-
       },
     ],
   },

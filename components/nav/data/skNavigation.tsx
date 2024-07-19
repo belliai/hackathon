@@ -19,9 +19,8 @@ import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const skNavigation: TSidebarItem[] = [
   {
-    name: "SK",
+    name: "SK (Jun 2024)",
     href: "/sk",
-    icon: CubeIcon,
     current: false,
     children: [
       {
