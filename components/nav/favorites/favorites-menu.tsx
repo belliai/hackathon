@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import {
   closestCenter,
   DndContext,
@@ -24,12 +25,15 @@ import {
   XIcon,
 } from "lucide-react"
 
+import { findActiveItem } from "@/lib/utils/nav-utils"
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../ui/accordion"
+import { getIconByHref } from "../data/operationsNavigation"
 import SidebarItem from "../SidebarItem"
 import FavoriteFolderItem from "./favorite-folder-item"
 import {
@@ -39,9 +43,7 @@ import {
   Path,
   useFavorites,
 } from "./favorites-provider"
-import { getIconByHref } from "../data/operationsNavigation"
-import { findActiveItem } from "@/lib/utils/nav-utils"
-import { usePathname } from "next/navigation"
+
 export default function FavoritesMenu() {
   const {
     favorites,
@@ -219,11 +221,11 @@ export default function FavoritesMenu() {
         <AccordionItem className="border-b-0" value="favorites">
           <AccordionTrigger
             customarrow={<></>}
-            className="justify-between gap-2 border-b-0 px-[5px] py-2 text-xs text-muted-foreground hover:no-underline [&[data-state=open]>div>svg]:rotate-90 [&[data-state=open]>svg]:rotate-0"
+            className="justify-between gap-2 border-b-0 px-2 py-2 text-xs text-[#E2E3E5] hover:no-underline [&[data-state=open]>div>svg]:rotate-90 [&[data-state=open]>svg]:rotate-0"
           >
             <div className="inline-flex items-center gap-2">
               <span>Favorites</span>
-              <ChevronRight className="h-3 w-3 shrink-0 text-muted-foreground transition-transform duration-200" />
+              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
             </div>
             <FolderPlusIcon
               onClick={(e) => {
@@ -245,7 +247,7 @@ export default function FavoritesMenu() {
                 onValueChange={setOpenFolders}
               >
                 {favorites.map((item) => {
-                  const isActive = isPath(item) && pathname === item.href;
+                  const isActive = isPath(item) && pathname === item.href
                   return (
                     <SortableItem
                       key={item.id}
@@ -254,7 +256,7 @@ export default function FavoritesMenu() {
                       openFolders={openFolders}
                       isActive={isActive}
                     />
-                  );
+                  )
                 })}
               </Accordion>
             </SortableContext>
@@ -307,7 +309,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({
   }
 
   if (isPath(item)) {
-    const itemIcon =  getIconByHref(item.href)
+    const itemIcon = getIconByHref(item.href)
 
     return (
       <div
