@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
+import { useOrganization } from "@clerk/nextjs"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { Loader, StarIcon } from "lucide-react"
 
@@ -16,14 +17,15 @@ import {
   BreadcrumbSeparator,
 } from "../ui/breadcrumb"
 import { Button } from "../ui/button"
+import { Skeleton } from "../ui/skeleton"
 import ActiveUsers from "./active-users"
 import { belliSettingsNavigation } from "./data/belliSettingsNavigation"
+import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 import { k360Navigation } from "./data/k360Navigation"
 import { settingNavigation } from "./data/settingNavigation"
 import { skNavigation } from "./data/skNavigation"
 import { Path, useFavorites } from "./favorites/favorites-provider"
 import { TSidebarItem } from "./SidebarItem"
-import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 
 const findCurrentPaths = (
   items: TSidebarItem[],
@@ -36,7 +38,7 @@ const findCurrentPaths = (
       ...path,
       { name: item.name, href: item.href, children: undefined },
     ]
-    
+
     // Check if the current item's href matches the pathname
     if (item.href === pathname) {
       return currentPath
@@ -58,11 +60,10 @@ const findCurrentPaths = (
 //Function to format the tab into a proper string
 const transformTabName = (tab: string) => {
   return tab
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ")
 }
-
 
 const getCurrentPaths = (pathname: string, searchParams: URLSearchParams) => {
   let currentPaths: TSidebarItem[] = []
@@ -81,9 +82,13 @@ const getCurrentPaths = (pathname: string, searchParams: URLSearchParams) => {
     currentPaths = result
   }
 
-  const tab = searchParams.get('tab')
+  const tab = searchParams.get("tab")
   if (tab) {
-    currentPaths.push({ name: transformTabName(tab), href: `${pathname}?tab=${tab}`, children: undefined })
+    currentPaths.push({
+      name: transformTabName(tab),
+      href: `${pathname}?tab=${tab}`,
+      children: undefined,
+    })
   }
 
   return currentPaths
@@ -105,9 +110,11 @@ const getSection = (pathname: string, items: TSidebarItem[]): boolean => {
 
 export default function BreadCrumbSection() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()  
+  const searchParams = useSearchParams()
   const { insertPath, isPathFavorited, deletePathByHref, favorites } =
     useFavorites()
+
+  const { organization, isLoaded } = useOrganization()
 
   const isFavorited = useMemo(
     () => isPathFavorited(pathname),
@@ -121,6 +128,16 @@ export default function BreadCrumbSection() {
       <div className="flex flex-row items-center gap-4">
         <Breadcrumb>
           <BreadcrumbList>
+            <>
+              <BreadcrumbItem>
+                {isLoaded ? (
+                  organization?.name
+                ) : (
+                  <Skeleton className="h-5 w-12" />
+                )}
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+            </>
             {currentPaths.map((path, index) => (
               <React.Fragment key={index}>
                 {index !== 0 && <BreadcrumbSeparator />}
