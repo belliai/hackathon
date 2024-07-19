@@ -13,7 +13,7 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs"
-import { Check, ChevronDownIcon, User } from "lucide-react"
+import { Check, ChevronDownIcon, User, Users } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -89,18 +89,18 @@ export default function UserDropdown({
   }
 
   const ITEMS: UserDropdownItem[] = [
-    // {
-    //   icon: <User className="mr-2 h-4 w-4" />,
-    //   // shortcut: "⇧⌘P",
-    //   route: "/profile",
-    //   label: "Profile",
-    //   separator: true,
-    // },
-    // {
-    //   route: "/k360/organize/masters/finance/cart",
-    //   label: "Settings",
-    //   changeNavigation: true,
-    // },
+    {
+      label: "Profile",
+      route: "/settings/profile",
+    },
+    {
+      label: "Organization",
+      route: "/settings/organization",
+    },
+    {
+      label: "Users",
+      route: "/settings/users",
+    },
   ]
 
   return (
@@ -161,7 +161,7 @@ export default function UserDropdown({
                 <DropdownMenuSubTrigger className="min-w-40 cursor-pointer rounded-lg px-3.5 py-2">
                   Change Organization
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
+                <DropdownMenuSubContent className="rounded-xl bg-zinc-950">
                   {userMemberships.data.map((orgmem) => {
                     const organization = orgmem.organization
                     const isActive = organization.id === auth.orgId

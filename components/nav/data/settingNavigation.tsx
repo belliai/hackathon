@@ -9,9 +9,8 @@ import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const settingNavigation: TSidebarItem[] = [
   {
-    name: "Configuration",
+    name: "SETTINGS (Jul 2024)",
     href: "#",
-    icon: CubeIcon,
     current: false,
     children: [
       {

@@ -8,13 +8,8 @@ import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline"
 
 import { fetchTooltips } from "@/lib/contentful"
-import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
 import SideBar from "@/components/nav/sidebar"
-import { CollaborativeApp } from "@/app/CollaborativeApp"
 
-import { Room } from "../liveblocks/room"
 import BreadCrumbSection from "../nav/breadcrumb-section"
 import {
   ResizableHandle,

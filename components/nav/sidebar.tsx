@@ -19,11 +19,12 @@ import { skNavigation } from "@/components/nav/data/skNavigation"
 import NewOrderModal from "../dashboard/new-order-modal"
 import { Button } from "../ui/button"
 import { toast } from "../ui/use-toast"
+import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 import { k360Navigation } from "./data/k360Navigation"
 import FavoritesMenu from "./favorites/favorites-menu"
+import { TSidebarItem } from "./SidebarItem"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
-import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -73,6 +74,14 @@ export default function SideBar() {
     ],
     pathname
   )
+
+  const adminOnlyItems: TSidebarItem[] = [
+    {
+      name: "Visible only to Admins",
+      href: "#",
+      children: [...settingNavigation, ...skNavigation, ...k360Navigation],
+    },
+  ]
 
   return (
     <Suspense>
@@ -165,33 +174,9 @@ export default function SideBar() {
             </ul>
           </ul>
           {isBelliAdmin && (
-            <>
-              {/* <Button
-                className="mt-4"
-                size="sm"
-                variant="button-primary"
-                asChild
-              >
-                <Link href="/admin/organization/organization-members">
-                  Admin
-                </Link>
-              </Button> */}
-              <SidebarMenu
-                items={settingNavigation[0].children ?? []}
-                sectionTitle="SETTINGS (Jul 2024)"
-                collapsible
-              />
-              <SidebarMenu
-                items={skNavigation[0].children ?? []}
-                sectionTitle="SK (Jun 2024)"
-                collapsible
-              />
-              <SidebarMenu
-                items={k360Navigation[0].children ?? []}
-                sectionTitle="K360 (Jun 2024)"
-                collapsible
-              />
-            </>
+            <ul role="list" className="-mx-2">
+              <SidebarMenu items={adminOnlyItems} collapsible />
+            </ul>
           )}
         </nav>
       </div>
