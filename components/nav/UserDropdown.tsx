@@ -94,6 +94,10 @@ export default function UserDropdown({
       route: "/settings/profile",
     },
     {
+      label: "Organization",
+      route: "/settings/organization",
+    },
+    {
       label: "Users",
       route: "/settings/users",
     },
