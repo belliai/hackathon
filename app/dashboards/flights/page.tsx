@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { DataTable } from "@/components/data-table/data-table"
 import Modal from "@/components/modal/modal"
-import { useRecurringFlightsColumns } from "@/app/belli/flight-schedule-editor/components/column"
 import { DisplayOption } from "@/app/data-fields/display"
+import { useRecurringFlightsColumns } from "@/app/settings/flights/components/column"
 
 interface FlightsActualInformation {
   detail: string

@@ -144,28 +144,28 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   options={transportMethodOptions}
                   label="Transport Method"
                   info="Select the Transport Method"
-                  editLink="/data-fields/shipments?tab=transport-method"
+                  editLink="/data-fields/airway-bills?tab=transport-method"
                 />
                 <Combobox
                   name="origin_id"
                   options={locationOptions}
                   label="Origin *"
                   info="Select the Location"
-                  editLink="/data-fields/shipments?tab=location"
+                  editLink="/data-fields/airway-bills?tab=location"
                 />
                 <Combobox
                   name="destination_id"
                   options={locationOptions}
                   label="Destination *"
                   info="Select the Location"
-                  editLink="/data-fields/shipments?tab=location"
+                  editLink="/data-fields/airway-bills?tab=location"
                 />
                 <Combobox
                   name="destination_id"
                   options={locationOptions}
                   label="Destination *"
                   info="Select the Location"
-                  editLink="/data-fields/shipments?tab=location"
+                  editLink="/data-fields/airway-bills?tab=location"
                 />
                 <Combobox
                   name="partner_type_id"
@@ -232,7 +232,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   options={statusOptions}
                   label="AWB Status"
                   info="Select the AWB Status"
-                  editLink="/data-fields/shipments?tab=status"
+                  editLink="/data-fields/airway-bills?tab=status"
                 />
               </div>
 

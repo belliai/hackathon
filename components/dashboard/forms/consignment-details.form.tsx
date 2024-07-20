@@ -87,21 +87,21 @@ const ConsignmentDetailsForm = React.forwardRef<HTMLDivElement, any>(
           options={locationsOptions}
           label="Origin"
           info="Select the origin location"
-          editLink="/data-fields/shipments?tab=location"
+          editLink="/data-fields/airway-bills?tab=location"
         />
         <Combobox
           name="destination_id"
           options={locationsOptions}
           label="Destination"
           info="Select the Destination location"
-          editLink="/data-fields/shipments?tab=location"
+          editLink="/data-fields/airway-bills?tab=location"
         />
         <Combobox
           name="commodity_code_id"
           options={commodityCodeOptions}
           label="Commodity Code *"
           info="Select the Commodity Code"
-          editLink="/data-fields/shipments?tab=commodity-code"
+          editLink="/data-fields/airway-bills?tab=commodity-code"
         />
         <FormField
           control={form.control}

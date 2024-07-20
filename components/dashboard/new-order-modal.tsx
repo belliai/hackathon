@@ -318,7 +318,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                       options={statusOptions}
                       label="Status"
                       info="Select the Status"
-                      editLink="/data-fields/shipments?tab=status"
+                      editLink="/data-fields/airway-bills?tab=status"
                     />
                   )}
                   

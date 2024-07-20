@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import PageContainer from "@/components/layout/PageContainer"
 
-export default function Page() {
+export default function DataSyncWithCMS() {
   const [data, setData] = useState<any>(null)
 
   const handleClick = () => {
@@ -48,23 +48,21 @@ export default function Page() {
   }
 
   return (
-    <PageContainer className="gap-6">
-      <div style={{ marginTop: '-5px' }}>
-        <div className="flex-1 p-4">
-          <Button
-            onClick={handleClick}
-            className="bg-button-primary text-white hover:bg-button-primary/80"
-            style={{ fontSize: '0.875rem' }}            
-          >
-            <span className="hidden md:block">Extract Data</span>
-          </Button>
-          {data && (
-            <div className="mt-4">
-              <pre>{JSON.stringify(data, null, 2)}</pre>
-            </div>
-          )}
-        </div>
+    <div style={{ marginTop: "-5px" }}>
+      <div className="flex-1 p-4">
+        <Button
+          onClick={handleClick}
+          className="bg-button-primary text-white hover:bg-button-primary/80"
+          style={{ fontSize: "0.875rem" }}
+        >
+          <span className="hidden md:block">Extract Data</span>
+        </Button>
+        {data && (
+          <div className="mt-4">
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+        )}
       </div>
-    </PageContainer>
+    </div>
   )
 }

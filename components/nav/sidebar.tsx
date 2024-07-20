@@ -143,7 +143,7 @@ export default function SideBar() {
               <ul className="flex flex-col gap-1">
                 {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
                   <>
-                    <FavoritesMenu />
+                    {/* <FavoritesMenu /> */}
                     <SidebarMenu items={operationsNavigation} collapsible />
                     <SidebarMenu items={belliSettingsNavigation} collapsible />
                     <SidebarMenu

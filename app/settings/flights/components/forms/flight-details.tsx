@@ -60,7 +60,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={formattedLocation}
           label="Origin"
           info="Select the source location"
-          editLink="/data-fields/shipments?tab=location"
+          editLink="/data-fields/airway-bills?tab=location"
         />
 
         <FormTextField
@@ -114,7 +114,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={formattedLocation}
           label="Destination"
           info="Select the source location"
-          editLink="/data-fields/shipments?tab=location"
+          editLink="/data-fields/airway-bills?tab=location"
         />
 
         <FormTextField
