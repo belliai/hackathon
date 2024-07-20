@@ -32,6 +32,7 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalType, setModalType] = useState<"edit" | "create">("create")
   const [deleteConfirm, setDeleteConfirm] = useState(false)
+  const [selectedColumnId, setSelectedColumnId] = useState('')
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -45,10 +46,9 @@ export default function Home() {
   } = useOrders({ pagination })
   const remove = useRemoveOrder()
 
-
-
-  const openModal = (data: Order) => {
+  const openModal = (data: Order, columnId: string) => {
     setSelectedBooking(data)
+    setSelectedColumnId(columnId)
     setModalOpen(true)
     if (data) setModalType("edit")
   }
@@ -60,6 +60,7 @@ export default function Home() {
 
   const onOpenChange = useCallback((open: boolean) => {
     setModalOpen(open)
+    if (!open) setSelectedColumnId('')
   }, [])
 
   const onDelete = (data: any) => {
@@ -87,7 +88,12 @@ export default function Home() {
     </Button>
   )
 
-  const columnWithActions = [...columns]
+  const columnWithActions = columns.map(column => ({
+    ...column,
+    cell: ({ row: { original, getValue }, column: { id } }: { row: { original: any; getValue: (id: string) => any }; column: { id: string } }) => (
+      <div onClick={() => openModal(original, id)} className="cursor-pointer">{getValue(id)}</div>
+    ),
+  }))
 
   return (
     <div>
@@ -104,7 +110,7 @@ export default function Home() {
           right: ["actions"],
         }}
         columns={columnWithActions}
-        onRowClick={openModal}
+        // onRowClick={openModal}
         data={isLoading ? [] : ordersData.data}
         pageCount={isLoading ? 1 : ordersData.total_pages}
         manualPagination={true}
@@ -114,7 +120,7 @@ export default function Home() {
         showToolbarOnlyOnHover={true}
         extraRightComponents={generateButton}
       />
-      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode={modalType} />
+      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode={modalType} selectedColumnId={selectedColumnId} />
       <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>

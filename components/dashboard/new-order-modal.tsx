@@ -54,26 +54,26 @@ import BookingTypeForm from "./forms/booking-type-form"
 import BookingDetailsForm from "./forms/booking-details-form"
 import ConsignorForm from "./forms/consignor-form"
 import ConsigneeForm from "./forms/consignee-form"
-import FreightForwarderForm from "./forms/freight-forwarder-form"
 import PaymentForm from "./forms/payment-form"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
   open?: boolean
   mode?: "edit" | "create"
+  selectedColumnId?: string
 }
 
 const schemas = orderSchema.omit({ activity_logs: true })
 const initialValues = getDefaults(schemas)
 
 export default function NewOrderModal(props: NewOrderModalProps) {
-  const { children, onOpenChange, mode = "create" } = props
+  const { children, onOpenChange, mode = "create", selectedColumnId } = props
   const { selectedBooking, setSelectedBooking } = useBookingContext()
   const [open, setOpen] = useState(props.open ?? false)
   const [isFullScreen, setFullScreen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
-  const [currentTab, setCurrentTab] = useState('booking-type')
+  const [currentTab, setCurrentTab] = useState('booking-details')
 
   const add = useAddOrder()
   const update = useUpdateOrder()
@@ -123,20 +123,23 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     icon: any;
     content: JSX.Element;
     fieldList: string[];
+    columnList: string[];
   }[] = [
-    {
-      label: 'Booking Type',
-      value: 'booking-type',
-      icon: PlaneIcon,
-      content: <BookingTypeForm onValueChange={nextTab} />,
-      fieldList: ['booking_type_id'],
-    },
+    // {
+    //   label: 'Booking Type',
+    //   value: 'booking-type',
+    //   icon: PlaneIcon,
+    //   content: <BookingTypeForm onValueChange={nextTab} />,
+    //   fieldList: ['booking_type_id'],
+    //   columnList: [],
+    // },
     {
       label: 'Booking Details',
       value: 'booking-details',
       icon: SquarePenIcon,
       content: <BookingDetailsForm />,
-      fieldList: ['partner_prefix_id', 'awb', 'partner_code_id', 'is_physical', 'commodity_code_id', 'commodity_name', 'pieces', 'gs_weight_kg', 'volume_kg'],
+      fieldList: ['booking_type_id', 'partner_prefix_id', 'awb', 'partner_code_id', 'is_physical', 'commodity_code_id', 'commodity_name', 'pieces', 'gs_weight_kg', 'volume_kg'],
+      columnList: ['awb', 'partner_code_name', 'partner_prefix_name', 'commodity_code_name', 'gs_weight_kg', 'volume_kg'],
     },
     {
       label: 'Consignor (Sender)',
@@ -144,6 +147,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       icon: PlaneTakeoffIcon,
       content: <ConsignorForm />,
       fieldList: ['origin_id', 'shipper_id'],
+      columnList: ['origin_name', 'shipper_name'],
     },
     {
       label: 'Consignee (Receiver)',
@@ -151,20 +155,15 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       icon: PlaneLandingIcon,
       content: <ConsigneeForm />,
       fieldList: ['destination_id', 'consignee_id'],
+      columnList: ['destination_name'],
     },
-    // {
-    //   label: 'Freight Forwarder',
-    //   value: 'freight-forwarder',
-    //   icon: PackageIcon,
-    //   content: <FreightForwarderForm />,
-    //   fieldList: ['freight_forwarder_id', 'organization_id'],
-    // },
     {
       label: 'Payment',
       value: 'payment',
       icon: Banknote,
       content: <PaymentForm />,
-      fieldList: ['use_freight_forwarder', 'freight_forwarder_id', 'organization_id', 'bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg']
+      fieldList: ['use_freight_forwarder', 'freight_forwarder_id', 'organization_id', 'bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg'],
+      columnList: ['bill_to_name', 'rate', 'currency_name', 'freight_forwarder_name', 's_freight', 's_rate', 'total', 'mode', 'ch_weight_kg', 'payment_mode_name'],
     }
   ]
 
@@ -189,6 +188,13 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     value: status.ID,
     label: status.name,
   }))
+
+  useEffect(() => {
+    if (selectedColumnId) {
+      const currentTabFromTable = TAB_LIST.find(tab => tab.columnList.includes(selectedColumnId))
+      setCurrentTab(currentTabFromTable?.value || 'booking-details')
+    }
+  }, [selectedColumnId])
 
   const renderSaveButtons = () => (
     <Button
@@ -299,7 +305,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                         key={`list-${list.value}`}
                         className="w-full justify-start py-1.5 data-[state=active]:bg-accent data-[state=active]:text-white disabled:text-muted-foreground/45"
                         value={list.value}
-                        disabled={index > getCurrentIndex(currentTab)}
+                        disabled={mode === 'create' && index > getCurrentIndex(currentTab)}
                       >
                         <list.icon className="mr-2 h-4 w-4" />
                         {list.label}
@@ -371,7 +377,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 onOpenChange(false)
                 setCloseWarningOpen(false)
                 form.reset(defaultValues)
-                setCurrentTab('booking-type')
+                setCurrentTab('booking-details')
               }}
             >
               Yes, discard changes
