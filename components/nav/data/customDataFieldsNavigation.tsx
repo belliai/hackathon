@@ -1,4 +1,11 @@
-import { Boxes, Building2, CreditCard, Plane, PlaneTakeoff } from "lucide-react"
+import {
+  Boxes,
+  Building2,
+  CreditCard,
+  Plane,
+  PlaneTakeoff,
+  Users,
+} from "lucide-react"
 
 import { TSidebarItem } from "../SidebarItem"
 
@@ -32,6 +39,11 @@ export const customDataFieldsNavigation: TSidebarItem[] = [
         name: "Organizations",
         href: "/data-fields/organizations",
         icon: Building2,
+      },
+      {
+        name: "Customers",
+        href: "/data-fields/customers",
+        icon: Users,
       },
     ],
   },

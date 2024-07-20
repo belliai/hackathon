@@ -17,7 +17,7 @@ import {
 import PageContainer from "@/components/layout/PageContainer"
 
 export interface DataFieldsTab {
-  name: SettingsTabName
+  name: SettingsTabName | string
   component: JSX.Element
   icon: LucideIcon
   tooltipId: string
@@ -27,11 +27,13 @@ export interface DataFieldsTab {
 interface DataFieldsPageTemplateProps {
   tabs: DataFieldsTab[]
   tabsOrientation?: "horizontal" | "vertical"
+  containerClassName?: string
 }
 
 export default function DataFieldsPageTemplate({
   tabs,
   tabsOrientation = "horizontal",
+  containerClassName,
 }: DataFieldsPageTemplateProps) {
   const tooltips = getTooltipContents()
 
@@ -67,13 +69,16 @@ export default function DataFieldsPageTemplate({
 
   // Handle tab change
   const handleTabChange = (val: any) => {
-    // setActiveTab(val)
     router.push(
       pathname +
         "?" +
         createQueryString("tab", val.toLowerCase().replace(/\s+/g, "-"))
     )
   }
+
+  useEffect(() => {
+    handleTabChange(activeTab)
+  }, [activeTab])
 
   const getHoveredContent = (tabName: string) => {
     const tabFound = tabs.find((tab) => tab.name === tabName)
@@ -104,7 +109,7 @@ export default function DataFieldsPageTemplate({
     <PageContainer>
       <Tabs
         value={activeTab}
-        onValueChange={handleTabChange}
+        onValueChange={setActiveTab}
         className={cn("flex h-full w-full items-start justify-start", {
           "flex-col gap-2": tabsOrientation === "horizontal",
           "flex-row gap-4 space-y-0": tabsOrientation === "vertical",
@@ -137,7 +142,9 @@ export default function DataFieldsPageTemplate({
         </TabsList>
         {tabsOrientation === "horizontal" && <Separator />}
         <div className="mt-6 flex w-full flex-col items-center">
-          <div className="flex w-full max-w-screen-sm">
+          <div
+            className={cn("flex w-full max-w-screen-sm", containerClassName)}
+          >
             {tabs.map((tab) => (
               <TabsContent
                 key={tab.name}
