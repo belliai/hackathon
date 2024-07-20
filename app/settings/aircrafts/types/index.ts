@@ -21,3 +21,10 @@ export type AircraftFormTabs =
   | "door-dimensions"
   | "volume"
   | "aircraft-tail-numbers"
+
+export type TailNumberFormTabs =
+  | "tail-numbers"
+  | "measurement-units"
+  | "aircraft-details"
+  | "door-dimensions"
+  | "volume"

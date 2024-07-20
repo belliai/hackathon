@@ -6,6 +6,10 @@ import {
   aircraftFormSchema,
   AircraftFormValues,
 } from "@/schemas/aircraft/aircraft"
+import {
+  tailNumberFormSchema,
+  TailNumberFormValues,
+} from "@/schemas/aircraft/tail-numbers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PlaneIcon, PlusIcon, ScrollTextIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -17,10 +21,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/data-table/data-table"
 import PageContainer from "@/components/layout/PageContainer"
 
-import AircraftTypeForm from "./components/aircraft-form-v3"
-import { aircraftTailNumbersColumns } from "./components/aircraft-tail-number-columns"
-import { aircraftTypeColumns } from "./components/aircraft-type-columns"
-import { formDefaultValues } from "./constants"
+import { aircraftTailNumbersColumns } from "./components/columns/aircraft-tail-number-columns"
+import { aircraftTypeColumns } from "./components/columns/aircraft-type-columns"
+import AircraftTypeForm from "./components/forms/aircraft-form-v3"
+import TailNumberForm from "./components/forms/aircraft-tail-number-form"
+import {
+  aircraftFormDefaultValues,
+  tailNumberFormDefaultValues,
+} from "./constants"
 import { TailNumberData } from "./types"
 
 export default function MasterAircraftPage() {
@@ -51,9 +59,12 @@ export default function MasterAircraftPage() {
     setSearchParams("tab", tabValue)
   }, [tabValue])
 
-  const [currentOpenModal, setCurrentOpenModal] = useState<string | boolean>(
-    false
-  ) // When the state is a string, it means the modal is in edit mode
+  const [currentOpenAircraftModal, setCurrentOpenAircraftModal] = useState<
+    string | boolean
+  >(false) // When the state is a string, it means the modal is in edit mode
+  const [currentOpenTailNumberModal, setCurrentOpenTailNumberModal] = useState<
+    string | boolean
+  >(false) // When the state is a string, it means the modal is in edit mode
 
   const { data: aircrafts, isLoading } = useAircrafts({
     page: 1,
@@ -92,15 +103,19 @@ export default function MasterAircraftPage() {
     [aircraftsData]
   )
 
-  const form = useForm<AircraftFormValues>({
+  const aircraftForm = useForm<AircraftFormValues>({
     resolver: zodResolver(aircraftFormSchema),
-    defaultValues: formDefaultValues,
+    defaultValues: aircraftFormDefaultValues,
+  })
+  const tailnumberForm = useForm<TailNumberFormValues>({
+    resolver: zodResolver(tailNumberFormSchema),
+    defaultValues: tailNumberFormDefaultValues,
   })
 
-  function handleRowClick(data: Aircraft) {
-    setCurrentOpenModal(data.id)
+  function handleAircraftRowClick(data: Aircraft) {
+    setCurrentOpenAircraftModal(data.id)
 
-    form.reset({
+    aircraftForm.reset({
       ...data,
       manufacturer_id: data.manufacturer.is_deleted ? "" : data.manufacturer.id,
       aircraft_type_id:
@@ -128,12 +143,34 @@ export default function MasterAircraftPage() {
     })
   }
 
-  const handleTailNumberRowClick = (aircraft_id: Aircraft["id"]) => {
+  const handleTailNumberRowClick = (
+    aircraft_id: Aircraft["id"],
+    tail_number: string
+  ) => {
     const aircraft = aircraftsData?.find((item) => item.id === aircraft_id)
-
     if (!aircraft) return
 
-    handleRowClick(aircraft)
+    const transformedAircraft: Partial<Aircraft> = {
+      ...aircraft,
+      manufacturer: undefined,
+      aircraft_type: undefined,
+      version: undefined,
+      aircraft_tail_numbers: undefined,
+    }
+
+    tailnumberForm.reset({
+      ...transformedAircraft,
+      tail_number: tail_number,
+      aircraft_id: transformedAircraft.id,
+      body_type_id: transformedAircraft.body_type?.id,
+      volume_unit_id: transformedAircraft.volume_unit?.id,
+      dimension_unit_id: transformedAircraft.dimension_unit?.id,
+      weight_unit_id: transformedAircraft.weight_unit?.id,
+      status_id: transformedAircraft.status?.id,
+      gl_code_id: transformedAircraft.gl_code?.id,
+    })
+
+    setCurrentOpenTailNumberModal(aircraft_id)
   }
 
   const tabsList = (
@@ -168,15 +205,14 @@ export default function MasterAircraftPage() {
               showToolbarOnlyOnHover={true}
               columns={aircraftTypeColumns}
               data={aircraftsData ?? []}
-              onRowClick={handleRowClick}
+              onRowClick={handleAircraftRowClick}
               menuId="aircraft"
               extraRightComponents={
                 <Button
                   size={"sm"}
                   variant={"button-primary"}
-                  className="p-2 text-xs"
-                  onClick={() => setCurrentOpenModal(true)}
-                  style={{ fontSize: "0.875rem" }}
+                  className="p-2 text-sm"
+                  onClick={() => setCurrentOpenAircraftModal(true)}
                 >
                   <PlusIcon className="mr-2 size-4" />
                   Create Aircraft
@@ -190,16 +226,15 @@ export default function MasterAircraftPage() {
               showToolbarOnlyOnHover={true}
               columns={aircraftTailNumbersColumns}
               data={aircraftTailNumbersData ?? []}
-              onRowClick={({ aircraft_id }) => {
-                handleTailNumberRowClick(aircraft_id)
+              onRowClick={({ aircraft_id, tail_number }) => {
+                handleTailNumberRowClick(aircraft_id, tail_number)
               }}
               extraRightComponents={
                 <Button
                   size={"sm"}
                   variant={"button-primary"}
-                  className="p-2 text-xs"
-                  onClick={() => setCurrentOpenModal(true)}
-                  style={{ fontSize: "0.875rem" }}
+                  className="p-2 text-sm"
+                  onClick={() => setCurrentOpenTailNumberModal(true)}
                 >
                   <PlusIcon className="mr-2 size-4" />
                   Create Tail Number
@@ -211,16 +246,30 @@ export default function MasterAircraftPage() {
         </Tabs>
       </div>
       <AircraftTypeForm
-        form={form}
-        currentOpen={currentOpenModal}
+        form={aircraftForm}
+        currentOpen={currentOpenAircraftModal}
         onOpenChange={(open) => {
           if (open) {
-            setCurrentOpenModal(currentOpenModal)
+            setCurrentOpenAircraftModal(currentOpenAircraftModal)
           } else {
-            if (typeof currentOpenModal === "string") {
-              form.reset(formDefaultValues)
+            if (typeof currentOpenAircraftModal === "string") {
+              aircraftForm.reset(aircraftFormDefaultValues)
             }
-            setCurrentOpenModal(false)
+            setCurrentOpenAircraftModal(false)
+          }
+        }}
+      />
+      <TailNumberForm
+        form={tailnumberForm}
+        currentOpen={currentOpenTailNumberModal}
+        onOpenChange={(open) => {
+          if (open) {
+            setCurrentOpenTailNumberModal(currentOpenTailNumberModal)
+          } else {
+            if (typeof currentOpenTailNumberModal === "string") {
+              tailnumberForm.reset(tailNumberFormDefaultValues)
+            }
+            setCurrentOpenTailNumberModal(false)
           }
         }}
       />

@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
 
-import { TailNumberData } from "../types"
+import { TailNumberData } from "../../types"
 
 export const aircraftTailNumbersColumns: ColumnDef<TailNumberData>[] = [
   {
