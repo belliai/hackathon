@@ -39,7 +39,7 @@ export interface Aircraft {
   updated_at: string
 }
 
-export interface Version extends OptionEntity {
+export interface Version extends Omit<OptionEntity, "name"> {
   version: string
 }
 

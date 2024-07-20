@@ -79,13 +79,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import InputSwitch from "@/components/form/InputSwitch"
 
-import { formDefaultValues } from "../constants"
+import { aircraftFormDefaultValues } from "../../constants"
 import {
   stepsOrder,
   tabValidations,
-} from "../constants/validation-steps-aircraft"
-import { AircraftFormTabs } from "../types"
-import OptionDeleteWarning, { Deletee } from "./option-delete-warning"
+} from "../../constants/validation-steps-aircraft"
+import { AircraftFormTabs } from "../../types"
+import OptionDeleteWarning, { Deletee } from "../option-delete-warning"
 
 type AircraftTypeFormProps = {
   currentOpen: string | boolean
@@ -296,7 +296,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
           onSuccess: (data) => {
             onOpenChange(false)
             console.log("res data", data)
-            form.reset(formDefaultValues)
+            form.reset(aircraftFormDefaultValues)
             toast({
               title: "Success!",
               description: "Aircraft updated successfully",
@@ -352,7 +352,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   // this is to reset the form states on modal close
   useEffect(() => {
     if (!currentOpen) {
-      form.reset(formDefaultValues)
+      form.reset(aircraftFormDefaultValues)
       setTabValue("aircraft-type")
       setHasDelete(false)
     }
@@ -364,7 +364,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
       volume: isEdit ? true : false,
       "aircraft-tail-numbers": isEdit ? true : false,
     })
-  }, [currentOpen, form, formDefaultValues, isEdit])
+  }, [currentOpen, form, aircraftFormDefaultValues, isEdit])
 
   const { mutateAsync: deleteMutateAsync, isPending: isPendingDelete } =
     useDeleteAircraft()
@@ -792,7 +792,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                 <Card className="flex flex-col divide-y rounded-md">
                   <CardHeader className="w-full">
                     <CardTitle className="font-semibold">
-                      DoorDimension
+                      Door Dimension
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
