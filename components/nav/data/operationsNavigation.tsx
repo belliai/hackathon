@@ -5,35 +5,21 @@ import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const operationsNavigation: TSidebarItem[] = [
   {
-    name: "Belli",
-    href: "/belli",
+    name: "Dashboards",
+    href: "/dashboards",
     current: false,
     children: [
       {
-        name: "Flights Dashboard",
-        href: "/belli/flights-dashboard",
+        name: "Flights",
+        href: "/dashboards/flights",
         icon: DashboardIcon,
         current: false,
         isCanCreate: false,
       },
       {
-        name: "Airway Bill Dashboard",
-        href: "/belli/airway-bill-dashboard",
+        name: "Airway Bills",
+        href: "/dashboards/airway-bills",
         icon: HomeIcon,
-        current: false,
-        isCanCreate: false,
-      },
-      {
-        name: "Data Sync",
-        href: "/belli/data-sync",
-        icon: CubeIcon,
-        current: false,
-        isCanCreate: false,
-      },
-      {
-        name: "Load Planner",
-        href: "/belli/load-planner",
-        icon: ReaderIcon,
         current: false,
         isCanCreate: false,
       },

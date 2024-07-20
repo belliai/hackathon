@@ -1114,7 +1114,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Ignore</AlertDialogCancel>
-            <Link href={"/belli/flight-schedule-editor"}>
+            <Link href={"/dashboards/flights"}>
               <AlertDialogAction variant={"button-primary"}>
                 Fix This
               </AlertDialogAction>

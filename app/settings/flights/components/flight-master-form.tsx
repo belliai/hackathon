@@ -183,14 +183,14 @@ export default function FlightMasterForm({ hookForm }: FlightMasterFormType) {
             options={formattedLocation}
             label="Origin"
             info="Select the source location"
-            editLink="/data-fields/shipments?tab=location"
+            editLink="/data-fields/airway-bills?tab=location"
           />
           <Combobox
             name="destination"
             options={formattedLocation}
             label="Destination"
             info="Select the destination location"
-            editLink="/data-fields/shipments?tab=location"
+            editLink="/data-fields/airway-bills?tab=location"
           />
         </div>
         <div className="grid grid-cols-2 gap-2">

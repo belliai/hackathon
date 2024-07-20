@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/belli/airway-bill-dashboard',
+        destination: '/dashboards/airway-bills',
         permanent: true,
       }
     ]

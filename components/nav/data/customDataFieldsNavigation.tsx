@@ -9,14 +9,19 @@ export const customDataFieldsNavigation: TSidebarItem[] = [
     current: false,
     children: [
       {
-        name: "Shipments",
-        href: "/data-fields/shipments",
-        icon: Boxes,
+        name: "Aircrafts",
+        href: "/data-fields/aircrafts",
+        icon: Plane,
       },
       {
-        name: "Organizations",
-        href: "/data-fields/organizations",
-        icon: Building2,
+        name: "Flights",
+        href: "/data-fields/flights",
+        icon: PlaneTakeoff,
+      },
+      {
+        name: "Airway Bills",
+        href: "/data-fields/airway-bills",
+        icon: Boxes,
       },
       {
         name: "Payments",
@@ -24,14 +29,9 @@ export const customDataFieldsNavigation: TSidebarItem[] = [
         icon: CreditCard,
       },
       {
-        name: "Flights",
-        href: "/data-fields/flights",
-        icon: PlaneTakeoff
-      },
-      {
-        name: "Aircrafts",
-        href: "/data-fields/aircrafts",
-        icon: Plane,
+        name: "Organizations",
+        href: "/data-fields/organizations",
+        icon: Building2,
       },
     ],
   },

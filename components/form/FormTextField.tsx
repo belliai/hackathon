@@ -12,7 +12,6 @@ import { CalendarIcon, Info } from "lucide-react"
 import { UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
-import NumberInputStepper from "@/app/belli/flight-schedule-editor/components/number-input-stepper"
 
 import { Button } from "../ui/button"
 import { Calendar } from "../ui/calendar"
@@ -33,6 +32,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip"
+import NumberInputStepper from "@/app/settings/flights/components/number-input-stepper"
 
 type SelectOption = {
   label: string

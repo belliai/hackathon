@@ -1,4 +1,4 @@
-import { PaperPlaneIcon } from "@radix-ui/react-icons"
+import { PaperPlaneIcon, ReaderIcon } from "@radix-ui/react-icons"
 import { PlaneIcon, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
@@ -10,23 +10,30 @@ export const belliSettingsNavigation: TSidebarItem[] = [
     current: false,
     children: [
       {
-        name: "Aircraft Setup",
-        href: "/settings/aircraft-setup",
+        name: "Aircrafts",
+        href: "/settings/aircrafts",
         icon: PlaneIcon,
         current: false,
         isCanCreate: true,
       },
       {
-        name: "Flight Schedule Editor",
-        href: "/belli/flight-schedule-editor",
+        name: "Flights",
+        href: "/settings/flights",
         icon: PaperPlaneIcon,
         current: false,
         isCanCreate: true,
       },
       {
-        name: "Integrations",
-        href: "/belli/integrations",
+        name: "Data",
+        href: "/settings/data",
         icon: Waypoints,
+        current: false,
+        isCanCreate: false,
+      },
+      {
+        name: "Load Planner",
+        href: "/settings/load-planner",
+        icon: ReaderIcon,
         current: false,
         isCanCreate: false,
       },

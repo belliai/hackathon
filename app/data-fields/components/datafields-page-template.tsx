@@ -6,6 +6,7 @@ import { LucideIcon } from "lucide-react"
 
 import { getTooltipContents } from "@/lib/contentful"
 import { SettingsTabName } from "@/lib/hooks/useSettingsDynamicHook"
+import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
@@ -25,10 +26,12 @@ export interface DataFieldsTab {
 
 interface DataFieldsPageTemplateProps {
   tabs: DataFieldsTab[]
+  tabsOrientation?: "horizontal" | "vertical"
 }
 
 export default function DataFieldsPageTemplate({
   tabs,
+  tabsOrientation = "horizontal",
 }: DataFieldsPageTemplateProps) {
   const tooltips = getTooltipContents()
 
@@ -88,7 +91,7 @@ export default function DataFieldsPageTemplate({
           <div>{tabName}</div>
         </TooltipTrigger>
         <TooltipContent
-          side="bottom"
+          side={tabsOrientation === "horizontal" ? "bottom" : "right"}
           className="border bg-card text-foreground"
         >
           <p>{content}</p>
@@ -102,22 +105,37 @@ export default function DataFieldsPageTemplate({
       <Tabs
         value={activeTab}
         onValueChange={handleTabChange}
-        className="flex h-full w-full flex-col items-start justify-start gap-2"
+        className={cn("flex h-full w-full items-start justify-start", {
+          "flex-col gap-2": tabsOrientation === "horizontal",
+          "flex-row gap-4 space-y-0": tabsOrientation === "vertical",
+        })}
       >
-        <TabsList className="h-fit w-full justify-start gap-4 overflow-auto bg-transparent">
+        <TabsList
+          className={cn("h-fit", {
+            "w-full justify-start gap-4 overflow-auto bg-transparent":
+              tabsOrientation === "horizontal",
+            "w-52 flex-col": tabsOrientation === "vertical",
+          })}
+        >
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.name}
               id={tab.name.toLowerCase().replace(/\s+/g, "-")}
               value={tab.name}
               disabled={tab?.disabled}
-              className="w-fit px-2 py-1.5"
+              className={cn("px-2 py-1.5", {
+                "w-fit": tabsOrientation === "horizontal",
+                "w-full justify-start": tabsOrientation === "vertical",
+              })}
             >
+              {tabsOrientation === "vertical" && (
+                <tab.icon className="mr-2 size-4" />
+              )}
               {renderTooltip(tab.name)}
             </TabsTrigger>
           ))}
         </TabsList>
-        <Separator />
+        {tabsOrientation === "horizontal" && <Separator />}
         <div className="mt-6 flex w-full flex-col items-center">
           <div className="flex w-full max-w-screen-sm">
             {tabs.map((tab) => (

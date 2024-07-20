@@ -87,7 +87,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             options={bookingTypeOptions}
             label="Booking Type"
             info="Select the booking type"
-            editLink="/data-fields/shipments?tab=booking-type"
+            editLink="/data-fields/airway-bills?tab=booking-type"
         />
       </div>
       <div className="grid grid-cols-3 gap-3">
@@ -129,7 +129,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             options={commodityCodeOptions}
             label="Commodity Code *"
             info="Select the Commodity Code"
-            editLink="/data-fields/shipments?tab=commodity-code"
+            editLink="/data-fields/airway-bills?tab=commodity-code"
         />
         <FormField
             control={form.control}
