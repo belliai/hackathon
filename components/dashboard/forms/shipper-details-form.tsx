@@ -179,7 +179,7 @@ const ShipperDetailsForm = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
                   options={partnerCodeOptions}
                   label="Partner Code"
                   info="Select the Partner Code"
-                  editLink="/data-fields/organizations?tab=partner-code"
+                  editLink="/data-fields/organizations?tab=iata-airline-code"
                 />
                 <FormField
                   control={form.control}

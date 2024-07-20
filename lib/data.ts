@@ -22,7 +22,7 @@ export const orders: any[] = [
     freight_forwarder: { id: "string", name: "string" },
     gs_weight_kg: "string",
     id: "00000000-0000-0000-0000-000000000000",
-    is_physical: true,
+    is_physical: 'yes',
     mode: "string",
     organization: { id: "string", name: "string" },
     origin: { id: "00000000-0000-0000-0000-000000000000", name: "string" },

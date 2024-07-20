@@ -30,6 +30,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 import { Separator } from "../ui/separator"
 import { FormTextFieldProps } from "./FormTextField"
@@ -39,6 +44,8 @@ export type ComboboxOption = {
   icon?: React.ReactNode
   label: string
   value: string
+  additionalColumn?: string[]
+  tooltipId?: string
 }
 
 export type ComboboxProps = {
@@ -51,6 +58,8 @@ export type ComboboxProps = {
   searchPlaceholder?: string
   onAddOption?: (newOption: string, close: () => void) => void
   onSaveEditOption?: (newOption: string, targetValue: string) => void
+  additionalColumn?: string[]
+  tooltipId?: string
 }
 
 /**
@@ -101,6 +110,8 @@ export function Combobox({
   searchPlaceholder = "Search",
   onAddOption, // Show the add option button if this is provided
   onSaveEditOption,
+  additionalColumn,
+  tooltipId = '',
 }: ComboboxFormProps) {
   const [isAdding, setIsAdding] = useState<boolean>(false)
   const [editingOptionValue, setEditingOptionValue] = useState<string | null>(
@@ -164,6 +175,42 @@ export function Combobox({
   }
 
   const addOptionLabel = label || "New Option"
+
+  const renderOptionItem = (data: ComboboxOption) => {
+    return (
+      <div className="flex items-center gap-3 [&>svg]:h-4 [&>svg]:w-4 max-w-full">
+        <div>
+          {data.icon}
+          {data.label}
+        </div>
+        {additionalColumn ?
+          additionalColumn.map((item, index) => {
+            return <div key={`additional-${index}`} className="text-nowrap overflow-hidden text-ellipsis">{data[item as keyof ComboboxOption]}</div>
+          }) 
+        : null}
+      </div>
+    )
+  }
+
+  const renderContentItem = (data: ComboboxOption) => {
+    if (tooltipId && data[tooltipId as keyof ComboboxOption]) {
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {renderOptionItem(data)}
+          </TooltipTrigger>
+          <TooltipContent
+            side="top"
+            className="border bg-card text-foreground max-w-72"
+          >
+            <p>{data[tooltipId as keyof ComboboxOption]}</p>
+          </TooltipContent>
+        </Tooltip>
+      )
+    }
+
+    return renderOptionItem(data)
+  }
 
   return (
     <FormField
@@ -233,10 +280,7 @@ export function Combobox({
                         >
                           {!isEditing ? (
                             <PopoverClose className="w-full">
-                              <div className="flex items-center gap-3 [&>svg]:h-4 [&>svg]:w-4">
-                                {opt.icon}
-                                {opt.label}
-                              </div>
+                              {renderContentItem(opt)}
                               <div className="flex items-center gap-2">
                                 <Check
                                   className={cn(

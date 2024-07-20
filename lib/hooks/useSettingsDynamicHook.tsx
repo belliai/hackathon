@@ -26,12 +26,16 @@ type SettingsTabName =
   | "Aircrafts"
   | "Time Zone"
   | "Display"
+  | "Airline AWB Prefix"
+  | "IATA Airline Code"
 
 // Map of hooks based on TabName
 const hooksMap: Record<SettingsTabName, (args?: any) => any> = {
   "Booking Type": useAddBookingType,
   "Partner Prefix": useAddPartnerPrefix,
   "Partner Code": useAddPartnerCode,
+  "Airline AWB Prefix": useAddPartnerPrefix,
+  "IATA Airline Code": useAddPartnerCode,
   Status: useAddStatus,
   Location: useAddLocation,
   "Commodity Code": useAddCommodityCode,
@@ -49,6 +53,8 @@ const fieldsMap: Record<SettingsTabName, string[]> = {
   "Booking Type": ["name"],
   "Partner Prefix": ["name"],
   "Partner Code": ["name"],
+  "Airline AWB Prefix": ["name"],
+  "IATA Airline Code": ["name"],
   Status: ["name"],
   Location: ["name"],
   "Commodity Code": ["name", "description"],

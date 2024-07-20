@@ -19,12 +19,12 @@ const PartnerCode = () => {
     <CrudTable
       isLoading={isPending}
       title="Partner Code"
-      columns={[{ accessorKey: "option", header: 'Name' }]}
+      columns={[{ accessorKey: "option", header: 'Name' }, { accessorKey: 'description', header: 'Description' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Partner Code" },
       ]}
-      data={data?.map((item: any) => ({ option: item.name, id: item.ID }))}
+      data={data?.map((item: any) => ({ ...item, option: item.name, id: item.ID }))}
       onSave={(data) => {
         // configure logic for add or edit, for edit the id will be zero
         const { id, option } = data

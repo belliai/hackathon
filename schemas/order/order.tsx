@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const orderSchema = z.object({
   ID: z.string().optional(),
-  amount_due: z.string().min(1),
+  amount_due: z.string().optional(),
   activity_logs: z
     .array(
       z
@@ -23,32 +23,32 @@ export const orderSchema = z.object({
     )
     .optional()
     .nullable(),
-  awb: z.string().min(1),
-  bill_to_id: z.string(),
+  awb: z.string().optional(),
+  bill_to_id: z.string().optional(),
   bill_to_old_name: z.string().optional().nullable(),
   bill_to_name: z.string().optional().nullable(),
-  booking_type_id: z.string().min(1, { message: "Please select Booking Type" }),
-  ch_weight_kg: z.string(),
+  booking_type_id: z.string().min(1, { message: "Please select Booking Type" }).optional(),
+  ch_weight_kg: z.string().optional(),
   commodity_code_id: z.string().optional(),
-  consignee_id: z.string(),
-  currency_id: z.string(),
-  customer_id: z.string(),
-  destination_id: z.string().min(1),
-  freight_forwarder_id: z.string(),
-  gs_weight_kg: z.string(),
+  consignee_id: z.string().optional(),
+  currency_id: z.string().optional(),
+  customer_id: z.string().optional(),
+  destination_id: z.string().optional(),
+  freight_forwarder_id: z.string().optional(),
+  gs_weight_kg: z.string().optional(),
   is_physical: z.string().optional(),
-  mode: z.string(),
-  organization_id: z.string(),
-  origin_id: z.string().min(1),
-  partner_code_id: z.string().min(1),
-  partner_prefix_id: z.string().min(1),
+  mode: z.string().optional(),
+  organization_id: z.string().optional(),
+  origin_id: z.string().optional(),
+  partner_code_id: z.string().optional(),
+  partner_prefix_id: z.string().optional(),
   shipper_details: z
     .array(
       z.object({
         ID: z.string().optional(),
-        transport_method_id: z.string().min(1).optional(),
-        origin_id: z.string().min(1).optional(),
-        destination_id: z.string().min(1).optional(),
+        transport_method_id: z.string().optional(),
+        origin_id: z.string().optional(),
+        destination_id: z.string().optional(),
         partner_type_id: z.string().optional(),
         partner_code_id: z.string().optional(),
         date: z.union([z.date(), z.string()]),
@@ -57,18 +57,18 @@ export const orderSchema = z.object({
         status_id: z.string().optional(),
       })
     )
-    .min(1),
+    ,
   // shipper_details: z.any(),
-  payment_mode_id: z.string(),
-  rate: z.string(),
-  s_freight: z.string(),
-  s_rate: z.string(),
-  shipper_id: z.string(),
-  spot_id: z.string(),
-  status_id: z.string().min(1),
-  total: z.string(),
-  volume_kg: z.string(),
-  use_freight_forwarder: z.string(),
+  payment_mode_id: z.string().optional(),
+  rate: z.string().optional(),
+  s_freight: z.string().optional(),
+  s_rate: z.string().optional(),
+  shipper_id: z.string().optional(),
+  spot_id: z.string().optional(),
+  status_id: z.string().optional(),
+  total: z.string().optional(),
+  volume_kg: z.string().optional(),
+  use_freight_forwarder: z.string().optional(),
 })
 
 export type Order = z.infer<typeof orderSchema>

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
 import { useBelliApi } from "@/lib/utils/network"
+import { getTooltipContents } from "../contentful"
 
 const route = "partner-codes"
 
@@ -38,10 +39,23 @@ export const removePartnerCode = async (
 
 export const usePartnerCodes = () => {
   const belliApi = useBelliApi()
-  return useQuery({
+  
+  const getData = useQuery({
     queryKey: [route],
     queryFn: async () => await fetchPartnerCodes(await belliApi),
   })
+
+  const tooltips = getTooltipContents();
+  
+  const additionalData = getData?.data?.map((item: { name: string }) => {
+    const partnerCodeDesc = tooltips.find((list) => list.id === `airline-code-${item.name.toLowerCase()}`);
+    return {
+      ...item,
+      description: partnerCodeDesc?.content || '',
+    };
+  }) || [];
+
+  return { ...getData, data: [ ...additionalData ]};
 }
 
 export const useUpdatePartnerCode = () => {

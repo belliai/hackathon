@@ -7,13 +7,13 @@ import PartnerType from "../partner-type"
 
 export const tabs: DataFieldsTab[] = [
   {
-    name: "Partner Prefix",
+    name: "Airline AWB Prefix",
     component: <PartnerPrefix />,
     icon: UserRoundCogIcon,
     tooltipId: "aircraft-settings-partner-prefix",
   },
   {
-    name: "Partner Code",
+    name: "IATA Airline Code",
     component: <PartnerCode />,
     icon: BookUserIcon,
     tooltipId: "aircraft-settings-partner-code",

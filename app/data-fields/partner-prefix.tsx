@@ -18,11 +18,11 @@ const PartnerPrefix = () => {
   return (
     <CrudTable
       isLoading={isPending}
-      title="Partner Prefix"
+      title="Airline AWB Prefix"
       columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "Partner Prefix" },
+        { name: "option", type: "text", label: "Airline AWB Prefix" },
       ]}
       data={data?.map((item: any) => ({ option: item.name, id: item.ID }))}
       onSave={(data) => {

@@ -1,7 +1,6 @@
 "use client"
 
 import { PropsWithChildren, useEffect, useMemo, useRef, useState, ComponentType } from "react"
-import { Customer } from "@/schemas/customer"
 import { Order, orderSchema } from "@/schemas/order/order"
 import { getDefaults } from "@/schemas/utils"
 import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline"
@@ -11,8 +10,6 @@ import {
   Banknote,
   ChevronLeft,
   ChevronRight,
-  PackageIcon,
-  PlaneIcon,
   PlaneLandingIcon,
   PlaneTakeoffIcon,
   SaveIcon,
@@ -50,7 +47,6 @@ import { useBookingContext } from "@/components/dashboard/BookingContext"
 import ActivityLog from "./activity-log"
 import { useStatuses } from "@/lib/hooks/statuses"
 import { Combobox } from "@/components/form/combobox"
-import BookingTypeForm from "./forms/booking-type-form"
 import BookingDetailsForm from "./forms/booking-details-form"
 import ConsignorForm from "./forms/consignor-form"
 import ConsigneeForm from "./forms/consignee-form"
@@ -110,11 +106,12 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   const nextTab = () => {
     const currentTabIndex = TAB_LIST.findIndex(tab => tab.value === currentTab)
     const fieldList = TAB_LIST[currentTabIndex].fieldList || []
-    form.trigger(fieldList as any)
-    .then((success) => {
+    // form.trigger(fieldList as any)
+    // .then((success) => {
       const isLast = isLastIndex();
-      if(success && !isLast) setCurrentTab(TAB_LIST[currentTabIndex + 1].value)
-    })
+      // if(success && !isLast) 
+      setCurrentTab(TAB_LIST[currentTabIndex + 1].value)
+    // })
   }
 
   const TAB_LIST: {
@@ -125,14 +122,6 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     fieldList: string[];
     columnList: string[];
   }[] = [
-    // {
-    //   label: 'Booking Type',
-    //   value: 'booking-type',
-    //   icon: PlaneIcon,
-    //   content: <BookingTypeForm onValueChange={nextTab} />,
-    //   fieldList: ['booking_type_id'],
-    //   columnList: [],
-    // },
     {
       label: 'Booking Details',
       value: 'booking-details',

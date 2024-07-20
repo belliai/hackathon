@@ -96,7 +96,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={partnerPrefixesOptions}
           label="Partner Prefix"
           info="Select the Partner Prefix"
-          editLink="/data-fields/organizations?tab=partner-prefix"
+          editLink="/data-fields/organizations?tab=airline-awb-prefix"
         />
         <FormField
           control={form.control}
@@ -116,7 +116,7 @@ const CreateBookingForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           options={partnerCodesOptions}
           label="Partner Code"
           info="Select the Partner Code"
-          editLink="/data-fields/organizations?tab=partner-code"
+          editLink="/data-fields/organizations?tab=iata-airline-code"
         />
         <Combobox
           name="is_physical"

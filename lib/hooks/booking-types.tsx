@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
 import { useBelliApi } from "@/lib/utils/network"
+import { getTooltipContents } from "../contentful"
 
 const route = "booking-types"
 
@@ -38,10 +39,23 @@ export const removeBookingType = async (
 
 export const useBookingTypes = () => {
   const belliApi = useBelliApi()
-  return useQuery({
+  const getData = useQuery({
     queryKey: [route],
     queryFn: async () => await fetchBookingTypes(await belliApi),
   })
+
+  const tooltips = getTooltipContents();
+  const additionalData = getData?.data?.map((item: { name: string }) => {
+    const bookingTypeTooltip = tooltips.find((list) => list.id === `booking-type-${item.name.toLowerCase()}`);
+    const bookingTypeDescTooltip = tooltips.find((list) => list.id === `booking-type-${item.name.toLowerCase()}-desc`);
+    return {
+      ...item,
+      description: bookingTypeDescTooltip?.content || '',
+      booking_type: bookingTypeTooltip?.content || '',
+    };
+  }) || [];
+
+  return { ...getData, data: [ ...additionalData ]};
 }
 
 export const useUpdateBookingType = () => {

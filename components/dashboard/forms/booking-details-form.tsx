@@ -54,6 +54,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const partnerCodesOptions = partnerCodes?.map((code: any) => ({
     value: code.ID,
     label: code.name,
+    description: code.description,
   }))
 
   const commodityCodeOptions = commodityCodes?.map((code: any) => ({
@@ -64,6 +65,8 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const bookingTypeOptions = bookingTypes?.map((code: any) => ({
     value: code.ID,
     label: `${code.name}`,
+    name: code.booking_type,
+    description: code.description,
   }));
 
   const IS_PHYSICAL_LIST = [
@@ -83,20 +86,22 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     <Card className="grid grid-cols-1 gap-3 p-4" ref={ref}>
       <div className="grid grid-cols-3 gap-3">
         <Combobox
-            name="partner_prefix_id"
+            name="booking_type_id"
             options={bookingTypeOptions}
             label="Booking Type"
             info="Select the booking type"
             editLink="/data-fields/airway-bills?tab=booking-type"
+            additionalColumn={['name']}
+            tooltipId="description"
         />
       </div>
       <div className="grid grid-cols-3 gap-3">
         <Combobox
             name="partner_prefix_id"
             options={partnerPrefixesOptions}
-            label="Partner Prefix"
-            info="Select the Partner Prefix"
-            editLink="/data-fields/organizations?tab=partner-prefix"
+            label="Airline AWB Prefix"
+            info="Select the Airline AWB Prefix"
+            editLink="/data-fields/organizations?tab=airline-awb-prefix"
         />
         <FormField
             control={form.control}
@@ -114,9 +119,11 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         <Combobox
             name="partner_code_id"
             options={partnerCodesOptions}
-            label="Partner Code"
-            info="Select the Partner Code"
-            editLink="/data-fields/organizations?tab=partner-code"
+            label="IATA Airline Code"
+            info="Select the IATA Airline Code"
+            editLink="/data-fields/organizations?tab=iata-airline-code"
+            additionalColumn={['description']}
+            tooltipId="description"
         />
         <Combobox
             name="is_physical"
