@@ -8,6 +8,7 @@ type NumberInputStepperProps = {
   max?: number
   step?: number
   disabled?: boolean
+  suffix?: string
 }
 
 const NumberInputStepper = ({
@@ -17,6 +18,7 @@ const NumberInputStepper = ({
   max = 100,
   step = 1,
   disabled = false,
+  suffix
 }: NumberInputStepperProps) => {
   const handleIncrement = () => {
     if (value < max) {
@@ -33,17 +35,20 @@ const NumberInputStepper = ({
   }
 
   return (
-    <div className="flex-col items-center space-y-1">
-      <ChevronUp
-        onClick={!disabled && value < max ? handleIncrement : undefined}
-        size={12}
-        className={`cursor-pointer hover:text-blue-300 ${disabled || value >= max ? "cursor-not-allowed text-gray-400" : ""}`}
-      />
-      <ChevronDown
-        onClick={!disabled && value > min ? handleDecrement : undefined}
-        size={12}
-        className={`cursor-pointer hover:text-blue-300 ${disabled || value <= min ? "cursor-not-allowed text-gray-400" : ""}`}
-      />
+    <div className="flex items-center space-x-1">
+      {suffix && <p className="text-xs ml-[-5px]">{suffix}</p> }
+      <div className="flex-col items-center space-y-1">
+        <ChevronUp
+          onClick={!disabled && value < max ? handleIncrement : undefined}
+          size={12}
+          className={`cursor-pointer hover:text-blue-300 ${disabled || value >= max ? "cursor-not-allowed text-gray-400" : ""}`}
+        />
+        <ChevronDown
+          onClick={!disabled && value > min ? handleDecrement : undefined}
+          size={12}
+          className={`cursor-pointer hover:text-blue-300 ${disabled || value <= min ? "cursor-not-allowed text-gray-400" : ""}`}
+        />
+      </div>
     </div>
   )
 }

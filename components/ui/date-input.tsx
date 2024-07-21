@@ -12,10 +12,34 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
 type DateInputProps = ControllerRenderProps & {
   className?: HTMLDivElement["className"]
+  disabledMatcher?: (date: Date) => boolean
+  mode?: "single" | "range"
 }
 
 const DateInput = forwardRef(
-  ({ value, onChange, className }: DateInputProps, ref) => {
+  (
+    {
+      value,
+      onChange,
+      className,
+      disabledMatcher,
+      mode = "single",
+    }: DateInputProps,
+    ref
+  ) => {
+    const defaultMatcher = (date: Date) =>
+      date > new Date() || date < new Date("1900-01-01")
+
+    const disabled = disabledMatcher || defaultMatcher
+
+    const formattedValue =
+      mode === "single" && value
+        ? formatDate(String(value))
+        : mode === "range" && value?.to
+          ? `${formatDate(String(value.from))} - ${formatDate(String(value.to))}`
+          : ""
+
+    const placeholder = mode === "single" ? "Pick a date" : "Pick range date"
     return (
       <Popover>
         <PopoverTrigger asChild>
@@ -28,18 +52,16 @@ const DateInput = forwardRef(
             )}
             ref={ref as React.RefObject<HTMLButtonElement>}
           >
-            {value ? formatDate(String(value)) : <span>Pick a date</span>}
+            {formattedValue || <span>{placeholder}</span>}
             <CalendarIcon className="ml-auto h-3 w-3" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
-            mode="single"
+            mode={mode}
             selected={value}
             onSelect={onChange}
-            disabled={(date) =>
-              date > new Date() || date < new Date("1900-01-01")
-            }
+            disabled={disabled}
             initialFocus
           />
         </PopoverContent>
