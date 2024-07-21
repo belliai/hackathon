@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { TailNumberFormValues } from "@/schemas/aircraft/tail-numbers"
+import { AircraftFormValues } from "@/schemas/aircraft/aircraft"
+import { CompanyFormValues } from "@/schemas/partners/company"
 import {
   ChevronLeftCircleIcon,
   ChevronRightCircleIcon,
+  PlusIcon,
   SaveIcon,
+  Trash,
   Trash2Icon,
 } from "lucide-react"
-import { Path, UseFormReturn } from "react-hook-form"
+import { Path, useFieldArray, UseFormReturn } from "react-hook-form"
 import { useStep } from "usehooks-ts"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
@@ -44,6 +47,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import InputSwitch from "@/components/form/InputSwitch"
 
@@ -51,18 +62,28 @@ import {
   CompanyFormTabs,
   companyFormTabsList,
 } from "../../constants/company-tabs-list"
+import {
+  addressStatusOptions,
+  companyTypeOptions,
+  DUMMY_SELECT_OPTIONS,
+} from "../../constants/select-options"
 
 type AircraftTypeFormProps = {
   currentOpen: string | boolean
   onOpenChange: (open: boolean) => void
-  form: UseFormReturn<any>
+  form: UseFormReturn<CompanyFormValues>
 }
 
 const getTabIndexValue = (value: CompanyFormTabs) =>
-  companyFormTabsList.findIndex((item) => item.value === value).toString()
+  (companyFormTabsList.findIndex((item) => item.value === value) + 1).toString()
 
-export default function TailNumberForm(props: AircraftTypeFormProps) {
+export default function CompanyForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
+
+  const fieldArray = useFieldArray({
+    control: form.control,
+    name: "addresses",
+  })
 
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
 
@@ -136,35 +157,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     label: `${unit.Name} - ${unit.Symbol}`,
   }))
 
-  async function handleSubmitTailNumber(data: TailNumberFormValues) {
-    // waiting for backend
-    console.log({ data })
-  }
-
-  const selectedWeightUnitSymbol = (
-    <span className="text-xs text-muted-foreground">
-      {unitsW?.find((unit) => unit.ID === form.watch("weight_unit_id"))?.Symbol}
-    </span>
-  )
-
-  const selectedVolumeUnitSymbol = (
-    <span className="text-xs text-muted-foreground">
-      {
-        unitsVol?.find((unit) => unit.ID === form.watch("volume_unit_id"))
-          ?.Symbol
-      }
-    </span>
-  )
-
-  const selectedDimensionUnitSymbol = (
-    <span className="text-xs text-muted-foreground">
-      {
-        unitsLen?.find((unit) => unit.ID === form.watch("dimension_unit_id"))
-          ?.Symbol
-      }
-    </span>
-  )
-
   // this is to reset the form states on modal close
   useEffect(() => {
     if (!currentOpen) {
@@ -201,14 +193,15 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
       <DialogContent hideCloseButton className="h-[90dvh] min-w-[1100px]">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(handleSubmitTailNumber, (data) =>
-              console.log({ data })
+            onSubmit={form.handleSubmit(
+              (data) => console.log({ data }),
+              (data) => console.log({ data })
             )}
             className="flex h-full w-full flex-col justify-start gap-6"
           >
             <DialogHeader>
               <DialogTitle>
-                {isEdit ? "Edit Tail Number" : "Create Tail Number"}
+                {isEdit ? "Edit Company" : "New Company"}
               </DialogTitle>
             </DialogHeader>
             <Tabs
@@ -221,10 +214,11 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                   {companyFormTabsList.map((item, index) => (
                     <TabsTrigger
                       key={item.value}
-                      value={index.toString()}
+                      value={(index + 1).toString()}
                       disabled={
-                        index !== 0 &&
-                        validatedSteps[companyFormTabsList[index - 1].value]
+                        index === 0
+                          ? false
+                          : !validatedSteps[companyFormTabsList[index].value]
                       }
                       className="w-full justify-start py-1.5"
                     >
@@ -234,31 +228,352 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                   ))}
                 </TabsList>
               </div>
-              <TabsContent value={getTabIndexValue("general-info")}>
-                <Card className="flex flex-col divide-y rounded-md">
+              <TabsContent value={getTabIndexValue("general-info")} asChild>
+                <Card className="flex w-full flex-grow flex-col divide-y rounded-md">
                   <CardHeader className="w-full">
                     <CardTitle className="font-semibold">
                       General Info
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
-                    <InputSwitch<TailNumberFormValues>
-                      label="Weight Unit"
-                      name="weight_unit_id"
-                      type="select"
-                      selectOptions={weightUnitsOptions}
+                    <InputSwitch<CompanyFormValues>
+                      label="Company Code"
+                      name="company_code"
+                      type="text"
                     />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Volume Unit"
-                      name="volume_unit_id"
-                      type="select"
-                      selectOptions={volumeUnitsOptions}
+                    <InputSwitch<CompanyFormValues>
+                      label="Company Name"
+                      name="company_name"
+                      type="text"
                     />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Dimension Unit"
-                      name="dimension_unit_id"
+                    <InputSwitch<CompanyFormValues>
+                      label="Type"
+                      name="company_type"
                       type="select"
-                      selectOptions={lengthUnitsOptions}
+                      selectOptions={companyTypeOptions}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="IATA Agent Code"
+                      name="iata_agent_code"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="SAP Customer Code"
+                      name="sap_customer_code"
+                      type="text"
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value={getTabIndexValue("address-book")} asChild>
+                <Card className="flex h-full w-5 flex-1 flex-col divide-y rounded-md">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                    <CardTitle className="font-semibold">
+                      Address Book
+                    </CardTitle>
+                    <Button
+                      className="h-7"
+                      type="button"
+                      onClick={() => {
+                        fieldArray.append({
+                          street_address: "",
+                          address_2: "",
+                          city: "",
+                          state: "",
+                          postal_code: "",
+                          country: "",
+                          status: "default_billing",
+                        })
+                      }}
+                      variant={"secondary"}
+                      size={"sm"}
+                    >
+                      <PlusIcon className="mr-2 size-4" />
+                      Add Address
+                    </Button>
+                  </CardHeader>
+                  <CardContent className="w-full flex-1 p-0">
+                    <Table containerClassName="min-h-full h-5 overflow-y-auto overflow-x-auto">
+                      <TableHeader className="border-b">
+                        <TableHead className="whitespace-nowrap pl-4 pr-1">
+                          Street Address
+                        </TableHead>
+                        <TableHead className="px-1">Address 2</TableHead>
+                        <TableHead className="px-1">City</TableHead>
+                        <TableHead className="px-1">State</TableHead>
+                        <TableHead className="px-1">Postal Code</TableHead>
+                        <TableHead className="px-1">Country</TableHead>
+                        <TableHead className="px-1">Status</TableHead>
+                        <TableHead className="pl-1 pr-4"></TableHead>
+                      </TableHeader>
+                      <TableBody className="overflow-y-auto">
+                        {fieldArray.fields?.map((field, index) => {
+                          return (
+                            <TableRow key={field.id}>
+                              <TableCell className="pl-4 pr-1 align-top">
+                                <InputSwitch<CompanyFormValues>
+                                  className="w-52"
+                                  name={`addresses.${index}.street_address`}
+                                  type="text"
+                                />
+                              </TableCell>
+                              <TableCell className="min-w-24 px-1 align-top">
+                                <InputSwitch<CompanyFormValues>
+                                  className="w-52"
+                                  name={`addresses.${index}.address_2`}
+                                  type="text"
+                                />
+                              </TableCell>
+                              <TableCell className="min-w-24 px-1 align-top">
+                                <InputSwitch<CompanyFormValues>
+                                  className="w-32"
+                                  name={`addresses.${index}.city`}
+                                  type="text"
+                                />
+                              </TableCell>
+                              <TableCell className="min-w-24 px-1 align-top">
+                                <InputSwitch<CompanyFormValues>
+                                  className="w-32"
+                                  name={`addresses.${index}.state`}
+                                  type="text"
+                                />
+                              </TableCell>
+                              <TableCell className="min-w-24 px-1 align-top">
+                                <InputSwitch<CompanyFormValues>
+                                  className="w-32"
+                                  name={`addresses.${index}.postal_code`}
+                                  type="text"
+                                />
+                              </TableCell>
+                              <TableCell className="min-w-24 px-1 align-top">
+                                <InputSwitch<CompanyFormValues>
+                                  className="w-32"
+                                  name={`addresses.${index}.country`}
+                                  type="text"
+                                />
+                              </TableCell>
+                              <TableCell className="min-w-24 px-1 align-top">
+                                <InputSwitch<CompanyFormValues>
+                                  className="w-44"
+                                  name={`addresses.${index}.status`}
+                                  type="select"
+                                  selectOptions={addressStatusOptions}
+                                />
+                              </TableCell>
+                              <TableCell className="w-9 pl-1 pr-4 align-top">
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  variant="destructive"
+                                  onClick={() => {
+                                    fieldArray.remove(index)
+                                  }}
+                                >
+                                  <Trash className="size-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value={getTabIndexValue("billing-details")} asChild>
+                <Card className="flex h-full w-full flex-grow flex-col divide-y rounded-md">
+                  <CardHeader className="w-full">
+                    <CardTitle className="font-semibold">
+                      Billing Details
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="custom-scrollbar grid h-5 w-full flex-grow grid-cols-3 gap-2 overflow-y-scroll pt-2">
+                    <InputSwitch<CompanyFormValues>
+                      label="Valid From *"
+                      name="valid_from"
+                      type="date"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Valid To *"
+                      name="valid_to"
+                      type="date"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Participation Type *"
+                      name="participation_type"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Stock Controller *"
+                      name="stock_controller"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Stock Controller Code *"
+                      name="stock_controller_code"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Bill To *"
+                      name="bill_to"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Billing Controller Code"
+                      name="billing_controller_code"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="GL Code"
+                      name="gl_code"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Bill Type *"
+                      name="bill_type"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Credit Controller *"
+                      name="credit_controller"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Credit Controller Code *"
+                      name="credit_controller_code"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Commission (%)"
+                      name="commission"
+                      type="number"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Incentive Per Kg"
+                      name="incentive"
+                      type="number"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Currency Code *"
+                      name="currency_id"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Agent Type *"
+                      name="agent_type"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Deals PLI applied To"
+                      name="deal_pli"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Invoice due days *"
+                      name="invoice_due"
+                      type="number"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="PP"
+                      name="pp"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Default Pay Mode"
+                      name="default_pay_mode"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Is FOC"
+                      name="is_foc"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Validate Credit"
+                      name="validate_credit"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="IsActive *"
+                      name="is_active"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Rateline Preference *"
+                      name="rateline_preference"
+                      type="text"
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="IsPOMail"
+                      name="is_po_mail"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="IsBonded"
+                      name="is_bonded"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Auto Allocate Stock"
+                      name="auto_allocate_stock"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Auto Generate Invoice"
+                      name="autoGenerateInvoice"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Participate in CASS"
+                      name="participate_in_cass"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Billing on Gross.wt"
+                      name="billing_on_gross"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="IsCharter"
+                      name="is_charter"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="IsWalkIn"
+                      name="is_walkin"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Sr Number Required"
+                      name="sr_number_required"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Select allow paymode"
+                      name="select_allow_paymode"
+                      type="select"
+                      selectOptions={DUMMY_SELECT_OPTIONS}
+                    />
+                    <InputSwitch<CompanyFormValues>
+                      label="Allowed Payment Mode"
+                      name="allowed_payment_id"
+                      type="text"
                     />
                   </CardContent>
                 </Card>
@@ -322,8 +637,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                 variant={isAllValidated ? "secondary" : "button-primary"}
                 onClick={async () => {
                   const isValidated = await form.trigger(
-                    // companyFormTabsList[step].validationFields
-                    []
+                    companyFormTabsList[step - 1].validationFields
                   )
                   setValidatedSteps((prev) => ({
                     ...prev,
