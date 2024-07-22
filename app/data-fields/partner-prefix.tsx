@@ -15,6 +15,11 @@ const PartnerPrefix = () => {
 
   if (error) return "An error has occurred: " + error.message
 
+  const partnerPrefixesOptions = data?.map((prefix: any) => ({
+    value: prefix.ID,
+    label: prefix.name,
+  }))
+  
   return (
     <CrudTable
       isLoading={isPending}
@@ -40,6 +45,8 @@ const PartnerPrefix = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      searchOptions={partnerPrefixesOptions}
+      canSearch
     />
   )
 }

@@ -15,14 +15,19 @@ const PartnerCode = () => {
 
   if (error) return "An error has occurred: " + error.message
 
+  const partnerCodeOptions = data?.map((prefix: any) => ({
+    value: prefix.ID,
+    label: prefix.name,
+  }))
+
   return (
     <CrudTable
       isLoading={isPending}
-      title="Partner Code"
+      title="IATA Airline Code"
       columns={[{ accessorKey: "option", header: 'Name' }, { accessorKey: 'description', header: 'Description' }]}
       form={[
         { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "Partner Code" },
+        { name: "option", type: "text", label: "IATA Airline Code" },
       ]}
       data={data?.map((item: any) => ({ ...item, option: item.name, id: item.ID }))}
       onSave={(data) => {
@@ -40,6 +45,8 @@ const PartnerCode = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      canSearch
+      searchOptions={partnerCodeOptions}
     />
   )
 }
