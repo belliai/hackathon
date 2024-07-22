@@ -4,7 +4,7 @@ import { AxiosInstance } from "axios"
 import { Aircraft, CreateAircraftRequest } from "@/types/aircraft/aircraft"
 import { useBelliApi } from "@/lib/utils/network"
 
-const route = "aircrafts"
+export const route = "aircrafts"
 
 export const fetchAircrafts = async (
   belliApi: AxiosInstance,

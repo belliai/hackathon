@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { TailNumberFormValues } from "@/schemas/aircraft/tail-numbers"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   BoxesIcon,
   ChevronLeftCircleIcon,
@@ -17,17 +18,16 @@ import {
 import { Path, UseFormReturn } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
+import { TailNumber } from "@/types/aircraft/tail-number"
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
-import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
+  route as aircraftRoute,
   useAircrafts,
-  useCreateAircraft,
-  useDeleteAircraft,
-  useUpdateAircraft,
 } from "@/lib/hooks/aircrafts/aircrafts"
 import {
   useCreateTailNumber,
+  useDeleteTailNumber,
   useUpdateTailNumber,
 } from "@/lib/hooks/aircrafts/tail-numbers"
 import { useUnits } from "@/lib/hooks/units/units"
@@ -62,7 +62,7 @@ import {
   stepsOrder,
   tabValidations,
 } from "../../constants/validation-steps-tail-number"
-import { AircraftFormTabs, TailNumberFormTabs } from "../../types"
+import { TailNumberFormTabs } from "../../types"
 import { Deletee } from "../option-delete-warning"
 
 type AircraftTypeFormProps = {
@@ -73,6 +73,7 @@ type AircraftTypeFormProps = {
 
 export default function TailNumberForm(props: AircraftTypeFormProps) {
   const { currentOpen, onOpenChange, form } = props
+  const queryClient = useQueryClient()
 
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
 
@@ -205,6 +206,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
               title: "Success!",
               description: "Tail number updated successfully",
             })
+            queryClient.invalidateQueries({ queryKey: [aircraftRoute] })
           },
         }
       )
@@ -224,6 +226,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
             title: "Success!",
             description: "Tail Number created successfully",
           })
+          queryClient.invalidateQueries({ queryKey: [aircraftRoute] })
         },
       })
     }
@@ -270,11 +273,32 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
   }, [currentOpen, form, tailNumberFormDefaultValues, isEdit])
 
   const { mutateAsync: deleteMutateAsync, isPending: isPendingDelete } =
-    useDeleteAircraft()
+    useDeleteTailNumber()
 
-  async function onDelete(id?: Aircraft["id"]) {
-    // waiting for backend
-    console.log({ id })
+  async function onDelete(id?: TailNumber["id"]) {
+    if (!id) return
+    setHasDelete(true)
+    await deleteMutateAsync(
+      { id },
+      {
+        onError: (error) => {
+          console.error(error)
+          toast({
+            title: "Error!",
+            description: "An error occurred while deleting tail number",
+          })
+        },
+        onSuccess: (data) => {
+          console.log("res data", data)
+          onOpenChange(false)
+          toast({
+            title: "Success!",
+            description: "Tail number deleted successfully",
+          })
+          queryClient.invalidateQueries({ queryKey: [aircraftRoute] })
+        },
+      }
+    )
   }
 
   const handleTabChange = async (newTab: string) => {
@@ -388,6 +412,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                       type="text"
                     />
                     <InputSwitch<TailNumberFormValues>
+                      disabled={isEdit}
                       name={"aircraft_id"}
                       placeholder="Select Aircraft Type"
                       label="Aircraft Type"

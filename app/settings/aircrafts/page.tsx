@@ -197,7 +197,6 @@ function TailNumbersForm() {
   const handleTailNumberRowClick = (tailNumber: TailNumber) => {
     tailnumberForm.reset({
       ...tailNumber,
-      aircraft_id: tailNumber.id,
       body_type_id: tailNumber.body_type?.id,
       volume_unit_id: tailNumber.volume_unit?.id,
       dimension_unit_id: tailNumber.dimension_unit?.id,

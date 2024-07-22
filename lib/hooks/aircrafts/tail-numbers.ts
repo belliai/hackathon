@@ -32,7 +32,7 @@ export const createTailNumber = async (
   data: TailNumberFormValues
 ) => {
   return belliApi
-    .post(`aircraft/${data.aircraft_id}/tail`, data)
+    .post(`aircrafts/${data.aircraft_id}/tails`, data)
     .then((res) => res.data as TailNumber)
 }
 
@@ -76,7 +76,7 @@ export const useUpdateTailNumber = () => {
   })
 }
 
-export const deleteAircaft = async (belliApi: AxiosInstance, id: string) => {
+export const deleteTailNumber = async (belliApi: AxiosInstance, id: string) => {
   return belliApi.delete(`${route}/${id}`).then((res) => res.data as TailNumber)
 }
 
@@ -87,7 +87,7 @@ export const useDeleteTailNumber = () => {
   return useMutation({
     mutationKey: [route],
     mutationFn: async (data: { id: string }) =>
-      await deleteAircaft(await belliApi, data.id),
+      await deleteTailNumber(await belliApi, data.id),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [route] })
     },

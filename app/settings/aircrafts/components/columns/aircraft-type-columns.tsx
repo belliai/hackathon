@@ -61,16 +61,16 @@ export const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
   },
   {
     accessorKey: "count",
+    accessorFn: (row) =>
+      row.aircraft_tail_numbers?.filter(
+        (item) => item.status?.name?.toLowerCase() === "active"
+      ).length ?? 0,
     header: () => (
       <TableHeaderWithTooltip
         header="Active Count"
         tooltipId="aircraft-active-count"
       />
     ),
-    cell: ({ row }) =>
-      row.original?.aircraft_tail_numbers?.filter(
-        (item) => item.status?.name?.toLowerCase() === "active"
-      ).length ?? 0,
   },
 
   {

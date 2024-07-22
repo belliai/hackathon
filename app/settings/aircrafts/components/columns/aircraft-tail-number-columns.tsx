@@ -7,6 +7,7 @@ import { TableHeaderWithTooltip } from "@/components/ui/table"
 export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   {
     accessorKey: "status",
+    accessorFn: (row) => row.status.name,
     header: () => (
       <TableHeaderWithTooltip header="Status" tooltipId="aircraft-status" />
     ),
@@ -32,9 +33,11 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   {
     accessorKey: "manufacturer.name",
     cell: ({ row }) => {
-      const deleted = row.original.manufacturer.is_deleted ? (
-        <span className="text-destructive"> (deleted)</span>
-      ) : null
+      const deleted =
+        row.original.manufacturer.is_deleted ||
+        !row.original.manufacturer.name ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
       return (
         <span>
           {row.original.manufacturer.name} {deleted}
@@ -51,9 +54,11 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   {
     accessorKey: "aircraft_type.name",
     cell: ({ row }) => {
-      const deleted = row.original.aircraft_type.is_deleted ? (
-        <span className="text-destructive"> (deleted)</span>
-      ) : null
+      const deleted =
+        row.original.aircraft_type.is_deleted ||
+        !row.original.aircraft_type.name ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
       return (
         <span>
           {row.original.aircraft_type.name} {deleted}
@@ -70,9 +75,10 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   {
     accessorKey: "version.version",
     cell: ({ row }) => {
-      const deleted = row.original.version.is_deleted ? (
-        <span className="text-destructive"> (deleted)</span>
-      ) : null
+      const deleted =
+        row.original.version.is_deleted || !row.original.version.version ? (
+          <span className="text-destructive"> (deleted)</span>
+        ) : null
       return (
         <span>
           {row.original.version.version} {deleted}
@@ -142,30 +148,6 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
       <TableHeaderWithTooltip
         header="Max Zero Fuel Wt"
         tooltipId="aircraft-max-zero-fuel-wt"
-      />
-    ),
-  },
-  {
-    accessorKey: "mtow",
-    header: () => (
-      <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
-    ),
-  },
-  {
-    accessorKey: "landing_weight",
-    header: () => (
-      <TableHeaderWithTooltip
-        header="Landing Wt"
-        tooltipId="aircraft-landing-weight"
-      />
-    ),
-  },
-  {
-    accessorKey: "cargo_capacity",
-    header: () => (
-      <TableHeaderWithTooltip
-        header="Cargo Cap"
-        tooltipId="aircraft-cargo-capacity"
       />
     ),
   },
