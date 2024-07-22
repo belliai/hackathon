@@ -51,6 +51,8 @@ import BookingDetailsForm from "./forms/booking-details-form"
 import ConsignorForm from "./forms/consignor-form"
 import ConsigneeForm from "./forms/consignee-form"
 import PaymentForm from "./forms/payment-form"
+import HeaderSection from "./header-section"
+import SummaryTotal from "./summary-total"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -262,9 +264,23 @@ export default function NewOrderModal(props: NewOrderModalProps) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full w-full flex-col justify-start gap-4">
             <DialogHeader className="flex flex-row items-center justify-between space-y-0">
               <DialogTitle>
-                {mode === "create" ? "New Orders" : "Edit Order"}
+                <HeaderSection
+                  bookingTypeId={formValues.booking_type_id || ''}
+                  partnerPrefixId={formValues.partner_prefix_id || ''}
+                  partnerCodeId={formValues.partner_code_id || ''}
+                  awbNumber={formValues.awb || ''}
+                  destinationId={formValues.destination_id || ''}
+                  originId={formValues.origin_id || ''}
+                />
               </DialogTitle>
               <div className="flex flex-row items-center justify-end gap-2 text-muted-foreground">
+                <SummaryTotal
+                  currencyId={formValues.currency_id || ''}
+                  total={formValues.total || ''}
+                  weight={formValues.gs_weight_kg || ''}
+                  volume={formValues.volume_kg || ''}
+                  type="header"
+                />
                 <Button
                   onClick={toggleFullScreen}
                   variant={"ghost"}
@@ -310,7 +326,13 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                       editLink="/data-fields/airway-bills?tab=status"
                     />
                   )}
-                  
+                  <SummaryTotal
+                    currencyId={formValues.currency_id || ''}
+                    total={formValues.total || ''}
+                    weight={formValues.gs_weight_kg || ''}
+                    volume={formValues.volume_kg || ''}
+                    type="sidebar"
+                  />
                 </div>
                 <div className="grid flex-1">
                   {TAB_LIST.map(item => (

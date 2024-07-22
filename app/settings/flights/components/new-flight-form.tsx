@@ -160,20 +160,20 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         "destination_timezone",
       ],
     },
-    {
-      label: "Recurring",
-      value: "recurring",
-      icon: Repeat,
-      content: <RecurringForm />,
-      fieldList: ["recurring"],
-    },
-    {
-      label: "Aircraft",
-      value: "aircraft",
-      icon: PlaneIcon,
-      content: <AircraftForm />,
-      fieldList: [],
-    },
+    // {
+    //   label: "Recurring",
+    //   value: "recurring",
+    //   icon: Repeat,
+    //   content: <RecurringForm />,
+    //   fieldList: ["recurring"],
+    // },
+    // {
+    //   label: "Aircraft",
+    //   value: "aircraft",
+    //   icon: PlaneIcon,
+    //   content: <AircraftForm />,
+    //   fieldList: [],
+    // },
   ]
 
   const onSubmit = async (data: CreateFlightMasterPayload) => {
@@ -334,7 +334,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
               className="grow"
             >
               <div className="flex w-full flex-row items-stretch gap-4">
-                <div className="flex min-w-[220px] grow-0 flex-col gap-4">
+                {/* <div className="flex min-w-[220px] grow-0 flex-col gap-4">
                   <TabsList className="h-fit w-full flex-col">
                     {TAB_LIST.map((list) => {
                       const isValid = validationStatus.find(
@@ -345,7 +345,6 @@ export default function NewFlightModal(props: NewFlightModalProps) {
                           key={`list-${list.value}`}
                           className="w-full justify-start py-1.5"
                           value={list.value}
-                          // disabled={!formValues.booking_type_id}
                         >
                           <list.icon className="mr-2 h-4 w-4" />
                           {list.label}{" "}
@@ -356,7 +355,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
                       )
                     })}
                   </TabsList>
-                </div>
+                </div> */}
                 <div className="grid flex-1">
                   {TAB_LIST.map((item) => (
                     <TabsContent

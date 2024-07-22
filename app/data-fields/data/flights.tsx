@@ -1,6 +1,7 @@
 import { ALargeSmall, Hash, TextCursorInput } from "lucide-react";
 import { DataFieldsTab } from "../components/datafields-page-template";
 import DisplaySettings from "../display";
+import DefaultTimezone from "../default-timezone";
 
 export const flightsTabs: DataFieldsTab[] = [
     {
@@ -21,6 +22,12 @@ export const flightsTabs: DataFieldsTab[] = [
         icon: Hash,
         disabled: true,
         component: <div>Number Format</div>,
+        tooltipId: "flights-number-format"
+    },
+    {
+        name: "Default Timezone" as any,
+        icon: Hash,
+        component: <DefaultTimezone />,
         tooltipId: "flights-number-format"
     },
 ]

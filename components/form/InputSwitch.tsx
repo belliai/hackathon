@@ -43,7 +43,12 @@ export type SelectOptions = {
 
 export type InputSwitchProps<DataType extends FieldValues> =
   | (BaseInputProps<DataType> & {
-      type: "date" | "search" | "text" | "checkbox" | "hidden" | "number"
+      type: "search" | "text" | "checkbox" | "hidden" | "number"
+    })
+  | (BaseInputProps<DataType> & {
+      type: "date"
+      disabledMatcher?: (date: Date) => boolean
+      mode? : 'single' | 'range'
     })
   | (BaseInputProps<DataType> & {
       type: "select"
@@ -71,6 +76,7 @@ export default function InputSwitch<DataType extends FieldValues>(
             {...props}
             min={Number(props.min)}
             max={Number(props.max)}
+            step={Number(props.step)}
             name={props.name}
             label={props.label}
             options={props.selectOptions}
@@ -185,6 +191,8 @@ export default function InputSwitch<DataType extends FieldValues>(
                   {...field}
                   className={props.className}
                   disabled={props.disabled}
+                  disabledMatcher={props.disabledMatcher}
+                  mode={props.mode}
                 />
                 <FormMessage />
               </FormItem>

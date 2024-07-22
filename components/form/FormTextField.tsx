@@ -59,6 +59,8 @@ export interface FormTextFieldProps {
   hideErrorMessage?: boolean
   min?: number
   max?: number
+  step?: number
+  suffix?: string
 }
 
 export default function FormTextField({
@@ -78,7 +80,9 @@ export default function FormTextField({
   orientation = "vertical",
   hideErrorMessage = false,
   min,
-  max
+  max,
+  step,
+  suffix
 }: FormTextFieldProps) {
   const fieldClassName = cn(
     "bg-transparent border-zinc-700 focus:ring-zinc-800 focus-visible:ring-zinc-700 w-full",
@@ -342,8 +346,10 @@ export default function FormTextField({
                         <NumberInputStepper
                           min={min}
                           max={max}
+                          step={step}
                           value={parseInt(field.value)}
                           onChange={field.onChange}
+                          suffix={suffix}
                         />
                       </span>
                     </div>

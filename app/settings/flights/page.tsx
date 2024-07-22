@@ -5,10 +5,12 @@ import {
   flightMasterFormSchema,
   FlightMasterFormValue,
 } from "@/schemas/flight-master/flight-master"
+import {
+flightSchema 
+} from "@/schemas/flight-master/flight"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoopIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
-import { filter } from "d3-array"
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns"
 import {
   ListIcon,
@@ -73,7 +75,7 @@ type FlightDetailFormValues = {
   flightNo: string
   source: string
   destination: string
-  fromDate: Date
+  from_date: Date
   toDate: Date
   frequencyItems: any
   aircraftType: string | undefined
@@ -101,11 +103,15 @@ type FlightDetailFormValues = {
   }
 }
 
+const filterDefaultValues = {
+  from_date: new Date(),
+}
+
 const formDefaultValues = {
   flightNo: "",
   source: "",
   destination: "",
-  fromDate: new Date(),
+  from_date: new Date(),
   toDate: new Date(),
   frequencyItems: [],
   aircraftType: "",
@@ -134,40 +140,40 @@ const formDefaultValues = {
   },
 }
 
-const flightSchema = flightMasterFormSchema.pick({
-  flightNo: true,
-  source: true,
-  destination: true,
-  fromDate: true,
-  toDate: true,
-  aircraftType: true,
-  status: true,
-  deptTime: true,
-  arrivalTime: true,
-  tailNo: true,
-  capacity: true,
-  uom: true,
-  sector: true,
-  flightType: true,
-})
+// const flightSchema = flightMasterFormSchema.pick({
+//   flightNo: true,
+//   source: true,
+//   destination: true,
+//   fromDate: true,
+//   toDate: true,
+//   aircraftType: true,
+//   status: true,
+//   deptTime: true,
+//   arrivalTime: true,
+//   tailNo: true,
+//   capacity: true,
+//   uom: true,
+//   sector: true,
+//   flightType: true,
+// })
 
-const recurringFlightSchema = flightMasterFormSchema.pick({
-  flightNo: true,
-  source: true,
-  destination: true,
-  fromDate: true,
-  toDate: true,
-  aircraftType: true,
-  status: true,
-  deptTime: true,
-  arrivalTime: true,
-  rangeDate: true,
-  recurring: true,
-})
+// const recurringFlightSchema = flightMasterFormSchema.pick({
+//   flightNo: true,
+//   source: true,
+//   destination: true,
+//   fromDate: true,
+//   toDate: true,
+//   aircraftType: true,
+//   status: true,
+//   deptTime: true,
+//   arrivalTime: true,
+//   rangeDate: true,
+//   recurring: true,
+// })
 
-const filtersSchema = flightMasterFormSchema.pick({
+const filtersSchema = flightSchema.pick({
   period: true,
-  fromDate: true,
+  from_date: true,
 })
 
 const initialWeeklyFromDate = startOfWeek(new Date(), { weekStartsOn: 1 })
@@ -226,16 +232,16 @@ export default function Page() {
     resolver: zodResolver(flightSchema),
   })
 
-  const sectionedHookRecurringForm = useForm({
-    defaultValues: formDefaultValues,
-    resolver: zodResolver(recurringFlightSchema),
-  })
+  // const sectionedHookRecurringForm = useForm({
+  //   defaultValues: formDefaultValues,
+  //   resolver: zodResolver(recurringFlightSchema),
+  // })
 
   const filtersHookForm = useForm({
     resolver: zodResolver(filtersSchema),
     defaultValues: {
       period: "daily",
-      fromDate: new Date(),
+      from_date: new Date(),
     },
   })
 
@@ -257,7 +263,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
 
         try {
           const rrule = RRule.fromString(rruleString)
-          const now = new Date(filterData.fromDate)
+          const now = new Date(filterData.from_date)
 
           let rangeDate = new Date(now)
           switch (filterData.period) {
@@ -290,7 +296,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
     }
   }, [
     flightData,
-    filterData.fromDate,
+    filterData.from_date,
     filterData.period,
     filterWeekly,
     filterMonthly,
@@ -304,148 +310,148 @@ RRULE:FREQ=DAILY;WKST=MO`,
     return String(val).padStart(count, "0")
   }
 
-  const handleCreateFlightRecurring = async (param: FlightMasterFormValue) => {
-    const { rangeDate, recurring } = param
+  // const handleCreateFlightRecurring = async (param: FlightMasterFormValue) => {
+  //   const { rangeDate, recurring } = param
 
-    if (rangeDate) {
-      const [fromHour, fromMinutes] = rangeDate.fromTime.split(":")
-      const [toHour, toMinutes] = rangeDate.fromTime.split(":")
+  //   if (rangeDate) {
+  //     const [fromHour, fromMinutes] = rangeDate.fromTime.split(":")
+  //     const [toHour, toMinutes] = rangeDate.fromTime.split(":")
 
-      const payload: CreateRecurringFlightMasterPayload = {
-        aircraft_id: param.aircraftType,
-        destination_id: param.destination,
-        flight_no: param.flightNo,
-        source_id: param.source,
-        status_id: param.status,
-        from_date: moment(rangeDate?.from).format("YYYY-MM-DD"),
-        to_date: moment(rangeDate?.to).format("YYYY-MM-DD"),
-        arrival_h: parseInt(toHour),
-        arrival_m: parseInt(toMinutes),
-        departure_h: parseInt(fromHour),
-        departure_m: parseInt(fromMinutes),
-      }
-      try {
-        await createFlight(payload as CreateFlightMasterPayload, {
-          onError: (error) => {
-            throw error
-          },
-        })
-      } catch (error) {
-        console.error("Error creating flight recurring:", error)
-      } finally {
-        setOpenModal(false)
-        setOpenModalRecurring(false)
-        sectionedHookRecurringForm.reset(formDefaultValues)
-        toast({
-          title: "Success!",
-          description: "Recurring Flights created successfully",
-        })
-      }
-    }
-  }
+  //     const payload: CreateRecurringFlightMasterPayload = {
+  //       aircraft_id: param.aircraftType,
+  //       destination_id: param.destination,
+  //       flight_no: param.flightNo,
+  //       source_id: param.source,
+  //       status_id: param.status,
+  //       from_date: moment(rangeDate?.from).format("YYYY-MM-DD"),
+  //       to_date: moment(rangeDate?.to).format("YYYY-MM-DD"),
+  //       arrival_h: parseInt(toHour),
+  //       arrival_m: parseInt(toMinutes),
+  //       departure_h: parseInt(fromHour),
+  //       departure_m: parseInt(fromMinutes),
+  //     }
+  //     try {
+  //       await createFlight(payload as CreateFlightMasterPayload, {
+  //         onError: (error) => {
+  //           throw error
+  //         },
+  //       })
+  //     } catch (error) {
+  //       console.error("Error creating flight recurring:", error)
+  //     } finally {
+  //       setOpenModal(false)
+  //       setOpenModalRecurring(false)
+  //       sectionedHookRecurringForm.reset(formDefaultValues)
+  //       toast({
+  //         title: "Success!",
+  //         description: "Recurring Flights created successfully",
+  //       })
+  //     }
+  //   }
+  // }
 
-  const handleCreateFlight = async (param: FlightMasterFormValue) => {
-    const payload: CreateFlightMasterPayload = {
-      aircraft_id: param.aircraftType,
-      capacity: parseInt(param.capacity),
-      destination_id: param.destination,
-      flight_no: param.flightNo,
-      flight_type_id: param.flightType,
-      sector_id: param.sector,
-      source_id: param.source,
-      status_id: param.status,
-      tail_id: param.tailNo,
-      from_date: moment(param.fromDate).format("YYYY-MM-DD"),
-      to_date: moment(param.toDate).format("YYYY-MM-DD"),
-      uom_id: param.uom,
-      arrival_d: parseInt(param.arrivalTime.arrivalDay || "0", 10),
-      arrival_h: parseInt(param.arrivalTime.arrivalHour || "0", 10),
-      arrival_m: parseInt(param.arrivalTime.arrivalMinute || "0", 10),
-      departure_d: parseInt(param.deptTime.deptDay || "0", 10),
-      departure_h: parseInt(param.deptTime.deptHour || "0", 10),
-      departure_m: parseInt(param.deptTime.deptMinute || "0", 10),
-      mon:
-        (param.frequencyItems && findDays(param.frequencyItems, "mon")) ||
-        false,
-      tue:
-        (param.frequencyItems && findDays(param.frequencyItems, "tue")) ||
-        false,
-      wed:
-        (param.frequencyItems && findDays(param.frequencyItems, "wed")) ||
-        false,
-      thu:
-        (param.frequencyItems && findDays(param.frequencyItems, "thu")) ||
-        false,
-      fri:
-        (param.frequencyItems && findDays(param.frequencyItems, "fri")) ||
-        false,
-      sat:
-        (param.frequencyItems && findDays(param.frequencyItems, "sat")) ||
-        false,
-      sun:
-        (param.frequencyItems && findDays(param.frequencyItems, "sun")) ||
-        false,
-    }
+  // const handleCreateFlight = async (param: FlightMasterFormValue) => {
+  //   const payload: CreateFlightMasterPayload = {
+  //     aircraft_id: param.aircraftType,
+  //     capacity: parseInt(param.capacity),
+  //     destination_id: param.destination,
+  //     flight_no: param.flightNo,
+  //     flight_type_id: param.flightType,
+  //     sector_id: param.sector,
+  //     source_id: param.source,
+  //     status_id: param.status,
+  //     tail_id: param.tailNo,
+  //     from_date: moment(param.fromDate).format("YYYY-MM-DD"),
+  //     to_date: moment(param.toDate).format("YYYY-MM-DD"),
+  //     uom_id: param.uom,
+  //     arrival_d: parseInt(param.arrivalTime.arrivalDay || "0", 10),
+  //     arrival_h: parseInt(param.arrivalTime.arrivalHour || "0", 10),
+  //     arrival_m: parseInt(param.arrivalTime.arrivalMinute || "0", 10),
+  //     departure_d: parseInt(param.deptTime.deptDay || "0", 10),
+  //     departure_h: parseInt(param.deptTime.deptHour || "0", 10),
+  //     departure_m: parseInt(param.deptTime.deptMinute || "0", 10),
+  //     mon:
+  //       (param.frequencyItems && findDays(param.frequencyItems, "mon")) ||
+  //       false,
+  //     tue:
+  //       (param.frequencyItems && findDays(param.frequencyItems, "tue")) ||
+  //       false,
+  //     wed:
+  //       (param.frequencyItems && findDays(param.frequencyItems, "wed")) ||
+  //       false,
+  //     thu:
+  //       (param.frequencyItems && findDays(param.frequencyItems, "thu")) ||
+  //       false,
+  //     fri:
+  //       (param.frequencyItems && findDays(param.frequencyItems, "fri")) ||
+  //       false,
+  //     sat:
+  //       (param.frequencyItems && findDays(param.frequencyItems, "sat")) ||
+  //       false,
+  //     sun:
+  //       (param.frequencyItems && findDays(param.frequencyItems, "sun")) ||
+  //       false,
+  //   }
 
-    if (param.rangeDate) {
-      const [fromHour, fromMin] = param.rangeDate.fromTime.split(":")
-      const [toHour, toMin] = param.rangeDate.toTime.split(":")
-      payload.departure_h = parseInt(fromHour)
-      payload.departure_m = parseInt(fromMin)
-      payload.arrival_h = parseInt(toHour)
-      payload.arrival_m = parseInt(toMin)
-    }
+  //   if (param.rangeDate) {
+  //     const [fromHour, fromMin] = param.rangeDate.fromTime.split(":")
+  //     const [toHour, toMin] = param.rangeDate.toTime.split(":")
+  //     payload.departure_h = parseInt(fromHour)
+  //     payload.departure_m = parseInt(fromMin)
+  //     payload.arrival_h = parseInt(toHour)
+  //     payload.arrival_m = parseInt(toMin)
+  //   }
 
-    if (
-      typeof openModal === "string" ||
-      typeof openModalRecurring === "string"
-    ) {
-      const id = openModal || openModalRecurring
+  //   if (
+  //     typeof openModal === "string" ||
+  //     typeof openModalRecurring === "string"
+  //   ) {
+  //     const id = openModal || openModalRecurring
 
-      await updateFlight(
-        { id: String(id), ...payload },
-        {
-          onError: (error) => {
-            console.error(error)
-            toast({
-              title: "Error!",
-              description: "An error occurred while updating flight",
-            })
-          },
-          onSuccess: (data) => {
-            setOpenModal(false)
-            setOpenModalRecurring(false)
-            sectionedHookForm.reset(formDefaultValues)
-            console.log("res data", data)
-            toast({
-              title: "Success!",
-              description: "Flight updated successfully",
-            })
-          },
-        }
-      )
-    } else {
-      await createFlight(payload, {
-        onError: (error) => {
-          console.error(error)
-          toast({
-            title: "Error!",
-            description: "An error occurred while creating flight",
-          })
-        },
-        onSuccess: (data) => {
-          setOpenModal(false)
-          setOpenModalRecurring(false)
-          sectionedHookForm.reset(formDefaultValues)
-          console.log("res data", data)
-          toast({
-            title: "Success!",
-            description: "Flight created successfully",
-          })
-        },
-      })
-    }
-  }
+  //     await updateFlight(
+  //       { id: String(id), ...payload },
+  //       {
+  //         onError: (error) => {
+  //           console.error(error)
+  //           toast({
+  //             title: "Error!",
+  //             description: "An error occurred while updating flight",
+  //           })
+  //         },
+  //         onSuccess: (data) => {
+  //           setOpenModal(false)
+  //           setOpenModalRecurring(false)
+  //           sectionedHookForm.reset(formDefaultValues)
+  //           console.log("res data", data)
+  //           toast({
+  //             title: "Success!",
+  //             description: "Flight updated successfully",
+  //           })
+  //         },
+  //       }
+  //     )
+  //   } else {
+  //     await createFlight(payload, {
+  //       onError: (error) => {
+  //         console.error(error)
+  //         toast({
+  //           title: "Error!",
+  //           description: "An error occurred while creating flight",
+  //         })
+  //       },
+  //       onSuccess: (data) => {
+  //         setOpenModal(false)
+  //         setOpenModalRecurring(false)
+  //         sectionedHookForm.reset(formDefaultValues)
+  //         console.log("res data", data)
+  //         toast({
+  //           title: "Success!",
+  //           description: "Flight created successfully",
+  //         })
+  //       },
+  //     })
+  //   }
+  // }
 
   const reformatDays = (data: Flight) => {
     const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
@@ -462,7 +468,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
       flightNo: data.flight_no,
       source: data.source?.ID,
       destination: data.destination?.ID,
-      fromDate: new Date(data.from_date),
+      from_date: new Date(data.from_date),
       toDate: new Date(data.to_date),
       frequencyItems: reformatDays(data) || [],
       aircraftType: aircraftTypeId?.id,
@@ -594,19 +600,19 @@ RRULE:FREQ=DAILY;WKST=MO`,
             <DataTable
               showToolbarOnlyOnHover={true}
               columns={listViewColumns}
-              data={isLoading ? [] : flightData && flightData.data || []}
+              data={isLoading ? [] : (flightData && flightData.data) || []}
               onRowClick={openDetailFlight}
               extraRightComponents={createButtonFlight}
               extraLeftComponents={
                 <TabsList className="gap-2 bg-transparent p-0">
-                  <TabsTrigger
+                  {/* <TabsTrigger
                     className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                     value="list-view"
                     style={{ fontSize: "0.875rem" }}
                   >
                     <ListIcon className="mr-2 size-4" />
                     List View
-                  </TabsTrigger>
+                  </TabsTrigger> */}
                   {/* <TabsTrigger
                     className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                     value="create-recurring-flight"
@@ -627,32 +633,28 @@ RRULE:FREQ=DAILY;WKST=MO`,
                           value: "daily",
                         },
                         {
-                          label: "Weekly",
-                          value: "weekly",
-                        },
-                        {
-                          label: "Monthly",
-                          value: "monthly",
+                          label: "Custom Range",
+                          value: "range",
                         },
                       ]}
                     />
                     {filterData.period === "daily" && (
                       <InputSwitch
-                        name="fromDate"
+                        name="from_date"
                         type="date"
                         className="h-8 w-36"
+                        disabledMatcher={(date) => false}
+                
                       />
                     )}
-                    {filterData.period === "weekly" && (
-                      <WeeklyDateStepper
-                        value={filterWeekly}
-                        onChange={setFilterWeekly}
-                      />
-                    )}
-                    {filterData.period === "monthly" && (
-                      <MonthlyDateStepper
-                        value={filterMonthly}
-                        onChange={setFilterMonthly}
+                    {filterData.period === "range" && (
+                      <InputSwitch
+                        name="range_date"
+                        type="date"
+                        // enable all date
+                        disabledMatcher={(date) => false}
+                        className="h-8 w-56"
+                        mode="range"
                       />
                     )}
                   </Form>
@@ -662,7 +664,6 @@ RRULE:FREQ=DAILY;WKST=MO`,
                 isLoading ? 1 : (flightData && flightData.total_pages) || 1
               }
               manualPagination={true}
-         
               tableState={tableState}
               menuId="flight-master-list-view"
             />
@@ -683,13 +684,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
                     <ListIcon className="mr-2 size-4" />
                     List View
                   </TabsTrigger>
-                  {/* <TabsTrigger
-                    className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-                    value="create-recurring-flight"
-                  >
-                    <LoopIcon className="mr-2 size-4" />
-                    Recurring Flights
-                  </TabsTrigger> */}
+
                 </TabsList>
               }
               pageCount={
@@ -709,84 +704,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
         onOpenChange={onOpenChange}
         resetData={setSelectedData}
       />
-      {/* <CreateEditModal
-        title={
-          typeof openModal === "string"
-            ? "Edit Flight"
-            : openModal
-              ? "Create New Flight"
-              : ""
-        }
-        open={openModal !== false}
-        form={sectionedHookForm}
-        onSubmit={handleCreateFlight}
-        setOpen={(open) => {
-          if (open) {
-            setOpenModal(openModal)
-          } else {
-            sectionedHookForm.reset(formDefaultValues)
-            setOpenModal(false)
-          }
-        }}
-        tabItems={[]}
-        content={
-          <Card className="mt-4 pt-4">
-            <CardContent>
-              <FlightMasterForm hookForm={sectionedHookForm} />
-            </CardContent>
-            <CardFooter className="flex flex-col items-end">
-              <Button
-                isLoading={isPending}
-                variant={"button-primary"}
-                className="w-40"
-                type="submit"
-              >
-                Save Flight
-              </Button>
-            </CardFooter>
-          </Card>
-        }
-      /> */}
-      {/* <CreateEditModal
-        title={
-          typeof openModalRecurring === "string"
-            ? "Edit Flight"
-            : openModal
-              ? "Create Recurring Flight"
-              : ""
-        }
-        open={openModalRecurring !== false}
-        form={sectionedHookRecurringForm}
-        onSubmit={handleCreateFlightRecurring}
-        setOpen={(open) => {
-          if (open) {
-            setOpenModalRecurring(openModalRecurring)
-          } else {
-            sectionedHookRecurringForm.reset(formDefaultValues)
-            setOpenModalRecurring(false)
-          }
-        }}
-        tabItems={[]}
-        content={
-          <Card className="mt-4 pt-4">
-            <CardContent>
-              <FlightMasterFormRecurring
-                hookForm={sectionedHookRecurringForm}
-              />
-            </CardContent>
-            <CardFooter className="flex flex-col items-end">
-              <Button
-                isLoading={isPending}
-                variant={"button-primary"}
-                className="w-40"
-                type="submit"
-              >
-                Save Recurring Flight
-              </Button>
-            </CardFooter>
-          </Card>
-        }
-      /> */}
+    
       <AlertDialog
         open={deleteConfirm !== null}
         onOpenChange={(open) => {

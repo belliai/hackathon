@@ -3,23 +3,23 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Company } from "@/types/partner/company"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
 
-import { companyTypeLabelMap } from "../../constants/company-types"
+import { companyTypeLabelMap } from "../../constants/company-types-map"
 
 export const companiesColumns: ColumnDef<Company>[] = [
   {
-    accessorKey: "companyCode",
+    accessorKey: "company_code",
     header: () => (
       <TableHeaderWithTooltip header="Company Code" tooltipId="company-code" />
     ),
   },
   {
-    accessorKey: "companyName",
+    accessorKey: "company_name",
     header: () => (
       <TableHeaderWithTooltip header="Company Name" tooltipId="company-name" />
     ),
   },
   {
-    accessorKey: "peopleCount",
+    accessorKey: "people_count",
     header: () => (
       <TableHeaderWithTooltip header="People Count" tooltipId="people-count" />
     ),

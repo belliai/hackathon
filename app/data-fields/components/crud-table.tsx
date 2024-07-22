@@ -67,6 +67,7 @@ import {
 } from "@/components/ui/table"
 import { DataTable } from "@/components/data-table/data-table"
 import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
+import { SearchDataField } from "./SearchDataField"
 
 type CrudTableProps<T extends FieldValues> = {
   title: string
@@ -79,6 +80,8 @@ type CrudTableProps<T extends FieldValues> = {
   onDelete: (data: T) => void
   hideAddForm?: boolean
   hideCardHeader?: boolean
+  searchOptions?: any
+  canSearch?: boolean
 }
 
 const FormDialog = <T extends FieldValues>(
@@ -243,7 +246,7 @@ export default function CrudTable<T extends FieldValues>(
 ) {
   const [openForm, setOpenForm] = useState<T | boolean>(false)
 
-  const { data, title, ...tableProps } = props
+  const { data, title, searchOptions, canSearch = false, ...tableProps  } = props
 
   const columns: ColumnDef<T>[] = props.columns
 
@@ -258,6 +261,10 @@ export default function CrudTable<T extends FieldValues>(
 
   // Check if any columns passed from props have explicitly defined headers
   const hasExplicitHeaders = props.columns.some((column) => column.header)
+
+  const handleSearch = (id: string) => {
+    setOpenForm(data.find(item => item.id === id) || false)
+  }
 
   return (
     <section id={props.id} className="space-y-4">
@@ -292,6 +299,11 @@ export default function CrudTable<T extends FieldValues>(
                 </FormDialog>
               )
             }
+            extraLeftComponents={canSearch && <SearchDataField
+              selectOptions={searchOptions}
+              label={`Search ${title}`}
+              onChangeValue={handleSearch}
+            />}
             className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
           />
           <FormDialog
