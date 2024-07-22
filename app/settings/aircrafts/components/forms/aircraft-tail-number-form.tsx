@@ -26,6 +26,10 @@ import {
   useDeleteAircraft,
   useUpdateAircraft,
 } from "@/lib/hooks/aircrafts/aircrafts"
+import {
+  useCreateTailNumber,
+  useUpdateTailNumber,
+} from "@/lib/hooks/aircrafts/tail-numbers"
 import { useUnits } from "@/lib/hooks/units/units"
 import { cn } from "@/lib/utils"
 import {
@@ -78,16 +82,24 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
 
   const isEdit = typeof currentOpen === "string"
 
-  const { mutateAsync, isPending: isPendingCreate } = useCreateAircraft()
+  const { mutateAsync, isPending: isPendingCreate } = useCreateTailNumber()
 
   const { mutateAsync: updateMutateAsync, isPending: isPendingUpdate } =
-    useUpdateAircraft()
-
-  const { data: aircraftBodyTypes } = useAircraftBodyTypes()
-
-  const { data: aircraftStatuses } = useAircraftStatuses()
+    useUpdateTailNumber()
 
   const [tabValue, setTabValue] = useState<TailNumberFormTabs>("tail-numbers")
+
+  const [validatedSteps, setValidatedSteps] = useState<
+    Record<TailNumberFormTabs, boolean>
+  >({
+    "tail-numbers": isEdit ? true : false,
+    "measurement-units": isEdit ? true : false,
+    "aircraft-details": isEdit ? true : false,
+    "door-dimensions": isEdit ? true : false,
+    volume: isEdit ? true : false,
+  })
+
+  const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
 
   const { data: aircrafts } = useAircrafts({
     page: 1,
@@ -104,21 +116,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
       ].join(" "),
     }
   })
-
-  const [validatedSteps, setValidatedSteps] = useState<
-    Record<TailNumberFormTabs, boolean>
-  >({
-    "tail-numbers": isEdit ? true : false,
-    "measurement-units": isEdit ? true : false,
-    "aircraft-details": isEdit ? true : false,
-    "door-dimensions": isEdit ? true : false,
-    volume: isEdit ? true : false,
-  })
-
-  const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
-  // default values
-
-  // this is to set default values on create
 
   const selectedAircraftId = form.watch("aircraft_id")
 
@@ -146,6 +143,9 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
       })
     }
   }, [selectedAircraftId])
+
+  const { data: aircraftBodyTypes } = useAircraftBodyTypes()
+  const { data: aircraftStatuses } = useAircraftStatuses()
 
   const { data: unitsW } = useUnits({
     category: "weight",
@@ -184,9 +184,49 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     label: `${unit.Name} - ${unit.Symbol}`,
   }))
 
-  async function handleSubmitTailNumber(data: TailNumberFormValues) {
-    // waiting for backend
-    console.log({ data })
+  async function handleSubmitTailNumber(payload: TailNumberFormValues) {
+    if (isEdit) {
+      // Update aircraft
+      await updateMutateAsync(
+        { id: currentOpen, ...payload },
+        {
+          onError: (error) => {
+            console.error(error)
+            toast({
+              title: "Error!",
+              description: "An error occurred while updating tail nnumber",
+            })
+          },
+          onSuccess: (data) => {
+            onOpenChange(false)
+            console.log("res data", data)
+            form.reset(tailNumberFormDefaultValues)
+            toast({
+              title: "Success!",
+              description: "Tail number updated successfully",
+            })
+          },
+        }
+      )
+    } else {
+      await mutateAsync(payload, {
+        onError: (error) => {
+          console.error(error)
+          toast({
+            title: "Error!",
+            description: "An error occurred while creating tail number",
+          })
+        },
+        onSuccess: (data) => {
+          onOpenChange(false)
+          console.log("res data", data)
+          toast({
+            title: "Success!",
+            description: "Tail Number created successfully",
+          })
+        },
+      })
+    }
   }
 
   const selectedWeightUnitSymbol = (
@@ -315,7 +355,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                     className="w-full justify-start py-1.5"
                   >
                     <FileSlidersIcon className="mr-2 size-4" />
-                    Aircraft Details
+                    Capacity Details
                   </TabsTrigger>
                   <TabsTrigger
                     disabled={!validatedSteps["aircraft-details"]}
@@ -340,7 +380,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                   <CardHeader className="space-y-0">
                     <CardTitle className="font-semibold">Tail Number</CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-2 pt-2">
+                  <CardContent className="grid grid-cols-3 gap-2 pt-2">
                     <InputSwitch<TailNumberFormValues>
                       name={"tail_number"}
                       placeholder="Tail Number"
@@ -353,6 +393,14 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                       label="Aircraft Type"
                       type="select"
                       selectOptions={aircraftSelectOptions}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Aircraft Status"
+                      name="status_id"
+                      type="select"
+                      className="rounded-md"
+                      defaultValue={aircraftStatusOptions?.[0].value}
+                      selectOptions={aircraftStatusOptions}
                     />
                   </CardContent>
                 </Card>

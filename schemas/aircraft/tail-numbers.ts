@@ -10,7 +10,7 @@ export const tailNumberFormSchema = z.object({
   bulk_h: z.string().optional(),
   bulk_w: z.string().optional(),
   cargo_capacity: z.string().optional(),
-  dimension_unit_id: z.string().optional(),
+  dimension_unit_id: z.string().uuid().optional(),
   fwd: z.string().optional(),
   fwd_h: z.string().optional(),
   fwd_w: z.string().optional(),
@@ -29,8 +29,8 @@ export const tailNumberFormSchema = z.object({
   restricted_weight_piece: z.string().optional(),
   status_id: z.string().uuid().optional(),
   uld_position: z.string().optional(),
-  volume_unit_id: z.string().optional(),
-  weight_unit_id: z.string().optional(),
+  volume_unit_id: z.string().uuid().optional(),
+  weight_unit_id: z.string().uuid().optional(),
 })
 
 export type TailNumberFormValues = z.infer<typeof tailNumberFormSchema>

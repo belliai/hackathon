@@ -36,7 +36,7 @@ import {
   useCreateFlight,
   useDeleteFlight,
   useFlightList,
-  useUpdateFlight
+  useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
 import { generateRecurringDates } from "@/lib/utils/date-utils"
 import {
@@ -222,7 +222,7 @@ export default function Page() {
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
   const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
-  useUpdateFlight()
+    useUpdateFlight()
 
   const { data: aircraftTypeList } = useAircraftTypes()
   const { mutateAsync: deleteFlight } = useDeleteFlight()
@@ -303,8 +303,12 @@ export default function Page() {
   //   ])
   const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
 
-  const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
-    return `${tail} - ${selectedAircraftType?.manufacturer?.name} ${selectedAircraftType?.aircraft_type?.name} Version ${selectedAircraftType?.version?.version} (${selectedAircraftType?.status?.name})`
+  const generateTailName = (
+    selectedAircraftType: Aircraft,
+    tail: string,
+    tailStatus: string
+  ) => {
+    return `${tail} - ${selectedAircraftType?.manufacturer?.name} ${selectedAircraftType?.aircraft_type?.name} Version ${selectedAircraftType?.version?.version} (${tailStatus})`
   }
 
   const aircraftTailNumbers = aircraftsList?.data.flatMap((list) =>
@@ -312,7 +316,7 @@ export default function Page() {
       .filter((tail) => !tail.is_deleted)
       .map((tail) => ({
         value: String(tail.id),
-        label: generateTailName(list, tail.tail_number),
+        label: generateTailName(list, tail.tail_number, tail.status.name),
       }))
   )
 
@@ -605,9 +609,9 @@ export default function Page() {
     onDelete: onShowDelete,
     aircraftOptions: aircraftTailNumbers || [],
     onChangeTailNumber: async (data) => {
-      const { ID, ...rest} = data
-      if(ID) await updateFlight({...rest, id:ID})
-    }
+      const { ID, ...rest } = data
+      if (ID) await updateFlight({ ...rest, id: ID })
+    },
   })
   const recurringFlightsColumns = useRecurringFlightsColumns(
     openDetailFlight,

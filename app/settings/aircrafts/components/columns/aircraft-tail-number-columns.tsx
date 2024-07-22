@@ -1,11 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table"
 
+import { TailNumber } from "@/types/aircraft/tail-number"
 import { Badge } from "@/components/ui/badge"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
 
-import { TailNumberData } from "../../types"
-
-export const aircraftTailNumbersColumns: ColumnDef<TailNumberData>[] = [
+export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   {
     accessorKey: "status",
     header: () => (
@@ -31,7 +30,7 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumberData>[] = [
     ),
   },
   {
-    accessorKey: "manufacturer",
+    accessorKey: "manufacturer.name",
     cell: ({ row }) => {
       const deleted = row.original.manufacturer.is_deleted ? (
         <span className="text-destructive"> (deleted)</span>
@@ -50,7 +49,7 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumberData>[] = [
     ),
   },
   {
-    accessorKey: "aircraft_type",
+    accessorKey: "aircraft_type.name",
     cell: ({ row }) => {
       const deleted = row.original.aircraft_type.is_deleted ? (
         <span className="text-destructive"> (deleted)</span>
@@ -69,7 +68,7 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumberData>[] = [
     ),
   },
   {
-    accessorKey: "version",
+    accessorKey: "version.version",
     cell: ({ row }) => {
       const deleted = row.original.version.is_deleted ? (
         <span className="text-destructive"> (deleted)</span>
@@ -84,38 +83,68 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumberData>[] = [
       <TableHeaderWithTooltip header="Version" tooltipId="aircraft-version" />
     ),
   },
-  // {
-  //   accessorKey: "manufacturer",
-  //   header: () => (
-  //     <TableHeaderWithTooltip
-  //       header="Aircraft Type"
-  //       tooltipId="aircraft-aircraft-type"
-  //     />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const deleted = [
-  //       row.original.manufacturer?.is_deleted,
-  //       row.original.aircraft_type?.is_deleted,
-  //       row.original.version?.is_deleted,
-  //     ].some((isDeleted) => !!isDeleted) ? (
-  //       <span className="text-destructive"> (deleted)</span>
-  //     ) : (
-  //       ""
-  //     )
-  //     return (
-  //       <p>
-  //         <span>
-  //           {[
-  //             row.original.manufacturer.name,
-  //             row.original.aircraft_type.name,
-  //             row.original.version.version,
-  //           ].join(" ")}
-  //         </span>
-  //         {deleted}
-  //       </p>
-  //     )
-  //   },
-  // },
+  {
+    accessorKey: "passenger_capacity",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Passenger Capacity"
+        tooltipId="aircraft-passenger-capacity"
+      />
+    ),
+  },
+  {
+    accessorKey: "landing_weight",
+    cell: ({ row }) => (
+      <span>
+        {row.original.landing_weight} {row.original.weight_unit.symbol}
+      </span>
+    ),
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Landing Wt"
+        tooltipId="aircraft-landing-weight"
+      />
+    ),
+  },
+  {
+    accessorKey: "cargo_capacity",
+    cell: ({ row }) => (
+      <span>
+        {row.original.cargo_capacity} {row.original.weight_unit.symbol}
+      </span>
+    ),
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Cargo Cap"
+        tooltipId="aircraft-cargo-capacity"
+      />
+    ),
+  },
+  {
+    accessorKey: "mtow",
+    cell: ({ row }) => (
+      <span>
+        {row.original.mtow} {row.original.weight_unit.symbol}
+      </span>
+    ),
+    header: () => (
+      <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
+    ),
+  },
+  {
+    accessorKey: "max_zero_fuel_weight",
+    cell: ({ row }) => (
+      <span>
+        {row.original.max_zero_fuel_weight} {row.original.weight_unit.symbol}
+      </span>
+    ),
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Max Zero Fuel Wt"
+        tooltipId="aircraft-max-zero-fuel-wt"
+      />
+    ),
+  },
   {
     accessorKey: "mtow",
     header: () => (

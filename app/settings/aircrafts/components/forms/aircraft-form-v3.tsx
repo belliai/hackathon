@@ -102,11 +102,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
 
   const [hasDelete, setHasDelete] = useState(false)
 
-  const fieldArray = useFieldArray({
-    control: form.control,
-    name: "aircraft_tail_numbers",
-  })
-
   const isEdit = typeof currentOpen === "string"
 
   const { mutateAsync, isPending: isPendingCreate } = useCreateAircraft()
@@ -115,8 +110,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     useUpdateAircraft()
 
   const { data: aircraftBodyTypes } = useAircraftBodyTypes()
-
-  const { data: aircraftStatuses } = useAircraftStatuses()
 
   const [tabValue, setTabValue] = useState<AircraftFormTabs>("aircraft-type")
 
@@ -128,7 +121,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     "aircraft-details": isEdit ? true : false,
     "door-dimensions": isEdit ? true : false,
     volume: isEdit ? true : false,
-    "aircraft-tail-numbers": isEdit ? true : false,
   })
 
   const isAllValidated = !Object.values(validatedSteps).some((item) => !item)
@@ -230,11 +222,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     category: "length",
   })
 
-  const aircraftStatusOptions = aircraftStatuses?.map((status) => ({
-    value: String(status.ID),
-    label: status.Name,
-  }))
-
   const aircraftBodyTypesOptions = aircraftBodyTypes?.map((bodyType) => ({
     value: String(bodyType.ID),
     label: bodyType.Name,
@@ -256,29 +243,8 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   }))
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
-    if (!data.aircraft_tail_numbers) return
-    if (
-      checkForDuplicatesTail({
-        items: data?.aircraft_tail_numbers,
-        keyToCheck: "tail_number",
-        errorMsg: "There are duplicate tail numbers",
-      })
-    ) {
-      return
-    }
-
-    const tailNumberCount = (data && data?.aircraft_tail_numbers?.length) || 0
-    if (form.getValues("count") ?? 0 > tailNumberCount) {
-      setHasDelete(true)
-    }
     const payload: CreateAircraftRequest = {
       ...data,
-      count: tailNumberCount,
-      // Generate uuid for tail numbers
-      aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
-        ...tailNumber,
-        id: tailNumber.id || undefined,
-      })),
     }
 
     if (isEdit) {
@@ -362,7 +328,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
       "aircraft-details": isEdit ? true : false,
       "door-dimensions": isEdit ? true : false,
       volume: isEdit ? true : false,
-      "aircraft-tail-numbers": isEdit ? true : false,
     })
   }, [currentOpen, form, aircraftFormDefaultValues, isEdit])
 
@@ -529,7 +494,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     className="w-full justify-start py-1.5"
                   >
                     <FileSlidersIcon className="mr-2 size-4" />
-                    Aircraft Details
+                    Capacity Details
                   </TabsTrigger>
                   <TabsTrigger
                     disabled={!validatedSteps["aircraft-details"]}
@@ -547,14 +512,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                     <BoxesIcon className="mr-2 size-4" />
                     Volume
                   </TabsTrigger>
-                  <TabsTrigger
-                    disabled={!validatedSteps["volume"]}
-                    value="aircraft-tail-numbers"
-                    className="w-full justify-start py-1.5"
-                  >
-                    <ScrollTextIcon className="mr-2 size-4" />
-                    Tail Numbers
-                  </TabsTrigger>
                 </TabsList>
               </div>
               <TabsContent className="w-full flex-1" value="aircraft-type">
@@ -564,7 +521,7 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       Aircraft Type
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-4 gap-2 pt-2">
+                  <CardContent className="grid grid-cols-3 gap-2 pt-2">
                     <InputSwitch<AircraftFormValues>
                       label="Manufacturer"
                       name="manufacturer_id"
@@ -669,87 +626,11 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       }}
                     />
                     <InputSwitch<AircraftFormValues>
-                      label="Aircraft Status"
-                      name="status_id"
+                      label="Body Type"
+                      name="body_type_id"
                       type="select"
-                      className="rounded-md"
-                      selectOptions={aircraftStatusOptions}
+                      selectOptions={aircraftBodyTypesOptions}
                     />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent
-                className="h-full w-full flex-1"
-                value="aircraft-tail-numbers"
-              >
-                <Card className="flex h-full flex-1 flex-col divide-y rounded-md">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                    <CardTitle className="font-semibold">
-                      Tail Numbers
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex-1 p-0">
-                    <Table containerClassName="min-h-full h-5  overflow-y-auto">
-                      <TableHeader className="border-b">
-                        <TableHead className="pl-4 pr-1">Tail Number</TableHead>
-                        <TableHead className="px-1">Status</TableHead>
-                        <TableHead className="pl-1 pr-4"></TableHead>
-                      </TableHeader>
-                      <TableBody className="overflow-y-auto">
-                        {fieldArray.fields?.map((field, index) => {
-                          return (
-                            <TableRow key={field.id}>
-                              <TableCell className="pl-4 pr-1 align-top">
-                                <InputSwitch<AircraftFormValues>
-                                  name={`aircraft_tail_numbers.${index}.tail_number`}
-                                  placeholder="Tail Number"
-                                  type="text"
-                                />
-                              </TableCell>
-                              <TableCell className="min-w-24 px-1 align-top">
-                                <InputSwitch<AircraftFormValues>
-                                  name={`aircraft_tail_numbers.${index}.status_id`}
-                                  type="select"
-                                  selectOptions={aircraftStatusOptions}
-                                />
-                              </TableCell>
-                              <TableCell className="w-9 pl-1 pr-4 align-top">
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  variant="destructive"
-                                  onClick={() => {
-                                    fieldArray.remove(index)
-                                  }}
-                                >
-                                  <Trash className="size-4" />
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          )
-                        })}
-                        <TableRow className="hover:bg-transparent">
-                          <TableCell colSpan={3} className="px-4 py-3">
-                            <Button
-                              className="w-full"
-                              type="button"
-                              onClick={() => {
-                                fieldArray.append({
-                                  status_id:
-                                    "a2a781e6-c892-46e4-ab3e-fb344727cfd8",
-                                  tail_number: "",
-                                })
-                              }}
-                              variant={"secondary"}
-                              size={"sm"}
-                            >
-                              <PlusIcon className="mr-2 size-4" />
-                              Add Tail Number
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -893,12 +774,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       name="max_zero_fuel_weight"
                       type="number"
                       rightIcon={selectedWeightUnitSymbol}
-                    />
-                    <InputSwitch<AircraftFormValues>
-                      label="Body Type"
-                      name="body_type_id"
-                      type="select"
-                      selectOptions={aircraftBodyTypesOptions}
                     />
                     <InputSwitch<AircraftFormValues>
                       label="Passenger Capacity"

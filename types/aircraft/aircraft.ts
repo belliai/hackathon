@@ -22,7 +22,6 @@ export interface Aircraft {
   max_dimension_length: string
   max_dimension_breadth: string
   max_dimension_height: string
-  status: OptionEntity
   gl_code: OptionEntity
   count: number
   aircraft_tail_numbers: AircraftTailNumber[]

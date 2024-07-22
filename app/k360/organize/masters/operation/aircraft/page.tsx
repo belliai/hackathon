@@ -120,13 +120,6 @@ export default function MasterAircraftPage() {
   const formDefaultValues: AircraftFormValues = {
     aft_h: "",
     aft_w: "",
-    aircraft_tail_numbers: [
-      {
-        id: "",
-        status_id: "",
-        tail_number: "",
-      },
-    ],
     aircraft_type_id: "",
     body_type_id: "",
     bulk: "",
@@ -151,7 +144,6 @@ export default function MasterAircraftPage() {
     mtow: "",
     passenger_capacity: "",
     restricted_weight_piece: "",
-    status_id: "",
     uld_position: "",
     version_id: "",
     dimension_unit_id: "",
@@ -446,16 +438,11 @@ export default function MasterAircraftPage() {
       manufacturer_id: data.manufacturer.id,
       aircraft_type_id: data.aircraft_type.id,
       version_id: data.version.id,
-      aircraft_tail_numbers: data.aircraft_tail_numbers?.map((tailNumber) => ({
-        id: tailNumber.id,
-        status_id: tailNumber.status.id,
-        tail_number: tailNumber?.tail_number,
-      })),
+
       body_type_id: data.body_type.id,
       volume_unit_id: data.volume_unit.id,
       dimension_unit_id: data.dimension_unit.id,
       weight_unit_id: data.weight_unit.id,
-      status_id: data.status.id,
       gl_code_id: data.gl_code.id,
       count: data.count,
     })
@@ -507,16 +494,7 @@ export default function MasterAircraftPage() {
       accessorKey: "count",
       header: "Active Count",
     },
-    {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => (
-        <StatusBadge
-          statusText={row.original.status.name}
-          severity={row.original.status.name === "Active" ? "default" : "error"}
-        />
-      ),
-    },
+
     createActionColumn({
       items: [
         {
@@ -569,10 +547,6 @@ export default function MasterAircraftPage() {
       ...data,
       count: Number(data.count),
       // Generate uuid for tail numbers
-      aircraft_tail_numbers: data?.aircraft_tail_numbers?.map((tailNumber) => ({
-        ...tailNumber,
-        id: tailNumber.id || undefined,
-      })),
     }
 
     if (typeof openModal === "string") {

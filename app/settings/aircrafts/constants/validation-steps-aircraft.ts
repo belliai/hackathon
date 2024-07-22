@@ -9,7 +9,6 @@ export const stepsOrder: AircraftFormTabs[] = [
   "aircraft-details",
   "door-dimensions",
   "volume",
-  "aircraft-tail-numbers",
 ]
 
 type Fields = Path<AircraftFormValues>[]
@@ -18,9 +17,8 @@ export const aircraftTypeFields: Fields = [
   "manufacturer_id",
   "aircraft_type_id",
   "version_id",
+  "body_type_id",
 ]
-
-export const tailNumbersFields: Fields = ["aircraft_tail_numbers"]
 
 export const measurementUnitFields: Fields = [
   "volume_unit_id",
@@ -31,7 +29,6 @@ export const measurementUnitFields: Fields = [
 export const detailsFields: Fields = [
   "mtow",
   "max_zero_fuel_weight",
-  "body_type_id",
   "passenger_capacity",
   "uld_position",
   "landing_weight",
@@ -63,5 +60,4 @@ export const tabValidations: Record<AircraftFormTabs, Fields> = {
   "door-dimensions": doorDimensionFields,
   volume: volumeFields,
   "aircraft-details": detailsFields,
-  "aircraft-tail-numbers": tailNumbersFields,
 }
