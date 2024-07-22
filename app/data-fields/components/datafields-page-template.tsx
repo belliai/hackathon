@@ -32,7 +32,7 @@ interface DataFieldsPageTemplateProps {
 
 export default function DataFieldsPageTemplate({
   tabs,
-  tabsOrientation = "horizontal",
+  tabsOrientation = "vertical",
   containerClassName,
 }: DataFieldsPageTemplateProps) {
   const tooltips = getTooltipContents()
