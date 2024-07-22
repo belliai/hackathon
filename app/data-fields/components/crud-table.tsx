@@ -185,7 +185,7 @@ const FormDropdown = <T extends FieldValues>(
       <AccordionItem value="item" className="space-y-4 border-b-0">
         <div className="flex w-full flex-row justify-end">
           <PrimitiveTrigger asChild>
-            <Button variant={"button-primary"} style={{ fontSize: "0.875rem" }}>
+            <Button variant={"button-primary"} size="sm">
               Add New
             </Button>
           </PrimitiveTrigger>
@@ -195,13 +195,14 @@ const FormDropdown = <T extends FieldValues>(
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
               <Card
                 className={cn(
-                  "flex flex-row items-center justify-start gap-3 rounded-md p-4 shadow-md",
+                  "flex flex-row items-center justify-start gap-4 rounded-md bg-zinc-900/50 p-4 px-3 py-1.5 shadow-md",
                   props.className
                 )}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex w-full items-center gap-3">
                   {props.form.map((formField) => (
                     <InputSwitch
+                      className="flex h-9 w-full"
                       key={formField.name}
                       {...formField}
                       label={undefined}
@@ -209,12 +210,13 @@ const FormDropdown = <T extends FieldValues>(
                     />
                   ))}
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <Button
                     type="button"
                     className="rounded-sm"
                     variant="secondary"
                     onClick={() => setValue("")}
+                    size="sm"
                   >
                     Cancel
                   </Button>
@@ -222,6 +224,7 @@ const FormDropdown = <T extends FieldValues>(
                     className="rounded-sm"
                     variant={"button-primary"}
                     type="submit"
+                    size="sm"
                   >
                     Save
                   </Button>
