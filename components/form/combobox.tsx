@@ -60,6 +60,7 @@ export type ComboboxProps = {
   onSaveEditOption?: (newOption: string, targetValue: string) => void
   additionalColumn?: string[]
   tooltipId?: string
+  onChangeValue?: (changedValue: string | null) => void
 }
 
 /**
@@ -111,7 +112,8 @@ export function Combobox({
   onAddOption, // Show the add option button if this is provided
   onSaveEditOption,
   additionalColumn,
-  tooltipId = '',
+  onChangeValue,
+  tooltipId = "",
 }: ComboboxFormProps) {
   const [isAdding, setIsAdding] = useState<boolean>(false)
   const [editingOptionValue, setEditingOptionValue] = useState<string | null>(
@@ -178,16 +180,23 @@ export function Combobox({
 
   const renderOptionItem = (data: ComboboxOption) => {
     return (
-      <div className="flex items-center gap-3 [&>svg]:h-4 [&>svg]:w-4 max-w-full">
+      <div className="flex max-w-full items-center gap-3 [&>svg]:h-4 [&>svg]:w-4">
         <div>
           {data.icon}
           {data.label}
         </div>
-        {additionalColumn ?
-          additionalColumn.map((item, index) => {
-            return <div key={`additional-${index}`} className="text-nowrap overflow-hidden text-ellipsis">{data[item as keyof ComboboxOption]}</div>
-          }) 
-        : null}
+        {additionalColumn
+          ? additionalColumn.map((item, index) => {
+              return (
+                <div
+                  key={`additional-${index}`}
+                  className="overflow-hidden text-ellipsis text-nowrap"
+                >
+                  {data[item as keyof ComboboxOption]}
+                </div>
+              )
+            })
+          : null}
       </div>
     )
   }
@@ -196,12 +205,10 @@ export function Combobox({
     if (tooltipId && data[tooltipId as keyof ComboboxOption]) {
       return (
         <Tooltip>
-          <TooltipTrigger asChild>
-            {renderOptionItem(data)}
-          </TooltipTrigger>
+          <TooltipTrigger asChild>{renderOptionItem(data)}</TooltipTrigger>
           <TooltipContent
             side="top"
-            className="border bg-card text-foreground max-w-72"
+            className="max-w-72 border bg-card text-foreground"
           >
             <p>{data[tooltipId as keyof ComboboxOption]}</p>
           </TooltipContent>
@@ -268,6 +275,7 @@ export function Combobox({
                           value={opt.label}
                           key={opt.value}
                           onSelect={() => {
+                            onChangeValue && onChangeValue(opt.value)
                             form.setValue(name, opt.value)
                           }}
                           className={cn(

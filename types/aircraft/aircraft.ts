@@ -48,6 +48,7 @@ interface Unit extends OptionEntity {
 }
 
 export interface AircraftTailNumber {
+  ID?: string
   id: string
   tail_number: string
   status: OptionEntity

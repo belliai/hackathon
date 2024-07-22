@@ -1,10 +1,20 @@
 "use client"
 
+import { useCallback, useEffect } from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import moment from "moment"
+import { useForm } from "react-hook-form"
 
-import { Flight } from "@/types/flight-master/flight-master"
+import {
+  CreateFlightMasterPayload,
+  Flight,
+} from "@/types/flight-master/flight-master"
+import { Form } from "@/components/ui/form"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
+import { Combobox } from "@/components/form/combobox"
+import { SelectOptions } from "@/components/form/InputSwitch"
+
+import TailNumberForm from "./forms/tail-number-dropdown"
 
 export type FlightMasterDataType = {
   entry_type: string
@@ -39,9 +49,9 @@ export const useRecurringFlightsColumns = (
       },
     },
     {
-      accessorKey: "day_of_week",
+      accessorKey: "day",
       header: () => (
-        <TableHeaderWithTooltip header="Day Of week" tooltipId="day-of-week" />
+        <TableHeaderWithTooltip header="Day" tooltipId="day-of-week" />
       ),
       cell: ({ row }) => {
         const date = row.original.from_date || ""
@@ -49,12 +59,18 @@ export const useRecurringFlightsColumns = (
       },
     },
     {
-      accessorKey: "departure_d",
+      accessorKey: "flight_no",
       header: () => (
         <TableHeaderWithTooltip
-          header="Departure Time"
-          tooltipId="departure-time"
+          header="Flight"
+          tooltipId="flight-master-flight-no"
         />
+      ),
+    },
+    {
+      accessorKey: "departure_d",
+      header: () => (
+        <TableHeaderWithTooltip header="Departure" tooltipId="departure-time" />
       ),
       cell: ({ row }) => {
         const departure_h = row.original.departure_h
@@ -66,25 +82,23 @@ export const useRecurringFlightsColumns = (
       },
     },
     {
-      accessorKey: "to_date",
+      accessorKey: "source.name",
       header: () => (
         <TableHeaderWithTooltip
-          header="Arrival"
-          tooltipId="flight-master-sta"
+          header="Origin "
+          tooltipId="flight-master-source"
         />
       ),
       cell: ({ row }) => {
-        const date = row.original.to_date || ""
-        return moment(date).format("YYYY-MM-DD")
+        const source = row.original.source
+        return source ? source.name : ""
       },
+      filterFn: "includesString",
     },
     {
       accessorKey: "arrival_d",
       header: () => (
-        <TableHeaderWithTooltip
-          header="Arrival Time"
-          tooltipId="arrival-time"
-        />
+        <TableHeaderWithTooltip header="Arrival" tooltipId="arrival-time" />
       ),
       cell: ({ row }) => {
         const arrival_h = row.original.arrival_h
@@ -96,14 +110,19 @@ export const useRecurringFlightsColumns = (
       },
     },
     {
-      accessorKey: "flight_no",
+      accessorKey: "destination.name",
       header: () => (
         <TableHeaderWithTooltip
-          header="Flight No."
-          tooltipId="flight-master-flight-no"
+          header="Destination"
+          tooltipId="flight-master-destination"
         />
       ),
+      cell: ({ row }) => {
+        const destination = row.original.destination
+        return destination ? destination.name : ""
+      },
     },
+
     {
       accessorKey: "tail.tail_number",
       header: () => (
@@ -117,19 +136,6 @@ export const useRecurringFlightsColumns = (
         return tail ? tail.tail_number : ""
       },
     },
-    // {
-    //   accessorKey: "recurring",
-    //   header: () => (
-    //     <TableHeaderWithTooltip
-    //       header="Recurring"
-    //       tooltipId="flight-master-destination"
-    //     />
-    //   ),
-    //   cell: ({ row }) => {
-    //     const recurring = row.original.recurring
-    //     return recurring ? recurring: ""
-    //   },
-    // },
     {
       accessorKey: "aircraft.aircraft_type",
       header: () => (
@@ -166,35 +172,6 @@ export const useRecurringFlightsColumns = (
         )
       },
     },
-
-    {
-      accessorKey: "source.name",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="From"
-          tooltipId="flight-master-source"
-        />
-      ),
-      cell: ({ row }) => {
-        const source = row.original.source
-        return source ? source.name : ""
-      },
-      filterFn: "includesString",
-    },
-    {
-      accessorKey: "destination.name",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="To"
-          tooltipId="flight-master-destination"
-        />
-      ),
-      cell: ({ row }) => {
-        const destination = row.original.destination
-        return destination ? destination.name : ""
-      },
-    },
-
     {
       accessorKey: "flight_type.value",
       header: () => (
@@ -284,9 +261,15 @@ export const useRecurringFlightsColumns = (
   ]
 }
 
-export const useListViewColumns = (
-  onRowClick: (data: Flight) => void,
+type ListViewProps = {
+  onRowClick: (data: Flight) => void
   onDelete: (data: Flight) => void
+  aircraftOptions: SelectOptions
+  onChangeTailNumber: (data: CreateFlightMasterPayload) => void
+}
+
+export const useListViewColumns = (
+  props: ListViewProps
 ): ColumnDef<Flight>[] => {
   return [
     {
@@ -300,9 +283,9 @@ export const useListViewColumns = (
       },
     },
     {
-      accessorKey: "day_of_week",
+      accessorKey: "day",
       header: () => (
-        <TableHeaderWithTooltip header="Day Of week" tooltipId="day-of-week" />
+        <TableHeaderWithTooltip header="Day" tooltipId="day-of-week" />
       ),
       cell: ({ row }) => {
         const date = row.original.from_date || ""
@@ -310,12 +293,18 @@ export const useListViewColumns = (
       },
     },
     {
-      accessorKey: "departure_d",
+      accessorKey: "flight_no",
       header: () => (
         <TableHeaderWithTooltip
-          header="Departure Time"
-          tooltipId="departure-time"
+          header="Flight"
+          tooltipId="flight-master-flight-no"
         />
+      ),
+    },
+    {
+      accessorKey: "departure_d",
+      header: () => (
+        <TableHeaderWithTooltip header="Departure" tooltipId="departure-time" />
       ),
       cell: ({ row }) => {
         const departure_h = row.original.departure_h
@@ -327,25 +316,23 @@ export const useListViewColumns = (
       },
     },
     {
-      accessorKey: "to_date",
+      accessorKey: "source.name",
       header: () => (
         <TableHeaderWithTooltip
-          header="Arrival"
-          tooltipId="flight-master-sta"
+          header="Origin"
+          tooltipId="flight-master-source"
         />
       ),
       cell: ({ row }) => {
-        const date = row.original.to_date || ""
-        return moment(date).format("YYYY-MM-DD")
+        const source = row.original.source
+        return source ? source.name : ""
       },
+      filterFn: "includesString",
     },
     {
       accessorKey: "arrival_d",
       header: () => (
-        <TableHeaderWithTooltip
-          header="Arrival Time"
-          tooltipId="arrival-time"
-        />
+        <TableHeaderWithTooltip header="Arrival" tooltipId="arrival-time" />
       ),
       cell: ({ row }) => {
         const arrival_h = row.original.arrival_h
@@ -357,40 +344,37 @@ export const useListViewColumns = (
       },
     },
     {
-      accessorKey: "flight_no",
+      accessorKey: "destination.name",
       header: () => (
         <TableHeaderWithTooltip
-          header="Flight No."
-          tooltipId="flight-master-flight-no"
+          header="Destination"
+          tooltipId="flight-master-destination"
         />
       ),
+      cell: ({ row }) => {
+        const destination = row.original.destination
+        return destination ? destination.name : ""
+      },
     },
     {
       accessorKey: "tail.tail_number",
+      size: 400,
       header: () => (
         <TableHeaderWithTooltip
-          header="Tail No."
+          header="Tail Number          "
           tooltipId="flight-master-tail-no"
         />
       ),
       cell: ({ row }) => {
-        const tail = row.original.tail
-        return tail ? tail.tail_number : ""
+        return (
+          <TailNumberForm
+            row={row}
+            aircraftOptions={props.aircraftOptions}
+            onChangeTailNumber={props.onChangeTailNumber}
+          />
+        )
       },
     },
-    // {
-    //   accessorKey: "recurring",
-    //   header: () => (
-    //     <TableHeaderWithTooltip
-    //       header="Recurring"
-    //       tooltipId="flight-master-destination"
-    //     />
-    //   ),
-    //   cell: ({ row }) => {
-    //     const recurring = row.original.recurring
-    //     return recurring ? recurring: ""
-    //   },
-    // },
     {
       accessorKey: "aircraft.aircraft_type",
       header: () => (
@@ -427,83 +411,69 @@ export const useListViewColumns = (
         )
       },
     },
-
     {
-      accessorKey: "source.name",
+      accessorKey: "aircraft.passenger_capacity",
       header: () => (
         <TableHeaderWithTooltip
-          header="From"
-          tooltipId="flight-master-source"
-        />
-      ),
-      cell: ({ row }) => {
-        const source = row.original.source
-        return source ? source.name : ""
-      },
-      filterFn: "includesString",
-    },
-    {
-      accessorKey: "destination.name",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="To"
-          tooltipId="flight-master-destination"
-        />
-      ),
-      cell: ({ row }) => {
-        const destination = row.original.destination
-        return destination ? destination.name : ""
-      },
-    },
-
-    {
-      accessorKey: "flight_type.value",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Flight Type"
+          header="Passenger Capacity"
           tooltipId="flight-master-flight-type"
         />
       ),
       cell: ({ row }) => {
-        const flightType = row.original.flight_type
-        return flightType ? flightType.value : ""
+        const aircraft = row.original.aircraft
+        return aircraft ? aircraft.passenger_capacity : ""
       },
     },
     {
-      accessorKey: "status.value",
+      accessorKey: "aircraft.landing_weight",
       header: () => (
         <TableHeaderWithTooltip
-          header="Status"
-          tooltipId="flight-master-status"
+          header="Landing Wt"
+          tooltipId="flight-master-flight-type"
         />
       ),
       cell: ({ row }) => {
-        const status = row.original.status
-        return status ? status.value : ""
+        const aircraft = row.original.aircraft
+        return aircraft ? aircraft.landing_weight : ""
       },
     },
     {
-      accessorKey: "entry_type",
+      accessorKey: "aircraft.cargo_capacity",
       header: () => (
         <TableHeaderWithTooltip
-          header="Entry Type"
-          tooltipId="flight-master-entry-type"
-        />
-      ),
-      cell: ({ row }) => "Manual",
-    },
-
-    {
-      accessorKey: "sector.value",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Sector"
-          tooltipId="flight-master-sector"
+          header="Cargo Cap"
+          tooltipId="flight-master-flight-type"
         />
       ),
       cell: ({ row }) => {
-        const sector = row.original.sector
-        return sector ? sector.value : ""
+        const aircraft = row.original.aircraft
+        return aircraft ? aircraft.cargo_capacity : ""
+      },
+    },
+    {
+      accessorKey: "aircraft.mtow",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="MTOW"
+          tooltipId="flight-master-flight-type"
+        />
+      ),
+      cell: ({ row }) => {
+        const aircraft = row.original.aircraft
+        return aircraft ? aircraft.mtow : ""
+      },
+    },
+    {
+      accessorKey: "aircraft.max_zero_fuel_weight",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Max Zero Fuel Wt"
+          tooltipId="flight-master-flight-type"
+        />
+      ),
+      cell: ({ row }) => {
+        const aircraft = row.original.aircraft
+        return aircraft ? aircraft.mtow : ""
       },
     },
     {

@@ -54,17 +54,17 @@ export interface CreateFlightMasterPayload {
   capacity?: number
   destination_id: string
   flight_no: string
-  flight_type_id: string
+  flight_type_id?: string
   sector_id?: string
   source_id: string
   status_id?: string
-  tail_id: string
+  tail_id?: string | null
   from_date: string
-  to_date: string
+  to_date?: string
   uom_id?: string
   arrival_d?: number
-  arrival_h: number
-  arrival_m: number
+  arrival_h?: number
+  arrival_m?: number
   origin_timezone?: string
   departure_d?: number
   departure_h: number

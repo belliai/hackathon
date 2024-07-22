@@ -50,6 +50,14 @@ export const useCreateFlight = () => {
   })
 }
 
+export const updateFlightTailNumber = async (
+  belliApi: AxiosInstance,
+  id: string,
+  data: { tail_id: string| null, id?: string}
+) => {
+  return belliApi.put(`${route}/${id}`, data).then((res) => res.data as Flight)
+}
+
 export const updateFlight = async (
   belliApi: AxiosInstance,
   id: string,
@@ -73,6 +81,8 @@ export const useUpdateFlight = () => {
     },
   })
 }
+
+
 
 export const deleteFlight = async (belliApi: AxiosInstance, id: string) => {
   return belliApi.delete(`${route}/${id}`).then((res) => res.data as Flight)

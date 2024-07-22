@@ -1,13 +1,11 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { flightSchema } from "@/schemas/flight-master/flight"
 import {
   flightMasterFormSchema,
   FlightMasterFormValue,
 } from "@/schemas/flight-master/flight-master"
-import {
-flightSchema 
-} from "@/schemas/flight-master/flight"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoopIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
@@ -26,17 +24,19 @@ import moment from "moment"
 import { useForm } from "react-hook-form"
 import { RRule } from "rrule"
 
+import { Aircraft } from "@/types/aircraft/aircraft"
 import {
   CreateFlightMasterPayload,
   CreateRecurringFlightMasterPayload,
   Flight,
 } from "@/types/flight-master/flight-master"
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
+import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import {
   useCreateFlight,
   useDeleteFlight,
   useFlightList,
-  useUpdateFlight,
+  useUpdateFlight
 } from "@/lib/hooks/flight-master/flight-master"
 import { generateRecurringDates } from "@/lib/utils/date-utils"
 import {
@@ -222,7 +222,7 @@ export default function Page() {
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
   const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
-    useUpdateFlight()
+  useUpdateFlight()
 
   const { data: aircraftTypeList } = useAircraftTypes()
   const { mutateAsync: deleteFlight } = useDeleteFlight()
@@ -247,60 +247,74 @@ export default function Page() {
 
   const filterData = filtersHookForm.watch()
 
-  useEffect(() => {
-    if (flightData && flightData.data) {
-      const flightDataRecurring = flightData.data.map((item) => ({
-        ...item,
-        // Temporary recurring value following this rule standard
-        // https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html
-        recurring: `DTSTART:20240701T040000Z
-RRULE:FREQ=DAILY;WKST=MO`,
+  //   useEffect(() => {
+  //     if (flightData && flightData.data) {
+  //       const flightDataRecurring = flightData.data.map((item) => ({
+  //         ...item,
+  //         // Temporary recurring value following this rule standard
+  //         // https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html
+  //         recurring: `DTSTART:20240701T040000Z
+  // RRULE:FREQ=DAILY;WKST=MO`,
+  //       }))
+
+  //       const flightDataNew = flightDataRecurring.flatMap((item) => {
+  //         const rruleString = item.recurring || ""
+  //         let occurrences: Date[] = []
+
+  //         try {
+  //           const rrule = RRule.fromString(rruleString)
+  //           const now = new Date(filterData.from_date)
+
+  //           let rangeDate = new Date(now)
+  //           switch (filterData.period) {
+  //             case "daily":
+  //               rangeDate.setDate(now.getDate() + 1)
+  //               occurrences = rrule.between(now, rangeDate)
+  //               break
+  //             case "weekly":
+  //               occurrences = rrule.between(filterWeekly.from, filterWeekly.to)
+  //               break
+  //             case "monthly":
+  //               occurrences = rrule.between(filterMonthly.from, filterMonthly.to)
+  //               break
+  //             default:
+  //               rangeDate.setDate(now.getDate() + 10)
+  //               break
+  //           }
+  //         } catch (error) {
+  //           console.error("Invalid RRule string:", rruleString, error)
+  //         }
+
+  //         return occurrences.map((date) => ({
+  //           ...item,
+  //           recurring: rruleString,
+  //           next_at: date,
+  //         }))
+  //       })
+
+  //       setFlightDataRecurring(flightDataNew)
+  //     }
+  //   }, [
+  //     flightData,
+  //     filterData.from_date,
+  //     filterData.period,
+  //     filterWeekly,
+  //     filterMonthly,
+  //   ])
+  const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
+
+  const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
+    return `${tail} - ${selectedAircraftType?.manufacturer?.name} ${selectedAircraftType?.aircraft_type?.name} Version ${selectedAircraftType?.version?.version} (${selectedAircraftType?.status?.name})`
+  }
+
+  const aircraftTailNumbers = aircraftsList?.data.flatMap((list) =>
+    list.aircraft_tail_numbers
+      .filter((tail) => !tail.is_deleted)
+      .map((tail) => ({
+        value: String(tail.id),
+        label: generateTailName(list, tail.tail_number),
       }))
-
-      const flightDataNew = flightDataRecurring.flatMap((item) => {
-        const rruleString = item.recurring || ""
-        let occurrences: Date[] = []
-
-        try {
-          const rrule = RRule.fromString(rruleString)
-          const now = new Date(filterData.from_date)
-
-          let rangeDate = new Date(now)
-          switch (filterData.period) {
-            case "daily":
-              rangeDate.setDate(now.getDate() + 1)
-              occurrences = rrule.between(now, rangeDate)
-              break
-            case "weekly":
-              occurrences = rrule.between(filterWeekly.from, filterWeekly.to)
-              break
-            case "monthly":
-              occurrences = rrule.between(filterMonthly.from, filterMonthly.to)
-              break
-            default:
-              rangeDate.setDate(now.getDate() + 10)
-              break
-          }
-        } catch (error) {
-          console.error("Invalid RRule string:", rruleString, error)
-        }
-
-        return occurrences.map((date) => ({
-          ...item,
-          recurring: rruleString,
-          next_at: date,
-        }))
-      })
-
-      setFlightDataRecurring(flightDataNew)
-    }
-  }, [
-    flightData,
-    filterData.from_date,
-    filterData.period,
-    filterWeekly,
-    filterMonthly,
-  ])
+  )
 
   const findDays = (data: string[], key: string): boolean => {
     return (data && data.includes(key)) || false
@@ -586,7 +600,15 @@ RRULE:FREQ=DAILY;WKST=MO`,
     setPagination(pagination)
   }, [])
 
-  const listViewColumns = useListViewColumns(openDetailFlight, onShowDelete)
+  const listViewColumns = useListViewColumns({
+    onRowClick: openDetailFlight,
+    onDelete: onShowDelete,
+    aircraftOptions: aircraftTailNumbers || [],
+    onChangeTailNumber: async (data) => {
+      const { ID, ...rest} = data
+      if(ID) await updateFlight({...rest, id:ID})
+    }
+  })
   const recurringFlightsColumns = useRecurringFlightsColumns(
     openDetailFlight,
     onShowDelete
@@ -644,7 +666,6 @@ RRULE:FREQ=DAILY;WKST=MO`,
                         type="date"
                         className="h-8 w-36"
                         disabledMatcher={(date) => false}
-                
                       />
                     )}
                     {filterData.period === "range" && (
@@ -684,7 +705,6 @@ RRULE:FREQ=DAILY;WKST=MO`,
                     <ListIcon className="mr-2 size-4" />
                     List View
                   </TabsTrigger>
-
                 </TabsList>
               }
               pageCount={
@@ -704,7 +724,7 @@ RRULE:FREQ=DAILY;WKST=MO`,
         onOpenChange={onOpenChange}
         resetData={setSelectedData}
       />
-    
+
       <AlertDialog
         open={deleteConfirm !== null}
         onOpenChange={(open) => {

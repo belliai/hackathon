@@ -21,8 +21,6 @@ import {
   Flight,
 } from "@/types/flight-master/flight-master"
 import {
-  createFlight,
-  updateFlight,
   useCreateFlight,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
@@ -151,13 +149,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         "departure_h",
         "departure_m",
         "departure_am_pm",
-        "origin_timezone",
-        "to_date",
-        "destination_id",
-        "arrival_h",
-        "arrival_m",
-        "arrival_am_pm",
-        "destination_timezone",
+        "destination_id"
       ],
     },
     // {
