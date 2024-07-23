@@ -11,7 +11,7 @@ import { SelectOptions } from "@/components/form/InputSwitch"
 type CellProps = {
   row: any
   aircraftOptions: SelectOptions
-  onChangeTailNumber: (data: CreateFlightMasterPayload | null) => void
+  onChangeTailNumber?: (data: CreateFlightMasterPayload | null) => void
 }
 
 const TailNumberForm = ({
@@ -42,7 +42,7 @@ const TailNumberForm = ({
       flight_duration_hour: original.flight_duration_hour,
       departure_period: original.departure_period,
     }
-    if (tail_id !== null) onChangeTailNumber({ tail_id, ...payload })
+    if (tail_id !== null && onChangeTailNumber) onChangeTailNumber({ tail_id, ...payload })
   }
 
   return (

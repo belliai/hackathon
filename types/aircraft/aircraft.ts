@@ -34,6 +34,7 @@ export interface Aircraft {
   fwt: string
   fwd: string
   bulk: string
+  tail_number: string
   created_at: string
   updated_at: string
 }

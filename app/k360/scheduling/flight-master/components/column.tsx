@@ -39,10 +39,10 @@ export const columns = (
     header: "Flight No.",
   },
   {
-    accessorKey: "source",
-    header: "Source",
+    accessorKey: "origin",
+    header: "Origin",
     cell: ({ row }) => {
-      const source = row.original.source
+      const source = row.original.origin
       return source ? source.name : ""
     },
   },
@@ -58,7 +58,7 @@ export const columns = (
     accessorKey: "from_date",
     header: "STD(API)",
     cell: ({ row }) => {
-      const date = row.original.from_date || ""
+      const date = row.original.departure_date || ""
       return moment(date).format("YYYY-MM-DD")
     },
   },
@@ -66,7 +66,7 @@ export const columns = (
     accessorKey: "to_date",
     header: "STA",
     cell: ({ row }) => {
-      const date = row.original.to_date || ""
+      const date = row.original.departure_date || ""
       return moment(date).format("YYYY-MM-DD")
     },
   },
@@ -74,7 +74,7 @@ export const columns = (
     accessorKey: "aircraft",
     header: "Aircraft Type",
     cell: ({ row }) => {
-      const aircraft = row.original.aircraft
+      const aircraft = row.original.tail
       return aircraft ? aircraft.aircraft_type : ""
     },
   },
@@ -90,31 +90,34 @@ export const columns = (
     accessorKey: "flight_type",
     header: "Flight Type",
     cell: ({ row }) => {
-      const flightType = row.original.flight_type
-      return flightType ? flightType.value : ""
+      // const flightType = row.original.flight_type
+      // return flightType ? flightType.value : ""
+      return ""
     },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.original.status
-      return status ? status.value : ""
+      // const status = row.original.status
+      // return status ? status.value : ""
+      return ""
     },
   },
   {
     accessorKey: "sector",
     header: "Sector",
     cell: ({ row }) => {
-      const sector = row.original.sector
-      return sector ? sector.value : ""
+      // const sector = row.original.sector
+      // return sector ? sector.value : ""
+      return ""
     },
   },
   {
     accessorKey: "created_at",
     header: "Created At",
     cell: ({ row }) => {
-      const date = row.original.created_at || ""
+      const date = row.original.departure_date || ""
       return moment(date).format("YYYY-MM-DD HH:mm:ss")
     },
   },
@@ -122,7 +125,7 @@ export const columns = (
     accessorKey: "updated_at",
     header: "Updated At",
     cell: ({ row }) => {
-      const date = row.original.updated_at || ""
+      const date = row.original.departure_date || ""
       return moment(date).format("YYYY-MM-DD HH:mm:ss")
     },
   },

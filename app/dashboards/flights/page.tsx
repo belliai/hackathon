@@ -13,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { DataTable } from "@/components/data-table/data-table"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
-import { useRecurringFlightsColumns } from "@/app/settings/flights/components/column"
+import { useListViewColumns } from "@/app/settings/flights/components/column"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
 
 interface FlightsActualInformation {
@@ -89,10 +89,7 @@ export default function FlightsDashboardPage() {
     name: "infos",
   })
 
-  const columns = useRecurringFlightsColumns(
-    (data) => {},
-    (data) => {}
-  )
+  const columns = useListViewColumns({})
 
   const displayedFlightsColumns: ColumnDef<FlightWithActualInformation>[] = [
     ...(columns as ColumnDef<FlightWithActualInformation>[]),
@@ -109,9 +106,9 @@ export default function FlightsDashboardPage() {
         return (
           <ActualInformation
             actual={Number(row.original.actual_mtow)}
-            maximum={Number(row.original?.aircraft?.mtow)}
+            maximum={Number(row.original?.tail?.mtow)}
             displayOption={displayOption}
-            unit={String(row.original.uom?.name || "")}
+            unit={String(row.original.tail.volume_unit.name || "")}
           />
         )
       },
@@ -129,9 +126,9 @@ export default function FlightsDashboardPage() {
         return (
           <ActualInformation
             actual={Number(row.original.actual_landing_weight)}
-            maximum={Number(row.original?.aircraft?.landing_weight)}
+            maximum={Number(row.original?.tail?.landing_weight)}
             displayOption={displayOption}
-            unit={String(row.original.uom?.name || "")}
+            unit={String(row.original.tail.mtow || "")}
           />
         )
       },
@@ -149,9 +146,9 @@ export default function FlightsDashboardPage() {
         return (
           <ActualInformation
             actual={Number(row.original.actual_cargo_capacity)}
-            maximum={Number(row.original?.aircraft?.cargo_capacity)}
+            maximum={Number(row.original?.tail?.cargo_capacity)}
             displayOption={displayOption}
-            unit={String(row.original.uom?.name || "")}
+            unit={String(row.original.tail.volume_unit.name || "")}
           />
         )
       },
@@ -164,17 +161,17 @@ export default function FlightsDashboardPage() {
         {
           detail: "MTOW",
           actual: flight?.actual_mtow || "",
-          maximum: flight?.aircraft?.mtow || "-",
+          maximum: flight?.tail?.mtow || "-",
         },
         {
           detail: "Landing Weight",
           actual: flight?.actual_landing_weight || "",
-          maximum: flight?.aircraft?.landing_weight || "-",
+          maximum: flight?.tail?.landing_weight || "-",
         },
         {
           detail: "Cargo Capacity",
           actual: flight?.actual_cargo_capacity || "",
-          maximum: flight?.aircraft?.cargo_capacity || "-",
+          maximum: flight?.tail?.cargo_capacity || "-",
         },
       ],
     })
@@ -213,7 +210,7 @@ export default function FlightsDashboardPage() {
     // Temporary solution to update the actual information, will be replaced with API call
     setDisplayedFlightsData((prev) =>
       prev.map((flight) => {
-        if (flight.ID === selectedFlight?.ID) {
+        if (flight.id === selectedFlight?.id) {
           return {
             ...flight,
             actual_mtow: data[0].actual ?? "",
@@ -227,8 +224,8 @@ export default function FlightsDashboardPage() {
     )
   }
 
-  const selectedFlightModalTitle = `${selectedFlight?.flight_no}, ${selectedFlight?.source.name} - ${selectedFlight?.destination.name}`
-  const selectedFlightModalDescription = `${moment(selectedFlight?.from_date).format("ddd, YYYY-MM-DD")} to ${moment(selectedFlight?.to_date).format("ddd, YYYY-MM-DD")} (${selectedFlight?.tail?.tail_number || ""}, ${selectedFlight?.aircraft?.aircraft_type?.name || ""})`
+  const selectedFlightModalTitle = `${selectedFlight?.flight_number}, ${selectedFlight?.origin.name} - ${selectedFlight?.destination.name}`
+  const selectedFlightModalDescription = `${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} to ${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} (${selectedFlight?.tail?.tail_number || ""}, ${selectedFlight?.tail?.aircraft_type?.name || ""})`
 
   return (
     <div>

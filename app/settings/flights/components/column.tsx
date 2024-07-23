@@ -28,10 +28,10 @@ export type FlightMasterDataType = {
 }
 
 type ListViewProps = {
-  onRowClick: (data: Flight) => void
-  onDelete: (data: Flight) => void
-  aircraftOptions: SelectOptions
-  onChangeTailNumber: (data: CreateFlightMasterPayload | null) => void
+  onRowClick?: (data: Flight) => void
+  onDelete?: (data: Flight) => void
+  aircraftOptions?: SelectOptions
+  onChangeTailNumber?: (data: CreateFlightMasterPayload | null) => void
 }
 
 export const useListViewColumns = (
@@ -131,8 +131,8 @@ export const useListViewColumns = (
         return (
           <TailNumberForm
             row={row}
-            aircraftOptions={props.aircraftOptions}
-            onChangeTailNumber={props.onChangeTailNumber}
+            aircraftOptions={props.aircraftOptions || []}
+            onChangeTailNumber={props.onChangeTailNumber }
           />
         )
       },
@@ -251,3 +251,5 @@ export const useListViewColumns = (
     },
   ]
 }
+
+

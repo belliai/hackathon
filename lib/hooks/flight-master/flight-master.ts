@@ -10,8 +10,8 @@ import { useBelliApi } from "@/lib/utils/network"
 const route = "flights"
 
 interface FlightParamsProps extends PaginationParams {
-  start_date: string
-  end_date: string
+  start_date?: string
+  end_date?: string
 }
 
 export const fetchFlightList = async (
