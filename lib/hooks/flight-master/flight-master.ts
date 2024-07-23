@@ -9,9 +9,14 @@ import { useBelliApi } from "@/lib/utils/network"
 
 const route = "flights"
 
+interface FlightParamsProps extends PaginationParams {
+  start_date: string
+  end_date: string
+}
+
 export const fetchFlightList = async (
   belliApi: AxiosInstance,
-  params: PaginationParams
+  params: FlightParamsProps
 ) => {
   return belliApi
     .get(route, {
@@ -20,7 +25,7 @@ export const fetchFlightList = async (
     .then((res) => res.data as APIPaginatedResponse<Flight>)
 }
 
-export const useFlightList = (params: PaginationParams) => {
+export const useFlightList = (params: FlightParamsProps) => {
   const belliApi = useBelliApi()
 
   return useQuery({

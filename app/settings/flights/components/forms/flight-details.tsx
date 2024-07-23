@@ -99,7 +99,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     list.aircraft_tail_numbers
       .filter((tail) => !tail.is_deleted)
       .map((tail) => ({
-        value: String(tail.tail_number),
+        value: String(tail.id),
         label: tail.tail_number,
         component: generateTailName(list, tail.tail_number),
       }))
@@ -107,12 +107,12 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
   useEffect(() => {}, [form.formState])
 
-  const departureDate = formData.from_date ? new Date(formData.from_date) : null
-  const departureHour = formData.departure_h
-  const departureMinute = formData.departure_m
-  const departureAmPm = formData.departure_am_pm as "am" | "pm"
-  const flightDurationHours = formData.flight_duration_h
-  const flightDurationMinutes = formData.flight_duration_m
+  const departureDate = formData.departure_date ? new Date(formData.departure_date) : null
+  const departureHour = formData.departure_hour
+  const departureMinute = formData.departure_minute
+  const departureAmPm = formData.departure_period as "AM" | "PM"
+  const flightDurationHours = formData.flight_duration_hour
+  const flightDurationMinutes = formData.flight_duration_minute
 
   // Generate departure time if all required data is present
   const departureTime =
@@ -148,7 +148,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       <div className="grid grid-cols-3 gap-4">
         <FormField
           control={form.control}
-          name="flight_no"
+          name="flight_number"
           render={({ field }) => (
             <FormItem>
               <FormLabel tooltipId="flight-number">Flight Number</FormLabel>
@@ -164,7 +164,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         />
         <div className="flex space-x-2">
           <FormTextField
-            name="flight_duration_h"
+            name="flight_duration_hour"
             form={form}
             type="stepper-number"
             min={0}
@@ -174,7 +174,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             suffix="hrs"
           />
           <FormTextField
-            name="flight_duration_m"
+            name="flight_duration_minute"
             form={form}
             type="stepper-number"
             min={0}
@@ -187,7 +187,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       </div>
       <div className="grid grid-cols-3 gap-4">
         <Combobox
-          name="source_id"
+          name="origin_id"
           options={formattedLocation}
           label="Origin"
           info="Select the source location"
@@ -195,7 +195,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         />
         <div className="flex items-end space-x-2 p-1">
           <FormTextField
-            name="departure_h"
+            name="departure_hour"
             form={form}
             type="stepper-number"
             min={0}
@@ -203,7 +203,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             label="Hours"
           />
           <FormTextField
-            name="departure_m"
+            name="departure_minute"
             form={form}
             type="stepper-number"
             min={0}
@@ -211,18 +211,18 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             label="Minutes"
           />
           <FormTextField
-            name="departure_am_pm"
+            name="departure_period"
             form={form}
             type="select"
             options={[
-              { label: "AM", value: "am" },
-              { label: "PM", value: "pm" },
+              { label: "AM", value: "AM" },
+              { label: "PM", value: "PM" },
             ]}
             label="AM/PM"
           />
         </div>
         <FormTextField
-          name="from_date"
+          name="departure_date"
           form={form}
           type="date"
           label="Departure Date"
@@ -253,7 +253,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
       <div className="grid grid-cols-1 gap-4">
         <Combobox
-          name="tail_no"
+          name="tail_id"
           label="Tail Number"
           info="Select Tail number"
           options={aircraftTailNumbers}

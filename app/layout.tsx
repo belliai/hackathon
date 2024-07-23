@@ -29,6 +29,7 @@ import { skNavigation } from "@/components/nav/data/skNavigation"
 import { FavoritesProvider } from "@/components/nav/favorites/favorites-provider"
 import { PHProvider } from "@/components/posthog-provider"
 import QueryProvider from "@/components/query-provider"
+import StiggProvider from "@/components/stigg-provider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -90,6 +91,7 @@ export default function RootLayout({
         )}
       >
         {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
+
         <PHProvider>
           <body className="h-full overflow-y-hidden bg-background text-white">
             {/* <ProgressBar />
@@ -97,16 +99,18 @@ export default function RootLayout({
             <PostHogPageView />
             <QueryProvider>
               <SignedIn>
-                <TooltipProvider>
-                  <BookingProvider>
-                    <FavoritesProvider>
-                      <RouteRoom>
-                        <UIWrapper>{children}</UIWrapper>
-                      </RouteRoom>
-                    </FavoritesProvider>
-                    <Toaster />
-                  </BookingProvider>
-                </TooltipProvider>
+                <StiggProvider>
+                  <TooltipProvider>
+                    <BookingProvider>
+                      <FavoritesProvider>
+                        <RouteRoom>
+                          <UIWrapper>{children}</UIWrapper>
+                        </RouteRoom>
+                      </FavoritesProvider>
+                      <Toaster />
+                    </BookingProvider>
+                  </TooltipProvider>
+                </StiggProvider>
               </SignedIn>
               <SignedOut>
                 <RedirectToSignIn />

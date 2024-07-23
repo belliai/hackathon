@@ -63,20 +63,19 @@ type NewFlightModalProps = PropsWithChildren & {
 const schemas = flightMasterFormSchema
 const initialValues = getDefaults(schemas)
 
-const mappedData = (props: Flight) => {
+const mappedData = (props: Flight) : CreateFlightMasterPayload => {
   return {
-    source_id: props.source?.ID,
-    destination_id: props.destination?.ID,
-    //reccurring: props.recurring,
-    from_date: new Date(props.from_date),
-    to_date: new Date(props.to_date),
-    arrival_h: props.arrival_h,
-    arrival_m: props.arrival_m,
-    departure_h: props.departure_h,
-    departure_m: props.departure_m,
-    aircraft_type: props.aircraft?.aircraft_type?.id,
-    tail_no: props.tail?.tail_number,
-    flight_no: props.flight_no,
+    origin_id: props.origin.id,
+    destination_id: props.destination.id,
+    departure_date: new Date(props.departure_date),
+    departure_hour: props.departure_hour,
+    departure_minute: props.departure_minute,
+    tail_id: props.tail.id,
+    flight_number: props.flight_number,
+    departure_period: props.departure_period,
+    flight_duration_hour: props.flight_duration_hour,
+    flight_duration_minute: props.flight_duration_minute,
+  
   }
 }
 
@@ -170,22 +169,16 @@ export default function NewFlightModal(props: NewFlightModalProps) {
 
   const onSubmit = async (data: CreateFlightMasterPayload) => {
     const payload: CreateFlightMasterPayload = {
-      flight_no: data.flight_no,
-      source_id: data.source_id,
+      flight_number: data.flight_number,
+      origin_id: data.origin_id,
       destination_id: data.destination_id,
-      departure_h: data.departure_h,
-      departure_m: data.departure_m,
-      destination_timezone: data.destination_timezone,
-      origin_timezone: data.origin_timezone,
-      arrival_h: data.departure_h,
-      arrival_m: data.departure_m,
-      aircraft_type: data.aircraft_type,
+      departure_hour: data.departure_hour,
+      departure_minute: data.departure_minute,
+      departure_period: data.departure_period,
       tail_id: data.tail_id,
-      flight_type_id: data.flight_type_id,
-      from_date: format(data.from_date, "yyyy-MM-dd"),
-      to_date: format(data.from_date, "yyyy-MM-dd"),
-
-      // departure_am_pm : data.departure_am_pm
+      departure_date: format(data.departure_date,"yyyy-MM-dd"),
+      flight_duration_hour: data.flight_duration_hour,
+      flight_duration_minute: data.flight_duration_minute,
     }
     try {
       // check props data
@@ -198,7 +191,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       } else {
         await update.mutateAsync({
           ...(payload as CreateFlightMasterPayload),
-          id: props.data.ID,
+          id: props.data.id,
         })
         toast({
           title: "Success!",

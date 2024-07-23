@@ -14,69 +14,49 @@ interface UOMType extends IDNameType {
   symbol: string
 }
 
+interface Timezone {
+  id: string,
+  abbreviation: string
+  name: string
+  offset: string
+}
+
+interface Location {
+  id: string,
+  name: string,
+  timezone: Timezone
+}
+
 export interface Flight {
-  recurring: string
-  next_at: Date
-  aircraft: Aircraft
-  arrival_d: number
-  arrival_h: number
-  arrival_m: number
-  capacity: number
-  departure_d: number
-  departure_h: number
-  departure_m: number
-  destination: IDNameType
-  flight_no: string
-  flight_type: IDValueType
-  fri: boolean
-  from_date: string
-  ID: string
-  mon: boolean
-  sat: boolean
-  sector: IDValueType
-  source: IDNameType
-  status: IDValueType
-  sun: boolean
-  tail: AircraftTailNumber
-  thu: boolean
-  to_date: string
-  tue: boolean
-  uom: UOMType
-  wed: boolean
-  created_at: string
-  updated_at: string
+  id: string
+  flight_number: string,
+  origin: Location,
+  destination: Location,
+  departure_date: string,
+  departure_hour: number,
+  departure_minute:number
+  departure_period: string,
+  arrival_date: string,
+  arrival_time: string,
+  arrival_hour: number,
+  arrival_minute:number
+  flight_duration_hour: number,
+  flight_duration_minute: number,
+  tail: Aircraft,
 }
 
 export interface CreateFlightMasterPayload {
   ID?: string
-  aircraft_id?: string
-  aircraft_type?: string
-  capacity?: number
-  destination_id: string
-  flight_no: string
-  flight_type_id?: string
-  sector_id?: string
-  source_id: string
-  status_id?: string
-  tail_id?: string | null
-  from_date: string
-  to_date?: string
-  uom_id?: string
-  arrival_d?: number
-  arrival_h?: number
-  arrival_m?: number
-  origin_timezone?: string
-  departure_d?: number
-  departure_h: number
-  departure_m: number
-  destination_timezone?: string
-  mon?: boolean
-  tue?: boolean
-  wed?: boolean
-  thu?: boolean
-  fri?: boolean
-  sat?: boolean
-  sun?: boolean
+  flight_number: string,
+  origin_id: string,
+  destination_id: string,
+  departure_period: string,
+  departure_date: Date | string,
+  departure_hour: number,
+  departure_minute:number
+  flight_duration_hour: number,
+  flight_duration_minute: number,
+  tail_id?: string,
 }
 
 export interface CreateRecurringFlightMasterPayload {

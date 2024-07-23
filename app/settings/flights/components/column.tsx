@@ -1,17 +1,11 @@
-"use client"
-
-import { useCallback, useEffect } from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import moment from "moment"
-import { useForm } from "react-hook-form"
 
 import {
   CreateFlightMasterPayload,
   Flight,
 } from "@/types/flight-master/flight-master"
-import { Form } from "@/components/ui/form"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
-import { Combobox } from "@/components/form/combobox"
 import { SelectOptions } from "@/components/form/InputSwitch"
 
 import TailNumberForm from "./forms/tail-number-dropdown"
@@ -33,239 +27,11 @@ export type FlightMasterDataType = {
   updated_by: string
 }
 
-export const useRecurringFlightsColumns = (
-  onRowClick: (data: Flight) => void,
-  onDelete: (data: Flight) => void
-): ColumnDef<Flight>[] => {
-  return [
-    {
-      accessorKey: "from_date",
-      header: () => (
-        <TableHeaderWithTooltip header="Date" tooltipId="flight-master-std" />
-      ),
-      cell: ({ row }) => {
-        const date = row.original.from_date || ""
-        return moment(date).format("YYYY-MM-DD")
-      },
-    },
-    {
-      accessorKey: "day",
-      header: () => (
-        <TableHeaderWithTooltip header="Day" tooltipId="day-of-week" />
-      ),
-      cell: ({ row }) => {
-        const date = row.original.from_date || ""
-        return moment(date).format("ddd")
-      },
-    },
-    {
-      accessorKey: "flight_no",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Flight"
-          tooltipId="flight-master-flight-no"
-        />
-      ),
-    },
-    {
-      accessorKey: "departure_d",
-      header: () => (
-        <TableHeaderWithTooltip header="Departure" tooltipId="departure-time" />
-      ),
-      cell: ({ row }) => {
-        const departure_h = row.original.departure_h
-        const departure_m = row.original.departure_m
-        const today = new Date()
-        today.setHours(departure_h)
-        today.setMinutes(departure_m)
-        return moment(today).format("HH:mm")
-      },
-    },
-    {
-      accessorKey: "source.name",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Origin "
-          tooltipId="flight-master-source"
-        />
-      ),
-      cell: ({ row }) => {
-        const source = row.original.source
-        return source ? source.name : ""
-      },
-      filterFn: "includesString",
-    },
-    {
-      accessorKey: "arrival_d",
-      header: () => (
-        <TableHeaderWithTooltip header="Arrival" tooltipId="arrival-time" />
-      ),
-      cell: ({ row }) => {
-        const arrival_h = row.original.arrival_h
-        const arrival_m = row.original.arrival_m
-        const today = new Date()
-        today.setHours(arrival_h)
-        today.setMinutes(arrival_m)
-        return moment(today).format("HH:mm")
-      },
-    },
-    {
-      accessorKey: "destination.name",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Destination"
-          tooltipId="flight-master-destination"
-        />
-      ),
-      cell: ({ row }) => {
-        const destination = row.original.destination
-        return destination ? destination.name : ""
-      },
-    },
-
-    {
-      accessorKey: "tail.tail_number",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Tail No."
-          tooltipId="flight-master-tail-no"
-        />
-      ),
-      cell: ({ row }) => {
-        const tail = row.original.tail
-        return tail ? tail.tail_number : ""
-      },
-    },
-    {
-      accessorKey: "aircraft.aircraft_type",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Aircraft Type"
-          tooltipId="flight-master-aircraft-type"
-        />
-      ),
-      cell: ({ row }) => {
-        if (!row.original.aircraft)
-          return <span className="text-destructive">(deleted)</span>
-        const deleted = [
-          row.original.aircraft?.manufacturer?.is_deleted,
-          row.original.aircraft?.aircraft_type?.is_deleted,
-          row.original.aircraft?.version?.is_deleted,
-        ].some((isDeleted) => !!isDeleted || isDeleted === undefined) ? (
-          <span className="text-destructive"> (deleted)</span>
-        ) : (
-          ""
-        )
-        const label = (
-          <span>
-            {[
-              row.original.aircraft?.manufacturer?.name,
-              row.original.aircraft?.aircraft_type?.name,
-              row.original.aircraft?.version?.version,
-            ].join(" ")}
-          </span>
-        )
-        return (
-          <p>
-            {label} {deleted}
-          </p>
-        )
-      },
-    },
-    {
-      accessorKey: "flight_type.value",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Flight Type"
-          tooltipId="flight-master-flight-type"
-        />
-      ),
-      cell: ({ row }) => {
-        const flightType = row.original.flight_type
-        return flightType ? flightType.value : ""
-      },
-    },
-    {
-      accessorKey: "status.value",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Status"
-          tooltipId="flight-master-status"
-        />
-      ),
-      cell: ({ row }) => {
-        const status = row.original.status
-        return status ? status.value : ""
-      },
-    },
-    {
-      accessorKey: "entry_type",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Entry Type"
-          tooltipId="flight-master-entry-type"
-        />
-      ),
-      cell: ({ row }) => "Manual",
-    },
-
-    {
-      accessorKey: "sector.value",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Sector"
-          tooltipId="flight-master-sector"
-        />
-      ),
-      cell: ({ row }) => {
-        const sector = row.original.sector
-        return sector ? sector.value : ""
-      },
-    },
-    {
-      accessorKey: "created_at",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Created At"
-          tooltipId="flight-master-created-at"
-        />
-      ),
-      cell: ({ row }) => {
-        const date = row.original.created_at || ""
-        return moment(date).format("YYYY-MM-DD HH:mm:ss")
-      },
-    },
-    {
-      accessorKey: "updated_at",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Updated At"
-          tooltipId="flight-master-updated-at"
-        />
-      ),
-      cell: ({ row }) => {
-        const date = row.original.updated_at || ""
-        return moment(date).format("YYYY-MM-DD HH:mm:ss")
-      },
-    },
-    {
-      accessorKey: "updated_by",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Updated By"
-          tooltipId="flight-master-updated-by"
-        />
-      ),
-      cell: ({ row }) => "Jeff Pan",
-    },
-  ]
-}
-
 type ListViewProps = {
   onRowClick: (data: Flight) => void
   onDelete: (data: Flight) => void
   aircraftOptions: SelectOptions
-  onChangeTailNumber: (data: CreateFlightMasterPayload) => void
+  onChangeTailNumber: (data: CreateFlightMasterPayload | null) => void
 }
 
 export const useListViewColumns = (
@@ -273,12 +39,12 @@ export const useListViewColumns = (
 ): ColumnDef<Flight>[] => {
   return [
     {
-      accessorKey: "from_date",
+      accessorKey: "departure_date",
       header: () => (
         <TableHeaderWithTooltip header="Date" tooltipId="next_at" />
       ),
       cell: ({ row }) => {
-        const date = row.original.from_date || ""
+        const date = row.original.departure_date || ""
         return moment(date).format("YYYY-MM-DD")
       },
     },
@@ -288,12 +54,12 @@ export const useListViewColumns = (
         <TableHeaderWithTooltip header="Day" tooltipId="day-of-week" />
       ),
       cell: ({ row }) => {
-        const date = row.original.from_date || ""
+        const date = row.original.departure_date || ""
         return moment(date).format("ddd")
       },
     },
     {
-      accessorKey: "flight_no",
+      accessorKey: "flight_number",
       header: () => (
         <TableHeaderWithTooltip
           header="Flight"
@@ -307,8 +73,8 @@ export const useListViewColumns = (
         <TableHeaderWithTooltip header="Departure" tooltipId="departure-time" />
       ),
       cell: ({ row }) => {
-        const departure_h = row.original.departure_h
-        const departure_m = row.original.departure_m
+        const departure_h = row.original.departure_hour
+        const departure_m = row.original.departure_minute
         const today = new Date()
         today.setHours(departure_h)
         today.setMinutes(departure_m)
@@ -316,7 +82,7 @@ export const useListViewColumns = (
       },
     },
     {
-      accessorKey: "source.name",
+      accessorKey: "origin.name",
       header: () => (
         <TableHeaderWithTooltip
           header="Origin"
@@ -324,23 +90,19 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const source = row.original.source
+        const source = row.original.origin
         return source ? source.name : ""
       },
       filterFn: "includesString",
     },
     {
-      accessorKey: "arrival_d",
+      accessorKey: "arrival_time",
       header: () => (
         <TableHeaderWithTooltip header="Arrival" tooltipId="arrival-time" />
       ),
       cell: ({ row }) => {
-        const arrival_h = row.original.arrival_h
-        const arrival_m = row.original.arrival_m
-        const today = new Date()
-        today.setHours(arrival_h)
-        today.setMinutes(arrival_m)
-        return moment(today).format("HH:mm")
+        const time = row.original.arrival_time
+        return time ? time : ""
       },
     },
     {
@@ -384,12 +146,12 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        if (!row.original.aircraft)
+        if (!row.original.tail)
           return <span className="text-destructive">(deleted)</span>
         const deleted = [
-          row.original.aircraft?.manufacturer?.is_deleted,
-          row.original.aircraft?.aircraft_type?.is_deleted,
-          row.original.aircraft?.version?.is_deleted,
+          row.original.tail?.manufacturer?.is_deleted,
+          row.original.tail?.aircraft_type?.is_deleted,
+          row.original.tail?.version?.is_deleted,
         ].some((isDeleted) => !!isDeleted || isDeleted === undefined) ? (
           <span className="text-destructive"> (deleted)</span>
         ) : (
@@ -398,9 +160,9 @@ export const useListViewColumns = (
         const label = (
           <span>
             {[
-              row.original.aircraft?.manufacturer?.name,
-              row.original.aircraft?.aircraft_type?.name,
-              row.original.aircraft?.version?.version,
+              row.original.tail?.manufacturer?.name,
+              row.original.tail?.aircraft_type?.name,
+              row.original.tail?.version?.version,
             ].join(" ")}
           </span>
         )
@@ -420,7 +182,7 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const aircraft = row.original.aircraft
+        const aircraft = row.original.tail
         return aircraft ? aircraft.passenger_capacity : ""
       },
     },
@@ -433,7 +195,7 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const aircraft = row.original.aircraft
+        const aircraft = row.original.tail
         return aircraft ? aircraft.landing_weight : ""
       },
     },
@@ -446,7 +208,7 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const aircraft = row.original.aircraft
+        const aircraft = row.original.tail
         return aircraft ? aircraft.cargo_capacity : ""
       },
     },
@@ -459,7 +221,7 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const aircraft = row.original.aircraft
+        const aircraft = row.original.tail
         return aircraft ? aircraft.mtow : ""
       },
     },
@@ -472,36 +234,11 @@ export const useListViewColumns = (
         />
       ),
       cell: ({ row }) => {
-        const aircraft = row.original.aircraft
+        const aircraft = row.original.tail
         return aircraft ? aircraft.mtow : ""
       },
     },
-    {
-      accessorKey: "created_at",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Created At"
-          tooltipId="flight-master-created-at"
-        />
-      ),
-      cell: ({ row }) => {
-        const date = row.original.created_at || ""
-        return moment(date).format("YYYY-MM-DD HH:mm:ss")
-      },
-    },
-    {
-      accessorKey: "updated_at",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Updated At"
-          tooltipId="flight-master-updated-at"
-        />
-      ),
-      cell: ({ row }) => {
-        const date = row.original.updated_at || ""
-        return moment(date).format("YYYY-MM-DD HH:mm:ss")
-      },
-    },
+
     {
       accessorKey: "updated_by",
       header: () => (

@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form"
 
-import { CreateFlightMasterPayload } from "@/types/flight-master/flight-master"
+import {
+  CreateFlightMasterPayload,
+  Flight,
+} from "@/types/flight-master/flight-master"
 import { Form } from "@/components/ui/form"
 import { Combobox } from "@/components/form/combobox"
 import { SelectOptions } from "@/components/form/InputSwitch"
@@ -8,7 +11,7 @@ import { SelectOptions } from "@/components/form/InputSwitch"
 type CellProps = {
   row: any
   aircraftOptions: SelectOptions
-  onChangeTailNumber: (data: CreateFlightMasterPayload) => void
+  onChangeTailNumber: (data: CreateFlightMasterPayload | null) => void
 }
 
 const TailNumberForm = ({
@@ -16,35 +19,37 @@ const TailNumberForm = ({
   aircraftOptions,
   onChangeTailNumber,
 }: CellProps) => {
-  const original = row.original
+  const original: Flight = row.original
   const tail = row.original.tail
 
   const form = useForm({
     defaultValues: {
-      tail_no: tail?.ID,
+      tail_id: tail?.id,
     },
   })
 
-  const tail_no = form.watch("tail_no")
 
   const onChangeSelect = (tail_id: string | null) => {
-    const payload = {
-      ID: original.ID,
-      destination_id: original.destination.ID,
-      flight_no: original.flight_no,
-      source_id: original.source.ID,
-      from_date: original.from_date,
-      departure_h: original.departure_h,
-      departure_m: original.departure_h,
+    const payload: CreateFlightMasterPayload = {
+      ID: original.id,
+      destination_id: original.destination.id,
+      flight_number: original.flight_number,
+      origin_id: original.origin.id,
+      departure_date: original.departure_date,
+      departure_hour: original.departure_hour,
+      departure_minute: original.departure_minute,
+      flight_duration_minute: original.flight_duration_minute,
+      flight_duration_hour: original.flight_duration_hour,
+      departure_period: original.departure_period,
     }
-    onChangeTailNumber({ tail_id, ...payload })
+    if (tail_id !== null) onChangeTailNumber({ tail_id, ...payload })
   }
 
   return (
     <Form {...form}>
       <div onClick={(e) => e.stopPropagation()}>
         <Combobox
-          name="tail_no"
+          name="tail_id"
           label=""
           info="Select Tail number"
           options={aircraftOptions}
