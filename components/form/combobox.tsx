@@ -38,7 +38,7 @@ import {
 
 import { Separator } from "../ui/separator"
 import { FormTextFieldProps } from "./FormTextField"
-import InputSwitch from "./InputSwitch"
+import InputSwitch, { SelectOptions } from "./InputSwitch"
 
 export type ComboboxOption = {
   icon?: React.ReactNode
@@ -46,6 +46,7 @@ export type ComboboxOption = {
   value: string
   additionalColumn?: string[]
   tooltipId?: string
+  component?: React.ReactNode
 }
 
 export type ComboboxProps = {
@@ -159,7 +160,7 @@ export function Combobox({
   function handleOpenEditOption(value: string) {
     // Find the option with the value and use the label to populate the edit form
     editForm.reset({
-      editedOption: options.find((opt) => opt.value === value)?.label,
+      editedOption: options.find((opt) => opt.value === value)?.label as string,
     })
     setEditingOptionValue(value)
   }
@@ -183,7 +184,7 @@ export function Combobox({
       <div className="flex max-w-full items-center gap-3 [&>svg]:h-4 [&>svg]:w-4">
         <div>
           {data.icon}
-          {data.label}
+          {data?.component ? data.component : data.label}
         </div>
         {additionalColumn
           ? additionalColumn.map((item, index) => {
@@ -272,7 +273,7 @@ export function Combobox({
 
                       return (
                         <CommandItem
-                          value={opt.label}
+                          value={opt.label as string}
                           key={opt.value}
                           onSelect={() => {
                             onChangeValue && onChangeValue(opt.value)

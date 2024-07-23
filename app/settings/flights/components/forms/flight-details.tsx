@@ -31,7 +31,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       const cityName = timezone ? timezone.name.split("/").pop() : ""
 
       const label = timezone
-        ? `${locationList.name} (GMT ${timezone.offset}, ${cityName})`
+        ? <p>{locationList.name} <span className="text-xs text-zinc-500">(GMT {timezone.offset}, {cityName})</span></p>
         : locationList.name
 
       return {
@@ -41,7 +41,24 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     }) || []
 
   const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
-    return `${selectedAircraftType?.aircraft_type.name}-${tail} ( ${selectedAircraftType?.mtow} MTOW - ${selectedAircraftType?.landing_weight} Landing Weight - ${selectedAircraftType?.cargo_capacity} Cargo Capacity )`
+    return (
+      <div className="grid grid-cols-7 gap-4 text-left items-center">
+        <div className="col-span-1 min-w-24">
+          <p>
+            {selectedAircraftType?.aircraft_type.name}-{tail}
+          </p>
+        </div>
+        <div className="col-span-1 min-w-24 text-xs text-zinc-500">
+          <p>{selectedAircraftType?.mtow} MTOW</p>
+        </div>
+        <div className="col-span-1 min-w-44 text-xs text-zinc-500">
+          <p>{selectedAircraftType?.landing_weight} Landing Weight</p>
+        </div>
+        <div className="col-span-2  ml-10 text-xs text-zinc-500">
+          <p>{selectedAircraftType?.cargo_capacity} Cargo Capacity</p>
+        </div>
+      </div>
+    )
   }
 
   const generateDepartureTime = (
@@ -83,7 +100,8 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       .filter((tail) => !tail.is_deleted)
       .map((tail) => ({
         value: String(tail.tail_number),
-        label: generateTailName(list, tail.tail_number),
+        label: tail.tail_number,
+        component: generateTailName(list, tail.tail_number),
       }))
   )
 
@@ -224,9 +242,12 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           <p>{arrivalTime ? format(arrivalTime, "HH:mm") : "N/A"}</p>
         </div>
         <div>
-         
-          {isDateDifferent &&  <label className="text-xs ">Arrival Date</label>}
-          {isDateDifferent &&  <p className="text-sm text-red-800">{arrivalTime?.toDateString()}</p>}
+          {isDateDifferent && <label className="text-xs">Arrival Date</label>}
+          {isDateDifferent && (
+            <p className="text-sm text-red-800">
+              {arrivalTime?.toDateString()}
+            </p>
+          )}
         </div>
       </div>
 

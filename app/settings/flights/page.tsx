@@ -303,12 +303,8 @@ export default function Page() {
   //   ])
   const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
 
-  const generateTailName = (
-    selectedAircraftType: Aircraft,
-    tail: string,
-    tailStatus: string
-  ) => {
-    return `${tail} - ${selectedAircraftType?.manufacturer?.name} ${selectedAircraftType?.aircraft_type?.name} Version ${selectedAircraftType?.version?.version} (${tailStatus})`
+  const generateTailName = (selectedAircraftType: Aircraft, tail: string, status: string) => {
+    return `${tail} - ${selectedAircraftType?.aircraft_type?.name} (${status})`
   }
 
   const aircraftTailNumbers = aircraftsList?.data.flatMap((list) =>

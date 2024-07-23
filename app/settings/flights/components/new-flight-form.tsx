@@ -284,7 +284,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         className={
           isFullScreen
             ? "h-screen w-screen max-w-none"
-            : "top-8 h-[90dvh] max-w-[1100px] translate-y-0"
+            : "top-8 h-[53dvh] max-w-[1100px] translate-y-0"
         }
         onInteractOutside={(e) => e.preventDefault()}
       >
