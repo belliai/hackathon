@@ -14,6 +14,7 @@ import { DataTable } from "@/components/data-table/data-table"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
 import { useRecurringFlightsColumns } from "@/app/settings/flights/components/column"
+import { TableHeaderWithTooltip } from "@/components/ui/table"
 
 interface FlightsActualInformation {
   detail: string
@@ -97,7 +98,12 @@ export default function FlightsDashboardPage() {
     ...(columns as ColumnDef<FlightWithActualInformation>[]),
     {
       accessorKey: "aircraft.mtow",
-      header: "MTOW",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="MTOW"
+          tooltipId="flights-mtow"
+        />
+      ),
       size: displayOption === "numbers-percentages" ? 240 : undefined,
       cell: ({ row }) => {
         return (
@@ -112,7 +118,12 @@ export default function FlightsDashboardPage() {
     },
     {
       accessorKey: "aircraft.landing_weight",
-      header: "Landing Weight",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Landing Weight"
+          tooltipId="flights-landing-weight"
+        />
+      ),
       size: displayOption === "numbers-percentages" ? 240 : undefined,
       cell: ({ row }) => {
         return (
@@ -127,7 +138,12 @@ export default function FlightsDashboardPage() {
     },
     {
       accessorKey: "aircraft.cargo_capacity",
-      header: "Cargo Capacity",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Cargo Capacity"
+          tooltipId="flights-cargo-capacity"
+        />
+      ),
       size: displayOption === "numbers-percentages" ? 240 : undefined,
       cell: ({ row }) => {
         return (

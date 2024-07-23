@@ -429,7 +429,7 @@ export const useListViewColumns = (
       header: () => (
         <TableHeaderWithTooltip
           header="Landing Wt"
-          tooltipId="flight-master-flight-type"
+          tooltipId="flights-landing-weight"
         />
       ),
       cell: ({ row }) => {
@@ -442,7 +442,7 @@ export const useListViewColumns = (
       header: () => (
         <TableHeaderWithTooltip
           header="Cargo Cap"
-          tooltipId="flight-master-flight-type"
+          tooltipId="flights-cargo-capacity"
         />
       ),
       cell: ({ row }) => {
@@ -455,7 +455,7 @@ export const useListViewColumns = (
       header: () => (
         <TableHeaderWithTooltip
           header="MTOW"
-          tooltipId="flight-master-flight-type"
+          tooltipId="flights-mtow"
         />
       ),
       cell: ({ row }) => {
