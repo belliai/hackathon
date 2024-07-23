@@ -10,6 +10,7 @@ import {
   Banknote,
   ChevronLeft,
   ChevronRight,
+  Package2Icon,
   PlaneLandingIcon,
   PlaneTakeoffIcon,
   SaveIcon,
@@ -53,6 +54,7 @@ import ConsigneeForm from "./forms/consignee-form"
 import PaymentForm from "./forms/payment-form"
 import HeaderSection from "./header-section"
 import SummaryTotal from "./summary-total"
+import WeightAndVolumeForm from "./forms/weight-and-volume-form"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -82,6 +84,8 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     () => ({
       ...initialValues,
       ...(selectedBooking && { ...mapJsonToSchema(selectedBooking) }),
+      individual_parcel_table: [],
+      hawb_table: [],
     }),
     [selectedBooking]
   )
@@ -131,6 +135,14 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       content: <BookingDetailsForm />,
       fieldList: ['booking_type_id', 'partner_prefix_id', 'awb', 'partner_code_id', 'is_physical', 'commodity_code_id', 'commodity_name', 'pieces', 'gs_weight_kg', 'volume_kg'],
       columnList: ['awb', 'partner_code_name', 'partner_prefix_name', 'commodity_code_name', 'gs_weight_kg', 'volume_kg'],
+    },
+    {
+      label: 'Weight & Volume',
+      value: 'weight-and-volume',
+      icon: Package2Icon,
+      content: <WeightAndVolumeForm />,
+      fieldList: ['origin_id', 'shipper_id'],
+      columnList: ['origin_name', 'shipper_name'],
     },
     {
       label: 'Consignor (Sender)',
@@ -277,8 +289,8 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 <SummaryTotal
                   currencyId={formValues.currency_id || ''}
                   total={formValues.total || ''}
-                  weight={formValues.gs_weight_kg || ''}
-                  volume={formValues.volume_kg || ''}
+                  weight={formValues.total_weight || ''}
+                  volume={formValues.total_volume || ''}
                   type="header"
                 />
                 <Button
@@ -329,12 +341,12 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                   <SummaryTotal
                     currencyId={formValues.currency_id || ''}
                     total={formValues.total || ''}
-                    weight={formValues.gs_weight_kg || ''}
-                    volume={formValues.volume_kg || ''}
+                    weight={formValues.total_weight || ''}
+                    volume={formValues.total_volume || ''}
                     type="sidebar"
                   />
                 </div>
-                <div className="grid flex-1">
+                <div className="grid w-full">
                   {TAB_LIST.map(item => (
                     <TabsContent key={`tab-${item.value}`} value={item.value} asChild>
                       {item.content}

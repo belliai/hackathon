@@ -19,7 +19,7 @@ export default function SummaryTotal(props: SummaryTotalProps) {
     if (type === 'header') {
         return (
             <div className="text-lg font-semibold leading-none tracking-tight text-white">
-                {`${weight ? `${weight}Kg` : ''} ${volume ? `${volume}m2` : ''} ${total ? `($${total} USD)` : ''}`}
+                {`${weight ? `${weight}Kg` : ''} ${volume ? `${volume}m3` : ''} ${total ? `($${total} USD)` : ''}`}
             </div>
         )
     }
@@ -32,7 +32,7 @@ export default function SummaryTotal(props: SummaryTotalProps) {
             </div>
             <div className="flex gap-3">
                 <div className="font-bold w-1/4">Volume</div>
-                <div>{`${volume ? volume : '0'}m2`}</div>
+                <div>{`${volume ? volume : '0'}m3`}</div>
             </div>
             <div className="flex gap-3">
                 <div className="font-bold w-1/4">Total</div>

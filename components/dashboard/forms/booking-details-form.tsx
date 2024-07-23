@@ -35,16 +35,9 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const awb = generateAWBNumbers(7752000270, 20)
   const formValues = form.watch()
 
-  const { commodity_code_id } = formValues
   const { data: partnerPrefixes } = usePartnerPrefixes()
   const { data: partnerCodes } = usePartnerCodes()
-  const { data: commodityCodes } = useCommodityCodes()
   const { data: bookingTypes } = useBookingTypes()
-
-  const commodity =
-      commodity_code_id &&
-      commodityCodes &&
-      commodityCodes.find((item: any) => item.ID === commodity_code_id)
 
   const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
     value: prefix.ID,
@@ -56,11 +49,6 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     label: code.name,
     description: code.description,
   }))
-
-  const commodityCodeOptions = commodityCodes?.map((code: any) => ({
-    value: code.ID,
-    label: `${code.name}: ${code.description}`,
-  }));
 
   const bookingTypeOptions = bookingTypes?.map((code: any) => ({
     value: code.ID,
@@ -86,27 +74,27 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     <Card className="grid grid-cols-1 gap-3 p-4" ref={ref}>
       <div className="grid grid-cols-3 gap-3">
         <Combobox
-            name="booking_type_id"
-            options={bookingTypeOptions}
-            label="Booking Type"
-            info="Select the booking type"
-            editLink="/data-fields/airway-bills?tab=booking-type"
-            additionalColumn={['name']}
-            tooltipId="description"
+          name="booking_type_id"
+          options={bookingTypeOptions}
+          label="Booking Type"
+          info="Select the booking type"
+          editLink="/data-fields/airway-bills?tab=booking-type"
+          additionalColumn={['name']}
+          tooltipId="description"
         />
       </div>
       <div className="grid grid-cols-3 gap-3">
         <Combobox
-            name="partner_prefix_id"
-            options={partnerPrefixesOptions}
-            label="Airline AWB Prefix"
-            info="Select the Airline AWB Prefix"
-            editLink="/data-fields/organizations?tab=airline-awb-prefix"
+          name="partner_prefix_id"
+          options={partnerPrefixesOptions}
+          label="Airline AWB Prefix"
+          info="Select the Airline AWB Prefix"
+          editLink="/data-fields/organizations?tab=airline-awb-prefix"
         />
         <FormField
-            control={form.control}
-            name="awb"
-            render={({ field }) => (
+          control={form.control}
+          name="awb"
+          render={({ field }) => (
             <FormItem>
               <FormLabel tooltipId="new-orders-awb-number">AWB#</FormLabel>
               <FormControl>
@@ -114,90 +102,22 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
               </FormControl>
               <FormMessage />
             </FormItem>
-            )}
+          )}
         />
         <Combobox
-            name="partner_code_id"
-            options={partnerCodesOptions}
-            label="IATA Airline Code"
-            info="Select the IATA Airline Code"
-            editLink="/data-fields/organizations?tab=iata-airline-code"
-            additionalColumn={['description']}
-            tooltipId="description"
+          name="partner_code_id"
+          options={partnerCodesOptions}
+          label="IATA Airline Code"
+          info="Select the IATA Airline Code"
+          editLink="/data-fields/organizations?tab=iata-airline-code"
+          additionalColumn={['description']}
+          tooltipId="description"
         />
         <Combobox
-            name="is_physical"
-            options={IS_PHYSICAL_LIST}
-            label="Is Physical"
-            info="Select is Physical"
-        />
-        <Combobox
-            name="commodity_code_id"
-            options={commodityCodeOptions}
-            label="Commodity Code *"
-            info="Select the Commodity Code"
-            editLink="/data-fields/airway-bills?tab=commodity-code"
-        />
-        <FormField
-            control={form.control}
-            name="pieces"
-            render={({ field }) => (
-            <FormItem>
-              <FormLabel info="hellow world!, this is info">
-                Pieces
-              </FormLabel>
-              <FormControl>
-              <Input
-                  {...field}
-                  type="number"
-                  className="border-2 border-foreground/30 h-[40px]"
-              />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-            )}
-        />
-        {/* <Combobox
-            name="pieces"
-            options={[
-            { label: "Origin Type 1", value: "origin-1" },
-            { label: "Origin Type 2", value: "origin-2" },
-            { label: "Origin Type 3", value: "origin-3" }
-            ]}
-            label="Pieces"
-        /> */}
-        <FormField
-            control={form.control}
-            name="gs_weight_kg"
-            render={({ field }) => (
-            <FormItem>
-                <FormLabel info="hellow world!, this is info">
-                Gross Weight (Kg) *
-                </FormLabel>
-                <FormControl>
-                <div className="relative h-fit">
-                    <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
-                    <div className="absolute right-0 top-0 inline-flex h-full items-center justify-center px-3">
-                    <ListIcon className="h-3 w-3" />
-                    </div>
-                </div>
-                </FormControl>
-                <FormMessage />
-            </FormItem>
-            )}
-        />
-        <FormField
-            control={form.control}
-            name="volume_kg"
-            render={({ field }) => (
-            <FormItem>
-                <FormLabel info="hello this is info here">Vol (KG)</FormLabel>
-                <FormControl>
-                <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
-                </FormControl>
-                <FormMessage />
-            </FormItem>
-            )}
+          name="is_physical"
+          options={IS_PHYSICAL_LIST}
+          label="Is Physical"
+          info="Select is Physical"
         />
       </div>
     </Card>

@@ -209,7 +209,7 @@ export function Combobox({
           <TooltipTrigger asChild>{renderOptionItem(data)}</TooltipTrigger>
           <TooltipContent
             side="top"
-            className="max-w-72 border bg-card text-foreground"
+            className="border bg-card text-foreground max-w-72 text-left"
           >
             <p>{data[tooltipId as keyof ComboboxOption]}</p>
           </TooltipContent>
