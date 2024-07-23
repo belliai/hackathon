@@ -93,7 +93,7 @@ const Status = () => {
               <DataFieldsItemContent
                 selectedEditing={selectedEditing}
                 setSelectedEditing={setSelectedEditing}
-                columnSpans={[2, 7, 3]}
+                columnSpans={[12, 0, 0]}
                 data={item}
                 form={form}
                 title={item.name}
@@ -102,8 +102,6 @@ const Status = () => {
 
                   const actualId = id || data.ID
                   const payload = option || data.name
-
-                  console.log(data, actualId)
 
                   if (actualId) {
                     update.mutate({ id: actualId, name: payload })
@@ -125,33 +123,5 @@ const Status = () => {
       </Form>
     </div>
   )
-
-  // return (
-  //   <CrudTable
-  //     isLoading={isLoading}
-  //     title="Status"
-  //     columns={[{ accessorKey: "option", header: 'Name' }]}
-  //     form={[
-  //       { name: "id", type: "hidden" },
-  //       { name: "option", type: "text", label: "Status" },
-  //     ]}
-  //     data={data?.map((item: any) => ({ option: item.name, id: item.ID }))}
-  //     onSave={(data) => {
-  //       // configure logic for add or edit, for edit the id will be zero
-  //       const { id, option } = data
-  //       if (id) {
-  //         update.mutate({ id, name: option })
-  //       } else {
-  //         add.mutate({ name: option })
-  //       }
-  //     }}
-  //     onDelete={(data) => {
-  //       // configure logic for delete
-  //       if (data.id) {
-  //         remove.mutate({ id: data.id })
-  //       }
-  //     }}
-  //   />
-  // )
 }
 export default Status
