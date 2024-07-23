@@ -58,15 +58,6 @@ const BookingType = () => {
 
   return (
     <div className="flex flex-col gap-8 py-4">
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold">Booking Type</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage booking types throughout the system
-          </p>
-        </div>
-        <Separator />
-      </div>
       <DataFields>
         {shouldUseModal && (
           <>
@@ -105,6 +96,7 @@ const BookingType = () => {
               data={item}
               form={form}
               title={item.name}
+              columnSpans={[2, 7, 3]}
               subtitle={item.booking_type}
               onSave={(data) => {
                 if (data.id) {

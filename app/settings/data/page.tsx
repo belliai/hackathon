@@ -25,5 +25,11 @@ export default function DataPage() {
     },
   ]
 
-  return <DataFieldsPageTemplate tabs={tabs} tabsOrientation="vertical" />
+  return (
+    <DataFieldsPageTemplate
+      tabs={tabs}
+      tabsOrientation="vertical"
+      containerClassName="max-w-none"
+    />
+  )
 }
