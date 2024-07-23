@@ -25,7 +25,7 @@ export default function DataIntegrations() {
           <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {paragon &&
             paragon.getIntegrationMetadata().map((integration) => {
               const integrationEnabled = user?.authenticated
