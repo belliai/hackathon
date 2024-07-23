@@ -1,9 +1,14 @@
-import { PropsWithChildren, useState } from "react"
+import { PropsWithChildren } from "react"
 import { LucideIcon, PencilIcon, Trash2 } from "lucide-react"
 import { DefaultValues, FieldValues, useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
 
 import { FormDialog } from "./crud-table"
@@ -18,6 +23,7 @@ interface DataFieldsItemContentProps<T extends FieldValues> {
   form: InputSwitchProps<T>[]
   selectedEditing: string | null
   setSelectedEditing: (isEditing: string | null) => void
+  columnSpans: number[]
 }
 
 function DataFieldsItemContent<T extends FieldValues>({
@@ -30,6 +36,7 @@ function DataFieldsItemContent<T extends FieldValues>({
   form,
   selectedEditing,
   setSelectedEditing,
+  columnSpans, // Need to equal to 12
 }: DataFieldsItemContentProps<T>) {
   const formContext = useFormContext()
 
@@ -58,6 +65,8 @@ function DataFieldsItemContent<T extends FieldValues>({
   const isEditing = selectedEditing === (data.id || data.ID)
 
   const { id, ID, created_at, updated_at, ...cleanDataToMap } = data
+
+  const cleanDataToMapArray = Object.values(cleanDataToMap)
 
   return (
     <>
@@ -105,24 +114,43 @@ function DataFieldsItemContent<T extends FieldValues>({
         </div>
       ) : (
         <div className="flex w-full max-w-full items-center justify-between gap-2 text-sm">
-          <div className="flex gap-2">
+          <div className="flex w-full gap-2">
             {icon && <span className="[&>svg]:h-4 [&>svg]:w-4">{icon}</span>}
-            <div
-              className={cn("grid w-full items-center gap-2")}
-              style={{
-                gridTemplateColumns: `repeat(${Object.keys(cleanDataToMap).length}, 1fr) auto`,
-              }}
-            >
-              {Object.values(cleanDataToMap).map((value, index) => {
+            <div className="grid w-full grid-cols-12 gap-4">
+              {cleanDataToMapArray.map((value, index) => {
+                const isLongText =
+                  typeof value === "string" && value.length > 10
+
                 return (
-                  <div key={index} className="flex w-full">
-                    <span
-                      className={cn("truncate text-muted-foreground", {
-                        "text-white": index === 0,
-                      })}
-                    >
-                      {value}
-                    </span>
+                  <div
+                    key={index}
+                    className={cn("flex w-full")}
+                    style={{
+                      gridColumn: `span ${columnSpans[index]} / span ${columnSpans[index]} `,
+                    }}
+                  >
+                    <Tooltip>
+                      <TooltipTrigger
+                        asChild
+                        className={cn({
+                          "pointer-events-none": !isLongText,
+                        })}
+                      >
+                        <span
+                          className={cn("truncate text-muted-foreground", {
+                            "text-white": index === 0,
+                          })}
+                        >
+                          {value}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="right"
+                        className="max-w-60 border bg-card text-foreground"
+                      >
+                        {value}
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 )
               })}
@@ -163,15 +191,5 @@ function DataFieldsItem({ children }: PropsWithChildren) {
 function DataFields({ children }: PropsWithChildren) {
   return <div className="flex flex-col gap-1.5">{children}</div>
 }
-
-// interface DataTableProps<TData,
-
-// function DataFieldsTable() {
-//   return(
-//     <Table>
-
-//     </Table>
-//   )
-// }
 
 export { DataFields, DataFieldsItem, DataFieldsItemContent }

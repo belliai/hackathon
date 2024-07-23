@@ -93,6 +93,7 @@ const Status = () => {
               <DataFieldsItemContent
                 selectedEditing={selectedEditing}
                 setSelectedEditing={setSelectedEditing}
+                columnSpans={[2, 7, 3]}
                 data={item}
                 form={form}
                 title={item.name}

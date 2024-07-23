@@ -96,6 +96,7 @@ const BookingType = () => {
               data={item}
               form={form}
               title={item.name}
+              columnSpans={[2, 7, 3]}
               subtitle={item.booking_type}
               onSave={(data) => {
                 if (data.id) {
