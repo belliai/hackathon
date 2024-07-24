@@ -15,6 +15,7 @@ import {
   PlaneTakeoffIcon,
   SaveIcon,
   SquarePenIcon,
+  UserCheck,
   XCircle,
 } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -55,6 +56,8 @@ import PaymentForm from "./forms/payment-form"
 import HeaderSection from "./header-section"
 import SummaryTotal from "./summary-total"
 import WeightAndVolumeForm from "./forms/weight-and-volume-form"
+import PayerForm from "./forms/payer-form"
+import PaymentFormV2 from "./forms/payment-form-v2"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -86,6 +89,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       ...(selectedBooking && { ...mapJsonToSchema(selectedBooking) }),
       individual_parcel_table: [],
       hawb_table: [],
+      payment_table: [],
     }),
     [selectedBooking]
   )
@@ -161,10 +165,18 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       columnList: ['destination_name'],
     },
     {
-      label: 'Payment',
-      value: 'payment',
+      label: 'Payer',
+      value: 'payer',
+      icon: UserCheck,
+      content: <PayerForm />,
+      fieldList: ['bill_to_id', 'total', 'currency'],
+      columnList: ['bill_to_name', 'total', 'currency'],
+    },
+    {
+      label: 'Payment History',
+      value: 'payment-history',
       icon: Banknote,
-      content: <PaymentForm />,
+      content: <PaymentFormV2 />,
       fieldList: ['use_freight_forwarder', 'freight_forwarder_id', 'organization_id', 'bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg'],
       columnList: ['bill_to_name', 'rate', 'currency_name', 'freight_forwarder_name', 's_freight', 's_rate', 'total', 'mode', 'ch_weight_kg', 'payment_mode_name'],
     }

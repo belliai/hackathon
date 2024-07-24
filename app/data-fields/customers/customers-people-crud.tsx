@@ -13,7 +13,7 @@ type People = {
   isPrimary: boolean
 }
 
-const MOCK_PEOPLE_DATA: People[] = [
+export const MOCK_PEOPLE_DATA: People[] = [
   {
     id: "1",
     name: "Alice Johnson",

@@ -147,6 +147,26 @@ export const orderSchema = z.object({
   ).optional(),
   total_weight: z.string().optional(),
   total_volume: z.string().optional(),
+  payment_form: z.object({
+    payment_method_id: z.string().optional(),
+    employee_id: z.string().optional(),
+    amount: z.string().optional(),
+    transaction_id: z.string().optional(),
+    notes: z.string().optional(),
+    send_payment_receipt: z.string().optional(),
+  }),
+  payment_table: z.array(
+    z.object({
+      id: z.string().optional(),
+      payment_method_id: z.string().optional(),
+      payment_method: z.string().optional(),
+      employee_id: z.string().optional(),
+      employee: z.string().optional(),
+      amount: z.string().optional(),
+      transaction_id: z.string().optional(),
+    }).optional(),
+  ).optional(),
+  total_paid: z.string().optional(),
 })
 
 export type Order = z.infer<typeof orderSchema>

@@ -84,23 +84,17 @@ const WeightAndVolumeForm = React.forwardRef<HTMLDivElement, any>(
     const formValues = form.watch()
 
     const handleAction = (type: string, payload: any) => {
+      const tableKey = type === 'hawb' ? 'hawb_table' : 'individual_parcel_table';
+      const currentTable = formValues[tableKey];
+
       if (formType === 'create') {
-        if (type === 'hawb') {
-          form.setValue('hawb_table', [...formValues.hawb_table, payload]);
-        } else if (type === 'individual') {
-          form.setValue('individual_parcel_table', [...formValues.individual_parcel_table, payload]);
-        }
+        form.setValue(tableKey, [...currentTable, payload]);
       } else {
-        if (type === 'hawb') {
-          const data = [...formValues.hawb_table].map(item => item.id === payload.id ? payload : item)
-          form.setValue('hawb_table', data)
-        } else if (type === 'individual') {
-          const data = [...formValues.individual_parcel_table].map(item => item.id === payload.id ? payload : item)
-          form.setValue('individual_parcel_table', data)
-        }
+        const updatedTable = currentTable.map((item: any) => item.id === payload.id ? payload : item);
+        form.setValue(tableKey, updatedTable);
       }
 
-      setFormType('create')
+      setFormType('create');
     }
 
     const handleDelete = (id: string) => {
@@ -156,14 +150,17 @@ const WeightAndVolumeForm = React.forwardRef<HTMLDivElement, any>(
       let totalWeight = 0;
       let totalVolume = 0;
 
+      const calculateTotal = (table: any) => {
+        totalWeight = table.reduce((acc: number, item: { weight: string }) => acc + parseFloat(item.weight), 0)
+        totalVolume = table.reduce((acc: number, item: { volume: string }) => acc + parseFloat(item.volume), 0)
+      }
+
       if (formValues.weight_and_volume_type === 'individual-parcel') {
-        totalWeight = formValues.individual_parcel_table.reduce((acc: number, item: { weight: string }) => acc + parseFloat(item.weight), 0)
-        totalVolume = formValues.individual_parcel_table.reduce((acc: number, item: { volume: string }) => acc + parseFloat(item.volume), 0)
+        calculateTotal(formValues.individual_parcel_table)
       }
 
       if (formValues.weight_and_volume_type === 'hawb') {
-        totalWeight = formValues.hawb_table.reduce((acc: number, item: { weight: string }) => acc + parseFloat(item.weight), 0)
-        totalVolume = formValues.hawb_table.reduce((acc: number, item: { volume: string }) => acc + parseFloat(item.volume), 0)
+        calculateTotal(formValues.hawb_table)
       }
 
       if (formValues.weight_and_volume_type === 'total') {
@@ -208,7 +205,7 @@ const WeightAndVolumeForm = React.forwardRef<HTMLDivElement, any>(
               hideToolbar
               manualPagination
             />
-            <div className="text-right font-bold">
+            <div className="text-right font-bold text-sm text-muted-foreground">
               Total: {`${formValues.total_weight || 0}`}Kg {`${formValues.total_volume || 0}`}m3
             </div>
           </div>
