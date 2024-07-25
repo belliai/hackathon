@@ -32,7 +32,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip"
-import NumberInputStepper from "@/app/settings/flights/components/number-input-stepper"
+import NumberInputStepper from "./number-input-stepper"
 
 type SelectOption = {
   label: string

@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react"
 import { format } from "date-fns"
+import { fromZonedTime, getTimezoneOffset, toZonedTime } from "date-fns-tz"
 import { useFormContext } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
@@ -18,6 +19,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/form/combobox"
 import FormTextField from "@/components/form/FormTextField"
+import InputSwitch from "@/components/form/InputSwitch"
+
+const isValidDate = (date: unknown): date is Date => {
+  return date instanceof Date && !isNaN(date.getTime())
+}
 
 const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const form = useFormContext()
@@ -30,9 +36,16 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       const timezone = locationList.timezone
       const cityName = timezone ? timezone.name.split("/").pop() : ""
 
-      const label = timezone
-        ? <p>{locationList.name} <span className="text-xs text-zinc-500">(GMT {timezone.offset}, {cityName})</span></p>
-        : locationList.name
+      const label = timezone ? (
+        <p>
+          {locationList.name}{" "}
+          <span className="text-xs text-zinc-500">
+            (GMT {timezone.offset}, {cityName})
+          </span>
+        </p>
+      ) : (
+        locationList.name
+      )
 
       return {
         label: label,
@@ -42,7 +55,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
   const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
     return (
-      <div className="grid grid-cols-7 gap-4 text-left items-center">
+      <div className="grid grid-cols-7 items-center gap-4 text-left">
         <div className="col-span-1 min-w-24">
           <p>
             {selectedAircraftType?.aircraft_type.name}-{tail}
@@ -54,7 +67,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         <div className="col-span-1 min-w-44 text-xs text-zinc-500">
           <p>{selectedAircraftType?.landing_weight} Landing Weight</p>
         </div>
-        <div className="col-span-2  ml-10 text-xs text-zinc-500">
+        <div className="col-span-2 ml-10 text-xs text-zinc-500">
           <p>{selectedAircraftType?.cargo_capacity} Cargo Capacity</p>
         </div>
       </div>
@@ -67,12 +80,12 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     min: number,
     amPm: string
   ) => {
-    if (!fromDate || !hour || !min) return null
+    if (!fromDate || isNaN(hour) || isNaN(min)) return null
 
     // Convert hour to 24-hour format
-    if (amPm === "pm" && hour !== 12) {
+    if (amPm === "PM" && hour !== 12) {
       hour += 12
-    } else if (amPm === "am" && hour === 12) {
+    } else if (amPm === "AM" && hour === 12) {
       hour = 0
     }
     const date = new Date(
@@ -86,11 +99,41 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     return date
   }
 
-  const generateArrivalTime = (date: Date, hour: number, min: number) => {
-    if (!date || !hour || !min) return null
-    const minutes = hour * 60 + min
-    const arrivalDate = new Date(date.getTime() + minutes * 60000)
-    return arrivalDate
+  const generateArrivalTime = (
+    date: Date,
+    hour: number,
+    min: number,
+    originTimezone: string,
+    destinationTimezone: string
+  ) => {
+    if (
+      !date ||
+      hour === undefined ||
+      min === undefined ||
+      !originTimezone ||
+      !destinationTimezone
+    ) {
+      return null
+    }
+
+    // get offset for every timezone
+    const originOffset = getTimezoneOffset(originTimezone, date)
+    // get offset for every timezone
+    const destinationOffset = getTimezoneOffset(destinationTimezone, date)
+
+    // const originDate = toZonedTime(date, originTimezone)
+    const originDate = new Date(date)
+    originDate.setHours(date.getHours())
+    originDate.setMinutes(date.getMinutes())
+
+    // Calculate the time to add in milliseconds
+    const minutesToAdd = hour * 60 + min
+    const arrivalDate = new Date(originDate.getTime() + minutesToAdd * 60000)
+
+    const convertedArrivalDate = new Date(
+      arrivalDate.getTime() - (originOffset - destinationOffset)
+    )
+    return convertedArrivalDate
   }
 
   const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
@@ -107,12 +150,23 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
   useEffect(() => {}, [form.formState])
 
-  const departureDate = formData.departure_date ? new Date(formData.departure_date) : null
+  const departureDate = formData.departure_date
+    ? new Date(formData.departure_date)
+    : null
   const departureHour = formData.departure_hour
   const departureMinute = formData.departure_minute
   const departureAmPm = formData.departure_period as "AM" | "PM"
   const flightDurationHours = formData.flight_duration_hour
   const flightDurationMinutes = formData.flight_duration_minute
+  const originTimezone =
+    locations &&
+    formData.origin_id &&
+    locations?.find((loc: any) => loc.ID === formData.origin_id).timezone?.name
+  const destinationTimezone =
+    locations &&
+    formData.destination_id &&
+    locations?.find((loc: any) => loc.ID === formData.destination_id).timezone
+      ?.name
 
   // Generate departure time if all required data is present
   const departureTime =
@@ -136,7 +190,9 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       ? generateArrivalTime(
           departureTime,
           parseInt(flightDurationHours),
-          parseInt(flightDurationMinutes)
+          parseInt(flightDurationMinutes),
+          originTimezone,
+          destinationTimezone
         )
       : null
 
@@ -163,25 +219,21 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           )}
         />
         <div className="flex space-x-2">
-          <FormTextField
-            name="flight_duration_hour"
-            form={form}
-            type="stepper-number"
-            min={0}
-            max={100}
-            step={1}
+          <InputSwitch
             label="Flight Time"
-            suffix="hrs"
-          />
-          <FormTextField
-            name="flight_duration_minute"
-            form={form}
+            name="flight_duration_hour"
             type="stepper-number"
-            min={0}
-            max={60}
-            step={5}
-            suffix="min"
+            max={100}
+            min={1}
+            step={1}
+          />
+          <InputSwitch
             label="&nbsp;&nbsp;&nbsp;&nbsp;"
+            name="flight_duration_minute"
+            type="stepper-number"
+            max={59}
+            min={0}
+            step={1}
           />
         </div>
       </div>
@@ -190,42 +242,41 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           name="origin_id"
           options={formattedLocation}
           label="Origin"
-          info="Select the source location"
+          info="Select the origin location"
           editLink="/data-fields/airway-bills?tab=location"
         />
-        <div className="flex items-end space-x-2 p-1">
-          <FormTextField
-            name="departure_hour"
-            form={form}
-            type="stepper-number"
-            min={0}
-            max={12}
+        <div className="flex items-end space-x-2">
+          <InputSwitch
             label="Hours"
-          />
-          <FormTextField
-            name="departure_minute"
-            form={form}
+            name="departure_hour"
             type="stepper-number"
-            min={0}
-            max={60}
-            label="Minutes"
+            max={12}
+            min={1}
+            step={1}
           />
-          <FormTextField
+          <InputSwitch
+            label="Minutes"
+            name="departure_minute"
+            type="stepper-number"
+            max={59}
+            min={0}
+            step={1}
+          />
+          <InputSwitch
             name="departure_period"
-            form={form}
             type="select"
-            options={[
+            selectOptions={[
               { label: "AM", value: "AM" },
               { label: "PM", value: "PM" },
             ]}
             label="AM/PM"
           />
         </div>
-        <FormTextField
-          name="departure_date"
-          form={form}
+        <InputSwitch
           type="date"
+          name="departure_date"
           label="Departure Date"
+          disabledMatcher={() => false}
         />
       </div>
 
@@ -239,18 +290,19 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         />
         <div className="flex-col">
           <label className="text-xs">Arrival Time</label>
-          <p>{arrivalTime ? format(arrivalTime, "HH:mm") : "N/A"}</p>
+          <p>
+            {isValidDate(arrivalTime) ? format(arrivalTime, "hh:mm a") : "N/A"}
+          </p>
         </div>
         <div>
           {isDateDifferent && <label className="text-xs">Arrival Date</label>}
           {isDateDifferent && (
             <p className="text-sm text-red-800">
-              {arrivalTime?.toDateString()}
+              {arrivalTime && format(arrivalTime, "MM/dd/yyyy")}
             </p>
           )}
         </div>
       </div>
-
       <div className="grid grid-cols-1 gap-4">
         <Combobox
           name="tail_id"

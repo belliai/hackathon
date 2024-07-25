@@ -1,13 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { flightSchema } from "@/schemas/flight-master/flight"
-import {
-  flightMasterFormSchema,
-  FlightMasterFormValue,
-} from "@/schemas/flight-master/flight-master"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { LoopIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import {
   endOfMonth,
@@ -173,19 +167,20 @@ export default function Page() {
 
   const filterData = filtersHookForm.watch()
 
-  useEffect(() => {
-  }, [filterData])
+  useEffect(() => {}, [filterData])
 
   const { data: flightData, isLoading } = useFlightList({
     ...paginationDetails,
     start_date:
       filterData.period === "daily"
-        ? format(filterData.from_date, "yyyy-MM-dd")
-        : format(filterData.range_date.from, "yyyy-MM-dd"),
+        ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
+        : filterData.range_date.from &&
+          format(filterData.range_date.from, "yyyy-MM-dd"),
     end_date:
       filterData.period === "daily"
-        ? format(filterData.from_date, "yyyy-MM-dd")
-        : format(filterData.range_date.to, "yyyy-MM-dd"),
+        ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
+        : filterData.range_date.to &&
+          format(filterData.range_date.to, "yyyy-MM-dd"),
   })
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
@@ -198,7 +193,9 @@ export default function Page() {
   const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
 
   const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
-    const tailDetail = selectedAircraftType.aircraft_tail_numbers.find(item=>item.tail_number===tail)
+    const tailDetail = selectedAircraftType.aircraft_tail_numbers.find(
+      (item) => item.tail_number === tail
+    )
     return `${tail} - ${selectedAircraftType?.aircraft_type?.name} (${tailDetail?.status?.name})`
   }
 

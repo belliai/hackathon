@@ -142,13 +142,16 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       icon: PlaneTakeoff,
       content: <FlightDetailsForm />,
       fieldList: [
-        "flight_no",
-        "source_id",
-        "from_date",
-        "departure_h",
-        "departure_m",
-        "departure_am_pm",
-        "destination_id"
+        "flight_number",
+        "origin_id",
+        "departure_date",
+        "departure_hour",
+        "departure_minute",
+        "departure_period",
+        "destination_id",
+        "flight_duration_hour",
+        "flight_duration_minute",
+        "tail_id",
       ],
     },
     // {
@@ -277,7 +280,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         className={
           isFullScreen
             ? "h-screen w-screen max-w-none"
-            : "top-8 h-[53dvh] max-w-[1100px] translate-y-0"
+            : "top-8 h-[55dvh] max-w-[1100px] translate-y-0"
         }
         onInteractOutside={(e) => e.preventDefault()}
       >

@@ -18,8 +18,15 @@ const NumberInputStepper = ({
   max = 100,
   step = 1,
   disabled = false,
-  suffix
+  suffix,
 }: NumberInputStepperProps) => {
+
+  const handleAction = () => {
+    console.log(min)
+    if(isNaN(value)) { onChange(min); return}
+  }
+
+
   const handleIncrement = () => {
     if (value < max) {
       const val = parseInt(value.toString()) + step
@@ -36,15 +43,15 @@ const NumberInputStepper = ({
 
   return (
     <div className="flex items-center space-x-1">
-      {suffix && <p className="text-xs ml-[-5px]">{suffix}</p> }
+      {suffix && <p className="ml-[-5px] text-xs">{suffix}</p>}
       <div className="flex-col items-center space-y-1">
         <ChevronUp
-          onClick={!disabled && value < max ? handleIncrement : undefined}
+          onClick={!disabled && value  < max ? handleIncrement : handleAction}
           size={12}
           className={`cursor-pointer hover:text-blue-300 ${disabled || value >= max ? "cursor-not-allowed text-gray-400" : ""}`}
         />
         <ChevronDown
-          onClick={!disabled && value > min ? handleDecrement : undefined}
+          onClick={!disabled && value > min ? handleDecrement : handleAction}
           size={12}
           className={`cursor-pointer hover:text-blue-300 ${disabled || value <= min ? "cursor-not-allowed text-gray-400" : ""}`}
         />

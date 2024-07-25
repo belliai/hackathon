@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Combobox, ComboboxProps } from "./combobox"
+import NumberInputStepper from "./number-input-stepper"
 
 type BaseInputProps<DataType> = InputProps & {
   name: Path<DataType>
@@ -43,12 +44,24 @@ export type SelectOptions = {
 
 export type InputSwitchProps<DataType extends FieldValues> =
   | (BaseInputProps<DataType> & {
-      type: "search" | "text" | "checkbox" | "hidden" | "number"
+      type:
+        | "search"
+        | "text"
+        | "checkbox"
+        | "hidden"
+        | "number"
+    })
+    | (BaseInputProps<DataType> & {
+      type: "stepper-number"
+      suffix?: string
+      min?: number
+      max?: number
+      step?: number
     })
   | (BaseInputProps<DataType> & {
       type: "date"
       disabledMatcher?: (date: Date) => boolean
-      mode? : 'single' | 'range'
+      mode?: "single" | "range"
     })
   | (BaseInputProps<DataType> & {
       type: "select"
@@ -294,6 +307,49 @@ export default function InputSwitch<DataType extends FieldValues>(
             name={props.name}
             render={({ field }) => (
               <input className="hidden" {...field} {...props} />
+            )}
+          />
+        )
+      case "stepper-number":
+        return (
+          <FormField
+            key={props.name}
+            control={form.control}
+            name={props.name}
+            render={({ field }) => (
+              <FormItem className="flex-grow space-y-1">
+                {!!props.label && (
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
+                    {props.label}
+                  </FormLabel>
+                )}
+                <FormControl>
+                  <div className="flex items-center gap-1">
+                    <div className="relative w-full">
+                      <Input
+                        {...field}
+                        disabled={props.disabled}
+                        type="number"
+                        placeholder={props.placeholder}
+                      />
+                      <span className="absolute right-2 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-zinc-400">
+                        <NumberInputStepper
+                          min={Number(props.min)}
+                          max={Number(props.max)}
+                          step={Number(props.step)}
+                          value={parseInt(field.value)}
+                          onChange={field.onChange}
+                          suffix={props.suffix}
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
         )

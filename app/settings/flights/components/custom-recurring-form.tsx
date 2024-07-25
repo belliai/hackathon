@@ -27,15 +27,13 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select } from "@/components/ui/select"
 import FormTextField from "@/components/form/FormTextField"
-
-import NumberInputStepper from "./number-input-stepper"
+import NumberInputStepper from "@/components/form/number-input-stepper"
 
 type CustomRecurringFormProps = {
   open: boolean
   setOpen: (val: boolean) => void
   onSave: (data: any) => void
 }
-
 
 const getSchema = (everyPeriod: string, repeatEnd: string) => {
   let schema = z.object({
@@ -73,7 +71,6 @@ const getSchema = (everyPeriod: string, repeatEnd: string) => {
   return schema
 }
 
-
 const periods = (val: number) => {
   const addition = val > 1 ? "s" : ""
 
@@ -107,7 +104,6 @@ export function CustomRecurringForm({
   setOpen,
   onSave,
 }: CustomRecurringFormProps) {
-
   const [repeatCount, setRepeatCount] = useState<number>(1)
   const [repeatPeriod, setRepeatPeriod] = useState<string>("daily")
   const [repeatEnd, setRepeatEnd] = useState<string>("never")
@@ -139,10 +135,10 @@ export function CustomRecurringForm({
   const handleSave = async () => {
     const isValid = await form.trigger()
     if (isValid) {
-        form.handleSubmit(onSave)()
-        //close the popup
-        setOpen(false)
-        form.reset()
+      form.handleSubmit(onSave)()
+      //close the popup
+      setOpen(false)
+      form.reset()
     }
   }
 
