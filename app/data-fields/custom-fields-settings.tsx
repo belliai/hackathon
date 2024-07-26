@@ -148,9 +148,32 @@ export default function CustomFieldsSettings({
     },
   ]
 
+  const secondForm: InputSwitchProps<{field_group: string}>[] = [
+    {
+      name: "field_group",
+      type: "text",
+      label: "Field Group Name",
+    }
+  ]
+
+  function handleAddFieldGroup(data: { field_group: string }) {
+    addFieldGroup(data.field_group)
+  }
+
   return (
     <div className="flex flex-col gap-8">
-      <FormDropdown form={form} onSave={addCustomField} className="flex-wrap justify-end" />
+      <FormDropdown
+        form={form}
+        onSave={addCustomField}
+        className="flex-wrap justify-end"
+        fieldsDirection="vertical"
+        buttonText="New Field"
+        secondFormProps={{
+          form: secondForm,
+          onSave: handleAddFieldGroup,
+          buttonText: "New Group",
+        }}
+      />
       <Accordion type="multiple" className="flex flex-col gap-4">
         {customFields.map((fieldGroup) => {
           return (

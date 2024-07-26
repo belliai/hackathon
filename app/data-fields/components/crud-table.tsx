@@ -22,7 +22,9 @@ import {
   Path,
   useForm,
   useFormContext,
+  UseFormReturn,
 } from "react-hook-form"
+import { ZodSchema } from "zod"
 
 import { cn } from "@/lib/utils"
 import {
@@ -70,7 +72,6 @@ import { DataTable } from "@/components/data-table/data-table"
 import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
 
 import { SearchDataField } from "./SearchDataField"
-import { ZodSchema } from "zod"
 
 type CrudTableProps<T extends FieldValues> = {
   title: string
@@ -134,10 +135,7 @@ const FormDialog = <T extends FieldValues>(
             </DialogHeader>
             <div className="space-y-1">
               {props.form.map((formField) => (
-                <InputSwitch<T>
-                  key={formField.name}
-                  {...formField}
-                />
+                <InputSwitch<T> key={formField.name} {...formField} />
               ))}
             </div>
             {props.onDelete && props.data && (
@@ -175,20 +173,36 @@ const FormDialog = <T extends FieldValues>(
   )
 }
 
-const FormDropdown = <T extends FieldValues>(
-  props: PropsWithChildren & {
-    form: CrudTableProps<T>["form"]
-    onSave: CrudTableProps<T>["onSave"]
-    data?: DefaultValues<T>
-    className?: string
-    validationSchema?: CrudTableProps<T>["validationSchema"]
+interface FormDropdownProps<T extends FieldValues> {
+  form: InputSwitchProps<T>[]
+  onSave: CrudTableProps<T>["onSave"]
+  data?: DefaultValues<T>
+  className?: string
+  validationSchema?: CrudTableProps<T>["validationSchema"]
+  fieldsDirection?: "horizontal" | "vertical"
+  buttonText?: string
+  buttonVariant?: "button-primary" | "secondary"
+}
+
+const FormDropdown = <T extends FieldValues, K extends FieldValues>(
+  props: FormDropdownProps<T> & {
+    secondFormProps?: FormDropdownProps<K>
   }
 ) => {
   const [value, setValue] = useState("")
+  const [openContent, setOpenContent] = useState("")
+
   const form = useForm<T>({
     defaultValues: props.data,
     resolver: props.validationSchema
       ? zodResolver(props.validationSchema)
+      : undefined,
+  })
+
+  const secondForm = useForm<K>({
+    defaultValues: props.secondFormProps?.data,
+    resolver: props.secondFormProps?.validationSchema
+      ? zodResolver(props.secondFormProps?.validationSchema)
       : undefined,
   })
 
@@ -198,61 +212,130 @@ const FormDropdown = <T extends FieldValues>(
     form.reset()
   }
 
+  const secondOnSubmit = (data: K) => {
+    props?.secondFormProps?.onSave(data)
+    setValue("")
+    secondForm.reset()
+  }
+
   return (
     <Accordion value={value} onValueChange={setValue} collapsible type="single">
       <AccordionItem value="item" className="space-y-4 border-b-0">
-        <div className="flex w-full flex-row justify-end">
+        <div className="flex w-full flex-row justify-end gap-2">
+          {props.secondFormProps && (
+            <PrimitiveTrigger asChild>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="data-[state=open]:pointer-events-none data-[state=open]:opacity-50"
+                onClick={() => setOpenContent("secondary")}
+              >
+                {props.secondFormProps.buttonText || "Add"}
+              </Button>
+            </PrimitiveTrigger>
+          )}
           <PrimitiveTrigger asChild>
-            <Button variant={"button-primary"} size="sm">
-              Add New
+            <Button
+              variant={props.buttonVariant || "button-primary"}
+              size="sm"
+              className="data-[state=open]:pointer-events-none data-[state=open]:opacity-50"
+              onClick={() => setOpenContent("primary")}
+            >
+              {props.buttonText || "Add New"}
             </Button>
           </PrimitiveTrigger>
         </div>
         <AccordionContent className="border-none p-0">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <Card
-                className={cn(
-                  "flex flex-row items-center justify-start gap-4 rounded-md bg-zinc-900/50 p-4 px-3 py-1.5 shadow-md",
-                  props.className
-                )}
-              >
-                <div className="flex w-full items-center gap-3">
-                  {props.form.map((formField) => (
-                    <InputSwitch
-                      className="flex h-9 w-full"
-                      key={formField.name}
-                      {...formField}
-                      label={undefined}
-                      placeholder={formField.label}
-                    />
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    className="rounded-sm"
-                    variant="secondary"
-                    onClick={() => setValue("")}
-                    size="sm"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="rounded-sm"
-                    variant={"button-primary"}
-                    type="submit"
-                    size="sm"
-                  >
-                    Save
-                  </Button>
-                </div>
-              </Card>
-            </form>
-          </Form>
+          {openContent === "secondary" ? (
+            props.secondFormProps && (
+              <FormDropdownContent
+                {...props.secondFormProps}
+                // The props below shouldn't be passed since they are already defined in the secondFormProps
+                // So it's redundant. I didn't want to deal with adjusting the types. Sorry
+                hookForm={secondForm}
+                onSubmit={secondOnSubmit}
+                value={value}
+                setValue={setValue}
+              />
+            )
+          ) : (
+            <FormDropdownContent
+              {...props}
+              hookForm={form}
+              onSubmit={onSubmit}
+              value={value}
+              setValue={setValue}
+            />
+          )}
         </AccordionContent>
       </AccordionItem>
     </Accordion>
+  )
+}
+
+function FormDropdownContent<T extends FieldValues>(props: {
+  form: InputSwitchProps<T>[]
+  onSave: CrudTableProps<T>["onSave"]
+  data?: DefaultValues<T>
+  value: string
+  setValue: (value: string) => void
+  hookForm: UseFormReturn<T>
+  onSubmit: (data: T) => void
+  className?: string
+  fieldsDirection?: FormDropdownProps<T>["fieldsDirection"]
+}) {
+  return (
+    <Form {...props.hookForm}>
+      <form
+        onSubmit={props.hookForm.handleSubmit(props.onSubmit)}
+        className="space-y-3"
+      >
+        <Card
+          className={cn(
+            "flex flex-row items-center justify-start gap-4 rounded-md bg-zinc-900/50 p-4 px-3 py-1.5 shadow-md",
+            props.className
+          )}
+        >
+          <div
+            className={cn("flex w-full items-center gap-3", {
+              "flex-col items-start [&>div]:w-full":
+                props.fieldsDirection === "vertical",
+            })}
+          >
+            {props.form.map((formField) => (
+              <InputSwitch
+                className={cn("flex h-9 w-full", {
+                  "max-w-none": props.fieldsDirection === "vertical",
+                })}
+                key={formField.name}
+                {...formField}
+                label={undefined}
+                placeholder={formField.label}
+              />
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              className="rounded-sm"
+              variant="secondary"
+              onClick={() => props.setValue("")}
+              size="sm"
+            >
+              Cancel
+            </Button>
+            <Button
+              className="rounded-sm"
+              variant={"button-primary"}
+              type="submit"
+              size="sm"
+            >
+              Save
+            </Button>
+          </div>
+        </Card>
+      </form>
+    </Form>
   )
 }
 
