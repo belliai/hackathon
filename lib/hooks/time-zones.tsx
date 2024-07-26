@@ -17,6 +17,11 @@ export const fetchTimeZones = async (belliApi: AxiosInstance, params? : FilterTi
   return data
 }
 
+export const fetchTimeZonesAll = async (belliApi: AxiosInstance) => {
+  const { data } = await belliApi.get(`/${route}/all`)
+  return data
+}
+
 export const updateTimeZone = async (
   belliApi: AxiosInstance,
   prop: { id: string; name: string }
@@ -49,6 +54,14 @@ export const useTimeZones = (params?: FilterTimezone) => {
   return useQuery({
     queryKey: [route, params],
     queryFn: async () => await fetchTimeZones(await belliApi, params),
+  })
+}
+
+export const useTimeZonesAll = () => {
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [route],
+    queryFn: async () => await fetchTimeZonesAll(await belliApi),
   })
 }
 

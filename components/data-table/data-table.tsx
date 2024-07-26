@@ -55,6 +55,7 @@ export interface DataTableProps<TData, TValue> {
   extraRightComponents?: React.ReactNode
   showToolbarOnlyOnHover?: boolean
   pageSize?: number
+  onExport?: (prop: any) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -77,6 +78,7 @@ export function DataTable<TData, TValue>({
   extraRightComponents,
   showToolbarOnlyOnHover,
   pageSize = 10,
+  onExport
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -228,7 +230,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {!hidePagination && (
-        <DataTablePagination table={table} isCanExport={isCanExport} isHover={isHover} />
+        <DataTablePagination table={table} isCanExport={isCanExport} isHover={isHover}  onExport={onExport}/>
       )}
     </div>
   )

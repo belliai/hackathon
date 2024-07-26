@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react"
 import { PaginationState } from "@tanstack/react-table"
+import { z } from "zod"
 
 import {
   useAddLocation,
@@ -7,27 +8,38 @@ import {
   useRemoveLocation,
   useUpdateLocation,
 } from "@/lib/hooks/locations"
-import { useTimeZones } from "@/lib/hooks/time-zones"
+import { useTimeZonesAll } from "@/lib/hooks/time-zones"
 
 import CrudTable from "./components/crud-table"
 
-const Location = () => {
+const schema = z.object({
+  id: z.string().optional(),
+  option: z.string().min(1, "Required"),
+  timezone: z.object({
+    ID: z.string().min(1, "Required"),
+  }),
+})
 
+const Location = () => {
   const { isLoading, isPending, error, data } = useLocations()
   const update = useUpdateLocation()
   const add = useAddLocation()
   const remove = useRemoveLocation()
 
-  const { data: timeZones, isLoading: isLoadingTimeZones } = useTimeZones()
+  const { data: timeZones, isLoading: isLoadingTimeZones } = useTimeZonesAll()
 
   const timeZoneOptions =
     timeZones &&
-    timeZones?.data?.map((tz: any) => ({
+    timeZones?.map((tz: any) => ({
       value: String(tz.ID),
       label: tz.name,
     }))
 
   if (error) return "An error has occurred: " + error.message
+
+  const tableProps = {
+    pageSize: 50,
+  }
 
   return (
     <CrudTable
@@ -38,12 +50,13 @@ const Location = () => {
         { accessorKey: "option", header: "Name" },
         { accessorKey: "timezone.name", header: "Timezone" },
       ]}
+      validationSchema={schema}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Location" },
         {
           name: "timezone.ID",
-          type: "select",
+          type: "combobox",
           label: "Default Time Zone",
           selectOptions: timeZoneOptions,
           placeholder: "Time Zone",
@@ -76,6 +89,7 @@ const Location = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      {...tableProps}
     />
   )
 }

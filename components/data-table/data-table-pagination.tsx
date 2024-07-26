@@ -27,13 +27,15 @@ interface DataTablePaginationProps<TData> {
   showSelectedCount?: boolean
   isCanExport?: boolean
   isHover?: boolean
+  onExport?: (prop:any) => void
 }
 
 export function DataTablePagination<TData>({
   table,
   showSelectedCount,
   isCanExport,
-  isHover
+  isHover,
+  onExport
 }: DataTablePaginationProps<TData>) {
   const router = useRouter()
   const pathname = usePathname()
@@ -169,7 +171,7 @@ export function DataTablePagination<TData>({
         {isCanExport && (
           <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
-              <Button size={"icon"} variant={"ghost"} className={"h-8 w-8"}>
+              <Button onClick={onExport} size={"icon"} variant={"ghost"} className={"h-8 w-8"}>
                 <DownloadIcon className={`h-4 w-4`} />
               </Button>
             </TooltipTrigger>

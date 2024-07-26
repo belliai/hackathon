@@ -223,6 +223,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             label="Flight Time"
             name="flight_duration_hour"
             type="stepper-number"
+            suffix="hrs"
             max={100}
             min={1}
             step={1}
@@ -231,6 +232,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             label="&nbsp;&nbsp;&nbsp;&nbsp;"
             name="flight_duration_minute"
             type="stepper-number"
+             suffix="min"
             max={59}
             min={0}
             step={1}

@@ -1,4 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Trigger as PrimitiveTrigger } from "@radix-ui/react-accordion"
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons"
 import {
@@ -67,7 +68,9 @@ import {
 } from "@/components/ui/table"
 import { DataTable } from "@/components/data-table/data-table"
 import InputSwitch, { InputSwitchProps } from "@/components/form/InputSwitch"
+
 import { SearchDataField } from "./SearchDataField"
+import { ZodSchema } from "zod"
 
 type CrudTableProps<T extends FieldValues> = {
   title: string
@@ -82,6 +85,7 @@ type CrudTableProps<T extends FieldValues> = {
   hideCardHeader?: boolean
   searchOptions?: any
   canSearch?: boolean
+  validationSchema?: ZodSchema<T>
 }
 
 const FormDialog = <T extends FieldValues>(
@@ -93,10 +97,14 @@ const FormDialog = <T extends FieldValues>(
     open: boolean
     setOpen: (open: boolean) => void
     onDelete?: (data: T) => void
+    validationSchema?: CrudTableProps<T>["validationSchema"]
   }
 ) => {
   const form = useForm<T>({
     defaultValues: props.data,
+    resolver: props.validationSchema
+      ? zodResolver(props.validationSchema)
+      : undefined,
   })
 
   const onSubmit = (data: T) => {
@@ -126,7 +134,10 @@ const FormDialog = <T extends FieldValues>(
             </DialogHeader>
             <div className="space-y-1">
               {props.form.map((formField) => (
-                <InputSwitch<T> key={formField.name} {...formField} />
+                <InputSwitch<T>
+                  key={formField.name}
+                  {...formField}
+                />
               ))}
             </div>
             {props.onDelete && props.data && (
@@ -170,11 +181,15 @@ const FormDropdown = <T extends FieldValues>(
     onSave: CrudTableProps<T>["onSave"]
     data?: DefaultValues<T>
     className?: string
+    validationSchema?: CrudTableProps<T>["validationSchema"]
   }
 ) => {
   const [value, setValue] = useState("")
   const form = useForm<T>({
     defaultValues: props.data,
+    resolver: props.validationSchema
+      ? zodResolver(props.validationSchema)
+      : undefined,
   })
 
   const onSubmit = (data: T) => {
@@ -246,7 +261,14 @@ export default function CrudTable<T extends FieldValues>(
 ) {
   const [openForm, setOpenForm] = useState<T | boolean>(false)
 
-  const { data, title, searchOptions, canSearch = false, ...tableProps  } = props
+  const {
+    data,
+    title,
+    searchOptions,
+    canSearch = false,
+    validationSchema,
+    ...tableProps
+  } = props
 
   const columns: ColumnDef<T>[] = props.columns
 
@@ -263,7 +285,7 @@ export default function CrudTable<T extends FieldValues>(
   const hasExplicitHeaders = props.columns.some((column) => column.header)
 
   const handleSearch = (id: string) => {
-    setOpenForm(data.find(item => item.id === id) || false)
+    setOpenForm(data.find((item) => item.id === id) || false)
   }
 
   return (
@@ -291,6 +313,7 @@ export default function CrudTable<T extends FieldValues>(
                   onSave={props.onSave}
                   open={openForm === true}
                   setOpen={(open) => setOpenForm(open)}
+                  validationSchema={validationSchema}
                 >
                   <Button variant="button-primary" size="sm">
                     <PlusIcon className="size-4" />
@@ -299,11 +322,15 @@ export default function CrudTable<T extends FieldValues>(
                 </FormDialog>
               )
             }
-            extraLeftComponents={canSearch && <SearchDataField
-              selectOptions={searchOptions}
-              label={`Search ${title}`}
-              onChangeValue={handleSearch}
-            />}
+            extraLeftComponents={
+              canSearch && (
+                <SearchDataField
+                  selectOptions={searchOptions}
+                  label={`Search ${title}`}
+                  onChangeValue={handleSearch}
+                />
+              )
+            }
             className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
           />
           <FormDialog
@@ -314,6 +341,7 @@ export default function CrudTable<T extends FieldValues>(
             open={typeof openForm !== "boolean"}
             data={openForm as DefaultValues<T>}
             setOpen={(open) => setOpenForm(open ? openForm : false)}
+            validationSchema={validationSchema}
           >
             <></>
           </FormDialog>
