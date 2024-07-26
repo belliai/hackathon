@@ -197,7 +197,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     try {
       const mappedShipperDetails = data.shipper_details?.map((item) => ({
         ...item,
-        date: item.date ? format(item.date, "yyyy-MM-dd") : "",
+        date: item?.date ? format(item.date, "yyyy-MM-dd") : "",
       }))
       data.shipper_details = mappedShipperDetails
       setIsLoading(true)

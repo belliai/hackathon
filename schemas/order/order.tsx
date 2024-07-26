@@ -51,12 +51,12 @@ export const orderSchema = z.object({
         destination_id: z.string().optional(),
         partner_type_id: z.string().optional(),
         partner_code_id: z.string().optional(),
-        date: z.union([z.date(), z.string()]),
+        date: z.union([z.date(), z.string()]).optional(),
         flight_code: z.string().optional(),
         allotment_code: z.string().optional(),
         status_id: z.string().optional(),
-      })
-    ),
+      }).optional()
+    ).optional(),
   // shipper_details: z.any(),
   payment_mode_id: z.string().optional(),
   rate: z.string().optional(),
@@ -145,8 +145,8 @@ export const orderSchema = z.object({
       commodity_code: z.string().optional(),
     }).optional(),
   ).optional(),
-  total_weight: z.string().optional(),
-  total_volume: z.string().optional(),
+  total_weight: z.string().or(z.number()).optional(),
+  total_volume: z.string().or(z.number()).optional(),
   payment_form: z.object({
     payment_method_id: z.string().optional(),
     employee_id: z.string().optional(),
@@ -166,7 +166,7 @@ export const orderSchema = z.object({
       transaction_id: z.string().optional(),
     }).optional(),
   ).optional(),
-  total_paid: z.string().optional(),
+  total_paid: z.number().or(z.string()).optional(),
 })
 
 export type Order = z.infer<typeof orderSchema>

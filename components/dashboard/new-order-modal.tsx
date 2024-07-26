@@ -211,27 +211,29 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     }
   }, [selectedColumnId])
 
-  const renderSaveButtons = () => (
-    <Button
-      type={isLastIndex() ? "submit" : "button"}
-      variant={"button-primary"}
-      onClick={isLastIndex() ? undefined : nextTab}
-    >
-      {isLastIndex() ? <><SaveIcon className="mr-2 size-4" />Save</> : <>Next<ChevronRight className="size-4" /></>}
-    </Button>
-  )
+  const renderSaveButtons = () => {
+    return (
+      <Button
+        type="button"
+        variant={"button-primary"}
+        onClick={isLastIndex() ? form.handleSubmit(onSubmit) : nextTab}
+      >
+        {isLastIndex() ? <><SaveIcon className="mr-2 size-4" />Save</> : <>Next<ChevronRight className="size-4" /></>}
+      </Button>
+    )
+  }
 
   const onSubmit = async (data: Order) => {
     const { bill_to_name, bill_to_old_name, bill_to_id } = data
-
+    
     try {
       const mappedShipperDetails = data.shipper_details?.map((item) => ({
         ...item,
-        date: item.date ? format(item.date, "yyyy-MM-dd") : "",
+        date: item?.date ? format(item.date, "yyyy-MM-dd") : "",
       }))
       data.shipper_details = mappedShipperDetails
       setIsLoading(true)
-
+      
       const dataMapped = mapSchemaToJson(data)
       //update bill to name if the value changes
       if (bill_to_id && bill_to_name && bill_to_old_name !== bill_to_name) {
@@ -264,6 +266,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     } catch (error) {
       console.error({ error })
     } finally {
+      onOpenChange(false)
       setIsLoading(false)
     }
   }

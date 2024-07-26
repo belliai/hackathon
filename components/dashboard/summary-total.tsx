@@ -3,9 +3,9 @@
 import { useCurrencies } from "@/lib/hooks/currencies"
 
 interface SummaryTotalProps {
-    weight: string
-    volume: string
-    total: string
+    weight: string | number
+    volume: string | number
+    total: string | number
     currencyId: string
     type: 'header' | 'sidebar'
 }
