@@ -31,7 +31,8 @@ export const createBelliApi = async (
         originalRequest._retry = true
         const newToken = await getToken()
         if (newToken) {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`
+          axiosInstance.defaults.headers.common["Authorization"] =
+            `Bearer ${newToken}`
           originalRequest.headers["Authorization"] = `Bearer ${newToken}`
           return axiosInstance(originalRequest)
         }
