@@ -67,14 +67,13 @@ const BookingType = () => {
               setOpen={setOpen}
               title="Booking Type"
               onSave={(data) => {
-                const { id, option } = data
+                const { id, ID, name } = data
+                const actualId = id || ID
 
-                console.log(data)
-
-                if (id) {
-                  update.mutate({ id, name: option })
+                if (actualId) {
+                  update.mutate({ id: actualId, name })
                 } else {
-                  add.mutate({ name: option })
+                  add.mutate({ name })
                 }
               }}
             />
@@ -99,12 +98,19 @@ const BookingType = () => {
               columnSpans={[2, 7, 3]}
               subtitle={item.booking_type}
               onSave={(data) => {
-                if (data.id) {
-                  update.mutate(data)
+                const { id, ID, ...rest } = data
+                const actualId = id || ID
+
+                if (actualId) {
+                  update.mutate({ id: actualId, ...rest })
                 }
               }}
               onDelete={() => {
-                remove.mutate(item.id)
+                const actualId = item.id || item.ID
+
+                if (actualId) {
+                  remove.mutate({ id: actualId })
+                }
               }}
             />
           </DataFieldsItem>
