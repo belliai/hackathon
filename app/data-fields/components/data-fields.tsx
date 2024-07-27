@@ -24,6 +24,9 @@ interface DataFieldsItemContentProps<T extends FieldValues> {
   selectedEditing: string | null
   setSelectedEditing: (isEditing: string | null) => void
   columnSpans: number[]
+  className?: string
+  actionsClassName?: string
+  isNew?: boolean
 }
 
 function DataFieldsItemContent<T extends FieldValues>({
@@ -37,6 +40,9 @@ function DataFieldsItemContent<T extends FieldValues>({
   selectedEditing,
   setSelectedEditing,
   columnSpans, // Need to equal to 12
+  className,
+  actionsClassName,
+  isNew,
 }: DataFieldsItemContentProps<T>) {
   const formContext = useFormContext()
 
@@ -82,6 +88,7 @@ function DataFieldsItemContent<T extends FieldValues>({
             }
           }}
           onSave={onSave}
+          isNew={isNew}
           data={data as DefaultValues<T>}
           title={title}
         />
@@ -96,7 +103,10 @@ function DataFieldsItemContent<T extends FieldValues>({
           <div className="flex gap-2">
             <Button
               variant="secondary"
-              onClick={handleCancelEdit}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleCancelEdit()
+              }}
               size="sm"
               className="h-9"
             >
@@ -104,7 +114,10 @@ function DataFieldsItemContent<T extends FieldValues>({
             </Button>
             <Button
               variant="button-primary"
-              onClick={handleSaveEdit}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleSaveEdit()
+              }}
               size="sm"
               className="h-9"
             >
@@ -113,7 +126,12 @@ function DataFieldsItemContent<T extends FieldValues>({
           </div>
         </div>
       ) : (
-        <div className="flex w-full max-w-full items-center justify-between gap-2 text-sm">
+        <div
+          className={cn(
+            "flex w-full max-w-full items-center justify-between gap-2 text-sm",
+            className
+          )}
+        >
           <div className="flex w-full gap-2">
             {icon && <span className="[&>svg]:h-4 [&>svg]:w-4">{icon}</span>}
             <div className="grid w-full grid-cols-12 gap-4">
@@ -156,12 +174,20 @@ function DataFieldsItemContent<T extends FieldValues>({
               })}
             </div>
           </div>
-          <div className="flex items-center gap-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <div
+            className={cn(
+              "flex items-center gap-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+              actionsClassName
+            )}
+          >
             <Button
               variant="ghost"
               size="icon"
               className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
-              onClick={handleOpenEdit}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleOpenEdit()
+              }}
             >
               <PencilIcon type="button" size={14} />
             </Button>
@@ -169,7 +195,10 @@ function DataFieldsItemContent<T extends FieldValues>({
               variant="ghost"
               size="icon"
               className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
-              onClick={onDelete}
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete?.()
+              }}
             >
               <Trash2 type="button" size={14} />
             </Button>
@@ -180,9 +209,17 @@ function DataFieldsItemContent<T extends FieldValues>({
   )
 }
 
-function DataFieldsItem({ children }: PropsWithChildren) {
+function DataFieldsItem({
+  children,
+  className,
+}: PropsWithChildren & { className?: string }) {
   return (
-    <div className="group flex justify-between rounded-sm border bg-zinc-900/50 px-3 py-1.5">
+    <div
+      className={cn(
+        "group flex justify-between rounded-sm border bg-zinc-900/50 px-3 py-1.5",
+        className
+      )}
+    >
       {children}
     </div>
   )

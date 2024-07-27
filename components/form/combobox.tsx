@@ -181,8 +181,8 @@ export function Combobox({
 
   const renderOptionItem = (data: ComboboxOption) => {
     return (
-      <div className="flex max-w-full items-center gap-3 [&>svg]:h-4 [&>svg]:w-4">
-        <div>
+      <div className="flex max-w-full items-center gap-3">
+        <div className="flex gap-3 [&>svg]:h-4 [&>svg]:w-4">
           {data.icon}
           {data?.component ? data.component : data.label}
         </div>
@@ -209,7 +209,7 @@ export function Combobox({
           <TooltipTrigger asChild>{renderOptionItem(data)}</TooltipTrigger>
           <TooltipContent
             side="top"
-            className="border bg-card text-foreground max-w-72 text-left"
+            className="max-w-72 border bg-card text-left text-foreground"
           >
             <p>{data[tooltipId as keyof ComboboxOption]}</p>
           </TooltipContent>
