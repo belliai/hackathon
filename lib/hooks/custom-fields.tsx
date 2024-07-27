@@ -99,7 +99,41 @@ export function useCustomFields({
     })
   }
 
-  const updateCustomField = () => {}
+  const updateCustomField = (data: CustomFieldsSettingsType) => {
+    console.log("submitted", data)
+
+    const updatedFieldGroups = customFields.map((field) => {
+      if (field.id === data.field_group) {
+        const updatedData = field.data.map((f) => {
+          if (f.id === data.id) {
+            return {
+              id: f.id,
+              field_name: data.field_name,
+              field_type: data.field_type,
+              field_group: data.field_group,
+            }
+          }
+
+          return f
+        })
+
+        return {
+          id: field.id,
+          name: field.name,
+          data: updatedData,
+        }
+      }
+
+      return field
+    })
+
+    setCustomFields(updatedFieldGroups)
+
+    toast({
+      title: "Success",
+      description: "Field updated",
+    })
+  }
 
   const addFieldGroup = (newField: string) => {
     const isExist = fieldGroups.some((field) => field.label === newField)
@@ -118,19 +152,20 @@ export function useCustomFields({
       { label: newField, value: slugify(newField) },
     ])
 
-    setCustomFields((prev) => [
-      ...prev,
-      {
-        id: slugify(newField),
-        name: newField,
-        data: [],
-      },
-    ])
+    const newFieldToAdd = {
+      id: slugify(newField),
+      name: newField,
+      data: [],
+    }
+
+    setCustomFields((prev) => [...prev, newFieldToAdd])
 
     toast({
       title: "Success",
       description: `${newField} has been added to Field Groups`,
     })
+
+    return newFieldToAdd
   }
 
   const updateFieldGroup = (newOption: string, targetValue: string) => {
@@ -180,6 +215,28 @@ export function useCustomFields({
     })
   }
 
+  function deleteFieldGroup(fieldGroup: string) {
+    const fieldGroupOption = fieldGroups.find(
+      (field) => field.value === fieldGroup
+    )
+
+    const updatedCustomFields = customFields.filter(
+      (field) => field.name !== fieldGroupOption?.label
+    )
+
+    const updatedFieldGroups = fieldGroups.filter(
+      (field) => field.value !== fieldGroup
+    )
+
+    setFieldGroups(updatedFieldGroups)
+    setCustomFields(updatedCustomFields)
+
+    toast({
+      title: "Success",
+      description: "Field Group deleted",
+    })
+  }
+
   return {
     getCustomFields,
     addCustomField,
@@ -191,5 +248,6 @@ export function useCustomFields({
     setFieldGroups,
     addFieldGroup,
     updateFieldGroup,
+    deleteFieldGroup,
   }
 }

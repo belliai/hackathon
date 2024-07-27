@@ -99,6 +99,7 @@ const FormDialog = <T extends FieldValues>(
     setOpen: (open: boolean) => void
     onDelete?: (data: T) => void
     validationSchema?: CrudTableProps<T>["validationSchema"]
+    isNew?: boolean
   }
 ) => {
   const form = useForm<T>({
@@ -128,7 +129,7 @@ const FormDialog = <T extends FieldValues>(
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <DialogHeader>
               <DialogTitle>
-                {Boolean(props.data)
+                {Boolean(props.data) && !props.isNew
                   ? `Edit ${props.title}`
                   : `Add ${props.title}`}
               </DialogTitle>

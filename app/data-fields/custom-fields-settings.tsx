@@ -11,8 +11,10 @@ import {
   ListChecks,
   ListTodo,
   Phone,
+  Plus,
   User2,
 } from "lucide-react"
+import { useForm } from "react-hook-form"
 
 import { useCustomFields } from "@/lib/hooks/custom-fields"
 import {
@@ -21,11 +23,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button"
 import { CardHeader, CardTitle } from "@/components/ui/card"
+import { Form } from "@/components/ui/form"
 import { ComboboxProps } from "@/components/form/combobox"
 import { InputSwitchProps } from "@/components/form/InputSwitch"
 
 import CrudTable, { FormDropdown } from "./components/crud-table"
+import {
+  DataFields,
+  DataFieldsItem,
+  DataFieldsItemContent,
+} from "./components/data-fields"
 
 export type FieldGroupType = {
   id: string
@@ -103,6 +112,16 @@ export default function CustomFieldsSettings({
   data,
   groups,
 }: CustomFieldsSettingsProps) {
+  const [selectedEditingField, setSelectedEditingField] = useState<
+    string | null
+  >(null)
+  const [selectedEditingGroup, setSelectedEditingGroup] = useState<
+    string | null
+  >(null)
+
+  const [selectedGroup, setSelectedGroup] = useState<string[]>([])
+  const [selectedAddgroup, setSelectedAddGroup] = useState<string | null>(null)
+
   const {
     deleteCustomField,
     addCustomField,
@@ -111,6 +130,8 @@ export default function CustomFieldsSettings({
     updateCustomField,
     customFields,
     setCustomFields,
+    updateFieldGroup,
+    deleteFieldGroup,
   } = useCustomFields({
     defaultCustomFields: data,
     defaultFieldGroups: groups,
@@ -128,13 +149,9 @@ export default function CustomFieldsSettings({
     },
     {
       name: "field_group",
-      type: "combobox-admin",
+      type: "combobox",
       label: "Field Group",
       placeholder: "Field Group",
-      onCreate: addFieldGroup,
-      onEdit: updateCustomField,
-      onDelete: () => {},
-      itemName: "Field Group",
       className: "min-w-[200px]",
       selectOptions: fieldGroups, // Hardcoded value, should be replaced with the actual value
     },
@@ -148,16 +165,36 @@ export default function CustomFieldsSettings({
     },
   ]
 
-  const secondForm: InputSwitchProps<{field_group: string}>[] = [
+  const secondForm: InputSwitchProps<{ field_group: string }>[] = [
     {
       name: "field_group",
       type: "text",
       label: "Field Group Name",
-    }
+    },
   ]
 
+  const fieldGroupForm = useForm({
+    defaultValues: { field_group: "" },
+  })
+
   function handleAddFieldGroup(data: { field_group: string }) {
-    addFieldGroup(data.field_group)
+    const newField = addFieldGroup(data.field_group)
+
+    // Add new field after creating the field group
+    handleAddFieldToGroup(newField?.id || "")
+  }
+
+  function handleAddFieldToGroup(id: string) {
+    setSelectedAddGroup(id)
+    setSelectedGroup((prev) => prev.concat(id))
+  }
+
+  console.log("adding field group", selectedAddgroup, customFields)
+
+  function handleUpdateFieldGroup(data: { id: string; field_group: string }) {
+    if (selectedEditingGroup) {
+      updateFieldGroup(data.field_group, selectedEditingGroup)
+    }
   }
 
   return (
@@ -174,55 +211,155 @@ export default function CustomFieldsSettings({
           buttonText: "New Group",
         }}
       />
-      <Accordion type="multiple" className="flex flex-col gap-4">
+      <Accordion
+        type="multiple"
+        className="flex flex-col gap-2"
+        value={selectedGroup}
+        onValueChange={setSelectedGroup}
+      >
         {customFields.map((fieldGroup) => {
+          const currentFieldGroupData = fieldGroups.find(
+            (f) => f.value === fieldGroup.id
+          )
+
+          const dataToDisplay = {
+            id: fieldGroup.id,
+            field_group: currentFieldGroupData?.label || "",
+          }
+
           return (
             <AccordionItem
               value={fieldGroup.id}
-              className="rounded-md border"
+              className="rounded-sm border bg-zinc-900/50"
               key={fieldGroup.id}
             >
-              <AccordionTrigger
-                className="flex flex-row items-center justify-between space-y-0 rounded-md bg-card px-4 py-2 data-[state=open]:rounded-b-none"
-                value={fieldGroup.id}
-              >
-                <CardTitle className="text-lg font-bold">
-                  {fieldGroup.name}
-                </CardTitle>
-              </AccordionTrigger>
-              <AccordionContent className="pb-0">
-                <CrudTable
-                  title={fieldGroup.name}
-                  hideCardHeader
-                  columns={[
-                    {
-                      accessorKey: "field_name",
-                      header: "Field Name",
-                    },
-                    {
-                      accessorKey: "field_group",
-                      header: "Field Group",
-                      cell: ({ row }) =>
-                        fieldGroups.find(
-                          (field) => field.value === row.original.field_group
-                        )?.label,
-                    },
-                    {
-                      accessorKey: "field_type",
-                      header: "Field Type",
-                      cell: ({ row }) =>
-                        DUMMY_FIELD_TYPES.find(
-                          (field) => field.value === row.original.field_type
-                        )?.label,
-                    },
-                  ]}
-                  hideAddForm
-                  form={form}
-                  data={fieldGroup.data}
-                  onDelete={deleteCustomField}
-                  onSave={addCustomField}
-                />
-              </AccordionContent>
+              <Form {...fieldGroupForm}>
+                <AccordionTrigger
+                  value={fieldGroup.id}
+                  className="group/trigger flex flex-row-reverse justify-between gap-2 px-3 py-1.5"
+                >
+                  <Button
+                    size="icon"
+                    className="h-8 w-8 bg-transparent p-0 text-gray-400 opacity-0 transition-opacity duration-200 hover:bg-transparent group-hover/trigger:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedGroup((prev) => prev.concat(fieldGroup.id))
+                      setSelectedAddGroup(fieldGroup.id)
+                    }}
+                  >
+                    <Plus size={16} />
+                  </Button>
+                  <DataFieldsItemContent
+                    selectedEditing={selectedEditingGroup}
+                    setSelectedEditing={setSelectedEditingGroup}
+                    columnSpans={[12, 0, 0]}
+                    data={dataToDisplay}
+                    title={fieldGroup.name}
+                    form={secondForm}
+                    onSave={handleUpdateFieldGroup}
+                    onDelete={() => deleteFieldGroup(fieldGroup.id)}
+                    actionsClassName="group/trigger:opacity-0 group-hover/trigger:opacity-100 group-hover:opacity-0"
+                  />
+                </AccordionTrigger>
+                <AccordionContent className="py-2">
+                  {fieldGroup.data.map((field) => {
+                    const dataToDisplay = {
+                      id: field.id,
+                      field_name: field.field_name,
+                      field_type: DUMMY_FIELD_TYPES.find(
+                        (d) => d.value === field.field_type
+                      )?.label,
+                    }
+
+                    return (
+                      <DataFieldsItem
+                        key={field.id}
+                        className="group/item rounded-none border-0 bg-transparent pl-9 hover:bg-white/5"
+                      >
+                        <DataFieldsItemContent
+                          selectedEditing={selectedEditingField}
+                          setSelectedEditing={setSelectedEditingField}
+                          columnSpans={[4, 4, 4]}
+                          data={dataToDisplay}
+                          actionsClassName="group-hover:opacity-0 opacity-0 group-hover/item:opacity-100"
+                          form={[
+                            {
+                              name: "id",
+                              type: "hidden",
+                            },
+                            {
+                              name: "field_name",
+                              type: "text",
+                              label: "Field Name*",
+                            },
+                            {
+                              name: "field_type",
+                              type: "combobox",
+                              label: "Field Type",
+                              placeholder: "Field Type*",
+                              className: "min-w-[200px]",
+                              selectOptions: DUMMY_FIELD_TYPES,
+                            },
+                          ]}
+                          title={field.field_name}
+                          onSave={(data) =>
+                            updateCustomField({
+                              ...data,
+                              field_type: field.field_type,
+                              field_group: fieldGroup.id,
+                            })
+                          }
+                          onDelete={() => deleteCustomField(field)}
+                        />
+                      </DataFieldsItem>
+                    )
+                  })}
+                  {selectedAddgroup === fieldGroup.id && (
+                    <DataFieldsItem className="group/item border-0 bg-transparent pl-9">
+                      <DataFieldsItemContent
+                        selectedEditing={selectedAddgroup}
+                        setSelectedEditing={setSelectedAddGroup}
+                        columnSpans={[4, 4, 4]}
+                        data={{
+                          id: fieldGroup.id,
+                          field_name: "",
+                          field_type: "",
+                        }}
+                        actionsClassName="group-hover:opacity-0 opacity-0 group-hover/item:opacity-100"
+                        form={[
+                          {
+                            name: "id",
+                            type: "hidden",
+                          },
+                          {
+                            name: "field_name",
+                            type: "text",
+                            label: "Field Name*",
+                          },
+                          {
+                            name: "field_type",
+                            type: "combobox",
+                            label: "Field Type",
+                            placeholder: "Field Type*",
+                            className: "min-w-[200px]",
+                            selectOptions: DUMMY_FIELD_TYPES,
+                          },
+                        ]}
+                        title={`New Field to ${fieldGroup.name}`}
+                        isNew
+                        onSave={(data) => {
+                          addCustomField({
+                            ...data,
+                            field_group: fieldGroup.id,
+                          })
+                          setSelectedAddGroup(null)
+                        }}
+                        onDelete={() => {}}
+                      />
+                    </DataFieldsItem>
+                  )}
+                </AccordionContent>
+              </Form>
             </AccordionItem>
           )
         })}
