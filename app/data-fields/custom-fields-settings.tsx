@@ -283,14 +283,14 @@ export default function CustomFieldsSettings({
                     return (
                       <DataFieldsItem
                         key={field.id}
-                        className="group/item rounded-none border-0 bg-transparent pl-9 hover:bg-white/5"
+                        className="rounded-none border-0 bg-transparent pl-9 hover:bg-white/5"
                       >
                         <DataFieldsItemContent
                           selectedEditing={selectedEditingField}
                           setSelectedEditing={setSelectedEditingField}
                           columnSpans={[4, 4, 4]}
                           data={dataToDisplay}
-                          actionsClassName="group-hover:opacity-0 opacity-0 group-hover/item:opacity-100"
+                          actionsClassName=""
                           form={[
                             {
                               name: "id",
