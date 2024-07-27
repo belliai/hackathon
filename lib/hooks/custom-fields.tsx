@@ -24,20 +24,34 @@ export function useCustomFields({
   defaultFieldGroups,
 }: CustomFieldsHook) {
   // This is temporary, we will replace this with the actual data from the API
-  const [fieldGroups, setFieldGroups] =
-    useState<ComboboxOption[]>(defaultFieldGroups)
+  const [fieldGroups, setFieldGroups] = useState<ComboboxOption[]>([
+    ...defaultFieldGroups,
+    {
+      label: "Unassigned",
+      value: "unassigned",
+    },
+  ])
   const [customFields, setCustomFields] =
     useState<FieldGroupType[]>(defaultCustomFields)
 
   const getCustomFields = () => {}
 
   const addCustomField = (formValues: CustomFieldsSettingsType) => {
-    console.log("submitted", formValues)
-
     // Get the field group selected by the user
     const customFieldsgroup = customFields.find(
-      (field) => field.name === formValues.field_group
+      (field) => field.id === formValues.field_group
     )
+
+    let newCustomFields = customFields
+
+    // If the field group is not found but there is a value, then add it
+    if (!customFieldsgroup && formValues.field_group) {
+      newCustomFields = customFields.concat({
+        id: slugify(formValues.field_group),
+        name: formValues.field_group,
+        data: [],
+      })
+    }
 
     // Check if the field already exists in the selected field group
     const isExist = customFieldsgroup?.data.some(
@@ -51,7 +65,7 @@ export function useCustomFields({
       })
     } else {
       // Add the new field to the selected field group
-      const updatedFieldGroup = customFields.map((field) => {
+      const updatedFieldGroup = newCustomFields.map((field) => {
         if (field.id === formValues.field_group) {
           return {
             id: field.id,
@@ -100,8 +114,6 @@ export function useCustomFields({
   }
 
   const updateCustomField = (data: CustomFieldsSettingsType) => {
-    console.log("submitted", data)
-
     const updatedFieldGroups = customFields.map((field) => {
       if (field.id === data.field_group) {
         const updatedData = field.data.map((f) => {

@@ -189,8 +189,6 @@ export default function CustomFieldsSettings({
     setSelectedGroup((prev) => prev.concat(id))
   }
 
-  console.log("adding field group", selectedAddgroup, customFields)
-
   function handleUpdateFieldGroup(data: { id: string; field_group: string }) {
     if (selectedEditingGroup) {
       updateFieldGroup(data.field_group, selectedEditingGroup)
@@ -201,7 +199,18 @@ export default function CustomFieldsSettings({
     <div className="flex flex-col gap-8">
       <FormDropdown
         form={form}
-        onSave={addCustomField}
+        onSave={(data) => {
+          let payload = {
+            ...data,
+            field_group: data.field_group,
+          }
+
+          if (data.field_group === "" || !data.field_group) {
+            payload.field_group = "unassigned"
+          }
+
+          addCustomField(payload)
+        }}
         className="flex-wrap justify-end"
         fieldsDirection="vertical"
         buttonText="New Field"
@@ -224,7 +233,7 @@ export default function CustomFieldsSettings({
 
           const dataToDisplay = {
             id: fieldGroup.id,
-            field_group: currentFieldGroupData?.label || "",
+            field_group: currentFieldGroupData?.label || "Unassigned",
           }
 
           return (
