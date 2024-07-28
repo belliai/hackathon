@@ -146,6 +146,13 @@ function AircraftDataTable() {
         data={aircraftsData ?? []}
         onRowClick={handleAircraftRowClick}
         menuId="aircraft"
+        initialVisibility={{
+          landing_weight: false,
+          cargo_capacity: false,
+          mtow: false,
+          max_zero_fuel_weight: false,
+          body_type: false,
+        }}
         extraRightComponents={
           <Button
             size={"sm"}
