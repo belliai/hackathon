@@ -94,7 +94,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     Record<TailNumberFormTabs, boolean>
   >({
     "tail-numbers": isEdit ? true : false,
-    "measurement-units": isEdit ? true : false,
     "aircraft-details": isEdit ? true : false,
     "door-dimensions": isEdit ? true : false,
     volume: isEdit ? true : false,
@@ -265,7 +264,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     }
     setValidatedSteps({
       "tail-numbers": isEdit ? true : false,
-      "measurement-units": isEdit ? true : false,
       "aircraft-details": isEdit ? true : false,
       "door-dimensions": isEdit ? true : false,
       volume: isEdit ? true : false,
@@ -367,14 +365,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                   </TabsTrigger>
                   <TabsTrigger
                     disabled={!validatedSteps["tail-numbers"]}
-                    value="measurement-units"
-                    className="w-full justify-start py-1.5"
-                  >
-                    <RulerIcon className="mr-2 size-4" />
-                    Measurement Units
-                  </TabsTrigger>
-                  <TabsTrigger
-                    disabled={!validatedSteps["measurement-units"]}
                     value="aircraft-details"
                     className="w-full justify-start py-1.5"
                   >
@@ -426,39 +416,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                       className="rounded-md"
                       defaultValue={aircraftStatusOptions?.[0].value}
                       selectOptions={aircraftStatusOptions}
-                    />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent
-                className="h-full w-full flex-1"
-                value="measurement-units"
-              >
-                <Card className="flex flex-col divide-y rounded-md">
-                  <CardHeader className="w-full">
-                    <CardTitle className="font-semibold">
-                      Measurement Units
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
-                    <InputSwitch<TailNumberFormValues>
-                      label="Weight Unit"
-                      name="weight_unit_id"
-                      type="select"
-                      selectOptions={weightUnitsOptions}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Volume Unit"
-                      name="volume_unit_id"
-                      type="select"
-                      selectOptions={volumeUnitsOptions}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Dimension Unit"
-                      name="dimension_unit_id"
-                      type="select"
-                      selectOptions={lengthUnitsOptions}
                     />
                   </CardContent>
                 </Card>
@@ -523,16 +480,19 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                       label="FWT"
                       name="fwt"
                       type="number"
+                      rightIcon={selectedVolumeUnitSymbol}
                     />
                     <InputSwitch<TailNumberFormValues>
                       label="FWD"
                       name="fwd"
                       type="number"
+                      rightIcon={selectedVolumeUnitSymbol}
                     />
                     <InputSwitch<TailNumberFormValues>
                       label="Bulk"
                       name="bulk"
                       type="number"
+                      rightIcon={selectedVolumeUnitSymbol}
                     />
                   </CardContent>
                 </Card>

@@ -6,7 +6,7 @@ import { TableHeaderWithTooltip } from "@/components/ui/table"
 
 export const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
   {
-    accessorKey: "manufacturer",
+    accessorKey: "manufacturer.name",
     cell: ({ row }) => {
       const deleted = row.original.manufacturer.is_deleted ? (
         <span className="text-destructive"> (deleted)</span>
@@ -25,7 +25,7 @@ export const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     ),
   },
   {
-    accessorKey: "aircraft_type",
+    accessorKey: "aircraft_type.name",
     cell: ({ row }) => {
       const deleted = row.original.aircraft_type.is_deleted ? (
         <span className="text-destructive"> (deleted)</span>
@@ -44,7 +44,7 @@ export const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     ),
   },
   {
-    accessorKey: "version",
+    accessorKey: "version.version",
     cell: ({ row }) => {
       const deleted = row.original.version.is_deleted ? (
         <span className="text-destructive"> (deleted)</span>

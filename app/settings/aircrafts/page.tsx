@@ -16,8 +16,10 @@ import { useForm } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
 import { TailNumber } from "@/types/aircraft/tail-number"
+import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useTailNumbers } from "@/lib/hooks/aircrafts/tail-numbers"
+import { isVallidUuid } from "@/lib/utils/string-utils"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/data-table/data-table"
@@ -25,7 +27,7 @@ import PageContainer from "@/components/layout/PageContainer"
 
 import { aircraftTailNumbersColumns } from "./components/columns/aircraft-tail-number-columns"
 import { aircraftTypeColumns } from "./components/columns/aircraft-type-columns"
-import AircraftTypeForm from "./components/forms/aircraft-form-v3"
+import AircraftTypeForm from "./components/forms/aircraft-form"
 import TailNumberForm from "./components/forms/aircraft-tail-number-form"
 import {
   aircraftFormDefaultValues,
@@ -187,6 +189,9 @@ function TailNumbersForm() {
     page: 1,
     page_size: 1000,
   })
+
+  const { aircraftDefaults } = useAircraftDefaults()
+
   const tailNumbersData = tailNumbers?.data
 
   const tailnumberForm = useForm<TailNumberFormValues>({
@@ -197,12 +202,18 @@ function TailNumbersForm() {
   const handleTailNumberRowClick = (tailNumber: TailNumber) => {
     tailnumberForm.reset({
       ...tailNumber,
-      body_type_id: tailNumber.body_type?.id,
-      volume_unit_id: tailNumber.volume_unit?.id,
-      dimension_unit_id: tailNumber.dimension_unit?.id,
-      weight_unit_id: tailNumber.weight_unit?.id,
-      status_id: tailNumber.status?.id,
-      gl_code_id: tailNumber.gl_code?.id,
+      volume_unit_id:
+        isVallidUuid(tailNumber.volume_unit?.id) ??
+        isVallidUuid(aircraftDefaults?.volume_unit_id),
+      dimension_unit_id:
+        isVallidUuid(tailNumber.dimension_unit?.id) ??
+        isVallidUuid(aircraftDefaults?.dimension_unit_id),
+      weight_unit_id:
+        isVallidUuid(tailNumber.weight_unit?.id) ??
+        isVallidUuid(aircraftDefaults?.weight_unit_id),
+      body_type_id: isVallidUuid(tailNumber.body_type?.id),
+      status_id: isVallidUuid(tailNumber.status?.id),
+      gl_code_id: isVallidUuid(tailNumber.gl_code?.id),
     })
 
     setCurrentOpenTailNumberModal(tailNumber.id)

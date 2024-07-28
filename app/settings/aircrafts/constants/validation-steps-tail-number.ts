@@ -5,7 +5,6 @@ import { TailNumberFormTabs } from "../types"
 
 export const stepsOrder: TailNumberFormTabs[] = [
   "tail-numbers",
-  "measurement-units",
   "aircraft-details",
   "door-dimensions",
   "volume",
@@ -51,7 +50,6 @@ export const volumeFields: Fields = ["fwt", "fwd", "bulk"]
 
 export const tabValidations: Record<TailNumberFormTabs, Fields> = {
   "tail-numbers": tailNumberFields,
-  "measurement-units": measurementUnitFields,
   "door-dimensions": doorDimensionFields,
   volume: volumeFields,
   "aircraft-details": detailsFields,

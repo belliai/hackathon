@@ -117,7 +117,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     Record<AircraftFormTabs, boolean>
   >({
     "aircraft-type": isEdit ? true : false,
-    "measurement-units": isEdit ? true : false,
     "aircraft-details": isEdit ? true : false,
     "door-dimensions": isEdit ? true : false,
     volume: isEdit ? true : false,
@@ -324,7 +323,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     }
     setValidatedSteps({
       "aircraft-type": isEdit ? true : false,
-      "measurement-units": isEdit ? true : false,
       "aircraft-details": isEdit ? true : false,
       "door-dimensions": isEdit ? true : false,
       volume: isEdit ? true : false,
@@ -482,14 +480,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                   </TabsTrigger>
                   <TabsTrigger
                     disabled={!validatedSteps["aircraft-type"]}
-                    value="measurement-units"
-                    className="w-full justify-start py-1.5"
-                  >
-                    <RulerIcon className="mr-2 size-4" />
-                    Measurement Units
-                  </TabsTrigger>
-                  <TabsTrigger
-                    disabled={!validatedSteps["measurement-units"]}
                     value="aircraft-details"
                     className="w-full justify-start py-1.5"
                   >
@@ -630,38 +620,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
                       name="body_type_id"
                       type="select"
                       selectOptions={aircraftBodyTypesOptions}
-                    />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent
-                className="h-full w-full flex-1"
-                value="measurement-units"
-              >
-                <Card className="flex flex-col divide-y rounded-md">
-                  <CardHeader className="w-full">
-                    <CardTitle className="font-semibold">
-                      Measurement Units
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
-                    <InputSwitch<AircraftFormValues>
-                      label="Weight Unit"
-                      name="weight_unit_id"
-                      type="select"
-                      selectOptions={weightUnitsOptions}
-                    />
-                    <InputSwitch<AircraftFormValues>
-                      label="Volume Unit"
-                      name="volume_unit_id"
-                      type="select"
-                      selectOptions={volumeUnitsOptions}
-                    />
-                    <InputSwitch<AircraftFormValues>
-                      label="Dimension Unit"
-                      name="dimension_unit_id"
-                      type="select"
-                      selectOptions={lengthUnitsOptions}
                     />
                   </CardContent>
                 </Card>

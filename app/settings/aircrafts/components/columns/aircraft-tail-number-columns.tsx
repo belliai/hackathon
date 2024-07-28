@@ -100,11 +100,12 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   },
   {
     accessorKey: "landing_weight",
-    cell: ({ row }) => (
-      <span>
-        {row.original.landing_weight} {row.original.weight_unit.symbol}
-      </span>
-    ),
+    cell: ({ row }) =>
+      row.original.landing_weight && (
+        <span>
+          {row.original.landing_weight} {row.original.weight_unit.symbol}
+        </span>
+      ),
     header: () => (
       <TableHeaderWithTooltip
         header="Landing Wt"
@@ -114,11 +115,12 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   },
   {
     accessorKey: "cargo_capacity",
-    cell: ({ row }) => (
-      <span>
-        {row.original.cargo_capacity} {row.original.weight_unit.symbol}
-      </span>
-    ),
+    cell: ({ row }) =>
+      row.original.cargo_capacity && (
+        <span>
+          {row.original.cargo_capacity} {row.original.weight_unit.symbol}
+        </span>
+      ),
     header: () => (
       <TableHeaderWithTooltip
         header="Cargo Cap"
@@ -128,22 +130,24 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
   },
   {
     accessorKey: "mtow",
-    cell: ({ row }) => (
-      <span>
-        {row.original.mtow} {row.original.weight_unit.symbol}
-      </span>
-    ),
+    cell: ({ row }) =>
+      row.original.mtow && (
+        <span>
+          {row.original.mtow} {row.original.weight_unit.symbol}
+        </span>
+      ),
     header: () => (
       <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
     ),
   },
   {
     accessorKey: "max_zero_fuel_weight",
-    cell: ({ row }) => (
-      <span>
-        {row.original.max_zero_fuel_weight} {row.original.weight_unit.symbol}
-      </span>
-    ),
+    cell: ({ row }) =>
+      row.original.max_zero_fuel_weight && (
+        <span>
+          {row.original.max_zero_fuel_weight} {row.original.weight_unit.symbol}
+        </span>
+      ),
     header: () => (
       <TableHeaderWithTooltip
         header="Max Zero Fuel Wt"

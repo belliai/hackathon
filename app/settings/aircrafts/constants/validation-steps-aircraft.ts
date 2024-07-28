@@ -5,7 +5,6 @@ import { AircraftFormTabs } from "../types"
 
 export const stepsOrder: AircraftFormTabs[] = [
   "aircraft-type",
-  "measurement-units",
   "aircraft-details",
   "door-dimensions",
   "volume",
@@ -56,7 +55,6 @@ export const volumeFields: Fields = ["fwt", "fwd", "bulk"]
 
 export const tabValidations: Record<AircraftFormTabs, Fields> = {
   "aircraft-type": aircraftTypeFields,
-  "measurement-units": measurementUnitFields,
   "door-dimensions": doorDimensionFields,
   volume: volumeFields,
   "aircraft-details": detailsFields,

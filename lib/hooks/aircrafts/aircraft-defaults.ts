@@ -10,6 +10,11 @@ type AircraftDefaults = {
   id: string
   created_at: string
   updated_at: string
+  weight_unit_id: string | null
+  volume_unit_id: string | null
+  dimension_unit_id: string | null
+  body_type_id: string | null
+  gl_code_id: string | null
   mtow: string | null
   max_zero_fuel_weight: string | null
   passenger_capacity: string | null
@@ -93,6 +98,11 @@ function convertToAircraftDefaultsData(
     id: rawData.version_id || "",
     created_at: getCurrentTimestamp(),
     updated_at: getCurrentTimestamp(),
+    weight_unit_id: rawData.weight_unit_id || null,
+    volume_unit_id: rawData.volume_unit_id || null,
+    dimension_unit_id: rawData.dimension_unit_id || null,
+    body_type_id: rawData.body_type_id || null,
+    gl_code_id: rawData.gl_code_id || null,
     mtow: rawData.mtow || null,
     max_zero_fuel_weight: rawData.max_zero_fuel_weight || null,
     passenger_capacity: rawData.passenger_capacity || null,
