@@ -58,10 +58,6 @@ export default function MasterAircraftPage() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [tabValue, setTabValue] = useState(
-    searchParams.get("tab") ?? "aircraft-types"
-  )
-
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString())
@@ -72,21 +68,22 @@ export default function MasterAircraftPage() {
   )
 
   const setSearchParams = (key: string, value: string) => {
-    console.log({ key, value })
-    // i have no idea why this is not working
-    router.push(pathname + "?" + createQueryString(key, value))
+    router.replace(pathname + "?" + createQueryString(key, value))
   }
 
+  const currentTab = searchParams.get("tab") ?? undefined
+  const handleTabChange = (val: string) => setSearchParams("tab", val)
+
   useEffect(() => {
-    setSearchParams("tab", tabValue)
-  }, [tabValue])
+    if (!currentTab) handleTabChange("tail-numbers")
+  }, [currentTab])
 
   return (
     <PageContainer>
       <div>
         <Tabs
-          value={tabValue}
-          onValueChange={setTabValue}
+          value={currentTab}
+          onValueChange={handleTabChange}
           className="space-y-4"
         >
           <TabsContent value="aircraft-types" asChild>
