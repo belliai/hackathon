@@ -36,14 +36,16 @@ export type UserDropdownItem = {
   label: string
   separator?: boolean
   changeNavigation?: boolean
+  isExpanded?: boolean
 }
 
 interface UserDropdownProps {
   doChangeNavigation: Dispatch<SetStateAction<number>>
+  isExpanded?: boolean
 }
 
 export default function UserDropdown({
-  doChangeNavigation = () => {},
+  doChangeNavigation = () => {}, isExpanded = true
 }: UserDropdownProps) {
   const router = useRouter()
 
@@ -124,13 +126,17 @@ export default function UserDropdown({
                   },
                 }}
               />
-              <span className="text-sm text-white">
-                {userSession.user?.fullName}
-              </span>
-              <ChevronDownIcon
-                className="h-4 w-4 text-zinc-500"
-                aria-hidden="true"
-              />
+              {isExpanded && (
+                <>
+                  <span className="text-sm text-white">
+                    {userSession.user?.fullName}
+                  </span>
+                  <ChevronDownIcon
+                    className="h-4 w-4 text-zinc-500"
+                    aria-hidden="true"
+                  />
+                </>
+              )}
             </SignedIn>
             <SignedOut>
               <Avatar className="h-6 w-6 rounded-md">

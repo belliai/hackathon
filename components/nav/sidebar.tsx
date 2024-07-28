@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useOrganization, useOrganizationList } from "@clerk/nextjs"
 import { UserCircleIcon } from "@heroicons/react/24/outline"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
-import { Boxes, PlusSquare } from "lucide-react"
+import { Boxes, ChevronsLeftIcon, PlusSquare } from "lucide-react"
 import { useFeatureFlagVariantKey } from "posthog-js/react"
 
 import { findActiveItem } from "@/lib/utils/nav-utils"
@@ -15,6 +15,7 @@ import { accountNavigation } from "@/components/nav/data/accountNavigation"
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation"
 import { settingNavigation } from "@/components/nav/data/settingNavigation"
 import { skNavigation } from "@/components/nav/data/skNavigation"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 import NewOrderModal from "../dashboard/new-order-modal"
 import { Button } from "../ui/button"
@@ -31,7 +32,7 @@ const SIDEBAR_TYPE = {
   SETTING: 2,
 }
 
-export default function SideBar() {
+export default function SideBar({ isExpanded, setIsExpanded }: { isExpanded: boolean; setIsExpanded: (expanded: boolean) => void }) {
   const searchParams = useSearchParams()
   const settings = searchParams.get("settings")
 
@@ -86,9 +87,9 @@ export default function SideBar() {
   return (
     <Suspense>
       <div className="no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border">
-        <div className="flex h-16 shrink-0 items-center justify-between">
+        <div className={`flex ${!isExpanded ? 'flex-col mt-2 gap-3' : 'flex-row'} h-16 shrink-0 items-center justify-between`}>
           {sidebarType === SIDEBAR_TYPE.DEFAULT && (
-            <UserDropdown doChangeNavigation={setNavigationType} />
+            <UserDropdown doChangeNavigation={setNavigationType} isExpanded={isExpanded} />
           )}
           {sidebarType === SIDEBAR_TYPE.SETTING && (
             <div
@@ -105,6 +106,21 @@ export default function SideBar() {
               <span className="font-bold text-white">Settings</span>
             </div>
           )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                onClick={() => setIsExpanded(!isExpanded)}
+                size="icon"
+              >
+                <ChevronsLeftIcon className={`h-4 w-4 ${!isExpanded ? 'rotate-180' : ''} transition-transform duration-200`} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="border bg-card text-foreground" side="right">
+              {isExpanded ? 'Collapse' : 'Expand'}
+            </TooltipContent>
+          </Tooltip>
+          
         </div>
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -131,7 +147,7 @@ export default function SideBar() {
               )} */}
               {sidebarType === SIDEBAR_TYPE.SETTING && (
                 <li className="mb-2 flex items-center gap-x-[7px] text-zinc-500">
-                  <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
+                  <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-400">
                     <firstCurrentNavigationItem.icon
                       className="h-[18px] w-[18px] shrink-0"
                       aria-hidden="true"
@@ -144,11 +160,12 @@ export default function SideBar() {
                 {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
                   <>
                     {/* <FavoritesMenu /> */}
-                    <SidebarMenu items={operationsNavigation} collapsible />
-                    <SidebarMenu items={belliSettingsNavigation} collapsible />
+                    <SidebarMenu items={operationsNavigation} collapsible isExpanded={isExpanded} />
+                    <SidebarMenu items={belliSettingsNavigation} collapsible isExpanded={isExpanded} />
                     <SidebarMenu
                       items={customDataFieldsNavigation}
                       collapsible
+                      isExpanded={isExpanded}
                     />
                   </>
                 ) : (
@@ -173,7 +190,7 @@ export default function SideBar() {
               )}
             </ul>
           </ul>
-          {isBelliAdmin && (
+          {(isBelliAdmin && isExpanded) &&  (
             <ul role="list" className="-mx-2">
               <SidebarMenu items={adminOnlyItems} collapsible />
             </ul>

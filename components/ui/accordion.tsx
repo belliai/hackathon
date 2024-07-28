@@ -24,8 +24,9 @@ const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> & {
     customarrow?: React.ReactNode
+    hideArrow?: boolean
   }
->(({ className, children, ...props }, ref) => (
+>(({ className, children, hideArrow = false, ...props }, ref) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
@@ -36,7 +37,7 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      {!props.asChild && (
+      {(!props.asChild && !hideArrow) && (
         <>
           {props.customarrow ? (
             props.customarrow

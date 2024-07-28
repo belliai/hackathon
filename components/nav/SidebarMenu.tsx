@@ -17,12 +17,14 @@ interface SidebarMenuProps {
   items: TSidebarItem[]
   collapsible?: boolean
   sectionTitle?: string
+  isExpanded?: boolean
 }
 
 export default function SidebarMenu({
   items,
   collapsible,
   sectionTitle,
+  isExpanded,
 }: SidebarMenuProps) {
   const pathname = usePathname()
 
@@ -50,6 +52,7 @@ export default function SidebarMenu({
           <SidebarItem
             key={item.name}
             item={item}
+            isExpanded={isExpanded}
             active={
               (activeItem?.parent?.name ?? activeItem?.item.name) === item.name
             }
