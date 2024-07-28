@@ -1,4 +1,6 @@
-import CustomFieldsSettings, { FieldGroupType } from "./custom-fields-settings"
+import CustomFieldsSettings, {
+  FieldGroupType,
+} from "../../custom-fields-settings"
 
 export const DUMMY_FIELD_GROUPS = [
   {

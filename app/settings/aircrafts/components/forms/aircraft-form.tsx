@@ -10,19 +10,14 @@ import {
   DoorClosedIcon,
   FileSlidersIcon,
   PlaneIcon,
-  PlusIcon,
-  RulerIcon,
   SaveIcon,
-  ScrollTextIcon,
-  Trash,
   Trash2Icon,
 } from "lucide-react"
-import { Path, useFieldArray, UseFormReturn } from "react-hook-form"
+import { Path, UseFormReturn } from "react-hook-form"
 
 import { Aircraft, CreateAircraftRequest } from "@/types/aircraft/aircraft"
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
 import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
-import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
   useAircraftManufacturers,
   useDeleteAircraftManufacturers,
@@ -67,14 +62,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import InputSwitch from "@/components/form/InputSwitch"
@@ -224,21 +211,6 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
   const aircraftBodyTypesOptions = aircraftBodyTypes?.map((bodyType) => ({
     value: String(bodyType.ID),
     label: bodyType.Name,
-  }))
-
-  const weightUnitsOptions = unitsW?.map((unit) => ({
-    value: String(unit.ID),
-    label: `${unit.Name} - ${unit.Symbol}`,
-  }))
-
-  const volumeUnitsOptions = unitsVol?.map((unit) => ({
-    value: String(unit.ID),
-    label: `${unit.Name} - ${unit.Symbol}`,
-  }))
-
-  const lengthUnitsOptions = unitsLen?.map((unit) => ({
-    value: String(unit.ID),
-    label: `${unit.Name} - ${unit.Symbol}`,
   }))
 
   async function handleSubmitAircraft(data: AircraftFormValues) {

@@ -6,8 +6,7 @@ import { useBelliApi } from "@/lib/utils/network"
 
 const route = "aircrafts/default"
 
-type AircraftDefaults = {
-  id: string
+export type AircraftDefaults = {
   created_at: string
   updated_at: string
   weight_unit_id: string | null
@@ -57,7 +56,7 @@ export const useUpdateAircraftDefaults = () => {
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (body: AircraftFormValues) => {
+    mutationFn: async (body: AircraftFormValues | AircraftDefaults) => {
       const instance = await belliApi
       return instance.put(route, convertToAircraftDefaultsData(body))
     },
@@ -84,18 +83,25 @@ export const useResetAircraftDefaults = () => {
 }
 
 export const useAircraftDefaults = () => {
-  const { data: aircraftDefaults } = useAircraftDefaultsQuery()
-  const { mutateAsync: updateAircraftDefaults } = useUpdateAircraftDefaults()
+  const { data: aircraftDefaults, refetch: refetchDefaults } =
+    useAircraftDefaultsQuery()
+  const { mutateAsync: updateAircraftDefaults, isPending: isUpdating } =
+    useUpdateAircraftDefaults()
   const { mutateAsync: resetAirccraftDefaults } = useResetAircraftDefaults()
 
-  return { aircraftDefaults, updateAircraftDefaults, resetAirccraftDefaults }
+  return {
+    aircraftDefaults,
+    updateAircraftDefaults,
+    resetAirccraftDefaults,
+    refetchDefaults,
+    isUpdating,
+  }
 }
 
 function convertToAircraftDefaultsData(
-  rawData: AircraftFormValues
+  rawData: AircraftFormValues | AircraftDefaults
 ): AircraftDefaults {
   return {
-    id: rawData.version_id || "",
     created_at: getCurrentTimestamp(),
     updated_at: getCurrentTimestamp(),
     weight_unit_id: rawData.weight_unit_id || null,

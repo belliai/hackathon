@@ -1,9 +1,10 @@
 "use client"
 
-import { Plane } from "lucide-react"
+import { Plane, RulerIcon } from "lucide-react"
 
-import CrudAircraft from "../aircraft"
 import DataFieldsPageTemplate from "../components/datafields-page-template"
+import CrudAircraft from "./components/aircraft"
+import MeasurementUnits from "./components/measurement-units"
 
 export default function AircraftDatafields() {
   return (
@@ -14,6 +15,12 @@ export default function AircraftDatafields() {
           icon: Plane,
           name: "Aircrafts",
           tooltipId: "aircraft",
+        },
+        {
+          component: <MeasurementUnits />,
+          icon: RulerIcon,
+          name: "Measurement Units",
+          tooltipId: "measurement-units",
         },
       ]}
     />
