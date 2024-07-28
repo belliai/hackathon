@@ -77,7 +77,7 @@ export function DataTable<TData, TValue>({
   extraLeftComponents,
   extraRightComponents,
   showToolbarOnlyOnHover,
-  pageSize = 10,
+  pageSize = 20,
   onExport,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
