@@ -13,6 +13,7 @@ import {
 } from "@clerk/nextjs"
 import { dark } from "@clerk/themes"
 import { GoogleTagManager } from "@next/third-parties/google"
+import * as changeCase from "change-case"
 
 import { cn } from "@/lib/utils"
 import { findActiveItem } from "@/lib/utils/nav-utils"
@@ -37,14 +38,24 @@ const inter = Inter({
 })
 
 export async function generateMetadata() {
+  const pathname = headers().get("x-pathname")
+  let tab = headers().get("x-tab")
+
   const defaultMetadata: Metadata = {
     title: "Belli",
     description: "Next-gen Air Cargo SaaS",
   }
 
-  const pathname = headers().get("x-pathname")
+  let newMetadata: Metadata = defaultMetadata
 
-  if (!pathname) return defaultMetadata
+  newMetadata = defaultMetadata
+
+  if (tab) {
+    tab = changeCase.capitalCase(tab)
+    newMetadata.title = `${newMetadata.title} - ${tab}`
+  }
+
+  if (!pathname) return newMetadata
 
   const menuItem = findActiveItem(
     [
@@ -59,10 +70,12 @@ export async function generateMetadata() {
 
   if (!menuItem) return defaultMetadata
 
-  return {
-    title: menuItem.item.name,
+  newMetadata = {
+    title: menuItem.item.name + (tab ? ` - ${tab}` : ""),
     description: "Belli - Next-gen Air Cargo SaaS",
   }
+
+  return newMetadata
 }
 
 const PostHogPageView = dynamic(() => import("@/components/posthog-pageview"), {
