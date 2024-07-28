@@ -78,7 +78,7 @@ export function DataTable<TData, TValue>({
   extraRightComponents,
   showToolbarOnlyOnHover,
   pageSize = 10,
-  onExport
+  onExport,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -230,7 +230,12 @@ export function DataTable<TData, TValue>({
       </div>
 
       {!hidePagination && (
-        <DataTablePagination table={table} isCanExport={isCanExport} isHover={isHover}  onExport={onExport}/>
+        <DataTablePagination
+          table={table}
+          isCanExport={isCanExport}
+          isHover={isHover}
+          onExport={onExport}
+        />
       )}
     </div>
   )

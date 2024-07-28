@@ -137,7 +137,8 @@ export const aircraftTypeColumns: ColumnDef<Aircraft>[] = [
     ),
   },
   {
-    accessorKey: "body_type.name",
+    accessorKey: "body_type",
+    accessorFn: (row) => row.body_type.name,
     header: () => (
       <TableHeaderWithTooltip
         header="Body Type"
