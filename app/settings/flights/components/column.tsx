@@ -131,7 +131,7 @@ export const useListViewColumns = (
         return (
           <TailNumberForm
             row={row}
-            aircraftOptions={props.aircraftOptions || []}
+            aircraftOptions={props.aircraftOptions || [{ value: "test", label: "test" }]}
             onChangeTailNumber={props.onChangeTailNumber }
           />
         )
