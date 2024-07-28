@@ -78,7 +78,7 @@ export function DataTable<TData, TValue>({
   extraRightComponents,
   showToolbarOnlyOnHover,
   pageSize = 10,
-  onExport
+  onExport,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
   }, [pagination])
 
   return (
-    <div className="flex flex-col gap-4" ref={hoverRef}>
+    <div className="group flex flex-col gap-4" ref={hoverRef}>
       {!hideToolbar && (
         <DataTableToolbar
           isHover={showToolbarOnlyOnHover ? isHover : undefined}
@@ -147,7 +147,7 @@ export function DataTable<TData, TValue>({
       <div className="relative">
         <div
           className={cn(
-            "border-none [&>div]:overflow-hidden [&>div]:pb-4 [&>div]:hover:overflow-x-scroll [&>div]:hover:pb-2 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground",
+            "border-none [&>div]:overflow-hidden [&>div]:pb-4 [&>div]:group-hover:overflow-x-scroll [&>div]:group-hover:pb-2 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground",
             className
           )}
         >
@@ -226,11 +226,15 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <div className="absolute bottom-0 left-0 h-4 w-full"></div>
       </div>
 
       {!hidePagination && (
-        <DataTablePagination table={table} isCanExport={isCanExport} isHover={isHover}  onExport={onExport}/>
+        <DataTablePagination
+          table={table}
+          isCanExport={isCanExport}
+          isHover={isHover}
+          onExport={onExport}
+        />
       )}
     </div>
   )

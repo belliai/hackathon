@@ -122,9 +122,7 @@ export function DataTablePagination<TData>({
             "flex items-center space-x-2 opacity-0 transition-opacity delay-0 duration-200",
             isHover === undefined
               ? "opacity-100"
-              : isHover
-                ? "opacity-100"
-                : "opacity-0"
+              : "opacity-0 group-hover:opacity-100"
           )}
         >
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
