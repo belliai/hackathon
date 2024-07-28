@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { usePathname } from "next/navigation"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 export type TSidebarItem = {
   name: string
@@ -33,16 +34,19 @@ interface SidebarItemProps {
   item: TSidebarItem
   active: boolean
   disabled?: boolean
+  isExpanded?: boolean
 }
 
 export default function SidebarItem({
   item,
   active,
   disabled,
+  isExpanded = true,
 }: SidebarItemProps) {
   function getBaseItemClassName(currentActive: boolean) {
     const className = cn(
-      "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-sm px-2 py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-800",
+      "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-sm py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-800",
+      !isExpanded ? "justify-center" : "",
       currentActive
         ? "text-white bg-zinc-900 [&_svg]:text-white"
         : ""
@@ -52,6 +56,37 @@ export default function SidebarItem({
   }
 
   const pathname = usePathname()
+
+  const renderWithTooltips = (comp: React.ReactNode, name: string) => {
+    return (
+      <Tooltip delayDuration={200}>
+        <TooltipTrigger asChild>
+          {comp}
+        </TooltipTrigger>
+        <TooltipContent className="border bg-card text-foreground" side="right">
+          {name}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  const renderItem = (item: TSidebarItem) => {
+    return (
+      <div className={`flex items-center gap-x-[7px] ${!isExpanded ? 'justify-center' : ''}`}>
+        {item.icon && (
+          <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
+            <item.icon
+              className="h-[18px] w-[18px] shrink-0"
+              aria-hidden="true"
+            />
+          </span>
+        )}
+        {isExpanded && (
+          <div className="flex-grow text-left overflow-hidden text-ellipsis text-nowrap">{item.name}</div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <AccordionItem value={item.name} className="border-none">
@@ -64,18 +99,9 @@ export default function SidebarItem({
           customarrow={
             <ChevronRight className="h-4 w-4 shrink-0 text-[#949496] transition-transform duration-200" />
           }
+          hideArrow={!isExpanded}
         >
-          <div className="flex items-center gap-x-[7px]">
-            {item.icon && (
-              <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
-                <item.icon
-                  className="h-[18px] w-[18px] shrink-0"
-                  aria-hidden="true"
-                />
-              </span>
-            )}
-            {item.name}
-          </div>
+          {isExpanded ? renderItem(item) : renderWithTooltips(renderItem(item), item.name)}
         </AccordionTrigger>
       ) : (
         <Link
@@ -85,17 +111,7 @@ export default function SidebarItem({
             disabled && "pointer-events-none"
           )}
         >
-          <div className="flex items-center gap-x-[7px]">
-            {item.icon && (
-              <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
-                <item.icon
-                  className="h-[18px] w-[18px] shrink-0"
-                  aria-hidden="true"
-                />
-              </span>
-            )}
-            {item.name}
-          </div>
+          {isExpanded ? renderItem(item) : renderWithTooltips(renderItem(item), item.name)}
         </Link>
       )}
       <AccordionContent className="relative pb-0">
@@ -112,22 +128,15 @@ export default function SidebarItem({
                   <AccordionTrigger
                     className={cn(
                       getBaseItemClassName(!!childMenu.current || active),
-                      "pl-6",
+                      isExpanded ? "pl-6" : "",
                       "[&[data-state=open]>svg]:rotate-90"
                     )}
                     customarrow={
                       <ChevronRight className="h-4 w-4 shrink-0 text-white/60 transition-transform duration-200" />
                     }
+                    hideArrow={!isExpanded}
                   >
-                    <div className="flex items-center gap-x-2.5">
-                      {childMenu.icon && (
-                        <childMenu.icon
-                          className="h-4 w-4 shrink-0"
-                          aria-hidden="true"
-                        />
-                      )}
-                      {childMenu.name}
-                    </div>
+                    {isExpanded ? renderItem(childMenu) : renderWithTooltips(renderItem(childMenu), childMenu.name)}
                   </AccordionTrigger>
                   <AccordionContent className="relative pb-0 pl-[46px]">
                     <span className="absolute left-8 top-0 my-0.5 h-full w-[1px] bg-border" />
@@ -214,16 +223,11 @@ export default function SidebarItem({
               href={childMenu.href}
               className={cn(
                 getBaseItemClassName(childMenu.href === pathname),
-                "gap-2.5 pl-6 my-1"
+                "gap-2.5 my-1",
+                isExpanded ? "pl-6" : "",
               )}
             >
-              {childMenu.icon && (
-                <childMenu.icon
-                  className="h-4 w-4 shrink-0"
-                  aria-hidden="true"
-                />
-              )}
-              <div className="flex items-center gap-x-3">{childMenu.name}</div>
+              {isExpanded ? renderItem(childMenu) : renderWithTooltips(renderItem(childMenu), childMenu.name)}
             </Link>
           )
         })}

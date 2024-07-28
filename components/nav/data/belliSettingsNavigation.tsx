@@ -2,12 +2,14 @@ import { PaperPlaneIcon, ReaderIcon } from "@radix-ui/react-icons"
 import { PlaneIcon, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
+import { Cog6ToothIcon } from "@heroicons/react/24/outline"
 
 export const belliSettingsNavigation: TSidebarItem[] = [
   {
     name: "Settings",
     href: "#",
     current: false,
+    icon: Cog6ToothIcon,
     children: [
       {
         name: "Aircrafts",

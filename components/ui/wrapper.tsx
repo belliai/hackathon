@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, Suspense, useEffect, useState } from "react"
+import { Fragment, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Dialog, Menu, Transition } from "@headlessui/react"
@@ -11,24 +11,36 @@ import { fetchTooltips } from "@/lib/contentful"
 import SideBar from "@/components/nav/sidebar"
 
 import BreadCrumbSection from "../nav/breadcrumb-section"
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "./resizable"
+import { ImperativePanelHandle, ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./resizable"
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
   { name: "Sign out", href: "#" },
 ]
 
+const MIN_SIDEBAR_WIDTH = {
+  EXPANDED: 250,
+  COLLAPSED: 100,
+}
+
 export default function UIWrapper({ children }: { children: React.ReactNode }) {
+  const ref = useRef<ImperativePanelHandle | null>(null); // Update ref type
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(true)
+  const [minSidebarSize, setMinSidebarSize] = useState(12)
 
   useEffect(() => {
     fetchTooltips()
   }, [])
 
+  useEffect(() => {
+    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
+    const widthSource = isExpanded ? MIN_SIDEBAR_WIDTH.EXPANDED : MIN_SIDEBAR_WIDTH.COLLAPSED
+    const minWidth = (widthSource / screenWidth) * 100;
+    setMinSidebarSize(minWidth)
+    ref?.current?.resize(minWidth)
+  }, [isExpanded])
+  
   return (
     <Suspense>
       <div id="main">
@@ -84,19 +96,21 @@ export default function UIWrapper({ children }: { children: React.ReactNode }) {
                       </button>
                     </div>
                   </Transition.Child>
-                  <SideBar />
+                  <SideBar isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
           </Dialog>
         </Transition.Root>
-        <ResizablePanelGroup direction="horizontal">
+        <ResizablePanelGroup direction="horizontal" id="core-layout">
           <ResizablePanel
+            ref={ref}
             defaultSize={20}
-            minSize={12}
-            className="custom-scrollbar hidden h-1 min-h-[100dvh] overflow-y-auto sm:grid"
+            minSize={minSidebarSize}
+            {...(isExpanded ? {} : {maxSize: 4})}
+            className="custom-scrollbar hidden h-1 min-h-[100dvh] overflow-y-auto sm:grid transition-transform duration-200"
           >
-            <SideBar />
+            <SideBar isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={80} minSize={33}>
