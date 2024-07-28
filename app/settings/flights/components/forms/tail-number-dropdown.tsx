@@ -28,7 +28,6 @@ const TailNumberForm = ({
     },
   })
 
-
   const onChangeSelect = (tail_id: string | null) => {
     const payload: CreateFlightMasterPayload = {
       ID: original.id,
@@ -42,7 +41,8 @@ const TailNumberForm = ({
       flight_duration_hour: original.flight_duration_hour,
       departure_period: original.departure_period,
     }
-    if (tail_id !== null && onChangeTailNumber) onChangeTailNumber({ tail_id, ...payload })
+    if (tail_id !== null && onChangeTailNumber)
+      onChangeTailNumber({ tail_id, ...payload })
   }
 
   return (
@@ -54,6 +54,7 @@ const TailNumberForm = ({
           info="Select Tail number"
           options={aircraftOptions}
           onChangeValue={onChangeSelect}
+          className="h-[30px] border-0 border-zinc-900 bg-transparent p-1"
         />
       </div>
     </Form>

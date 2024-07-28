@@ -144,8 +144,8 @@ export default function BreadCrumbSection() {
                 <BreadcrumbItem>
                   <BreadcrumbLink
                     className={cn(
-                      index === 0 && "text-foreground",
-                      index === currentPaths.length - 1 && "text-button-primary"
+                      index === currentPaths.length - 1 &&
+                        "text-white hover:text-button-primary"
                     )}
                     href={path.href}
                   >
@@ -156,7 +156,7 @@ export default function BreadCrumbSection() {
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        <Button
+        {/* <Button
           onClick={() => {
             if (isFavorited) {
               deletePathByHref(pathname)
@@ -172,7 +172,7 @@ export default function BreadCrumbSection() {
             className="size-4"
             fill={isFavorited ? "hsl(var(--foreground))" : undefined}
           />
-        </Button>
+        </Button> */}
       </div>
       <ClientSideSuspense fallback={<></>}>
         <ActiveUsers />

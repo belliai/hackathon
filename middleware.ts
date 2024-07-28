@@ -14,6 +14,14 @@ const isAdminRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const pathname = req.nextUrl.pathname
 
+  /**
+   *  We retrieve the @searchParams from the middleware because we can't do it in the layout.tsx
+   *  and we need a way to do this globally across all pages
+   *  */
+  const searchParams = req.nextUrl.searchParams
+
+  const tab = searchParams.get("tab")
+
   if (isProtectedRoute(req) && !isPublicRoute(req)) auth().protect()
 
   const { orgSlug } = auth()
@@ -27,6 +35,10 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set("x-pathname", pathname)
+
+  if (tab) {
+    requestHeaders.set("x-tab", tab)
+  }
 
   return NextResponse.next({
     request: {

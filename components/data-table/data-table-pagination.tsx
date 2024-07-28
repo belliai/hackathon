@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@components/ui/button"
 import {
@@ -19,15 +19,16 @@ import {
 } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { cn } from "@/lib/utils"
+
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
   showSelectedCount?: boolean
   isCanExport?: boolean
   isHover?: boolean
-  onExport?: (prop:any) => void
+  onExport?: (prop: any) => void
 }
 
 export function DataTablePagination<TData>({
@@ -35,11 +36,13 @@ export function DataTablePagination<TData>({
   showSelectedCount,
   isCanExport,
   isHover,
-  onExport
+  onExport,
 }: DataTablePaginationProps<TData>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  const [openRowPerPage, setOpenRowPerPage] = useState(false)
 
   const removeQueryString = useCallback(
     (name: string) => {
@@ -86,9 +89,7 @@ export function DataTablePagination<TData>({
   }, [currentPageSize])
 
   return (
-    <div
-      className="!mt-1 flex flex-col items-center justify-between gap-4 px-2 md:flex-row"
-    >
+    <div className="!mt-1 flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
       {showSelectedCount ? (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -97,9 +98,19 @@ export function DataTablePagination<TData>({
       ) : (
         <div />
       )}
-      <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-0.5 text-muted-foreground">
-      <p className="text-sm font-medium">Rows per page</p>
+      <div
+        className={cn(
+          "flex items-center gap-4 transition-opacity delay-0 duration-200 text-muted-foreground",
+          isHover === undefined || openRowPerPage
+            ? "opacity-100"
+            : "opacity-0 group-hover:opacity-100"
+        )}
+      >
+        <div className="flex flex-col items-center gap-4 space-x-6 md:flex-row lg:space-x-0.5">
+          <p className="text-sm font-medium">Rows per page</p>
           <Select
+            open={openRowPerPage}
+            onOpenChange={setOpenRowPerPage}
             value={`${currentPageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
@@ -117,61 +128,58 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div
-          className={cn(
-            "flex items-center space-x-2 opacity-0 transition-opacity delay-0 duration-200",
-            isHover === undefined
-              ? "opacity-100"
-              : isHover
-                ? "opacity-100"
-                : "opacity-0"
-          )}
-        >
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {currentPage} of {table.getPageCount()}
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <span className="sr-only">Go to first page</span>
-            <DoubleArrowLeftIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <span className="sr-only">Go to previous page</span>
-            <ChevronLeftIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className="sr-only">Go to next page</span>
-            <ChevronRightIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className="sr-only">Go to last page</span>
-            <DoubleArrowRightIcon className="h-4 w-4" />
-          </Button>
+        <div className={cn("flex items-center space-x-2")}>
+          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+            Page {currentPage} of {table.getPageCount()}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              className="hidden h-8 w-8 p-0 lg:flex"
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <span className="sr-only">Go to first page</span>
+              <DoubleArrowLeftIcon className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <span className="sr-only">Go to previous page</span>
+              <ChevronLeftIcon className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <span className="sr-only">Go to next page</span>
+              <ChevronRightIcon className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              className="hidden h-8 w-8 p-0 lg:flex"
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+            >
+              <span className="sr-only">Go to last page</span>
+              <DoubleArrowRightIcon className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         {isCanExport && (
           <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
-              <Button onClick={onExport} size={"icon"} variant={"ghost"} className={"h-8 w-8"}>
+              <Button
+                onClick={onExport}
+                size={"icon"}
+                variant={"ghost"}
+                className={"h-8 w-8"}
+              >
                 <DownloadIcon className={`h-4 w-4`} />
               </Button>
             </TooltipTrigger>
