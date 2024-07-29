@@ -78,7 +78,7 @@ export const useListViewColumns = (
         const today = new Date()
         today.setHours(departure_h)
         today.setMinutes(departure_m)
-        return moment(today).format("HH:mm")
+        return moment(today).format("HH:mma")
       },
     },
     {

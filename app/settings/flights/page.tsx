@@ -157,7 +157,7 @@ export default function Page() {
   const filtersHookForm = useForm({
     resolver: zodResolver(filtersSchema),
     defaultValues: {
-      period: "daily",
+      period: "all",
       from_date: new Date(),
       range_date: {
         from: new Date(),
@@ -173,15 +173,19 @@ export default function Page() {
   const { data: flightData, isLoading } = useFlightList({
     ...paginationDetails,
     start_date:
-      filterData.period === "daily"
-        ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
-        : filterData.range_date.from &&
-          format(filterData.range_date.from, "yyyy-MM-dd"),
+      filterData.period === "all"
+        ? format(new Date(),"yyyy-MM-dd")
+        : filterData.period === "daily"
+          ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
+          : filterData.range_date.from &&
+            format(filterData.range_date.from, "yyyy-MM-dd"),
     end_date:
-      filterData.period === "daily"
-        ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
-        : filterData.range_date.to &&
-          format(filterData.range_date.to, "yyyy-MM-dd"),
+      filterData.period === "all"
+        ? undefined
+        : filterData.period === "daily"
+          ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
+          : filterData.range_date.to &&
+            format(filterData.range_date.to, "yyyy-MM-dd"),
   })
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
@@ -261,7 +265,7 @@ export default function Page() {
 
   const onExport = (data: any) => {
     const flatData = flattenList(data)
-    const todayStr = format(new Date(),"yyyMMddHHmmss")
+    const todayStr = format(new Date(), "yyyMMddHHmmss")
     exportToXlsx(flatData, "Sheet1", `Flightdata_${todayStr}.xlsx`)
   }
 
@@ -317,6 +321,32 @@ export default function Page() {
     },
   })
 
+  const flights =
+    flightData &&
+    flightData.data
+      .map((flight) => {
+        const departureDatetime = new Date(flight.departure_date)
+        let hour = flight.departure_hour
+
+        if (flight.departure_period === "PM" && hour < 12) {
+          hour += 12
+        } else if (flight.departure_period === "AM" && hour === 12) {
+          hour = 0
+        }
+
+        departureDatetime.setHours(hour)
+        departureDatetime.setMinutes(flight.departure_minute)
+
+        return {
+          ...flight,
+          departureDatetime,
+        }
+      })
+      // .filter((flight) => flight.departureDatetime > new Date())
+      .sort(
+        (a, b) => a.departureDatetime.getTime() - b.departureDatetime.getTime()
+      )
+
   return (
     <>
       <PageContainer>
@@ -325,7 +355,7 @@ export default function Page() {
             <DataTable
               showToolbarOnlyOnHover={true}
               columns={listViewColumns}
-              data={isLoading ? [] : (flightData && flightData.data) || []}
+              data={isLoading || !flights ? [] : flights}
               onRowClick={openDetailFlight}
               extraRightComponents={createButtonFlight}
               extraLeftComponents={
@@ -353,6 +383,10 @@ export default function Page() {
                       defaultValue="daily"
                       className="h-8 w-40"
                       selectOptions={[
+                        {
+                          label: "All Flights",
+                          value: "all",
+                        },
                         {
                           label: "Daily",
                           value: "daily",

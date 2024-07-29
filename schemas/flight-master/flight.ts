@@ -16,7 +16,7 @@ export const flightSchema = z.object({
     }),
   departure_hour: z.preprocess(
     convertToNumber,
-    z.number().min(0, "Required").max(12, "max value is 12")
+    z.number().min(1, "Minimum hour is 1").max(12, "max value is 12")
   ),
   departure_minute: z.preprocess(
     convertToNumber,
