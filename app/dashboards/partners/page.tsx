@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   companyFormSchema,
@@ -21,7 +21,7 @@ import CompanyForm from "./components/forms/company-form"
 import { companyFormDefaultValues } from "./constants/company-form-default-values"
 import { DUMMY_COMPANIES_DATA, PEOPLE_DUMMY_DATA } from "./constants/dummy-data"
 
-const tabsList = (
+const PartnersTabsList = () => (
   <TabsList className="gap-2 bg-transparent p-0">
     <TabsTrigger
       className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
@@ -44,10 +44,16 @@ export default function MasterAircraftPage() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const tabParam = searchParams.get("tab")
 
-  const [tabValue, setTabValue] = useState(
-    searchParams.get("tab") ?? "companies"
-  )
+  const [tabValue, setTabValue] = useState("companies") // If no tabParam, default to companies
+
+  // Set initial tab value from searchParams
+  useEffect(() => {
+    if (tabParam) {
+      setTabValue(tabParam)
+    }
+  }, [tabParam])
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -59,14 +65,23 @@ export default function MasterAircraftPage() {
   )
 
   const setSearchParams = (key: string, value: string) => {
-    console.log({ key, value })
-    // i have no idea why this is not working
+    /**
+     * Note: 
+     * There was a bug before where the searchParams were not updating properly.
+     * It was caused by a conflict with another function that was updating the searchParams 
+     * in the data-table-pagination.tsx file, which is nested inside the DataTable component used below.
+     * I have since removed the conflicting function in data-table-pagination.tsx and the bug is now fixed.
+     */
     router.push(pathname + "?" + createQueryString(key, value))
   }
 
   useEffect(() => {
+    console.log("tabValue in useEffect", tabValue)
     setSearchParams("tab", tabValue)
   }, [tabValue])
+
+  // Memoize to prevent re-rendering
+  const memoizedTabsList = useMemo(() => <PartnersTabsList />, [])
 
   return (
     <PageContainer>
@@ -77,7 +92,9 @@ export default function MasterAircraftPage() {
           className="space-y-4"
         >
           <TabsContent value="companies" asChild>
-            <CompanyDataTable />
+            <CompanyDataTable
+              leftComponents={memoizedTabsList} // Pass tabsList as props to prevent re-rendering
+            />
           </TabsContent>
           <TabsContent value="people" asChild>
             <DataTable
@@ -96,7 +113,7 @@ export default function MasterAircraftPage() {
                   New Person
                 </Button>
               }
-              extraLeftComponents={tabsList}
+              extraLeftComponents={memoizedTabsList}
             />
           </TabsContent>
         </Tabs>
@@ -105,7 +122,11 @@ export default function MasterAircraftPage() {
   )
 }
 
-function CompanyDataTable() {
+function CompanyDataTable({
+  leftComponents,
+}: {
+  leftComponents?: React.ReactNode
+}) {
   const [currentOpen, setCurrentOpen] = useState<string | boolean>(false)
 
   const form = useForm<CompanyFormValues>({
@@ -132,7 +153,7 @@ function CompanyDataTable() {
             New Company
           </Button>
         }
-        extraLeftComponents={tabsList}
+        extraLeftComponents={leftComponents}
       />
       <CompanyForm
         form={form}

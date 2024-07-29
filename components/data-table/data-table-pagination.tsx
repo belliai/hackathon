@@ -38,37 +38,9 @@ export function DataTablePagination<TData>({
   isHover,
   onExport,
 }: DataTablePaginationProps<TData>) {
-  const router = useRouter()
-  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const [openRowPerPage, setOpenRowPerPage] = useState(false)
-
-  const removeQueryString = useCallback(
-    (name: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.delete(name)
-      return params.toString()
-    },
-    [searchParams]
-  )
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
-      return params.toString()
-    },
-    [searchParams]
-  )
-
-  const setSearchParams = (key: string, value: string) => {
-    router.push(pathname + "?" + createQueryString(key, value))
-  }
-
-  const deleteSearchParams = (key: string) => {
-    router.push(pathname + "?" + removeQueryString(key))
-  }
 
   const currentPage = table.getState().pagination.pageIndex + 1
   const currentPageSize = table.getState().pagination.pageSize
@@ -79,14 +51,6 @@ export function DataTablePagination<TData>({
     if (!pageSizeParams) return
     table.setPageSize(Number(pageSizeParams))
   }, [pageSizeParams])
-
-  useEffect(() => {
-    if (currentPageSize === 10) {
-      deleteSearchParams("pageSize")
-      return
-    }
-    setSearchParams("pageSize", String(currentPageSize))
-  }, [currentPageSize])
 
   return (
     <div className="!mt-1 flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
@@ -100,7 +64,7 @@ export function DataTablePagination<TData>({
       )}
       <div
         className={cn(
-          "flex items-center gap-4 transition-opacity delay-0 duration-200 text-muted-foreground",
+          "flex items-center gap-4 text-muted-foreground transition-opacity delay-0 duration-200",
           isHover === undefined || openRowPerPage
             ? "opacity-100"
             : "opacity-0 group-hover:opacity-100"
