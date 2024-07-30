@@ -6,15 +6,24 @@ import moment from "moment"
 import { useFieldArray, useForm } from "react-hook-form"
 import { useReadLocalStorage } from "usehooks-ts"
 
+import { Aircraft } from "@/types/aircraft/aircraft"
 import { Flight } from "@/types/flight-master/flight-master"
-import { useFlightList } from "@/lib/hooks/flight-master/flight-master"
+import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
+import {
+  useFlightList,
+  useUpdateFlight,
+} from "@/lib/hooks/flight-master/flight-master"
 import { Input } from "@/components/ui/input"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { TableHeaderWithTooltip } from "@/components/ui/table"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { DataTable } from "@/components/data-table/data-table"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
 import { useListViewColumns } from "@/app/settings/flights/components/column"
-import { TableHeaderWithTooltip } from "@/components/ui/table"
 
 interface FlightsActualInformation {
   detail: string
@@ -41,6 +50,9 @@ export default function FlightsDashboardPage() {
   const [displayedFlightsData, setDisplayedFlightsData] = useState<
     FlightWithActualInformation[]
   >([])
+
+  const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
+    useUpdateFlight()
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -84,22 +96,35 @@ export default function FlightsDashboardPage() {
     },
   })
 
-  const actualInformationFieldArray = useFieldArray({
-    control: actualInformationForm.control,
-    name: "infos",
+  const { data: aircraftsList, generateTailName } = useAircrafts({
+    page: 1,
+    page_size: 999,
   })
 
-  const columns = useListViewColumns({})
+  const aircraftTailNumbers = aircraftsList?.data.flatMap((list) =>
+    list.aircraft_tail_numbers
+      .filter((tail) => !tail.is_deleted)
+      .map((tail) => ({
+        value: String(tail.id),
+        label: generateTailName(list, tail.tail_number),
+      }))
+  )
+
+  const columns = useListViewColumns({
+    aircraftOptions: aircraftTailNumbers || [],
+    onChangeTailNumber: async (data) => {
+      if (!data) return
+      const { ID, ...rest } = data
+      if (ID) await updateFlight({ ...rest, id: ID })
+    },
+  })
 
   const displayedFlightsColumns: ColumnDef<FlightWithActualInformation>[] = [
     ...(columns as ColumnDef<FlightWithActualInformation>[]),
     {
       accessorKey: "aircraft.mtow",
       header: () => (
-        <TableHeaderWithTooltip
-          header="MTOW"
-          tooltipId="flights-mtow"
-        />
+        <TableHeaderWithTooltip header="MTOW" tooltipId="flights-mtow" />
       ),
       size: displayOption === "numbers-percentages" ? 240 : undefined,
       cell: ({ row }) => {
@@ -314,7 +339,8 @@ function ActualInformation({
             </TooltipTrigger>
             <TooltipContent className="border bg-card text-foreground">
               <span>
-                {actual.toLocaleString()} / {maximum.toLocaleString()} {unit || ""}
+                {actual.toLocaleString()} / {maximum.toLocaleString()}{" "}
+                {unit || ""}
               </span>
             </TooltipContent>
           </Tooltip>

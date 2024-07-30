@@ -174,7 +174,7 @@ export default function Page() {
     ...paginationDetails,
     start_date:
       filterData.period === "all"
-        ? format(new Date(),"yyyy-MM-dd")
+        ? format(new Date(), "yyyy-MM-dd")
         : filterData.period === "daily"
           ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
           : filterData.range_date.from &&
@@ -195,14 +195,10 @@ export default function Page() {
   const { data: aircraftTypeList } = useAircraftTypes()
   const { mutateAsync: deleteFlight } = useDeleteFlight()
 
-  const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
-
-  const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
-    const tailDetail = selectedAircraftType.aircraft_tail_numbers.find(
-      (item) => item.tail_number === tail
-    )
-    return `${tail} - ${selectedAircraftType?.aircraft_type?.name} (${tailDetail?.status?.name})`
-  }
+  const { data: aircraftsList, generateTailName } = useAircrafts({
+    page: 1,
+    page_size: 999,
+  })
 
   const aircraftTailNumbers = aircraftsList?.data.flatMap((list) =>
     list.aircraft_tail_numbers
