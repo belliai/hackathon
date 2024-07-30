@@ -1,7 +1,8 @@
+import { format } from "date-fns"
 import { saveAs } from "file-saver"
 import * as XLSX from "xlsx"
 
-export function exportToXlsx(data : any, sheetName: string, fileName: string) {
+export function exportToXlsx(data: any, sheetName: string, fileName: string) {
   // Create a new workbook
   const workbook = XLSX.utils.book_new()
 
@@ -28,25 +29,44 @@ export function exportToXlsx(data : any, sheetName: string, fileName: string) {
   saveAs(blob, fileName)
 }
 
-
 interface AnyObject {
-    [key: string]: any;
-  }
+  [key: string]: any
+}
 
-function flattenObject(obj: AnyObject, parent: string = '', res: AnyObject = {}): AnyObject {
-    for (let key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const propName = parent ? `${parent}.${key}` : key;
-        if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-          flattenObject(obj[key], propName, res);
-        } else {
-          res[propName] = obj[key];
-        }
+function flattenObject(
+  obj: AnyObject,
+  parent: string = "",
+  res: AnyObject = {}
+): AnyObject {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const propName = parent ? `${parent}.${key}` : key
+      if (
+        typeof obj[key] === "object" &&
+        obj[key] !== null &&
+        !Array.isArray(obj[key])
+      ) {
+        flattenObject(obj[key], propName, res)
+      } else {
+        res[propName] = obj[key]
       }
     }
-    return res;
   }
-  
-  export function flattenList(list: AnyObject[]): AnyObject[] {
-    return list.map(item => flattenObject(item));
-  }
+  return res
+}
+
+export function flattenList(list: AnyObject[]): AnyObject[] {
+  return list.map((item) => flattenObject(item))
+}
+
+interface onExportProps {
+  data: any
+  filename: string
+}
+
+export const onExport = (props: onExportProps) => {
+  const { data, filename } = props
+  const flatData = flattenList(data)
+  const todayStr = format(new Date(), "yyyMMddHHmmss")
+  exportToXlsx(flatData, "Sheet1", `${filename}_${todayStr}.xlsx`)
+}

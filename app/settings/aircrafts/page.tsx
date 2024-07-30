@@ -11,6 +11,7 @@ import {
   TailNumberFormValues,
 } from "@/schemas/aircraft/tail-numbers"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { format } from "date-fns"
 import { PlaneIcon, PlusIcon, ScrollTextIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
@@ -19,6 +20,7 @@ import { TailNumber } from "@/types/aircraft/tail-number"
 import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useTailNumbers } from "@/lib/hooks/aircrafts/tail-numbers"
+import { onExport } from "@/lib/utils/export"
 import { isVallidUuid } from "@/lib/utils/string-utils"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -138,6 +140,7 @@ function AircraftDataTable() {
       count: data.count,
     })
   }
+
   return (
     <>
       <DataTable
@@ -165,6 +168,10 @@ function AircraftDataTable() {
           </Button>
         }
         extraLeftComponents={tabsList}
+        isCanExport={true}
+        onExport={() =>
+          onExport({ data: aircraftsData, filename: "AircraftData" })
+        }
       />
       <AircraftTypeForm
         form={aircraftForm}
@@ -222,6 +229,7 @@ function TailNumbersForm() {
 
     setCurrentOpenTailNumberModal(tailNumber.id)
   }
+
   return (
     <>
       <DataTable
@@ -241,6 +249,10 @@ function TailNumbersForm() {
           </Button>
         }
         extraLeftComponents={tabsList}
+        isCanExport={true}
+        onExport={() =>
+          onExport({ data: tailNumbersData, filename: "TailsNumberData" })
+        }
       />
       <TailNumberForm
         form={tailnumberForm}

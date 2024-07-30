@@ -25,6 +25,7 @@ import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "@radix-ui/react-icons"
+import { onExport } from "@/lib/utils/export"
 
 export default function Home() {
   const data = getData()
@@ -124,6 +125,10 @@ export default function Home() {
         menuId="airway-bill-dashboard"
         showToolbarOnlyOnHover={true}
         extraRightComponents={generateButton}
+        isCanExport={true}
+        onExport={() =>
+          onExport({ data: ordersData.data, filename: "AirwaybillsData" })
+        }
       />
       <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode={modalType} selectedColumnId={selectedColumnId} />
       <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>

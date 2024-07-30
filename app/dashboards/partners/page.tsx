@@ -20,6 +20,7 @@ import { peopleColumns } from "./components/columns/people-columns"
 import CompanyForm from "./components/forms/company-form"
 import { companyFormDefaultValues } from "./constants/company-form-default-values"
 import { DUMMY_COMPANIES_DATA, PEOPLE_DUMMY_DATA } from "./constants/dummy-data"
+import { onExport } from "@/lib/utils/export"
 
 const PartnersTabsList = () => (
   <TabsList className="gap-2 bg-transparent p-0">
@@ -66,9 +67,9 @@ export default function MasterAircraftPage() {
 
   const setSearchParams = (key: string, value: string) => {
     /**
-     * Note: 
+     * Note:
      * There was a bug before where the searchParams were not updating properly.
-     * It was caused by a conflict with another function that was updating the searchParams 
+     * It was caused by a conflict with another function that was updating the searchParams
      * in the data-table-pagination.tsx file, which is nested inside the DataTable component used below.
      * I have since removed the conflicting function in data-table-pagination.tsx and the bug is now fixed.
      */
@@ -114,6 +115,10 @@ export default function MasterAircraftPage() {
                 </Button>
               }
               extraLeftComponents={memoizedTabsList}
+              isCanExport={true}
+              onExport={() =>
+                onExport({ data: PEOPLE_DUMMY_DATA, filename: "PartnersPeopleData" })
+              }
             />
           </TabsContent>
         </Tabs>
@@ -154,6 +159,10 @@ function CompanyDataTable({
           </Button>
         }
         extraLeftComponents={leftComponents}
+        isCanExport={true}
+              onExport={() =>
+                onExport({ data: DUMMY_COMPANIES_DATA, filename: "PartnersCompanyData" })
+              }
       />
       <CompanyForm
         form={form}

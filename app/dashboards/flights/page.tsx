@@ -24,6 +24,7 @@ import { DataTable } from "@/components/data-table/data-table"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
 import { useListViewColumns } from "@/app/settings/flights/components/column"
+import { onExport } from "@/lib/utils/export"
 
 interface FlightsActualInformation {
   detail: string
@@ -262,6 +263,10 @@ export default function FlightsDashboardPage() {
         className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
         menuId="flight-dashboard"
         showToolbarOnlyOnHover={true}
+        isCanExport={true}
+        onExport={() =>
+          onExport({ data: displayedFlightsData, filename: "DashboardFlightData" })
+        }
       />
     </div>
   )

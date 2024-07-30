@@ -40,7 +40,7 @@ import {
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
 import { generateRecurringDates } from "@/lib/utils/date-utils"
-import { exportToXlsx, flattenList } from "@/lib/utils/export"
+import { onExport } from "@/lib/utils/export"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -259,11 +259,6 @@ export default function Page() {
     }
   }
 
-  const onExport = (data: any) => {
-    const flatData = flattenList(data)
-    const todayStr = format(new Date(), "yyyMMddHHmmss")
-    exportToXlsx(flatData, "Sheet1", `Flightdata_${todayStr}.xlsx`)
-  }
 
   const onShowDelete = (data: Flight) => {
     setDeleteConfirm(data)
@@ -421,7 +416,7 @@ export default function Page() {
               tableState={tableState}
               menuId="flight-master-list-view"
               isCanExport={true}
-              onExport={() => onExport(flightData && flightData.data)}
+              onExport={() => onExport( { data: flightData && flightData.data, filename:"Flightdata" })}
             />
           </TabsContent>
 
