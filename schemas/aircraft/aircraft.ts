@@ -11,7 +11,6 @@ export const aircraftFormSchema = z.object({
   bulk_w: z.string().optional(),
   cargo_capacity: z.string().optional(),
   count: z.number().optional(),
-  dimension_unit_id: z.string().optional(),
   fwd: z.string().optional(),
   fwd_h: z.string().optional(),
   fwd_w: z.string().optional(),
@@ -30,6 +29,7 @@ export const aircraftFormSchema = z.object({
   restricted_weight_piece: z.string().optional(),
   uld_position: z.string().optional(),
   version_id: z.string().min(1, "required"),
+  dimension_unit_id: z.string().optional(),
   volume_unit_id: z.string().optional(),
   weight_unit_id: z.string().optional(),
 })

@@ -12,7 +12,7 @@ import {
 } from "@/schemas/aircraft/tail-numbers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
-import { PlaneIcon, PlusIcon, ScrollTextIcon } from "lucide-react"
+import { PlaneIcon, PlusIcon, ScrollTextIcon, Users } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
@@ -23,6 +23,7 @@ import { useTailNumbers } from "@/lib/hooks/aircrafts/tail-numbers"
 import { onExport } from "@/lib/utils/export"
 import { isVallidUuid } from "@/lib/utils/string-utils"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/data-table/data-table"
 import PageContainer from "@/components/layout/PageContainer"
@@ -40,17 +41,17 @@ const tabsList = (
   <TabsList className="gap-2 bg-transparent p-0">
     <TabsTrigger
       className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-      value="aircraft-types"
-    >
-      <PlaneIcon className="mr-2 size-4" />
-      Aircraft Types
-    </TabsTrigger>
-    <TabsTrigger
-      className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
       value="tail-numbers"
     >
       <ScrollTextIcon className="mr-2 size-4" />
       Tail Numbers
+    </TabsTrigger>
+    <TabsTrigger
+      className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+      value="aircraft-types"
+    >
+      <PlaneIcon className="mr-2 size-4" />
+      Aircraft Types
     </TabsTrigger>
   </TabsList>
 )
@@ -142,8 +143,56 @@ function AircraftDataTable() {
   }
 
   return (
-    <>
-      <DataTable
+    <div className="flex h-[85dvh] flex-col items-center justify-start gap-16">
+      <div className="flex w-full items-center justify-between">
+        {tabsList}
+        <Button
+          size={"sm"}
+          variant={"button-primary"}
+          className="p-2 text-sm"
+          onClick={() => setCurrentOpenAircraftModal(true)}
+        >
+          <PlusIcon className="mr-2 size-4" />
+          Create Aircraft
+        </Button>
+      </div>
+      <div className="no-scrollbar flex h-5 w-[60%] min-w-fit flex-1 grid-cols-1 flex-col gap-2 overflow-y-scroll">
+        {aircraftsData?.map((aircraft) => (
+          <Button
+            asChild
+            key={aircraft.id}
+            variant={"secondary"}
+            className="cursor-pointer text-foreground"
+            onClick={() => handleAircraftRowClick(aircraft)}
+          >
+            <Card className="sm group grid grid-cols-3 border bg-zinc-900/50 px-3 py-1.5 text-sm">
+              <span>
+                {aircraft.manufacturer.name} {aircraft.aircraft_type.name}{" "}
+                {aircraft.version.version}
+              </span>
+              <div className="inline-flex items-center gap-2 text-muted-foreground">
+                <span className="tabular-nums text-foreground">
+                  {aircraft.aircraft_tail_numbers?.filter(
+                    (item) =>
+                      item.status?.name?.toLowerCase() === "active" &&
+                      !item.is_deleted
+                  ).length ?? 0}
+                </span>
+                <PlaneIcon className="size-4" />
+                <span className="text-xs">Active tail numbers</span>
+              </div>
+              <div className="inline-flex items-center gap-2 text-muted-foreground">
+                <span className="tabular-nums text-foreground">
+                  {aircraft.passenger_capacity || "-"}
+                </span>
+                <Users className="size-4" />
+                <span className="text-xs">Passenger Capacity</span>
+              </div>
+            </Card>
+          </Button>
+        ))}
+      </div>
+      {/* <DataTable
         showToolbarOnlyOnHover={true}
         columns={aircraftTypeColumns}
         data={aircraftsData ?? []}
@@ -168,11 +217,7 @@ function AircraftDataTable() {
           </Button>
         }
         extraLeftComponents={tabsList}
-        isCanExport={true}
-        onExport={() =>
-          onExport({ data: aircraftsData, filename: "AircraftData" })
-        }
-      />
+      /> */}
       <AircraftTypeForm
         form={aircraftForm}
         currentOpen={currentOpenAircraftModal}
@@ -187,7 +232,7 @@ function AircraftDataTable() {
           }
         }}
       />
-    </>
+    </div>
   )
 }
 
