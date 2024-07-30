@@ -10,6 +10,7 @@ import {
   ChevronRightCircleIcon,
   DoorClosedIcon,
   FileSlidersIcon,
+  PackageIcon,
   PlaneIcon,
   RulerIcon,
   SaveIcon,
@@ -20,6 +21,7 @@ import { Path, UseFormReturn } from "react-hook-form"
 import { Aircraft } from "@/types/aircraft/aircraft"
 import { TailNumber } from "@/types/aircraft/tail-number"
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
+import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
   route as aircraftRoute,
@@ -94,6 +96,8 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     Record<TailNumberFormTabs, boolean>
   >({
     "tail-numbers": isEdit ? true : false,
+    "cargo-capacity": isEdit ? true : false,
+    "max-per-piece": isEdit ? true : false,
     "aircraft-details": isEdit ? true : false,
     "door-dimensions": isEdit ? true : false,
     volume: isEdit ? true : false,
@@ -130,9 +134,9 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     if (selectedAircraft && !isEdit) {
       const newDefaults: Partial<TailNumberFormValues> = {
         ...selectedAircraft,
-        volume_unit_id: selectedAircraft.volume_unit?.id,
-        weight_unit_id: selectedAircraft.weight_unit?.id,
         dimension_unit_id: selectedAircraft.dimension_unit?.id,
+        weight_unit_id: selectedAircraft.weight_unit?.id,
+        volume_unit_id: selectedAircraft.volume_unit?.id,
         body_type_id: selectedAircraft.body_type?.id,
         gl_code_id: selectedAircraft.gl_code?.id,
       }
@@ -146,6 +150,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
 
   const { data: aircraftBodyTypes } = useAircraftBodyTypes()
   const { data: aircraftStatuses } = useAircraftStatuses()
+  const { aircraftDefaults } = useAircraftDefaults()
 
   const { data: unitsW } = useUnits({
     category: "weight",
@@ -167,21 +172,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
   const aircraftBodyTypesOptions = aircraftBodyTypes?.map((bodyType) => ({
     value: String(bodyType.ID),
     label: bodyType.Name,
-  }))
-
-  const weightUnitsOptions = unitsW?.map((unit) => ({
-    value: String(unit.ID),
-    label: `${unit.Name} - ${unit.Symbol}`,
-  }))
-
-  const volumeUnitsOptions = unitsVol?.map((unit) => ({
-    value: String(unit.ID),
-    label: `${unit.Name} - ${unit.Symbol}`,
-  }))
-
-  const lengthUnitsOptions = unitsLen?.map((unit) => ({
-    value: String(unit.ID),
-    label: `${unit.Name} - ${unit.Symbol}`,
   }))
 
   async function handleSubmitTailNumber(payload: TailNumberFormValues) {
@@ -264,6 +254,8 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     }
     setValidatedSteps({
       "tail-numbers": isEdit ? true : false,
+      "cargo-capacity": isEdit ? true : false,
+      "max-per-piece": isEdit ? true : false,
       "aircraft-details": isEdit ? true : false,
       "door-dimensions": isEdit ? true : false,
       volume: isEdit ? true : false,
@@ -365,11 +357,27 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                   </TabsTrigger>
                   <TabsTrigger
                     disabled={!validatedSteps["tail-numbers"]}
+                    value="cargo-capacity"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <BoxesIcon className="mr-2 size-4" />
+                    Cargo Capacity
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={!validatedSteps["cargo-capacity"]}
+                    value="max-per-piece"
+                    className="w-full justify-start py-1.5"
+                  >
+                    <PackageIcon className="mr-2 size-4" />
+                    Max Per Piece
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={!validatedSteps["max-per-piece"]}
                     value="aircraft-details"
                     className="w-full justify-start py-1.5"
                   >
                     <FileSlidersIcon className="mr-2 size-4" />
-                    Capacity Details
+                    Aircraft Details
                   </TabsTrigger>
                   <TabsTrigger
                     disabled={!validatedSteps["aircraft-details"]}
@@ -416,6 +424,131 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                       className="rounded-md"
                       defaultValue={aircraftStatusOptions?.[0].value}
                       selectOptions={aircraftStatusOptions}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent
+                className="h-full w-full flex-1"
+                value="cargo-capacity"
+              >
+                <Card className="flex flex-col divide-y rounded-md">
+                  <CardHeader className="w-full">
+                    <CardTitle className="font-semibold">
+                      Cargo Capacity
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid w-full grid-cols-2 gap-2 pt-2">
+                    <InputSwitch<TailNumberFormValues>
+                      label="Cargo Capacity"
+                      name="cargo_capacity"
+                      type="number"
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="ULD Positions"
+                      name="uld_position"
+                      type="number"
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Max Bulk Capacity Weight"
+                      name="max_bulk_capacity_weight"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Max Bulk Capacity Volume"
+                      name="max_bulk_capacity_volume"
+                      type="number"
+                      rightIcon={selectedVolumeUnitSymbol}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Max Volume"
+                      name="max_volume"
+                      type="number"
+                      rightIcon={selectedVolumeUnitSymbol}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent
+                className="h-full w-full flex-1"
+                value="max-per-piece"
+              >
+                <Card className="flex flex-col divide-y rounded-md">
+                  <CardHeader className="w-full">
+                    <CardTitle className="font-semibold">
+                      Max Per Piece
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid w-full grid-cols-2 gap-2 pt-2">
+                    <InputSwitch<TailNumberFormValues>
+                      label="Restricted Weight Per Piece"
+                      name="restricted_weight_piece"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Max Dimension per Piece (Length)"
+                      name="max_dimension_length"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Max Dimension per Piece (Breadth)"
+                      name="max_dimension_breadth"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Max Dimension per Piece (Height)"
+                      name="max_dimension_height"
+                      type="number"
+                      rightIcon={selectedDimensionUnitSymbol}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent
+                className="h-full w-full flex-1"
+                value="aircraft-details"
+              >
+                <Card className="flex flex-col divide-y rounded-md">
+                  <CardHeader>
+                    <CardTitle className="font-semibold">
+                      Aircraft Details
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
+                    <InputSwitch<TailNumberFormValues>
+                      label="MTOW"
+                      name="mtow"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Max Zero Fuel Weight"
+                      name="max_zero_fuel_weight"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+                    <InputSwitch<TailNumberFormValues>
+                      label="Passenger Capacity"
+                      name="passenger_capacity"
+                      type="number"
+                    />
+
+                    <InputSwitch<TailNumberFormValues>
+                      label="Landing Weight"
+                      name="landing_weight"
+                      type="number"
+                      rightIcon={selectedWeightUnitSymbol}
+                    />
+
+                    <InputSwitch<TailNumberFormValues>
+                      label="GL Code"
+                      name="gl_code_id"
+                      type="select"
+                      selectOptions={aircraftBodyTypesOptions}
                     />
                   </CardContent>
                 </Card>
@@ -497,107 +630,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
                   </CardContent>
                 </Card>
               </TabsContent>
-              <TabsContent
-                className="h-full w-full flex-1"
-                value="aircraft-details"
-              >
-                <Card className="flex flex-col divide-y rounded-md">
-                  <CardHeader>
-                    <CardTitle className="font-semibold">
-                      Aircraft Details
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid w-full grid-cols-3 gap-2 pt-2">
-                    <InputSwitch<TailNumberFormValues>
-                      label="MTOW"
-                      name="mtow"
-                      type="number"
-                      rightIcon={selectedWeightUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Max Zero Fuel Weight"
-                      name="max_zero_fuel_weight"
-                      type="number"
-                      rightIcon={selectedWeightUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Body Type"
-                      name="body_type_id"
-                      type="select"
-                      selectOptions={aircraftBodyTypesOptions}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Passenger Capacity"
-                      name="passenger_capacity"
-                      type="number"
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="ULD Positions"
-                      name="uld_position"
-                      type="number"
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Landing Weight"
-                      name="landing_weight"
-                      type="number"
-                      rightIcon={selectedWeightUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Cargo Capacity"
-                      name="cargo_capacity"
-                      type="number"
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Max Bulk Capacity Weight"
-                      name="max_bulk_capacity_weight"
-                      type="number"
-                      rightIcon={selectedWeightUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Max Bulk Capacity Volume"
-                      name="max_bulk_capacity_volume"
-                      type="number"
-                      rightIcon={selectedVolumeUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Max Volume"
-                      name="max_volume"
-                      type="number"
-                      rightIcon={selectedVolumeUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Restricted Weight Per Piece"
-                      name="restricted_weight_piece"
-                      type="number"
-                      rightIcon={selectedWeightUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Max Dimension per Piece (Length)"
-                      name="max_dimension_length"
-                      type="number"
-                      rightIcon={selectedDimensionUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Max Dimension per Piece (Breadth)"
-                      name="max_dimension_breadth"
-                      type="number"
-                      rightIcon={selectedDimensionUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="Max Dimension per Piece (Height)"
-                      name="max_dimension_height"
-                      type="number"
-                      rightIcon={selectedDimensionUnitSymbol}
-                    />
-                    <InputSwitch<TailNumberFormValues>
-                      label="GL Code"
-                      name="gl_code_id"
-                      type="select"
-                      selectOptions={aircraftBodyTypesOptions}
-                    />
-                  </CardContent>
-                </Card>
-              </TabsContent>
+
               <TabsContent className="flex-1" value="activity-log">
                 <Card className="w-full rounded-md p-4"></Card>
               </TabsContent>
