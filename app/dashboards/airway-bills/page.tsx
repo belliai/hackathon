@@ -90,9 +90,14 @@ export default function Home() {
 
   const columnWithActions = columns.map(column => ({
     ...column,
-    cell: ({ row: { original, getValue }, column: { id } }: { row: { original: any; getValue: (id: string) => any }; column: { id: string } }) => (
-      <div onClick={() => openModal(original, id)} className="cursor-pointer">{getValue(id)}</div>
-    ),
+    cell: ({ row: { original, getValue }, column: { id } }: { row: { original: any; getValue: (id: string) => any }; column: { id: string } }) => {
+      const columnValue = original.booking_type.name.toLowerCase() === 'mawb' && id === 'hawb' ? '567-56789012' :
+        original.booking_type.name.toLowerCase() === 'hawb' && id === 'mawb' ? '345-34567890' : getValue(id);
+
+      return (
+        <div onClick={() => openModal(original, id)} className="cursor-pointer">{columnValue}</div>
+      )
+    },
   }))
 
   return (

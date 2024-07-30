@@ -28,15 +28,18 @@ export default function SummaryTotal(props: SummaryTotalProps) {
         <div className="flex flex-col text-sm text-muted-foreground gap-2 mt-3">
             <div className="flex gap-3">
                 <div className="font-bold w-1/4">Weight</div>
-                <div>{`${weight ? weight : '0'}Kg`}</div>
+                <div className="w-2/4 text-right">{`${weight ? weight : '0'}`}</div>
+                <div className="w-1/4 text-right">Kg</div>
             </div>
             <div className="flex gap-3">
                 <div className="font-bold w-1/4">Volume</div>
-                <div>{`${volume ? volume : '0'}m3`}</div>
+                <div className="w-2/4 text-right">{`${volume ? volume : '0'}`}</div>
+                <div className="w-1/4 text-right">m3</div>
             </div>
             <div className="flex gap-3">
-                <div className="font-bold w-1/4">Total</div>
-                <div>{`$${total ? total : '0'} USD`}</div>
+                <div className="font-bold w-1/4">Value</div>
+                <div className="w-2/4 text-right">{`${total ? total : '0'}`}</div>
+                <div className="w-1/4 text-right">USD</div>
             </div>
         </div>
     )

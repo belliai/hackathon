@@ -3,7 +3,7 @@
 import { PropsWithChildren, useEffect, useMemo, useRef, useState, ComponentType } from "react"
 import { Order, orderSchema } from "@/schemas/order/order"
 import { getDefaults } from "@/schemas/utils"
-import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { ArrowsPointingOutIcon, DeviceTabletIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import {
@@ -58,6 +58,8 @@ import SummaryTotal from "./summary-total"
 import WeightAndVolumeForm from "./forms/weight-and-volume-form"
 import PayerForm from "./forms/payer-form"
 import PaymentFormV2 from "./forms/payment-form-v2"
+import { useBookingTypes } from "@/lib/hooks/booking-types"
+import HAWBTable from "./forms/hawb-table"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -77,6 +79,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
   const [currentTab, setCurrentTab] = useState('booking-details')
+  const { data: bookingTypes } = useBookingTypes()
 
   const add = useAddOrder()
   const update = useUpdateOrder()
@@ -211,14 +214,16 @@ export default function NewOrderModal(props: NewOrderModalProps) {
     }
   }, [selectedColumnId])
 
+  const selectedBookingType = bookingTypes.find(bookingType => bookingType.ID === formValues.booking_type_id)
+
   const renderSaveButtons = () => {
     return (
       <Button
         type="button"
         variant={"button-primary"}
-        onClick={isLastIndex() ? form.handleSubmit(onSubmit) : nextTab}
+        onClick={isLastIndex() || currentTab === 'hawb' ? form.handleSubmit(onSubmit) : nextTab}
       >
-        {isLastIndex() ? <><SaveIcon className="mr-2 size-4" />Save</> : <>Next<ChevronRight className="size-4" /></>}
+        {isLastIndex() || currentTab === 'hawb' ? <><SaveIcon className="mr-2 size-4" />Save</> : <>Next<ChevronRight className="size-4" /></>}
       </Button>
     )
   }
@@ -343,6 +348,15 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                         {list.label}
                       </TabsTrigger>
                     ))}
+                    <TabsTrigger
+                      key={`list-hawb`}
+                      className="w-full justify-start py-1.5 data-[state=active]:bg-accent data-[state=active]:text-white disabled:text-muted-foreground/45"
+                      value={'hawb'}
+                      disabled={selectedBookingType?.name.toLowerCase() !== 'mawb'}
+                    >
+                      <DeviceTabletIcon className="mr-2 h-4 w-4" />
+                      House Airway Bill
+                    </TabsTrigger>
                   </TabsList>
                   {mode === 'edit' && (
                     <Combobox
@@ -367,6 +381,9 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                       {item.content}
                     </TabsContent>
                   ))}
+                  <TabsContent key={`tab-hawb`} value={'hawb'} asChild>
+                    <HAWBTable />
+                  </TabsContent>
                   <TabsContent value="activity-log" asChild>
                     <ActivityLog />
                   </TabsContent>
@@ -382,7 +399,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 <XCircle className="mr-2 size-4" />
                 Cancel
               </Button>
-              {getCurrentIndex(currentTab) > 0 && (
+              {getCurrentIndex(currentTab) > 0 || currentTab !== 'hawb' && (
                 <Button
                   type="button"
                   variant={"secondary"}

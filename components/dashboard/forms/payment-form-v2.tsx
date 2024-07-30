@@ -226,18 +226,18 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 justify-end">
               <div className="text-sm text-right font-bold text-muted-foreground">Total:</div>
-              <div className="text-sm text-right font-bold text-muted-foreground">${formValues.total || 0}</div>
+              <div className="text-sm text-right text-muted-foreground">${formValues.total || 0}</div>
             </div>
             <div className="flex gap-2 justify-end">
               <div className="text-sm text-right font-bold text-muted-foreground">Paid:</div>
-              <div className="text-sm text-right font-bold text-muted-foreground">${formValues.total_paid || 0}</div>
+              <div className="text-sm text-right text-muted-foreground">${formValues.total_paid || 0}</div>
             </div>
             <div className="flex gap-2 justify-end">
               <div className="text-sm text-right font-bold text-muted-foreground">Due:</div>
-              <div className="text-sm text-right font-bold text-muted-foreground">
-                {formValues.total && formValues.total_paid ? formValues.total - formValues.total_paid : 
+              <div className="text-sm text-right text-muted-foreground">
+                {`$${formValues.total && formValues.total_paid ? formValues.total - formValues.total_paid : 
                  formValues.total && !formValues.total_paid ? formValues.total : 
-                 !formValues.total && !formValues.total_paid ? 0 : ''}
+                 !formValues.total && !formValues.total_paid ? 0 : ''}`}
               </div>
             </div>
           </div>

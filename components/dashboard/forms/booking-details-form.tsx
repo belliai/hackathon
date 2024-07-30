@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/form/combobox"
-import { useCommodityCodes } from "@/lib/hooks/commodity-codes"
+import { useOrders } from "@/lib/hooks/orders"
 
 const generateAWBNumbers = (start: number, length: number) => {
   return Array.from({ length }, (_, i) => {
@@ -38,6 +38,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const { data: partnerPrefixes } = usePartnerPrefixes()
   const { data: partnerCodes } = usePartnerCodes()
   const { data: bookingTypes } = useBookingTypes()
+  const { data: ordersData } = useOrders({ pagination: { pageIndex: 0, pageSize: 20 }})
 
   const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
     value: prefix.ID,
@@ -56,6 +57,16 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     name: code.booking_type,
     description: code.description,
   }));
+
+  const selectedBookingType = bookingTypeOptions.find(bookingType => bookingType.value === formValues.booking_type_id)
+  
+  const awbList = selectedBookingType?.label.toLowerCase() === 'hawb'
+    ? ordersData.data.filter((order: any) => order.booking_type.name.toLowerCase() === 'mawb')
+      .map((orderData: any) => ({
+        value: orderData.ID,
+        label: orderData.awb,
+      }))
+    : [];
 
   const IS_PHYSICAL_LIST = [
     {
@@ -82,6 +93,14 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           additionalColumn={['name']}
           tooltipId="description"
         />
+        {selectedBookingType?.label.toLowerCase() === 'hawb' && (
+          <Combobox
+            name="mawb"
+            options={awbList}
+            label="Master Airway Bill"
+            info="Select the MAWB"
+          />
+        )}
       </div>
       <div className="grid grid-cols-3 gap-3">
         <Combobox

@@ -10,10 +10,17 @@ export const columns: ColumnDef<Order>[] = [
     header: "AWB",
     accessorKey: "awb",
   },
-
   {
     header: "Booking Type",
     accessorKey: "booking_type.name",
+  },
+  {
+    header: "MAWB",
+    accessorKey: "mawb",
+  },
+  {
+    header: "HAWB",
+    accessorKey: "hawb",
   },
   {
     header: "Destination",
