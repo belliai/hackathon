@@ -119,6 +119,17 @@ export const useListViewColumns = (
       },
     },
     {
+      accessorKey: "duration",
+      accessorFn: (row) =>
+        `${row.flight_duration_hour}h ${row.flight_duration_minute}m`,
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Duration"
+          tooltipId="flight-master-duration"
+        />
+      ),
+    },
+    {
       accessorKey: "tail.tail_number",
       size: 400,
       header: () => (
@@ -132,7 +143,7 @@ export const useListViewColumns = (
           <TailNumberForm
             row={row}
             aircraftOptions={props.aircraftOptions || []}
-            onChangeTailNumber={props.onChangeTailNumber }
+            onChangeTailNumber={props.onChangeTailNumber}
           />
         )
       },
@@ -215,10 +226,7 @@ export const useListViewColumns = (
     {
       accessorKey: "aircraft.mtow",
       header: () => (
-        <TableHeaderWithTooltip
-          header="MTOW"
-          tooltipId="flights-mtow"
-        />
+        <TableHeaderWithTooltip header="MTOW" tooltipId="flights-mtow" />
       ),
       cell: ({ row }) => {
         const aircraft = row.original.tail
@@ -251,5 +259,3 @@ export const useListViewColumns = (
     },
   ]
 }
-
-

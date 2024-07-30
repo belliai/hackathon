@@ -120,44 +120,7 @@ export default function FlightsDashboardPage() {
   })
 
   const displayedFlightsColumns: ColumnDef<FlightWithActualInformation>[] = [
-    ...(columns as ColumnDef<FlightWithActualInformation>[]),
-    {
-      accessorKey: "aircraft.mtow",
-      header: () => (
-        <TableHeaderWithTooltip header="MTOW" tooltipId="flights-mtow" />
-      ),
-      size: displayOption === "numbers-percentages" ? 240 : undefined,
-      cell: ({ row }) => {
-        return (
-          <ActualInformation
-            actual={Number(row.original.actual_mtow)}
-            maximum={Number(row.original?.tail?.mtow)}
-            displayOption={displayOption}
-            unit={String(row.original.tail.volume_unit.name || "")}
-          />
-        )
-      },
-    },
-    {
-      accessorKey: "aircraft.landing_weight",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Landing Weight"
-          tooltipId="flights-landing-weight"
-        />
-      ),
-      size: displayOption === "numbers-percentages" ? 240 : undefined,
-      cell: ({ row }) => {
-        return (
-          <ActualInformation
-            actual={Number(row.original.actual_landing_weight)}
-            maximum={Number(row.original?.tail?.landing_weight)}
-            displayOption={displayOption}
-            unit={String(row.original.tail.mtow || "")}
-          />
-        )
-      },
-    },
+    ...(columns.slice(0, 2) as ColumnDef<FlightWithActualInformation>[]),
     {
       accessorKey: "aircraft.cargo_capacity",
       header: () => (
@@ -178,6 +141,7 @@ export default function FlightsDashboardPage() {
         )
       },
     },
+    ...(columns.slice(2, 9) as ColumnDef<FlightWithActualInformation>[]),
   ]
 
   function handleRowClick(flight: FlightWithActualInformation) {

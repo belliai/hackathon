@@ -127,6 +127,8 @@ const TableHeaderWithTooltip = ({
   const tooltips = getTooltipContents()
   const content = tooltips.find((list) => list.id === tooltipId)
 
+  console.log({ tooltipId, tooltips, content })
+
   const tooltipContent = content?.content
 
   return (

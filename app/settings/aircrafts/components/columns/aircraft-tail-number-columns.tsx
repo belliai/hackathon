@@ -14,7 +14,7 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
     cell: ({ row }) => (
       <Badge
         variant={
-          row.original.status.name === "Active" ? "success" : "destructive"
+          row.original.status.name === "Active" ? "secondary" : "destructive"
         }
       >
         {row.original.status.name}
@@ -90,30 +90,6 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
     ),
   },
   {
-    accessorKey: "passenger_capacity",
-    header: () => (
-      <TableHeaderWithTooltip
-        header="Passenger Capacity"
-        tooltipId="aircraft-passenger-capacity"
-      />
-    ),
-  },
-  {
-    accessorKey: "landing_weight",
-    cell: ({ row }) =>
-      row.original.landing_weight && (
-        <span>
-          {row.original.landing_weight} {row.original.weight_unit.symbol}
-        </span>
-      ),
-    header: () => (
-      <TableHeaderWithTooltip
-        header="Landing Wt"
-        tooltipId="aircraft-landing-weight"
-      />
-    ),
-  },
-  {
     accessorKey: "cargo_capacity",
     cell: ({ row }) =>
       row.original.cargo_capacity && (
@@ -123,35 +99,73 @@ export const aircraftTailNumbersColumns: ColumnDef<TailNumber>[] = [
       ),
     header: () => (
       <TableHeaderWithTooltip
-        header="Cargo Cap"
+        header="Cargo Capacity"
         tooltipId="aircraft-cargo-capacity"
       />
     ),
   },
   {
-    accessorKey: "mtow",
+    accessorKey: "max_dimension_length",
     cell: ({ row }) =>
-      row.original.mtow && (
+      row.original.max_dimension_length && (
         <span>
-          {row.original.mtow} {row.original.weight_unit.symbol}
-        </span>
-      ),
-    header: () => (
-      <TableHeaderWithTooltip header="MTOW" tooltipId="aircraft-mtow" />
-    ),
-  },
-  {
-    accessorKey: "max_zero_fuel_weight",
-    cell: ({ row }) =>
-      row.original.max_zero_fuel_weight && (
-        <span>
-          {row.original.max_zero_fuel_weight} {row.original.weight_unit.symbol}
+          {row.original.max_dimension_length}{" "}
+          {row.original.dimension_unit.symbol}
         </span>
       ),
     header: () => (
       <TableHeaderWithTooltip
-        header="Max Zero Fuel Wt"
-        tooltipId="aircraft-max-zero-fuel-wt"
+        header="Max (L)"
+        tooltipId="aircraft-max-dimension-length"
+      />
+    ),
+  },
+  {
+    accessorKey: "max_dimension_breadth",
+    cell: ({ row }) =>
+      row.original.max_dimension_breadth && (
+        <span>
+          {row.original.max_dimension_breadth}{" "}
+          {row.original.dimension_unit.symbol}
+        </span>
+      ),
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Max (W)"
+        tooltipId="aircraft-max-dimension-breadth"
+      />
+    ),
+  },
+  {
+    accessorKey: "max_dimension_height",
+    cell: ({ row }) =>
+      row.original.max_dimension_height && (
+        <span>
+          {row.original.max_dimension_height}{" "}
+          {row.original.dimension_unit.symbol}
+        </span>
+      ),
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Max (H)"
+        tooltipId="aircraft-max-dimension-height"
+      />
+    ),
+  },
+
+  {
+    accessorKey: "restricted_weight_piece",
+    cell: ({ row }) =>
+      row.original.restricted_weight_piece && (
+        <span>
+          {row.original.restricted_weight_piece}{" "}
+          {row.original.weight_unit.symbol}
+        </span>
+      ),
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Max (Weight)"
+        tooltipId="aircraft-max-piece-weight"
       />
     ),
   },
