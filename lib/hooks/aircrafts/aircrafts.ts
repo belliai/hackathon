@@ -20,10 +20,20 @@ export const fetchAircrafts = async (
 export const useAircrafts = (params: PaginationParams) => {
   const belliApi = useBelliApi()
 
-  return useQuery({
-    queryKey: [route],
-    queryFn: async () => await fetchAircrafts(await belliApi, params),
-  })
+  const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
+    const tailDetail = selectedAircraftType.aircraft_tail_numbers.find(
+      (item) => item.tail_number === tail
+    )
+    return `${tail} - ${selectedAircraftType?.aircraft_type?.name} (${tailDetail?.status?.name})`
+  }
+
+  return {
+    ...useQuery({
+      queryKey: [route],
+      queryFn: async () => await fetchAircrafts(await belliApi, params),
+    }),
+    generateTailName,
+  }
 }
 
 export const createAircraft = async (
