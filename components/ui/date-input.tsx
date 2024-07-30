@@ -9,10 +9,11 @@ import { Button } from "./button"
 import { Calendar } from "./calendar"
 import { FormControl } from "./form"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
+import { Matcher } from "react-day-picker"
 
 type DateInputProps = ControllerRenderProps & {
   className?: HTMLDivElement["className"]
-  disabledMatcher?: (date: Date) => boolean
+  disabledMatcher?: Matcher
   mode?: "single" | "range"
 }
 

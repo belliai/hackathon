@@ -22,7 +22,6 @@ const NumberInputStepper = ({
 }: NumberInputStepperProps) => {
 
   const handleAction = () => {
-    console.log(min)
     if(isNaN(value)) { onChange(min); return}
   }
 

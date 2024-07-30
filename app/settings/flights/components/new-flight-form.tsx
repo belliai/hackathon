@@ -154,13 +154,13 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         "tail_id",
       ],
     },
-    // {
-    //   label: "Recurring",
-    //   value: "recurring",
-    //   icon: Repeat,
-    //   content: <RecurringForm />,
-    //   fieldList: ["recurring"],
-    // },
+    {
+      label: "Recurring",
+      value: "recurring",
+      icon: Repeat,
+      content: <RecurringForm />,
+      fieldList: ["recurring"],
+    },
     // {
     //   label: "Aircraft",
     //   value: "aircraft",
@@ -280,7 +280,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         className={
           isFullScreen
             ? "h-screen w-screen max-w-none"
-            : "top-8 h-[55dvh] max-w-[1100px] translate-y-0"
+            : "top-8 min-h-[65dvh] max-w-[1100px] translate-y-0"
         }
         onInteractOutside={(e) => e.preventDefault()}
       >
@@ -322,7 +322,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
               className="grow"
             >
               <div className="flex w-full flex-row items-stretch gap-4">
-                {/* <div className="flex min-w-[220px] grow-0 flex-col gap-4">
+                <div className="flex min-w-[220px] grow-0 flex-col gap-4">
                   <TabsList className="h-fit w-full flex-col">
                     {TAB_LIST.map((list) => {
                       const isValid = validationStatus.find(
@@ -343,7 +343,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
                       )
                     })}
                   </TabsList>
-                </div> */}
+                </div>
                 <div className="grid flex-1">
                   {TAB_LIST.map((item) => (
                     <TabsContent

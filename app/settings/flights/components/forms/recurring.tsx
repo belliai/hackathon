@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
+
 import { cn } from "@/lib/utils"
 import { generateRecurringOptions } from "@/lib/utils/date-utils"
 import { Card } from "@/components/ui/card"
@@ -15,7 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import FormTextField from "@/components/form/FormTextField"
+import InputSwitch from "@/components/form/InputSwitch"
 
 const recurringOption = [
   {
@@ -64,56 +65,52 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const [repeatEnd, setRepeatEnd] = useState<string>("never")
 
   const optionsPeriod = useMemo(
-    () => getPeriods(formData.every_number),
-    [formData.every_number]
+    () => getPeriods(formData.recurring_count),
+    [formData.recurring_count]
   )
 
   useEffect(() => {
-    if (formData.from_date) {
+    if (formData.departure_date) {
       const { options } = generateRecurringOptions({
-        startAt: formData.from_date,
+        startAt: formData.departure_date,
       })
       setRecurrings(options)
     }
-  }, [formData.from_date])
+  }, [formData.departure_date])
 
-  useEffect(() => {
-    if (formData.every_period) {
-    }
-  }, [formData.every_period])
+  useEffect(() => {}, [formData.period])
 
   return (
     <Card className="space-y-4 p-4" ref={ref}>
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-2">
-          <FormTextField
-            form={form}
+          <InputSwitch
             name="recurring"
             label="Recurring"
             type="select"
-            options={recurrings}
+            selectOptions={recurrings}
           />
         </div>
       </div>
       {formData.recurring === "custom" && (
         <div className="space-y-4">
           <div className="grid grid-cols-3 items-end gap-4">
-            <FormTextField
-              name="every_number"
-              form={form}
-              type="stepper-number"
+            <InputSwitch
               label="Repeat every"
-              orientation="horizontal"
+              name="recurring_count"
+              type="stepper-number"
+              max={100}
+              min={1}
+              step={1}
             />
-            <FormTextField
+            <InputSwitch
               label=""
-              name="every_period"
-              form={form}
+              name="recurring_period"
               type="select"
-              options={optionsPeriod}
+              selectOptions={optionsPeriod}
             />
           </div>
-          {formData.every_period === "weekly" && (
+          {formData.period === "weekly" && (
             <div className="grid grid-cols-1 gap-4">
               <Label>Repeat on</Label>
               <div className="flex">
@@ -176,11 +173,11 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
                   <Label htmlFor="r2">On</Label>
                 </div>
                 <div>
-                  <FormTextField
-                    name="ends_on"
+                  <InputSwitch
+                    label=""
+                    name="recurring_ends_on"
                     type="date"
-                    form={form}
-                    disabled={repeatEnd !== "ends_on"}
+                    disabledMatcher={repeatEnd !== "ends_on"}
                   />
                 </div>
               </div>
@@ -190,12 +187,14 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
                   <Label htmlFor="r3">After</Label>
                 </div>
                 <div className="col-span-1 flex items-center space-x-2">
-                  <FormTextField
+                  <InputSwitch
                     label=""
-                    name="after_occurence"
-                    form={form}
+                    name="recurring_occurence"
                     type="stepper-number"
                     disabled={repeatEnd !== "after"}
+                    max={100}
+                    min={1}
+                    step={1}
                   />
                   <Label
                     className={cn(repeatEnd !== "after" ? "text-zinc-500" : "")}

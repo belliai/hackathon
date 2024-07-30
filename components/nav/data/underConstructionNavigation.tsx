@@ -11,7 +11,7 @@ export const underConstructionNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Pricing",
-        href: "/plans?tab=pricing",
+        href: "/under-construction/plans?tab=pricing",
         icon: Banknote,
         current: false,
         isCanCreate: true,

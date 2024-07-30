@@ -31,6 +31,7 @@ export const flightSchema = z.object({
     z.number().min(0, "Required")
   ),
   tail_id: z.string().min(1, { message: "Tail Number is required" }),
+  recurring: z.string().min(1, { message: "Recurring is required" }).optional(),
 })
 
 export type FlightSchema = z.infer<typeof flightSchema>

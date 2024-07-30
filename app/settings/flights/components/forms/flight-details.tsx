@@ -199,6 +199,8 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const isDateDifferent =
     departureTime?.toDateString() !== arrivalTime?.toDateString()
 
+
+
   return (
     <Card className="space-y-4 p-4" ref={ref}>
       <div className="grid grid-cols-3 gap-4">
@@ -278,7 +280,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           type="date"
           name="departure_date"
           label="Departure Date"
-          disabledMatcher={() => false}
+          disabledMatcher={{ before: new Date() }}
         />
       </div>
 

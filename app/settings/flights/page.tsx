@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoopIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import {
   endOfMonth,
@@ -259,7 +260,6 @@ export default function Page() {
     }
   }
 
-
   const onShowDelete = (data: Flight) => {
     setDeleteConfirm(data)
   }
@@ -289,7 +289,11 @@ export default function Page() {
       size={"sm"}
       variant={"button-primary"}
       className="p-2 text-xs"
-      onClick={() => setOpenModalRecurring(true)}
+      // onClick={() => setOpenModalRecurring(true)}
+      onClick={() => {
+        setOpenModal(true)
+        setModalType("create")
+      }}
       style={{ fontSize: "0.875rem" }}
     >
       <PlusIcon className="mr-2 size-4" />
@@ -351,22 +355,22 @@ export default function Page() {
               extraRightComponents={createButtonFlight}
               extraLeftComponents={
                 <TabsList className="gap-2 bg-transparent p-0">
-                  {/* <TabsTrigger
+                  <TabsTrigger
                     className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                     value="list-view"
                     style={{ fontSize: "0.875rem" }}
                   >
                     <ListIcon className="mr-2 size-4" />
                     List View
-                  </TabsTrigger> */}
-                  {/* <TabsTrigger
+                  </TabsTrigger>
+                  <TabsTrigger
                     className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
                     value="create-recurring-flight"
                     style={{ fontSize: "0.875rem" }}
                   >
                     <LoopIcon className="mr-2 size-4" />
                     Recurring Flights
-                  </TabsTrigger> */}
+                  </TabsTrigger>
                   <Form {...filtersHookForm}>
                     <InputSwitch
                       name="period"
@@ -393,7 +397,7 @@ export default function Page() {
                         name="from_date"
                         type="date"
                         className="h-8 w-36"
-                        disabledMatcher={(date) => false}
+                        disabledMatcher={(date)=>false}
                       />
                     )}
                     {filterData.period === "range" && (
@@ -401,7 +405,7 @@ export default function Page() {
                         name="range_date"
                         type="date"
                         // enable all date
-                        disabledMatcher={(date) => false}
+                        disabledMatcher={(date)=>false}
                         className="h-8 w-56"
                         mode="range"
                       />
@@ -416,14 +420,19 @@ export default function Page() {
               tableState={tableState}
               menuId="flight-master-list-view"
               isCanExport={true}
-              onExport={() => onExport( { data: flightData && flightData.data, filename:"Flightdata" })}
+              onExport={() =>
+                onExport({
+                  data: flightData && flightData.data,
+                  filename: "Flightdata",
+                })
+              }
             />
           </TabsContent>
 
           <TabsContent value="create-recurring-flight" className="mt-0">
-            {/* <DataTable
+            <DataTable
               showToolbarOnlyOnHover={true}
-              columns={recurringFlightsColumns}
+              columns={listViewColumns}
               data={isLoading ? [] : (flightData && flightData.data) || []}
               extraRightComponents={createButtonRecurringFlight}
               extraLeftComponents={
@@ -435,6 +444,54 @@ export default function Page() {
                     <ListIcon className="mr-2 size-4" />
                     List View
                   </TabsTrigger>
+                  <TabsTrigger
+                    className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+                    value="create-recurring-flight"
+                    style={{ fontSize: "0.875rem" }}
+                  >
+                    <LoopIcon className="mr-2 size-4" />
+                    Recurring Flights
+                  </TabsTrigger>
+                  <Form {...filtersHookForm}>
+                    <InputSwitch
+                      name="period"
+                      type="select"
+                      defaultValue="daily"
+                      className=""
+                      selectOptions={[
+                        {
+                          label: "Daily",
+                          value: "daily",
+                        },
+                        {
+                          label: "Weekly",
+                          value: "weekly",
+                        },
+                        {
+                          label: "Monthly",
+                          value: "monthly",
+                        },
+                      ]}
+                    />
+                    {filterData.period === "daily" && (
+                      <InputSwitch 
+                      name="fromDate" type="date" className="" 
+                      disabledMatcher={(date)=>false}
+                      />
+                    )}
+                    {filterData.period === "weekly" && (
+                      <WeeklyDateStepper
+                        value={filterWeekly}
+                        onChange={setFilterWeekly}
+                      />
+                    )}
+                    {filterData.period === "monthly" && (
+                      <MonthlyDateStepper
+                        value={filterMonthly}
+                        onChange={setFilterMonthly}
+                      />
+                    )}
+                  </Form>
                 </TabsList>
               }
               pageCount={
@@ -443,7 +500,7 @@ export default function Page() {
               manualPagination={true}
               tableState={tableState}
               menuId="flight-master-recurring-view"
-            /> */}
+            />
           </TabsContent>
         </Tabs>
       </PageContainer>
