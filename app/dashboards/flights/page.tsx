@@ -137,7 +137,7 @@ export default function FlightsDashboardPage() {
             actual={Number(row.original.actual_cargo_capacity)}
             maximum={Number(row.original?.tail?.cargo_capacity)}
             displayOption={displayOption}
-            unit={String(row.original.tail.volume_unit.name || "")}
+            unit={String(row.original.tail.volume_unit.symbol || "")}
           />
         )
       },
