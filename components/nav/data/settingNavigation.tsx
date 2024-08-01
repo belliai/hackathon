@@ -551,9 +551,9 @@ export const settingNavigation: TSidebarItem[] = [
         ],
       },
       {
-        name: "testpage",
+        name: "Kanban View",
         icon: CubeIcon,
-        href: "/configuration/testpage",
+        href: "/configuration/kanban",
         current: false,
       },
     ],
