@@ -872,6 +872,12 @@ export const skNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
       },
+      {
+        name: "Load Planner",
+        href: "/sk/load-planner",
+        icon: CubeIcon,
+        current: false,
+      },
     ],
   },
 ]

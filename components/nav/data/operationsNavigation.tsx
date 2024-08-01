@@ -10,6 +10,7 @@ export const operationsNavigation: TSidebarItem[] = [
     href: "/dashboards",
     current: false,
     icon: TvIcon,
+    disabled: true,
     children: [
       {
         name: "Flights",

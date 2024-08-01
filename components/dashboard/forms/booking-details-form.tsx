@@ -5,6 +5,7 @@ import { ListIcon } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 
 import { useBookingTypes } from "@/lib/hooks/booking-types"
+import { useOrders } from "@/lib/hooks/orders"
 import { usePartnerCodes } from "@/lib/hooks/partner-codes"
 import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
 import { useStatuses } from "@/lib/hooks/statuses"
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/form/combobox"
-import { useOrders } from "@/lib/hooks/orders"
 
 const generateAWBNumbers = (start: number, length: number) => {
   return Array.from({ length }, (_, i) => {
@@ -38,7 +38,9 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const { data: partnerPrefixes } = usePartnerPrefixes()
   const { data: partnerCodes } = usePartnerCodes()
   const { data: bookingTypes } = useBookingTypes()
-  const { data: ordersData } = useOrders({ pagination: { pageIndex: 0, pageSize: 20 }})
+  const { data: ordersData } = useOrders({
+    pagination: { pageIndex: 0, pageSize: 20 },
+  })
 
   const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
     value: prefix.ID,
@@ -56,27 +58,33 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     label: `${code.name}`,
     name: code.booking_type,
     description: code.description,
-  }));
+  }))
 
-  const selectedBookingType = bookingTypeOptions.find(bookingType => bookingType.value === formValues.booking_type_id)
-  
-  const awbList = selectedBookingType?.label.toLowerCase() === 'hawb'
-    ? ordersData.data.filter((order: any) => order.booking_type.name.toLowerCase() === 'mawb')
-      .map((orderData: any) => ({
-        value: orderData.ID,
-        label: orderData.awb,
-      }))
-    : [];
+  const selectedBookingType = bookingTypeOptions.find(
+    (bookingType) => bookingType.value === formValues.booking_type_id
+  )
+
+  const awbList =
+    selectedBookingType?.label.toLowerCase() === "hawb"
+      ? ordersData.data
+          .filter(
+            (order: any) => order.booking_type?.name.toLowerCase() === "mawb"
+          )
+          .map((orderData: any) => ({
+            value: orderData.ID,
+            label: orderData.awb,
+          }))
+      : []
 
   const IS_PHYSICAL_LIST = [
     {
-      value: 'yes',
-      label: 'Yes',
+      value: "yes",
+      label: "Yes",
     },
     {
-      value: 'no',
-      label: 'No',
-    }
+      value: "no",
+      label: "No",
+    },
   ]
 
   useEffect(() => {}, [form.formState])
@@ -90,10 +98,10 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           label="Booking Type"
           info="Select the booking type"
           editLink="/data-fields/airway-bills?tab=booking-type"
-          additionalColumn={['name']}
+          additionalColumn={["name"]}
           tooltipId="description"
         />
-        {selectedBookingType?.label.toLowerCase() === 'hawb' && (
+        {selectedBookingType?.label.toLowerCase() === "hawb" && (
           <Combobox
             name="mawb"
             options={awbList}
@@ -117,7 +125,10 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             <FormItem>
               <FormLabel tooltipId="new-orders-awb-number">AWB#</FormLabel>
               <FormControl>
-              <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
+                <Input
+                  {...field}
+                  className="h-[40px] border-2 border-foreground/30"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -129,7 +140,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           label="IATA Airline Code"
           info="Select the IATA Airline Code"
           editLink="/data-fields/organizations?tab=iata-airline-code"
-          additionalColumn={['description']}
+          additionalColumn={["description"]}
           tooltipId="description"
         />
         <Combobox

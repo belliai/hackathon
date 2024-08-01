@@ -28,6 +28,7 @@ import {
 } from "../ui/select"
 import { Combobox, ComboboxProps } from "./combobox"
 import NumberInputStepper from "./number-input-stepper"
+import { Matcher } from "react-day-picker"
 
 type BaseInputProps<DataType> = InputProps & {
   name: Path<DataType>
@@ -60,7 +61,7 @@ export type InputSwitchProps<DataType extends FieldValues> =
     })
   | (BaseInputProps<DataType> & {
       type: "date"
-      disabledMatcher?: (date: Date) => boolean
+      disabledMatcher?: Matcher
       mode?: "single" | "range"
     })
   | (BaseInputProps<DataType> & {

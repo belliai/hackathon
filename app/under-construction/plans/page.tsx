@@ -2,10 +2,11 @@
 
 import { Banknote } from "lucide-react"
 
-import DataFieldsPageTemplate from "../data-fields/components/datafields-page-template"
+
 import CheckoutSection from "./components/checkout"
 import PricingSection from "./components/pricing"
 import SubscriptionsSection from "./components/subscriptions"
+import DataFieldsPageTemplate from "@/app/data-fields/components/datafields-page-template"
 
 export default function PlanPage() {
   return (
