@@ -3,11 +3,13 @@
 import { useCallback, useState } from "react"
 import { DataTable } from "@components/data-table/data-table"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
+import { PlusIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import { Loader } from "lucide-react"
 
 import { getData } from "@/lib/data"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
+import { onExport } from "@/lib/utils/export"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,14 +20,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 import { columns, Order } from "@/components/dashboard/columns"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
-import { Button } from "@/components/ui/button"
-import { PlusIcon } from "@radix-ui/react-icons"
-import { onExport } from "@/lib/utils/export"
 
 export default function Home() {
   const data = getData()
@@ -33,7 +33,7 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalType, setModalType] = useState<"edit" | "create">("create")
   const [deleteConfirm, setDeleteConfirm] = useState(false)
-  const [selectedColumnId, setSelectedColumnId] = useState('')
+  const [selectedColumnId, setSelectedColumnId] = useState("")
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -61,7 +61,7 @@ export default function Home() {
 
   const onOpenChange = useCallback((open: boolean) => {
     setModalOpen(open)
-    if (!open) setSelectedColumnId('')
+    if (!open) setSelectedColumnId("")
   }, [])
 
   const onDelete = (data: any) => {
@@ -89,25 +89,34 @@ export default function Home() {
     </Button>
   )
 
-  const columnWithActions = columns.map(column => ({
+  const columnWithActions = columns.map((column) => ({
     ...column,
-    cell: ({ row: { original, getValue }, column: { id } }: { row: { original: any; getValue: (id: string) => any }; column: { id: string } }) => {
-      const columnValue = original.booking_type.name.toLowerCase() === 'mawb' && id === 'hawb' ? '567-56789012' :
-        original.booking_type.name.toLowerCase() === 'hawb' && id === 'mawb' ? '345-34567890' : getValue(id);
+    cell: ({
+      row: { original, getValue },
+      column: { id },
+    }: {
+      row: { original: any; getValue: (id: string) => any }
+      column: { id: string }
+    }) => {
+      const columnValue =
+        original.booking_type?.name?.toLowerCase() === "mawb" && id === "hawb"
+          ? "567-56789012"
+          : original.booking_type?.name?.toLowerCase() === "hawb" &&
+              id === "mawb"
+            ? "345-34567890"
+            : getValue(id)
 
       return (
-        <div onClick={() => openModal(original, id)} className="cursor-pointer">{columnValue}</div>
+        <div onClick={() => openModal(original, id)} className="cursor-pointer">
+          {columnValue}
+        </div>
       )
     },
   }))
 
   return (
     <div>
-      <ClientSideSuspense
-        fallback={
-          <></>
-        }
-      >
+      <ClientSideSuspense fallback={<></>}>
         <LiveCursorHoc />
       </ClientSideSuspense>
       <DataTable
@@ -130,7 +139,12 @@ export default function Home() {
           onExport({ data: ordersData.data, filename: "AirwaybillsData" })
         }
       />
-      <NewOrderModal open={modalOpen} onOpenChange={onOpenChange} mode={modalType} selectedColumnId={selectedColumnId} />
+      <NewOrderModal
+        open={modalOpen}
+        onOpenChange={onOpenChange}
+        mode={modalType}
+        selectedColumnId={selectedColumnId}
+      />
       <AlertDialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
