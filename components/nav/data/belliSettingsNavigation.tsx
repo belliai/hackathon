@@ -1,8 +1,8 @@
+import { Cog6ToothIcon } from "@heroicons/react/24/outline"
 import { PaperPlaneIcon, ReaderIcon } from "@radix-ui/react-icons"
 import { PlaneIcon, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
-import { Cog6ToothIcon } from "@heroicons/react/24/outline"
 
 export const belliSettingsNavigation: TSidebarItem[] = [
   {
@@ -29,13 +29,6 @@ export const belliSettingsNavigation: TSidebarItem[] = [
         name: "Data",
         href: "/settings/data",
         icon: Waypoints,
-        current: false,
-        isCanCreate: false,
-      },
-      {
-        name: "Load Planner",
-        href: "/settings/load-planner",
-        icon: ReaderIcon,
         current: false,
         isCanCreate: false,
       },
