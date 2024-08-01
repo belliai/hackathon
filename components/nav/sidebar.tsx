@@ -185,21 +185,7 @@ export default function SideBar({
                 {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
                   <>
                     {/* <FavoritesMenu /> */}
-                    <SidebarMenu
-                      items={operationsNavigation}
-                      collapsible
-                      isExpanded={isExpanded}
-                    />
-                    <SidebarMenu
-                      items={belliSettingsNavigation}
-                      collapsible
-                      isExpanded={isExpanded}
-                    />
-                    <SidebarMenu
-                      items={customDataFieldsNavigation}
-                      collapsible
-                      isExpanded={isExpanded}
-                    />
+                    <SidebarMenu items={operationsNavigation} collapsible isExpanded={isExpanded} />
                   </>
                 ) : (
                   <SidebarMenu items={settingNavigation[0].children ?? []} />
@@ -223,7 +209,15 @@ export default function SideBar({
               )}
             </ul>
           </ul>
-          {isBelliAdmin && isExpanded && (
+          <ul className="flex flex-col gap-1 -mx-2">
+            <SidebarMenu items={belliSettingsNavigation} collapsible isExpanded={isExpanded} />
+            <SidebarMenu
+              items={customDataFieldsNavigation}
+              collapsible
+              isExpanded={isExpanded}
+            />
+          </ul>
+          {(isBelliAdmin && isExpanded) &&  (
             <ul role="list" className="-mx-2">
               <SidebarMenu items={adminOnlyItems} collapsible />
             </ul>

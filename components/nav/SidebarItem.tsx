@@ -28,6 +28,7 @@ export type TSidebarItem = {
   current?: boolean
   children?: TSidebarItem[]
   isCanCreate?: boolean
+  disabled?: boolean
 }
 
 interface SidebarItemProps {
@@ -40,7 +41,7 @@ interface SidebarItemProps {
 export default function SidebarItem({
   item,
   active,
-  disabled,
+  disabled = false,
   isExpanded = true,
 }: SidebarItemProps) {
   function getBaseItemClassName(currentActive: boolean) {
@@ -99,7 +100,8 @@ export default function SidebarItem({
           customarrow={
             <ChevronRight className="h-4 w-4 shrink-0 text-[#949496] transition-transform duration-200" />
           }
-          hideArrow={!isExpanded}
+          disabled={disabled}
+          hideArrow={!isExpanded || disabled}
         >
           {isExpanded ? renderItem(item) : renderWithTooltips(renderItem(item), item.name)}
         </AccordionTrigger>

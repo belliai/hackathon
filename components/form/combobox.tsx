@@ -183,8 +183,8 @@ export function Combobox({
     return (
       <div className="flex max-w-full items-center gap-3">
         <div className="flex gap-3 [&>svg]:h-4 [&>svg]:w-4">
-          {data.icon}
-          {data?.component ? data.component : data.label}
+          {data?.icon}
+          {data?.component ? data.component : data?.label}
         </div>
         {additionalColumn
           ? additionalColumn.map((item, index) => {
@@ -242,7 +242,7 @@ export function Combobox({
                 >
                   <span>
                     {field.value
-                      ? options?.find((opt) => opt.value === field.value)?.label
+                      ? options?.find((opt) => opt?.value === field.value)?.label
                       : placeholder ?? " "}
                   </span>
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -269,12 +269,12 @@ export function Combobox({
                 <CommandGroup className="py-0 pr-0">
                   <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
                     {options?.map((opt) => {
-                      const isEditing = editingOptionValue === opt.value
+                      const isEditing = editingOptionValue === opt?.value
 
                       return (
                         <CommandItem
-                          value={opt.label as string}
-                          key={opt.value}
+                          value={opt?.label as string}
+                          key={opt?.value}
                           onSelect={() => {
                             onChangeValue && onChangeValue(opt.value)
                             form.setValue(name, opt.value)
@@ -294,7 +294,7 @@ export function Combobox({
                                 <Check
                                   className={cn(
                                     "h-4 w-4",
-                                    opt.value === field.value
+                                    opt?.value === field.value
                                       ? "opacity-100"
                                       : "opacity-0"
                                   )}

@@ -25,6 +25,7 @@ import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
 import { useListViewColumns } from "@/app/settings/flights/components/column"
 import { onExport } from "@/lib/utils/export"
+import SettingMenuToggle from "@/components/setting-menu-toggle/setting-menu-toggle"
 
 interface FlightsActualInformation {
   detail: string
@@ -37,6 +38,49 @@ type FlightWithActualInformation = Flight & {
   actual_landing_weight: string
   actual_cargo_capacity: string
 }
+
+const SETTING_OPTIONS = [
+  {
+    label: 'Aircraft Types',
+    link: '/settings/aircrafts?tab=aircraft-types',
+  },
+  {
+    label: 'Tail Numbers',
+    link: '/settings/aircrafts?tab=tail-numbers',
+  },
+  {
+    label: 'Flight Scheduler',
+    link: '/settings/flights',
+  },
+  {
+    label: 'Custom Data Fields: Aircrafts',
+    link: '',
+    child: [
+      {
+        label: 'Aircrafts',
+        link: '/data-fields/aircrafts?tab=aircrafts',
+      },
+      {
+        label: 'Measurement Units',
+        link: '/data-fields/aircrafts?tab=measurement-units',
+      },
+    ]
+  },
+  {
+    label: 'Custom Data Fields: Flights',
+    link: '',
+    child: [
+      {
+        label: 'Display',
+        link: '/data-fields/flights?tab=display',
+      },
+      {
+        label: 'Default Timezone',
+        link: '/data-fields/flights?tab=default-timezone',
+      },
+    ]
+  },
+]
 
 export default function FlightsDashboardPage() {
   const displayOption: DisplayOption =
@@ -267,6 +311,7 @@ export default function FlightsDashboardPage() {
         onExport={() =>
           onExport({ data: displayedFlightsData, filename: "DashboardFlightData" })
         }
+        extraLeftComponents={<SettingMenuToggle settingOptions={SETTING_OPTIONS} />}
       />
     </div>
   )
