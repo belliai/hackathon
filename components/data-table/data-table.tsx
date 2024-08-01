@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils"
 import { ButtonProps } from "../ui/button"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar"
+import { ColumnsByVisibility } from "./data-table-view-options"
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -60,6 +61,7 @@ export interface DataTableProps<TData, TValue> {
   initialColumnOrder?: string[]
   onOrderChange?: (newOrder: string[]) => void
   onResetColumns?: () => void
+  onVisibilityChange?: (visibility: ColumnsByVisibility<TData>) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -86,10 +88,11 @@ export function DataTable<TData, TValue>({
   initialColumnOrder,
   onOrderChange,
   onResetColumns,
+  onVisibilityChange,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(initialVisibility ?? {})
+    React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -144,6 +147,12 @@ export function DataTable<TData, TValue>({
   }, [initialColumnOrder])
 
   useEffect(() => {
+    if (initialVisibility) {
+      table.setColumnVisibility(initialVisibility)
+    }
+  }, [initialVisibility, table])
+
+  useEffect(() => {
     tableState && tableState({ pagination })
   }, [pagination])
 
@@ -161,6 +170,7 @@ export function DataTable<TData, TValue>({
           extraRightComponents={extraRightComponents}
           onOrderChange={onOrderChange}
           onResetColumns={onResetColumns}
+          onVisibilityChange={onVisibilityChange}
         />
       )}
       <div className="relative">

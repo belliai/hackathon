@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils"
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { DataTableFilterOptions } from "./data-table-filter-options"
-import { DataTableViewOptions } from "./data-table-view-options"
+import { ColumnsByVisibility, DataTableViewOptions } from "./data-table-view-options"
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -42,6 +42,7 @@ export interface DataTableToolbarProps<TData> {
   extraRightComponents?: React.ReactNode
   onOrderChange?: (order: string[]) => void
   onResetColumns?: () => void
+  onVisibilityChange?: (visibility: ColumnsByVisibility<TData>) => void
 }
 
 export function DataTableToolbar<TData>({
@@ -203,6 +204,7 @@ export function DataTableToolbar<TData>({
               initialVisibility={props.initialVisibility ?? {}}
               onOrderChange={props.onOrderChange}
               onResetColumns={props.onResetColumns}
+              onVisibilityChange={props.onVisibilityChange}
             >
               <TooltipTrigger asChild>
                 <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>

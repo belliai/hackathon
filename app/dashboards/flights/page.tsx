@@ -1,7 +1,12 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { ColumnDef, PaginationState, Table } from "@tanstack/react-table"
+import {
+  ColumnDef,
+  PaginationState,
+  Table,
+  VisibilityState,
+} from "@tanstack/react-table"
 import { Loader } from "lucide-react"
 import moment from "moment"
 import { useFieldArray, useForm } from "react-hook-form"
@@ -25,6 +30,7 @@ import {
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/use-toast"
 import { DataTable } from "@/components/data-table/data-table"
+import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
 import Modal from "@/components/modal/modal"
 import SettingMenuToggle from "@/components/setting-menu-toggle/setting-menu-toggle"
 import { DisplayOption } from "@/app/data-fields/display"
@@ -199,8 +205,12 @@ export default function FlightsDashboardPage() {
     ...(columns.slice(2, 9) as ColumnDef<FlightWithActualInformation>[]),
   ]
 
-  const reorderedDisplayedFlightsColumns = columnsQuery.data?.visible_columns
-    .map((column) => {
+  const allColumnsFromApi = columnsQuery.data?.visible_columns.concat(
+    columnsQuery.data?.non_visible_columns
+  )
+
+  const reorderedDisplayedFlightsColumns = allColumnsFromApi
+    ?.map((column) => {
       const foundColumn = displayedFlightsColumns.find(
         (displayedColumn) => displayedColumn.id === column.column_name
       )
@@ -279,12 +289,27 @@ export default function FlightsDashboardPage() {
   }
 
   const initialColumnOrder = useMemo<string[]>(() => {
-    const initialOrder = columnsQuery.data?.visible_columns.map(
-      (column) => column.column_name
-    )
+    const initialOrder = allColumnsFromApi?.map((column) => column.column_name)
 
     return initialOrder || []
-  }, [columnsQuery.data?.visible_columns])
+  }, [columnsQuery.data])
+
+  const initialColumnVisibility = useMemo<VisibilityState>(() => {
+    const initialNonVisibleColumns =
+      columnsQuery.data?.non_visible_columns.reduce(
+        (initialVisibility, column) => {
+          return {
+            ...initialVisibility,
+            [column.column_name]: false,
+          }
+        },
+        {}
+      )
+
+    return initialNonVisibleColumns as VisibilityState
+  }, [columnsQuery.data?.non_visible_columns])
+
+  console.log("initialColumnVisibility", initialColumnVisibility)
 
   async function handleOnOrderChange(newOrder: string[]) {
     const newVisibleColumns = newOrder
@@ -345,8 +370,50 @@ export default function FlightsDashboardPage() {
             title: "Success",
             description: "Columns reset successfully",
           })
+        },
+      }
+    )
+  }
 
+  async function handleOnVisibilityChange(
+    columnsByvisibility: ColumnsByVisibility<FlightWithActualInformation>
+  ) {
+    const allColumnsFromApi = columnsQuery.data?.visible_columns.concat(
+      columnsQuery.data?.non_visible_columns
+    )
 
+    const newColumnsPayload = allColumnsFromApi?.map((column, index) => {
+      const hiddenColumn = columnsByvisibility.hidden.find(
+        (hiddenColumn) => hiddenColumn.id === column.column_name
+      )
+
+      return {
+        id: column.id,
+        sort_order: index + 1,
+        visible: hiddenColumn === undefined ? column.visible : false,
+      }
+    }) as {
+      id: string
+      sort_order: number
+      visible: boolean
+    }[]
+
+    await mutateAsync(
+      {
+        columns: newColumnsPayload,
+      },
+      {
+        onError: () => {
+          toast({
+            title: "Error",
+            description: "Failed to update columns visibility",
+          })
+        },
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Columns visibility updated successfully",
+          })
         },
       }
     )
@@ -389,13 +456,14 @@ export default function FlightsDashboardPage() {
         <DataTable
           onResetColumns={handleResetColumns}
           onOrderChange={handleOnOrderChange}
+          onVisibilityChange={handleOnVisibilityChange}
           initialColumnOrder={initialColumnOrder}
           initialPinning={{
             left: [],
             right: ["actions"],
           }}
           columns={reorderedDisplayedFlightsColumns}
-          initialVisibility={{}}
+          initialVisibility={initialColumnVisibility}
           data={displayedFlightsData || []}
           pageCount={isLoading ? 1 : flights?.total_pages}
           manualPagination={true}

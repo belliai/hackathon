@@ -1,6 +1,6 @@
 "use client"
 
-import { HTMLAttributes, ReactNode, useState } from "react"
+import { HTMLAttributes, ReactNode, useEffect, useState } from "react"
 import { Button } from "@components/ui/button"
 import {
   closestCorners,
@@ -37,6 +37,11 @@ import {
 } from "../ui/command"
 import { Popover, PopoverContent } from "../ui/popover"
 
+export type ColumnsByVisibility<TData> = {
+  active: Column<TData, unknown>[]
+  hidden: Column<TData, unknown>[]
+}
+
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   children: ReactNode
@@ -47,6 +52,7 @@ interface DataTableViewOptionsProps<TData> {
   onOpenChange: (open: boolean) => void
   onOrderChange?: (newOrder: string[]) => void // Function to save the column order
   onResetColumns?: () => void
+  onVisibilityChange?: (columnsVisibility: ColumnsByVisibility<TData>) => void
 }
 
 export function DataTableViewOptions<TData>({
@@ -83,8 +89,6 @@ export function DataTableViewOptions<TData>({
   }
 
   const onHideColumn = (col: Column<TData, unknown>) => {
-    console.log(col)
-
     setSections((sections) => {
       const activeIndex = sections.active.findIndex(
         (column) => column.id === col.id
@@ -98,6 +102,12 @@ export function DataTableViewOptions<TData>({
       const newHidden = [...sections.hidden, col]
 
       col.toggleVisibility(false)
+
+      props.onVisibilityChange?.({
+        active: newActive,
+        hidden: newHidden,
+      })
+
 
       return {
         ...sections,
@@ -122,6 +132,11 @@ export function DataTableViewOptions<TData>({
 
       // Update the column visibility in the table
       col.toggleVisibility(true)
+
+      props.onVisibilityChange?.({
+        active: newActive,
+        hidden: newHidden,
+      })
 
       return {
         ...sections,
