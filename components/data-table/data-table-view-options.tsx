@@ -1,6 +1,6 @@
 "use client"
 
-import { HTMLAttributes, ReactNode, useState } from "react"
+import { HTMLAttributes, ReactNode, useEffect, useMemo, useState } from "react"
 import { Button } from "@components/ui/button"
 import {
   closestCorners,
@@ -37,6 +37,11 @@ import {
 } from "../ui/command"
 import { Popover, PopoverContent } from "../ui/popover"
 
+export type ColumnsByVisibility<TData> = {
+  active: Column<TData, unknown>[]
+  hidden: Column<TData, unknown>[]
+}
+
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   children: ReactNode
@@ -45,44 +50,36 @@ interface DataTableViewOptionsProps<TData> {
   showShowAll?: boolean
   initialVisibility?: VisibilityState
   onOpenChange: (open: boolean) => void
+  onOrderChange?: (newOrder: string[]) => void // Function to save the column order
+  onResetColumns?: () => void
+  onVisibilityChange?: (columnsVisibility: ColumnsByVisibility<TData>) => void
 }
 
 export function DataTableViewOptions<TData>({
   table,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  const columns = table.getAllColumns().filter((col) => Boolean(col.accessorFn))
-
-  const activeColumns = columns.filter(
-    (column) => column.getIsVisible() === true
-  )
-  const hiddenColumns = columns.filter(
-    (column) => column.getIsVisible() === false
-  )
-
   const [sections, setSections] = useState<{
     [key: string]: Column<TData, unknown>[]
   }>({
-    active: activeColumns,
-    hidden: hiddenColumns,
+    active: [],
+    hidden: [],
   })
 
-  function resetColumnVisibility() {
-    table.setColumnVisibility(props.initialVisibility ?? {})
+  useEffect(() => {
+    // Initiate in useEffect to enable rerenders when the table columns change
+    // If we do this outside of useEffect, the setSections won't be triggered from a change of the "table" prop in the parent component
+    const columns = table.getAllColumns()
+    if (columns.length > 0) {
+      const activeColumns = columns.filter((col) => col.getIsVisible())
+      const hiddenColumns = columns.filter((col) => !col.getIsVisible())
 
-    const defaultVisibleSections = columns.filter(
-      (column) => props.initialVisibility?.[column.id] !== false
-    )
-
-    const defaultHiddenSections = columns.filter(
-      (column) => props.initialVisibility?.[column.id] === false
-    )
-
-    setSections({
-      active: defaultVisibleSections,
-      hidden: defaultHiddenSections,
-    })
-  }
+      setSections({
+        active: activeColumns,
+        hidden: hiddenColumns,
+      })
+    }
+  }, [table.getAllColumns(), props.initialVisibility])
 
   const [activeColumnId, setActiveColumndId] = useState<null | string>(null)
 
@@ -98,8 +95,6 @@ export function DataTableViewOptions<TData>({
   }
 
   const onHideColumn = (col: Column<TData, unknown>) => {
-    console.log(col)
-
     setSections((sections) => {
       const activeIndex = sections.active.findIndex(
         (column) => column.id === col.id
@@ -113,6 +108,11 @@ export function DataTableViewOptions<TData>({
       const newHidden = [...sections.hidden, col]
 
       col.toggleVisibility(false)
+
+      props.onVisibilityChange?.({
+        active: newActive,
+        hidden: newHidden,
+      })
 
       return {
         ...sections,
@@ -137,6 +137,11 @@ export function DataTableViewOptions<TData>({
 
       // Update the column visibility in the table
       col.toggleVisibility(true)
+
+      props.onVisibilityChange?.({
+        active: newActive,
+        hidden: newHidden,
+      })
 
       return {
         ...sections,
@@ -221,8 +226,6 @@ export function DataTableViewOptions<TData>({
       (col) => col.id === over?.id
     )
 
-    console.log({ activeContainer, overContainer })
-
     table
       .getColumn(active.id as string)
       ?.toggleVisibility(overContainer === "hidden" ? false : true)
@@ -234,7 +237,12 @@ export function DataTableViewOptions<TData>({
           activeIndex,
           overIndex
         )
-        table.setColumnOrder(newOrder.map((col) => col.id))
+
+        const newOrderIds = newOrder.map((col) => col.id)
+
+        props.onOrderChange?.(newOrderIds)
+
+        table.setColumnOrder(newOrderIds)
         return {
           ...section,
           [overContainer]: newOrder,
@@ -336,40 +344,41 @@ export function DataTableViewOptions<TData>({
                     )}
                   </div>
                   {sections.hidden.map((column) => (
-                    <Draggable key={column.id} args={{ id: column.id }}>
-                      <CommandItem
-                        key={column.id}
-                        value={
-                          typeof column?.columnDef?.header === "function"
-                            ? (column?.columnDef?.header as () => string)()
-                            : String(column.columnDef.header)
-                        }
-                        className="flex flex-row items-center justify-between"
+                    // <Draggable key={column.id} args={{ id: column.id }}>
+                    <CommandItem
+                      key={column.id}
+                      value={
+                        typeof column?.columnDef?.header === "function"
+                          ? (column?.columnDef?.header as () => string)()
+                          : String(column.columnDef.header)
+                      }
+                      className="flex flex-row items-center justify-between"
+                    >
+                      <div className="flex flex-row items-center gap-2">
+                        {/* <GripVerticalIcon className="size-4 text-muted-foreground" /> */}
+                        <div className="size-4" />
+                        {typeof column?.columnDef?.header === "function"
+                          ? (column?.columnDef?.header as () => string)()
+                          : String(column.columnDef.header)}
+                      </div>
+                      <button
+                        data-no-dnd="true"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          onShowColumn(column)
+                        }}
                       >
-                        <div className="flex flex-row items-center gap-2">
-                          <GripVerticalIcon className="size-4 text-muted-foreground" />
-                          {typeof column?.columnDef?.header === "function"
-                            ? (column?.columnDef?.header as () => string)()
-                            : String(column.columnDef.header)}
-                        </div>
-                        <button
-                          data-no-dnd="true"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            onShowColumn(column)
-                          }}
-                        >
-                          <EyeOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
-                        </button>
-                      </CommandItem>
-                    </Draggable>
+                        <EyeOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                      </button>
+                    </CommandItem>
+                    // </Draggable>
                   ))}
                   <div className="px-2 py-1">
                     <Button
                       variant={"link"}
                       className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
-                      onClick={resetColumnVisibility}
+                      onClick={props.onResetColumns}
                     >
                       Reset Columns to Default
                     </Button>
