@@ -46,6 +46,7 @@ interface DataTableViewOptionsProps<TData> {
   initialVisibility?: VisibilityState
   onOpenChange: (open: boolean) => void
   onOrderChange?: (newOrder: string[]) => void // Function to save the column order
+  onResetColumns?: () => void
 }
 
 export function DataTableViewOptions<TData>({
@@ -67,23 +68,6 @@ export function DataTableViewOptions<TData>({
     active: activeColumns,
     hidden: hiddenColumns,
   })
-
-  function resetColumnVisibility() {
-    table.setColumnVisibility(props.initialVisibility ?? {})
-
-    const defaultVisibleSections = columns.filter(
-      (column) => props.initialVisibility?.[column.id] !== false
-    )
-
-    const defaultHiddenSections = columns.filter(
-      (column) => props.initialVisibility?.[column.id] === false
-    )
-
-    setSections({
-      active: defaultVisibleSections,
-      hidden: defaultHiddenSections,
-    })
-  }
 
   const [activeColumnId, setActiveColumndId] = useState<null | string>(null)
 
@@ -375,7 +359,7 @@ export function DataTableViewOptions<TData>({
                     <Button
                       variant={"link"}
                       className="h-fit px-0 py-0 text-xs text-button-primary transition-colors hover:no-underline"
-                      onClick={resetColumnVisibility}
+                      onClick={props.onResetColumns}
                     >
                       Reset Columns to Default
                     </Button>

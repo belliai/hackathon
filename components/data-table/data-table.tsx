@@ -59,6 +59,7 @@ export interface DataTableProps<TData, TValue> {
   onExport?: (prop: any) => void
   initialColumnOrder?: string[]
   onOrderChange?: (newOrder: string[]) => void
+  onResetColumns?: () => void
 }
 
 export function DataTable<TData, TValue>({
@@ -84,6 +85,7 @@ export function DataTable<TData, TValue>({
   onExport,
   initialColumnOrder,
   onOrderChange,
+  onResetColumns,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -129,10 +131,17 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange: setPagination,
     manualPagination: manualPagination ?? false,
-    initialState: {
-      columnOrder: initialColumnOrder,
-    },
   })
+
+  useEffect(() => {
+    /**
+     * We use a useEffect to set the column order instead of passing it directly to the useReactTable hook.
+     * This is so the column order will always be set if the initialColumnOrder prop changes
+     */
+    if (initialColumnOrder) {
+      table.setColumnOrder(initialColumnOrder)
+    }
+  }, [initialColumnOrder])
 
   useEffect(() => {
     tableState && tableState({ pagination })
@@ -151,6 +160,7 @@ export function DataTable<TData, TValue>({
           extraLeftComponents={extraLeftComponents}
           extraRightComponents={extraRightComponents}
           onOrderChange={onOrderChange}
+          onResetColumns={onResetColumns}
         />
       )}
       <div className="relative">

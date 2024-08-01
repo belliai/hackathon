@@ -102,10 +102,11 @@ export default function FlightsDashboardPage() {
   const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
     useUpdateFlight()
 
-  const { useGetColumns, useUpdateColumn } = useColumns()
+  const { useGetColumns, useUpdateColumn, useResetColumns } = useColumns()
   const columnsQuery = useGetColumns("dashboard_flights")
 
   const { mutateAsync } = useUpdateColumn()
+  const { mutateAsync: resetColumns } = useResetColumns("dashboard_flights")
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -327,6 +328,30 @@ export default function FlightsDashboardPage() {
     )
   }
 
+  async function handleResetColumns() {
+    await resetColumns(
+      {
+        tableName: "dashboard_flights",
+      },
+      {
+        onError: () => {
+          toast({
+            title: "Error",
+            description: "Failed to reset columns",
+          })
+        },
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Columns reset successfully",
+          })
+
+
+        },
+      }
+    )
+  }
+
   const selectedFlightModalTitle = `${selectedFlight?.flight_number}, ${selectedFlight?.origin.name} - ${selectedFlight?.destination.name}`
   const selectedFlightModalDescription = `${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} to ${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} (${selectedFlight?.tail?.tail_number || ""}, ${selectedFlight?.tail?.aircraft_type?.name || ""})`
 
@@ -362,6 +387,7 @@ export default function FlightsDashboardPage() {
         </div>
       ) : (
         <DataTable
+          onResetColumns={handleResetColumns}
           onOrderChange={handleOnOrderChange}
           initialColumnOrder={initialColumnOrder}
           initialPinning={{
@@ -370,7 +396,7 @@ export default function FlightsDashboardPage() {
           }}
           columns={reorderedDisplayedFlightsColumns}
           initialVisibility={{}}
-          data={displayedFlightsData}
+          data={displayedFlightsData || []}
           pageCount={isLoading ? 1 : flights?.total_pages}
           manualPagination={true}
           onRowClick={handleRowClick}

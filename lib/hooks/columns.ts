@@ -46,8 +46,28 @@ export function useColumns() {
         return updateMutation
     }
 
+
+    /**
+     * Resets the columns configuration of a given table to the default configuration set in the admin organization
+     * @param tableName 
+     */
+    function useResetColumns(tableName: string) {
+        const resetMutation = useMutation({
+            mutationKey: [route, tableName],
+            mutationFn: async (data: { tableName: string }) => {
+                const res = await (await belli).post(route + `/reset/${data.tableName}`)
+
+                return res.data
+            },
+            onSuccess: () => queryClient.invalidateQueries({ queryKey: [route, tableName] })
+        })
+
+        return resetMutation
+    }
+
     return {
         useGetColumns,
-        useUpdateColumn
+        useUpdateColumn,
+        useResetColumns
     }
 }

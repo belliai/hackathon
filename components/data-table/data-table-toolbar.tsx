@@ -41,6 +41,7 @@ export interface DataTableToolbarProps<TData> {
   extraLeftComponents?: React.ReactNode
   extraRightComponents?: React.ReactNode
   onOrderChange?: (order: string[]) => void
+  onResetColumns?: () => void
 }
 
 export function DataTableToolbar<TData>({
@@ -110,7 +111,9 @@ export function DataTableToolbar<TData>({
   }, [lockedPageFilters.isLocked])
 
   return (
-    <div className={cn("flex items-center justify-between h-9", props.className)}>
+    <div
+      className={cn("flex h-9 items-center justify-between", props.className)}
+    >
       <div className="flex flex-row items-center gap-3">
         {props.extraButtons?.map((button, index) => (
           <Button
@@ -199,6 +202,7 @@ export function DataTableToolbar<TData>({
               table={table}
               initialVisibility={props.initialVisibility ?? {}}
               onOrderChange={props.onOrderChange}
+              onResetColumns={props.onResetColumns}
             >
               <TooltipTrigger asChild>
                 <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>
@@ -239,11 +243,9 @@ export function DataTableToolbar<TData>({
               <p>{isLockedView ? "Unlock Filter" : "Lock Filter"}</p>
             </TooltipContent>
           </Tooltip> */}
-          
         </div>
         {props.extraRightComponents}
       </div>
-      
     </div>
   )
 }
