@@ -40,6 +40,7 @@ export interface DataTableToolbarProps<TData> {
   menuId?: string
   extraLeftComponents?: React.ReactNode
   extraRightComponents?: React.ReactNode
+  onOrderChange?: (order: string[]) => void
 }
 
 export function DataTableToolbar<TData>({
@@ -197,6 +198,7 @@ export function DataTableToolbar<TData>({
               onOpenChange={setViewOpen}
               table={table}
               initialVisibility={props.initialVisibility ?? {}}
+              onOrderChange={props.onOrderChange}
             >
               <TooltipTrigger asChild>
                 <Button size={"icon"} variant={"outline"} className={"h-8 w-8"}>

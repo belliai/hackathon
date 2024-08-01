@@ -39,6 +39,7 @@ export const useListViewColumns = (
 ): ColumnDef<Flight>[] => {
   return [
     {
+      id: "Date", // Used to match the column_name from the columns configuration endpoint in the API
       accessorKey: "departure_date",
       header: () => (
         <TableHeaderWithTooltip header="Date" tooltipId="next_at" />
@@ -49,6 +50,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Day",
       accessorKey: "day",
       header: () => (
         <TableHeaderWithTooltip header="Day" tooltipId="day-of-week" />
@@ -59,6 +61,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Flight",
       accessorKey: "flight_number",
       header: () => (
         <TableHeaderWithTooltip
@@ -68,6 +71,7 @@ export const useListViewColumns = (
       ),
     },
     {
+      id: "Departure",
       accessorKey: "departure_d",
       header: () => (
         <TableHeaderWithTooltip header="Departure" tooltipId="departure-time" />
@@ -82,6 +86,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Origin",
       accessorKey: "origin.name",
       header: () => (
         <TableHeaderWithTooltip
@@ -96,6 +101,7 @@ export const useListViewColumns = (
       filterFn: "includesString",
     },
     {
+      id: "Arrival",
       accessorKey: "arrival_time",
       header: () => (
         <TableHeaderWithTooltip header="Arrival" tooltipId="arrival-time" />
@@ -106,6 +112,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Destination",
       accessorKey: "destination.name",
       header: () => (
         <TableHeaderWithTooltip
@@ -119,6 +126,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Flight Type",
       accessorKey: "duration",
       accessorFn: (row) =>
         `${row.flight_duration_hour}h ${row.flight_duration_minute}m`,
@@ -130,6 +138,7 @@ export const useListViewColumns = (
       ),
     },
     {
+      id: "Tail Number",
       accessorKey: "tail.tail_number",
       size: 400,
       header: () => (
@@ -149,6 +158,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Aircraft Type",
       accessorKey: "aircraft.aircraft_type",
       header: () => (
         <TableHeaderWithTooltip
@@ -185,6 +195,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Passenger Capacity",
       accessorKey: "aircraft.passenger_capacity",
       header: () => (
         <TableHeaderWithTooltip
@@ -198,6 +209,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Fuel Capacity",
       accessorKey: "aircraft.landing_weight",
       header: () => (
         <TableHeaderWithTooltip
@@ -211,6 +223,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Cargo Capacity",
       accessorKey: "aircraft.cargo_capacity",
       header: () => (
         <TableHeaderWithTooltip
@@ -224,6 +237,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "MTOW",
       accessorKey: "aircraft.mtow",
       header: () => (
         <TableHeaderWithTooltip header="MTOW" tooltipId="flights-mtow" />
@@ -234,6 +248,7 @@ export const useListViewColumns = (
       },
     },
     {
+      id: "Max Zero Fuel Wt",
       accessorKey: "aircraft.max_zero_fuel_weight",
       header: () => (
         <TableHeaderWithTooltip
@@ -246,8 +261,8 @@ export const useListViewColumns = (
         return aircraft ? aircraft.mtow : ""
       },
     },
-
     {
+      id: "Max Landing Wt",
       accessorKey: "updated_by",
       header: () => (
         <TableHeaderWithTooltip

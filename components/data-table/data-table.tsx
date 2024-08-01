@@ -24,6 +24,7 @@ import {
   getSortedRowModel,
   PaginationState,
   SortingState,
+  Table as TableType,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
@@ -56,6 +57,8 @@ export interface DataTableProps<TData, TValue> {
   showToolbarOnlyOnHover?: boolean
   pageSize?: number
   onExport?: (prop: any) => void
+  initialColumnOrder?: string[]
+  onOrderChange?: (newOrder: string[]) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -79,6 +82,8 @@ export function DataTable<TData, TValue>({
   showToolbarOnlyOnHover,
   pageSize = 20,
   onExport,
+  initialColumnOrder,
+  onOrderChange,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -124,6 +129,9 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange: setPagination,
     manualPagination: manualPagination ?? false,
+    initialState: {
+      columnOrder: initialColumnOrder,
+    },
   })
 
   useEffect(() => {
@@ -142,6 +150,7 @@ export function DataTable<TData, TValue>({
           menuId={menuId}
           extraLeftComponents={extraLeftComponents}
           extraRightComponents={extraRightComponents}
+          onOrderChange={onOrderChange}
         />
       )}
       <div className="relative">

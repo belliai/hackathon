@@ -45,6 +45,7 @@ interface DataTableViewOptionsProps<TData> {
   showShowAll?: boolean
   initialVisibility?: VisibilityState
   onOpenChange: (open: boolean) => void
+  onOrderChange?: (newOrder: string[]) => void // Function to save the column order
 }
 
 export function DataTableViewOptions<TData>({
@@ -234,7 +235,12 @@ export function DataTableViewOptions<TData>({
           activeIndex,
           overIndex
         )
-        table.setColumnOrder(newOrder.map((col) => col.id))
+
+        const newOrderIds = newOrder.map((col) => col.id)
+
+        props.onOrderChange?.(newOrderIds)
+
+        table.setColumnOrder(newOrderIds)
         return {
           ...section,
           [overContainer]: newOrder,
