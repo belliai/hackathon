@@ -126,7 +126,7 @@ export default function Home() {
         }}
         columns={columnWithActions}
         // onRowClick={openModal}
-        data={isLoading ? [] : ordersData.data}
+        data={isLoading ? [] : ordersData?.data}
         pageCount={isLoading ? 1 : ordersData.total_pages}
         manualPagination={true}
         tableState={tableState}
