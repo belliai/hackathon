@@ -309,8 +309,6 @@ export default function FlightsDashboardPage() {
     return initialNonVisibleColumns as VisibilityState
   }, [columnsQuery.data?.non_visible_columns])
 
-  console.log("initialColumnVisibility", initialColumnVisibility)
-
   async function handleOnOrderChange(newOrder: string[]) {
     const newVisibleColumns = newOrder
       .map((column, index) => {
@@ -322,7 +320,7 @@ export default function FlightsDashboardPage() {
 
         return {
           id: columnData.id,
-          visible: !!columnData.visible,
+          visible: true,
           sort_order: index + 1,
         }
       })
@@ -387,10 +385,14 @@ export default function FlightsDashboardPage() {
         (hiddenColumn) => hiddenColumn.id === column.column_name
       )
 
+      const visibleColumn = columnsByvisibility.active.find(
+        (visibleColumn) => visibleColumn.id === column.column_name
+      )
+
       return {
         id: column.id,
         sort_order: index + 1,
-        visible: hiddenColumn === undefined ? column.visible : false,
+        visible: !!visibleColumn && !hiddenColumn,
       }
     }) as {
       id: string

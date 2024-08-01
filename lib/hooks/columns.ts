@@ -30,19 +30,20 @@ export function useColumns() {
         return query
     }
 
-    const updateMutation = useMutation({
-        mutationKey: [route],
-        mutationFn: async (data: { columns: Omit<Column, "column_name">[] },) => {
-            const res = data.columns.map(async column => {
-                return (await (await belli).patch(route, column)).data
-            })
-
-            return await Promise.all(res)
-        },
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: [route] })
-    })
-
+    
     function useUpdateColumn() {
+        const updateMutation = useMutation({
+            mutationKey: [route],
+            mutationFn: async (data: { columns: Omit<Column, "column_name">[] },) => {
+                const res = data.columns.map(async column => {
+                    return (await (await belli).patch(route, column)).data
+                })
+    
+                return await Promise.all(res)
+            },
+            onSuccess: () => queryClient.invalidateQueries({ queryKey: [route] })
+        })
+        
         return updateMutation
     }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { HTMLAttributes, ReactNode, useEffect, useState } from "react"
+import { HTMLAttributes, ReactNode, useEffect, useMemo, useState } from "react"
 import { Button } from "@components/ui/button"
 import {
   closestCorners,
@@ -59,21 +59,27 @@ export function DataTableViewOptions<TData>({
   table,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  const columns = table.getAllColumns().filter((col) => Boolean(col.accessorFn))
-
-  const activeColumns = columns.filter(
-    (column) => column.getIsVisible() === true
-  )
-  const hiddenColumns = columns.filter(
-    (column) => column.getIsVisible() === false
-  )
-
   const [sections, setSections] = useState<{
     [key: string]: Column<TData, unknown>[]
   }>({
-    active: activeColumns,
-    hidden: hiddenColumns,
+    active: [],
+    hidden: [],
   })
+
+  useEffect(() => {
+    // Initiate in useEffect to enable rerenders when the table columns change
+    // If we do this outside of useEffect, the setSections won't be triggered from a change of the "table" prop in the parent component
+    const columns = table.getAllColumns()
+    if (columns.length > 0) {
+      const activeColumns = columns.filter((col) => col.getIsVisible())
+      const hiddenColumns = columns.filter((col) => !col.getIsVisible())
+
+      setSections({
+        active: activeColumns,
+        hidden: hiddenColumns,
+      })
+    }
+  }, [table.getAllColumns(), props.initialVisibility])
 
   const [activeColumnId, setActiveColumndId] = useState<null | string>(null)
 
@@ -107,7 +113,6 @@ export function DataTableViewOptions<TData>({
         active: newActive,
         hidden: newHidden,
       })
-
 
       return {
         ...sections,
@@ -220,8 +225,6 @@ export function DataTableViewOptions<TData>({
     const overIndex = sections[overContainer].findIndex(
       (col) => col.id === over?.id
     )
-
-    console.log({ activeContainer, overContainer })
 
     table
       .getColumn(active.id as string)
@@ -341,34 +344,35 @@ export function DataTableViewOptions<TData>({
                     )}
                   </div>
                   {sections.hidden.map((column) => (
-                    <Draggable key={column.id} args={{ id: column.id }}>
-                      <CommandItem
-                        key={column.id}
-                        value={
-                          typeof column?.columnDef?.header === "function"
-                            ? (column?.columnDef?.header as () => string)()
-                            : String(column.columnDef.header)
-                        }
-                        className="flex flex-row items-center justify-between"
+                    // <Draggable key={column.id} args={{ id: column.id }}>
+                    <CommandItem
+                      key={column.id}
+                      value={
+                        typeof column?.columnDef?.header === "function"
+                          ? (column?.columnDef?.header as () => string)()
+                          : String(column.columnDef.header)
+                      }
+                      className="flex flex-row items-center justify-between"
+                    >
+                      <div className="flex flex-row items-center gap-2">
+                        {/* <GripVerticalIcon className="size-4 text-muted-foreground" /> */}
+                        <div className="size-4" />
+                        {typeof column?.columnDef?.header === "function"
+                          ? (column?.columnDef?.header as () => string)()
+                          : String(column.columnDef.header)}
+                      </div>
+                      <button
+                        data-no-dnd="true"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          onShowColumn(column)
+                        }}
                       >
-                        <div className="flex flex-row items-center gap-2">
-                          <GripVerticalIcon className="size-4 text-muted-foreground" />
-                          {typeof column?.columnDef?.header === "function"
-                            ? (column?.columnDef?.header as () => string)()
-                            : String(column.columnDef.header)}
-                        </div>
-                        <button
-                          data-no-dnd="true"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            onShowColumn(column)
-                          }}
-                        >
-                          <EyeOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
-                        </button>
-                      </CommandItem>
-                    </Draggable>
+                        <EyeOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                      </button>
+                    </CommandItem>
+                    // </Draggable>
                   ))}
                   <div className="px-2 py-1">
                     <Button
