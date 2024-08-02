@@ -1,17 +1,5 @@
-import { Version } from "@/types/aircraft/aircraft"
+import { AircraftFormSections } from "@/app/data-fields/aircrafts/constants/form-fields-sections"
 
-export type AircraftFormTabs =
-  | "aircraft-type"
-  | "cargo-capacity"
-  | "max-per-piece"
-  | "aircraft-details"
-  | "door-dimensions"
-  | "volume"
+export type AircraftFormTabs = AircraftFormSections | "aircraft-type"
 
-export type TailNumberFormTabs =
-  | "tail-numbers"
-  | "cargo-capacity"
-  | "max-per-piece"
-  | "aircraft-details"
-  | "door-dimensions"
-  | "volume"
+export type TailNumberFormTabs = AircraftFormSections | "tail-numbers"

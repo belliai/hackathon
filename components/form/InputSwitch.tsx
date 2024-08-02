@@ -1,4 +1,4 @@
-import { ChevronDown, ListIcon, SearchIcon } from "lucide-react"
+import { ListIcon, SearchIcon } from "lucide-react"
 import { FieldValues, Path, PathValue, useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -8,7 +8,6 @@ import { Checkbox } from "../ui/checkbox"
 import ComboBoxInput, {
   ComboAdminBoxInputProps,
 } from "../ui/combobox-admin-input"
-import { Command } from "../ui/command"
 import DateInput from "../ui/date-input"
 import {
   FormControl,
@@ -18,7 +17,6 @@ import {
   FormMessage,
 } from "../ui/form"
 import { Input, InputProps } from "../ui/input"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import {
   Select,
   SelectContent,
@@ -26,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { Switch } from "../ui/switch"
 import { Combobox, ComboboxProps } from "./combobox"
 import NumberInputStepper from "./number-input-stepper"
 
@@ -44,14 +43,9 @@ export type SelectOptions = {
 
 export type InputSwitchProps<DataType extends FieldValues> =
   | (BaseInputProps<DataType> & {
-      type:
-        | "search"
-        | "text"
-        | "checkbox"
-        | "hidden"
-        | "number"
+      type: "search" | "text" | "checkbox" | "switch" | "hidden" | "number"
     })
-    | (BaseInputProps<DataType> & {
+  | (BaseInputProps<DataType> & {
       type: "stepper-number"
       suffix?: string
       min?: number
@@ -74,7 +68,7 @@ export type InputSwitchProps<DataType extends FieldValues> =
       Omit<ComboAdminBoxInputProps<DataType, Path<DataType>>, "field">)
   | (BaseInputProps<DataType> & {
       type: "combobox"
-      selectOptions: SelectOptions
+      selectOptions?: SelectOptions
     } & ComboboxProps)
 
 export default function InputSwitch<DataType extends FieldValues>(
@@ -255,6 +249,33 @@ export default function InputSwitch<DataType extends FieldValues>(
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     className={cn("border-zinc-700", props.className)}
+                  />
+                </FormControl>
+                {!!props.label && (
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
+                    {props.label}
+                  </FormLabel>
+                )}
+              </FormItem>
+            )}
+          />
+        )
+      case "switch":
+        return (
+          <FormField
+            key={props.name}
+            control={form.control}
+            name={props.name}
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-1.5 space-y-0">
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className={cn(props.className)}
                   />
                 </FormControl>
                 {!!props.label && (

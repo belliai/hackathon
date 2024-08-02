@@ -1,36 +1,12 @@
 import { z } from "zod"
 
+import { aircraftGeneralFieldsFormSchema } from "./general-fields"
+
 export const tailNumberFormSchema = z.object({
   tail_number: z.string().min(1, "Required"),
   aircraft_id: z.string().min(1, "Required"),
-  body_type_id: z.string().uuid().optional(),
-  aft_h: z.string().optional(),
-  aft_w: z.string().optional(),
-  bulk: z.string().optional(),
-  bulk_h: z.string().optional(),
-  bulk_w: z.string().optional(),
-  cargo_capacity: z.string().optional(),
-  fwd: z.string().optional(),
-  fwd_h: z.string().optional(),
-  fwd_w: z.string().optional(),
-  fwt: z.string().optional(),
-  gl_code_id: z.string().uuid().optional(),
-  landing_weight: z.string().optional(),
-  max_bulk_capacity_volume: z.string().optional(),
-  max_bulk_capacity_weight: z.string().optional(),
-  max_dimension_breadth: z.string().optional(),
-  max_dimension_height: z.string().optional(),
-  max_dimension_length: z.string().optional(),
-  max_volume: z.string().optional(),
-  max_zero_fuel_weight: z.string().optional(),
-  mtow: z.string().optional(),
-  passenger_capacity: z.string().optional(),
-  restricted_weight_piece: z.string().optional(),
   status_id: z.string().uuid().optional(),
-  uld_position: z.string().optional(),
-  dimension_unit_id: z.string().uuid().optional(),
-  volume_unit_id: z.string().uuid().optional(),
-  weight_unit_id: z.string().uuid().optional(),
+  ...aircraftGeneralFieldsFormSchema.shape,
 })
 
 export type TailNumberFormValues = z.infer<typeof tailNumberFormSchema>
