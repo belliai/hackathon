@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoopIcon } from "@radix-ui/react-icons"
-import { PaginationState } from "@tanstack/react-table"
+import { PaginationState, SortingState } from "@tanstack/react-table"
 import {
   endOfMonth,
   endOfWeek,
@@ -135,6 +135,10 @@ export default function Page() {
     pageSize: 10,
   })
 
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "departure_date", desc: false }
+  ])
+
   const [selectedData, setSelectedData] = useState<Flight | null>(null)
 
   const [filterWeekly, setFilterWeekly] = useState<{ from: Date; to: Date }>({
@@ -155,6 +159,14 @@ export default function Page() {
     }),
     [pagination]
   )
+
+  const sortingDetails = useMemo(()=>({
+    //curently only sort by column departure_date
+    //TODO implement all column sorting
+    sort_by: sorting[0]?.id || "departure_date",
+    sort_dir: sorting[0]?.desc ? "desc" :  "asc" || "asc",
+  }),[sorting])
+
   const filtersHookForm = useForm({
     resolver: zodResolver(filtersSchema),
     defaultValues: {
@@ -173,6 +185,7 @@ export default function Page() {
 
   const { data: flightData, isLoading } = useFlightList({
     ...paginationDetails,
+    ...sortingDetails,
     start_date:
       filterData.period === "all"
         ? format(new Date(), "yyyy-MM-dd")
@@ -187,6 +200,7 @@ export default function Page() {
           ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
           : filterData.range_date.to &&
             format(filterData.range_date.to, "yyyy-MM-dd"),
+   
   })
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
@@ -303,6 +317,7 @@ export default function Page() {
 
   const tableState = useCallback(async ({ pagination }: any) => {
     setPagination(pagination)
+
   }, [])
 
   const listViewColumns = useListViewColumns({
@@ -316,6 +331,7 @@ export default function Page() {
     },
   })
 
+  // this temporary sorting in client side, if  nested sorting in BE ready it can be removed.
   const flights =
     flightData &&
     flightData.data
@@ -337,9 +353,10 @@ export default function Page() {
           departureDatetime,
         }
       })
-      // .filter((flight) => flight.departureDatetime > new Date())
       .sort(
-        (a, b) => a.departureDatetime.getTime() - b.departureDatetime.getTime()
+        (a, b) =>  { 
+          if(sorting[0].desc) b.departureDatetime.getTime() - a.departureDatetime.getTime()
+          return a.departureDatetime.getTime() - b.departureDatetime.getTime() }
       )
 
   return (

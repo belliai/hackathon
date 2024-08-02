@@ -37,6 +37,11 @@ import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar, DataTableToolbarProps } from "./data-table-toolbar"
 import { ColumnsByVisibility } from "./data-table-view-options"
 
+type TableStateProps = {
+  pagination?: PaginationState
+  sorting?: SortingState
+}
+
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -49,7 +54,8 @@ export interface DataTableProps<TData, TValue> {
   initialPinning?: ColumnPinningState
   initialVisibility?: VisibilityState
   manualPagination?: boolean
-  tableState?: (prop: any) => void
+  manualSorting?: boolean
+  tableState?: (prop: TableStateProps) => void
   pageCount?: number
   menuId?: string
   isCanExport?: boolean
@@ -76,6 +82,7 @@ export function DataTable<TData, TValue>({
   initialVisibility,
   onRowClick,
   manualPagination,
+  manualSorting,
   tableState,
   pageCount,
   menuId,
@@ -134,6 +141,7 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange: setPagination,
     manualPagination: manualPagination ?? false,
+    manualSorting: manualSorting ?? false,
   })
 
   useEffect(() => {
@@ -153,8 +161,8 @@ export function DataTable<TData, TValue>({
   }, [initialVisibility, table])
 
   useEffect(() => {
-    tableState && tableState({ pagination })
-  }, [pagination])
+    tableState && tableState({ pagination, sorting })
+  }, [pagination, sorting])
 
   return (
     <div className="group flex flex-col gap-4" ref={hoverRef}>
