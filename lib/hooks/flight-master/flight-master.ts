@@ -12,6 +12,9 @@ const route = "flights"
 interface FlightParamsProps extends PaginationParams {
   start_date?: string
   end_date?: string
+  sort_by? : string
+  sort_dir?: string
+
 }
 
 export const fetchFlightList = async (

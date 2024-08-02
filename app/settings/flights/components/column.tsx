@@ -79,10 +79,13 @@ export const useListViewColumns = (
       cell: ({ row }) => {
         const departure_h = row.original.departure_hour
         const departure_m = row.original.departure_minute
+        const period = row.original.departure_period
         const today = new Date()
         today.setHours(departure_h)
         today.setMinutes(departure_m)
-        return moment(today).format("HH:mma")
+        const periodFormat = period.toLowerCase()
+        const hoursFormat = moment(today).format("HH:mm")
+        return `${hoursFormat}${periodFormat}`
       },
     },
     {
