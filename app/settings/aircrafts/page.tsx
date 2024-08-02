@@ -11,7 +11,6 @@ import {
   TailNumberFormValues,
 } from "@/schemas/aircraft/tail-numbers"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { format } from "date-fns"
 import { PlaneIcon, PlusIcon, ScrollTextIcon, Users } from "lucide-react"
 import { useForm } from "react-hook-form"
 
@@ -29,7 +28,6 @@ import { DataTable } from "@/components/data-table/data-table"
 import PageContainer from "@/components/layout/PageContainer"
 
 import { aircraftTailNumbersColumns } from "./components/columns/aircraft-tail-number-columns"
-import { aircraftTypeColumns } from "./components/columns/aircraft-type-columns"
 import AircraftTypeForm from "./components/forms/aircraft-form"
 import TailNumberForm from "./components/forms/aircraft-tail-number-form"
 import {
