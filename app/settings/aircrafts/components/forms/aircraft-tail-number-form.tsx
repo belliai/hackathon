@@ -16,7 +16,6 @@ import { useStep } from "usehooks-ts"
 import { Aircraft } from "@/types/aircraft/aircraft"
 import { TailNumber } from "@/types/aircraft/tail-number"
 import { useAircraftBodyTypes } from "@/lib/hooks/aircrafts/aircraft-body-type"
-import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircraftStatuses } from "@/lib/hooks/aircrafts/aircraft-statuses"
 import {
   route as aircraftRoute,
@@ -27,6 +26,7 @@ import {
   useDeleteTailNumber,
   useUpdateTailNumber,
 } from "@/lib/hooks/aircrafts/tail-numbers"
+import { useDefaultMeasurements } from "@/lib/hooks/units/default-measurement"
 import { useUnits } from "@/lib/hooks/units/units"
 import { cn } from "@/lib/utils"
 import {
@@ -127,9 +127,6 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     if (selectedAircraft && !isEdit) {
       const newDefaults: Partial<TailNumberFormValues> = {
         ...selectedAircraft,
-        dimension_unit_id: selectedAircraft.dimension_unit?.id,
-        weight_unit_id: selectedAircraft.weight_unit?.id,
-        volume_unit_id: selectedAircraft.volume_unit?.id,
         body_type_id: selectedAircraft.body_type?.id,
         gl_code_id: selectedAircraft.gl_code?.id,
       }
@@ -143,28 +140,10 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
 
   const { data: aircraftBodyTypes } = useAircraftBodyTypes()
   const { data: aircraftStatuses } = useAircraftStatuses()
-  const { aircraftDefaults } = useAircraftDefaults()
-
-  const { data: unitsW } = useUnits({
-    category: "weight",
-  })
-
-  const { data: unitsVol } = useUnits({
-    category: "volume",
-  })
-
-  const { data: unitsLen } = useUnits({
-    category: "length",
-  })
 
   const aircraftStatusOptions = aircraftStatuses?.map((status) => ({
     value: String(status.ID),
     label: status.Name,
-  }))
-
-  const aircraftBodyTypesOptions = aircraftBodyTypes?.map((bodyType) => ({
-    value: String(bodyType.ID),
-    label: bodyType.Name,
   }))
 
   async function handleSubmitTailNumber(payload: TailNumberFormValues) {
@@ -214,27 +193,23 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
     }
   }
 
+  const { data: defaultMeasurements } = useDefaultMeasurements()
+
   const selectedWeightUnitSymbol = (
     <span className="text-xs text-muted-foreground">
-      {unitsW?.find((unit) => unit.ID === form.watch("weight_unit_id"))?.Symbol}
+      {defaultMeasurements?.weight_unit.symbol}
     </span>
   )
 
   const selectedVolumeUnitSymbol = (
     <span className="text-xs text-muted-foreground">
-      {
-        unitsVol?.find((unit) => unit.ID === form.watch("volume_unit_id"))
-          ?.Symbol
-      }
+      {defaultMeasurements?.volume_unit.symbol}
     </span>
   )
 
   const selectedDimensionUnitSymbol = (
     <span className="text-xs text-muted-foreground">
-      {
-        unitsLen?.find((unit) => unit.ID === form.watch("dimension_unit_id"))
-          ?.Symbol
-      }
+      {defaultMeasurements?.dimension_unit.symbol}
     </span>
   )
 

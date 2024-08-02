@@ -36,6 +36,7 @@ import {
   useDeleteAircraft,
   useUpdateAircraft,
 } from "@/lib/hooks/aircrafts/aircrafts"
+import { useDefaultMeasurements } from "@/lib/hooks/units/default-measurement"
 import { useUnits } from "@/lib/hooks/units/units"
 import { cn } from "@/lib/utils"
 import {
@@ -175,39 +176,23 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     (item) => item.value === form.watch("version_id")
   )
 
-  const { data: unitsW } = useUnits({
-    category: "weight",
-  })
-
-  const { data: unitsVol } = useUnits({
-    category: "volume",
-  })
-
-  const { data: unitsLen } = useUnits({
-    category: "length",
-  })
+  const { data: defaultMeasurements } = useDefaultMeasurements()
 
   const selectedWeightUnitSymbol = (
     <span className="text-xs text-muted-foreground">
-      {unitsW?.find((unit) => unit.ID === form.watch("weight_unit_id"))?.Symbol}
+      {defaultMeasurements?.weight_unit.symbol}
     </span>
   )
 
   const selectedVolumeUnitSymbol = (
     <span className="text-xs text-muted-foreground">
-      {
-        unitsVol?.find((unit) => unit.ID === form.watch("volume_unit_id"))
-          ?.Symbol
-      }
+      {defaultMeasurements?.volume_unit.symbol}
     </span>
   )
 
   const selectedDimensionUnitSymbol = (
     <span className="text-xs text-muted-foreground">
-      {
-        unitsLen?.find((unit) => unit.ID === form.watch("dimension_unit_id"))
-          ?.Symbol
-      }
+      {defaultMeasurements?.dimension_unit.symbol}
     </span>
   )
 

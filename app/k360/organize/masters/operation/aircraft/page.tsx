@@ -146,9 +146,6 @@ export default function MasterAircraftPage() {
     restricted_weight_piece: "",
     uld_position: "",
     version_id: "",
-    dimension_unit_id: "",
-    volume_unit_id: "",
-    weight_unit_id: "",
   }
 
   const sectionedHookForm = useForm<AircraftFormValues>({
@@ -440,9 +437,6 @@ export default function MasterAircraftPage() {
       version_id: data.version.id,
 
       body_type_id: data.body_type.id,
-      volume_unit_id: data.volume_unit.id,
-      dimension_unit_id: data.dimension_unit.id,
-      weight_unit_id: data.weight_unit.id,
       gl_code_id: data.gl_code.id,
       count: data.count,
     })

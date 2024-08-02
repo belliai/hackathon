@@ -30,9 +30,6 @@ export const aircraftFormDefaultValues: AircraftFormValues = {
   restricted_weight_piece: "",
   uld_position: "",
   version_id: "",
-  dimension_unit_id: "",
-  volume_unit_id: "",
-  weight_unit_id: "",
 }
 
 export const tailNumberFormDefaultValues: TailNumberFormValues = {

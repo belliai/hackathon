@@ -26,9 +26,6 @@ export const aircraftGeneralFieldsFormSchema = z.object({
   passenger_capacity: z.string().optional(),
   restricted_weight_piece: z.string().optional(),
   uld_position: z.string().optional(),
-  dimension_unit_id: z.string().optional(),
-  volume_unit_id: z.string().optional(),
-  weight_unit_id: z.string().optional(),
 })
 
 export type AircraftGeneralFields = z.infer<

@@ -132,9 +132,6 @@ function AircraftDataTable() {
           ? ""
           : data.version.id,
       body_type_id: data.body_type.id,
-      volume_unit_id: data.volume_unit.id,
-      dimension_unit_id: data.dimension_unit.id,
-      weight_unit_id: data.weight_unit.id,
       gl_code_id: data.gl_code.id,
       count: data.count,
     })
@@ -256,15 +253,6 @@ function TailNumbersForm() {
   const handleTailNumberRowClick = (tailNumber: TailNumber) => {
     tailnumberForm.reset({
       ...tailNumber,
-      volume_unit_id:
-        isVallidUuid(tailNumber.volume_unit?.id) ??
-        isVallidUuid(aircraftDefaults?.volume_unit_id),
-      dimension_unit_id:
-        isVallidUuid(tailNumber.dimension_unit?.id) ??
-        isVallidUuid(aircraftDefaults?.dimension_unit_id),
-      weight_unit_id:
-        isVallidUuid(tailNumber.weight_unit?.id) ??
-        isVallidUuid(aircraftDefaults?.weight_unit_id),
       body_type_id: isVallidUuid(tailNumber.body_type?.id),
       status_id: isVallidUuid(tailNumber.status?.id),
       gl_code_id: isVallidUuid(tailNumber.gl_code?.id),
