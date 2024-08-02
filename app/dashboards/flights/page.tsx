@@ -177,7 +177,7 @@ export default function FlightsDashboardPage() {
       const { ID, ...rest } = data
       if (ID) await updateFlight({ ...rest, id: ID })
     },
-  })
+  }).filter(c => c.id !== "Tail Number") // Remove Tail Number column
 
   const displayedFlightsColumns: ColumnDef<FlightWithActualInformation>[] = [
     ...(columns.slice(0, 2) as ColumnDef<FlightWithActualInformation>[]),
@@ -222,16 +222,6 @@ export default function FlightsDashboardPage() {
   function handleRowClick(flight: FlightWithActualInformation) {
     actualInformationForm.reset({
       infos: [
-        {
-          detail: "MTOW",
-          actual: flight?.actual_mtow || "",
-          maximum: flight?.tail?.mtow || "-",
-        },
-        {
-          detail: "Landing Weight",
-          actual: flight?.actual_landing_weight || "",
-          maximum: flight?.tail?.landing_weight || "-",
-        },
         {
           detail: "Cargo Capacity",
           actual: flight?.actual_cargo_capacity || "",
@@ -537,9 +527,20 @@ function ActualInformation({
         return <span>-</span>
       }
 
+      const backgroundPercentage = Number(percentage2) / 100
+      const backgroundAlpha =
+        backgroundPercentage / 100 < 0.1
+          ? 0.1 // Set minimum alpha to 0.1
+          : backgroundPercentage / 100
+
       return (
         <div className="flex w-fit shrink-0 items-center gap-2">
-          <span className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 py-0.5 text-center text-sm text-white">
+          <span
+            className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 py-0.5 text-center text-sm text-white"
+            style={{
+              backgroundColor: `rgba(251, 87, 39, ${backgroundAlpha})`,
+            }}
+          >
             {percentage2}%
           </span>
           <span>

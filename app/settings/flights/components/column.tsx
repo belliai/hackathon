@@ -8,6 +8,7 @@ import {
 import { TableHeaderWithTooltip } from "@/components/ui/table"
 import { SelectOptions } from "@/components/form/InputSwitch"
 
+import { TableCellDropdown } from "./forms/table-cell-dropdown"
 import TailNumberForm from "./forms/tail-number-dropdown"
 
 export type FlightMasterDataType = {
@@ -86,6 +87,33 @@ export const useListViewColumns = (
         const periodFormat = period.toLowerCase()
         const hoursFormat = moment(today).format("HH:mm")
         return `${hoursFormat}${periodFormat}`
+      },
+    },
+    {
+      // TODO: Integrate with API
+      id: "Landing Wt", // We set the id to Landing Wt because currently the "Status" column doesn't exist in the API (should be replaced later)
+      accessorKey: "status",
+      header: () => <TableHeaderWithTooltip header="Status" tooltipId="status" />,
+      cell: ({ row }) => {
+        const status = "active"
+        return (
+          <TableCellDropdown
+            defaultValue={status}
+            name="status"
+            options={[
+              { label: "Active", value: "active" },
+              { label: "Scheduled", value: "scheduled" },
+              { label: "Landed", value: "landed" },
+              { label: "Cancelled", value: "cancelled" },
+              { label: "Incident", value: "incident" },
+              { label: "Diverted", value: "diverted" },
+              { label: "Redirected", value: "redirected" },
+            ]}
+            onChangeSelect={(data) => {
+              console.log("data", data)
+            }}
+          />
+        )
       },
     },
     {
@@ -226,7 +254,7 @@ export const useListViewColumns = (
       },
     },
     {
-      id: "Cargo Capacity",
+      id: "Cargo Cap",
       accessorKey: "aircraft.cargo_capacity",
       header: () => (
         <TableHeaderWithTooltip

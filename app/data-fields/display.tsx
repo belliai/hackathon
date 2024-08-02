@@ -49,7 +49,7 @@ export default function DisplaySettings() {
 
   const displayForm = useForm({
     defaultValues: {
-      displayOption: "numbers",
+      displayOption: "numbers-percentages",
     },
   })
 
