@@ -7,7 +7,7 @@ import {
 
 import CrudTable from "./components/crud-table"
 
-const PartnerType = () => {
+const PartnerType = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = usePartnerTypes()
   const update = useUpdatePartnerType()
   const add = useAddPartnerType()
@@ -40,6 +40,7 @@ const PartnerType = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      tabComponent={tabComponent}
     />
   )
 }

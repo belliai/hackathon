@@ -7,7 +7,7 @@ import {
 
 import CrudTable from "./components/crud-table"
 
-const CommodityCode = () => {
+const CommodityCode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = useCommodityCodes()
   const update = useUpdateCommodityCode()
   const add = useAddCommodityCode()
@@ -45,6 +45,7 @@ const CommodityCode = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      tabComponent={tabComponent}
     />
   )
 }

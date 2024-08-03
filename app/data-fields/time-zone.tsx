@@ -10,7 +10,7 @@ import {
 
 import CrudTable from "./components/crud-table"
 
-const TimeZone = () => {
+const TimeZone = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -84,6 +84,7 @@ const TimeZone = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      tabComponent={tabComponent}
     />
   )
 }

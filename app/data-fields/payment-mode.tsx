@@ -7,7 +7,7 @@ import {
 
 import CrudTable from "./components/crud-table"
 
-const PaymentMode = () => {
+const PaymentMode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = usePaymentModes()
   const update = useUpdatePaymentMode()
   const add = useAddPaymentMode()
@@ -40,6 +40,7 @@ const PaymentMode = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      tabComponent={tabComponent}
     />
   )
 }

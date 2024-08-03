@@ -7,7 +7,7 @@ import {
 
 import CrudTable from "./components/crud-table"
 
-const PartnerCode = () => {
+const PartnerCode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = usePartnerCodes()
   const update = useUpdatePartnerCode()
   const add = useAddPartnerCode()
@@ -47,6 +47,7 @@ const PartnerCode = () => {
       }}
       canSearch
       searchOptions={partnerCodeOptions}
+      tabComponent={tabComponent}
     />
   )
 }

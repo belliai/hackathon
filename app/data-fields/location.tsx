@@ -20,7 +20,7 @@ const schema = z.object({
   }),
 })
 
-const Location = () => {
+const Location = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = useLocations()
   const update = useUpdateLocation()
   const add = useAddLocation()
@@ -89,6 +89,7 @@ const Location = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      tabComponent={tabComponent}
       {...tableProps}
     />
   )

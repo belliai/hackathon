@@ -87,6 +87,7 @@ type CrudTableProps<T extends FieldValues> = {
   searchOptions?: any
   canSearch?: boolean
   validationSchema?: ZodSchema<T>
+  tabComponent?: React.ReactNode
 }
 
 const FormDialog = <T extends FieldValues>(
@@ -351,6 +352,7 @@ export default function CrudTable<T extends FieldValues>(
     searchOptions,
     canSearch = false,
     validationSchema,
+    tabComponent,
     ...tableProps
   } = props
 
@@ -407,12 +409,23 @@ export default function CrudTable<T extends FieldValues>(
               )
             }
             extraLeftComponents={
-              canSearch && (
-                <SearchDataField
-                  selectOptions={searchOptions}
-                  label={`Search ${title}`}
-                  onChangeValue={handleSearch}
-                />
+              tabComponent && canSearch ? (
+                <>
+                  <SearchDataField
+                    selectOptions={searchOptions}
+                    label={`Search ${title}`}
+                    onChangeValue={handleSearch}
+                  />
+                  {tabComponent}
+                </>
+              ) : tabComponent && !canSearch ? tabComponent : (
+                canSearch && (
+                  <SearchDataField
+                    selectOptions={searchOptions}
+                    label={`Search ${title}`}
+                    onChangeValue={handleSearch}
+                  />
+                )
               )
             }
             className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"

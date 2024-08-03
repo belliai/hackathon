@@ -18,7 +18,7 @@ import {
   DataFieldsItemContent,
 } from "./components/data-fields"
 
-const BookingType = () => {
+const BookingType = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const [selectedEditing, setSelectedEditing] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
   const { isLoading, isPending, error, data } = useBookingTypes()
@@ -59,34 +59,40 @@ const BookingType = () => {
   return (
     <div className="flex flex-col gap-8 py-4">
       <DataFields>
-        {shouldUseModal && (
-          <>
-            <FormDialog
-              form={form}
-              open={shouldUseModal && open}
-              setOpen={setOpen}
-              title="Booking Type"
-              onSave={(data) => {
-                const { id, ID, name } = data
-                const actualId = id || ID
+        <div className="flex justify-between">
+          {tabComponent && (
+            tabComponent
+          )}
+          {shouldUseModal && (
+            <>
+              <FormDialog
+                form={form}
+                open={shouldUseModal && open}
+                setOpen={setOpen}
+                title="Booking Type"
+                onSave={(data) => {
+                  const { id, ID, name } = data
+                  const actualId = id || ID
 
-                if (actualId) {
-                  update.mutate({ id: actualId, name })
-                } else {
-                  add.mutate({ name })
-                }
-              }}
-            />
-            <Button
-              variant="button-primary"
-              size="sm"
-              onClick={() => setOpen(true)}
-              className="mb-2 ml-auto"
-            >
-              Add New
-            </Button>
-          </>
-        )}
+                  if (actualId) {
+                    update.mutate({ id: actualId, name })
+                  } else {
+                    add.mutate({ name })
+                  }
+                }}
+              />
+              <Button
+                variant="button-primary"
+                size="sm"
+                onClick={() => setOpen(true)}
+                className="mb-2 ml-auto"
+              >
+                Add New
+              </Button>
+            </>
+          )}
+        </div>
+        
         {data.map((item) => (
           <DataFieldsItem key={item.id}>
             <DataFieldsItemContent

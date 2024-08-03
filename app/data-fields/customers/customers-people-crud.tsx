@@ -66,7 +66,7 @@ export const MOCK_PEOPLE_DATA: People[] = [
   },
 ]
 
-const CustomersPeopleCrud = () => {
+const CustomersPeopleCrud = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   return (
     <CrudTable
       title="People"
@@ -112,6 +112,7 @@ const CustomersPeopleCrud = () => {
         //   remove.mutate({ id: data.id })
         // }
       }}
+      tabComponent={tabComponent}
     />
   )
 }

@@ -7,7 +7,7 @@ import {
   CompanyFormValues,
 } from "@/schemas/partners/company"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Building2Icon, Contact2Icon, PlusIcon } from "lucide-react"
+import { Building2Icon, CogIcon, Contact2Icon, PlusIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
@@ -21,8 +21,75 @@ import CompanyForm from "./components/forms/company-form"
 import { companyFormDefaultValues } from "./constants/company-form-default-values"
 import { DUMMY_COMPANIES_DATA, PEOPLE_DUMMY_DATA } from "./constants/dummy-data"
 import { onExport } from "@/lib/utils/export"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import PaymentMode from "@/app/data-fields/payment-mode"
+import Currency from "@/app/data-fields/currency"
+import PartnerPrefix from "@/app/data-fields/partner-prefix"
+import PartnerCode from "@/app/data-fields/partner-code"
+import PartnerType from "@/app/data-fields/partner-type"
+import CustomersOrganizationsCrud from "@/app/data-fields/customers/customers-organizations.crud"
+import CustomersPeopleCrud from "@/app/data-fields/customers/customers-people-crud"
 
-const PartnersTabsList = () => (
+const SETTING_OPTIONS = [
+  {
+    label: "Payments",
+    value: "",
+    child: [
+      {
+        label: "Payment Mode",
+        value: "payment-mode",
+      },
+      {
+        label: "Currency",
+        value: "currency",
+      },
+    ],
+  },
+  {
+    label: "Organizations",
+    value: "organizations",
+    child: [
+      {
+        label: "Airline AWB Prefix",
+        value: "Airline-AWB-Prefix",
+      },
+      {
+        label: "IATA Airline Code",
+        value: "IATA-airline-code",
+      },
+      {
+        label: "Partner Type",
+        value: "partner-type",
+      },
+    ],
+  },
+  {
+    label: "Customers",
+    value: "customers",
+    child: [
+      {
+        label: "Organizations",
+        value: "organizations",
+      },
+      {
+        label: "People",
+        value: "setting-people",
+      },
+    ],
+  },
+]
+
+const PartnersTabsList = ({ tabValue }: { tabValue: string }) => (
   <TabsList className="gap-2 bg-transparent p-0">
     <TabsTrigger
       className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
@@ -38,6 +105,55 @@ const PartnersTabsList = () => (
       <Contact2Icon className="mr-2 size-4" />
       People
     </TabsTrigger>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`h-8 border border-secondary ${tabValue !== 'companies' && tabValue !== 'people' ? 'border-muted-foreground/40 bg-secondary text-white' : ''}`}
+        >
+          <CogIcon className="mr-2 size-4" />
+          Settings
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-fit" align="start">
+        <DropdownMenuGroup>
+          {SETTING_OPTIONS.map((item, index) => {
+            if (item.child) {
+              return (
+                <DropdownMenuSub key={`setting-${index}`}>
+                  <DropdownMenuSubTrigger>
+                    <span>{item.label}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="ml-2">
+                      {item.child.map((childMenu, childId) => (
+                        <DropdownMenuItem key={`child-${index}-${childId}`} className="cursor-pointer">
+                          <TabsTrigger
+                            value={childMenu.value}
+                            className="data-[state=active]:bg-transparent"
+                          >
+                            {childMenu.label}
+                          </TabsTrigger>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              )
+            }
+            return (
+              <DropdownMenuItem key={`setting-${index}`} className="cursor-pointer">
+                <TabsTrigger
+                  value={item.value}
+                >
+                  {item.label}
+                </TabsTrigger>
+              </DropdownMenuItem>
+            )
+          })}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   </TabsList>
 )
 
@@ -77,12 +193,11 @@ export default function MasterAircraftPage() {
   }
 
   useEffect(() => {
-    console.log("tabValue in useEffect", tabValue)
     setSearchParams("tab", tabValue)
   }, [tabValue])
 
   // Memoize to prevent re-rendering
-  const memoizedTabsList = useMemo(() => <PartnersTabsList />, [])
+  const memoizedTabsList = useMemo(() => <PartnersTabsList tabValue={tabValue} />, [tabValue])
 
   return (
     <PageContainer>
@@ -120,6 +235,27 @@ export default function MasterAircraftPage() {
                 onExport({ data: PEOPLE_DUMMY_DATA, filename: "PartnersPeopleData" })
               }
             />
+          </TabsContent>
+          <TabsContent value="payment-mode" asChild>
+            <PaymentMode tabComponent={memoizedTabsList} />
+          </TabsContent>
+          <TabsContent value="currency" asChild>
+            <Currency tabComponent={memoizedTabsList} />
+          </TabsContent>
+          <TabsContent value="Airline-AWB-Prefix" asChild>
+            <PartnerPrefix tabComponent={memoizedTabsList} />
+          </TabsContent>
+          <TabsContent value="IATA-airline-code" asChild>
+            <PartnerCode tabComponent={memoizedTabsList} />
+          </TabsContent>
+          <TabsContent value="partner-type" asChild>
+            <PartnerType tabComponent={memoizedTabsList} />
+          </TabsContent>
+          <TabsContent value="organizations" asChild>
+            <CustomersOrganizationsCrud tabComponent={memoizedTabsList} />
+          </TabsContent>
+          <TabsContent value="setting-people" asChild>
+            <CustomersPeopleCrud tabComponent={memoizedTabsList} />
           </TabsContent>
         </Tabs>
       </div>

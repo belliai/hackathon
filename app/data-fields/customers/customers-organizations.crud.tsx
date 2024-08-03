@@ -40,7 +40,7 @@ const MOCK_ORGANIZATION_DATA: Organization[] = [
   },
 ]
 
-const CustomersOrganizationsCrud = () => {
+const CustomersOrganizationsCrud = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   return (
     <CrudTable
       title="Partner Type"
@@ -70,6 +70,7 @@ const CustomersOrganizationsCrud = () => {
         //   remove.mutate({ id: data.id })
         // }
       }}
+      tabComponent={tabComponent}
     />
   )
 }

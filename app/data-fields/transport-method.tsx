@@ -7,7 +7,7 @@ import {
 
 import CrudTable from "./components/crud-table"
 
-const TransportMethod = () => {
+const TransportMethod = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = useTransportMethods()
   const update = useUpdateTransportMethod()
   const add = useAddTransportMethod()
@@ -42,6 +42,7 @@ const TransportMethod = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      tabComponent={tabComponent}
     />
   )
 }

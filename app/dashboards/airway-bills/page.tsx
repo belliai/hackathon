@@ -1,11 +1,11 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { DataTable } from "@components/data-table/data-table"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
-import { Loader } from "lucide-react"
+import { CogIcon, HomeIcon, Loader } from "lucide-react"
 
 import { getData } from "@/lib/data"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
@@ -25,7 +25,118 @@ import { useBookingContext } from "@/components/dashboard/BookingContext"
 import { columns, Order } from "@/components/dashboard/columns"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
-import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import BookingType from "@/app/data-fields/booking-type"
+import Status from "@/app/data-fields/status"
+import Location from "@/app/data-fields/location"
+import CommodityCode from "@/app/data-fields/commodity-code"
+import TransportMethod from "@/app/data-fields/transport-method"
+import TimeZone from "@/app/data-fields/time-zone"
+
+const SETTING_OPTIONS = [
+  {
+    label: "Airway Bills",
+    value: "",
+    child: [
+      {
+        label: "Booking Type",
+        value: "booking-type",
+      },
+      {
+        label: "Status",
+        value: "status",
+      },
+      {
+        label: "Location",
+        value: "location",
+      },
+      {
+        label: "Commodity Code",
+        value: "commodity-code",
+      },
+      {
+        label: "Transport Method",
+        value: "transport-method",
+      },
+      {
+        label: "Time Zone",
+        value: "time-zone",
+      },
+    ],
+  },
+]
+
+const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
+  <TabsList className="gap-2 bg-transparent p-0">
+    <TabsTrigger
+      className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+      value="airway-bills"
+    >
+      <HomeIcon className="mr-2 size-4" />
+      Airway Bills
+    </TabsTrigger>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`h-8 border border-secondary ${tabValue !== 'airway-bills' ? 'border-muted-foreground/40 bg-secondary text-white' : ''}`}
+        >
+          <CogIcon className="mr-2 size-4" />
+          Settings
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-fit" align="start">
+        <DropdownMenuGroup>
+          {SETTING_OPTIONS.map((item, index) => {
+            if (item.child) {
+              return (
+                <DropdownMenuSub key={`setting-${index}`}>
+                  <DropdownMenuSubTrigger>
+                    <span>{item.label}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="ml-2">
+                      {item.child.map((childMenu, childId) => (
+                        <DropdownMenuItem key={`child-${index}-${childId}`} className="cursor-pointer">
+                          <TabsTrigger
+                            value={childMenu.value}
+                            className="data-[state=active]:bg-transparent"
+                          >
+                            {childMenu.label}
+                          </TabsTrigger>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              )
+            }
+            return (
+              <DropdownMenuItem key={`setting-${index}`} className="cursor-pointer">
+                <TabsTrigger
+                  value={item.value}
+                >
+                  {item.label}
+                </TabsTrigger>
+              </DropdownMenuItem>
+            )
+          })}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </TabsList>
+)
 
 export default function Home() {
   const data = getData()
@@ -38,6 +149,7 @@ export default function Home() {
     pageIndex: 0,
     pageSize: 10,
   })
+  const [tabValue, setTabValue] = useState("airway-bills")
 
   const {
     isLoading,
@@ -114,31 +226,60 @@ export default function Home() {
     },
   }))
 
+  const memoizedTabsList = useMemo(() => <AWBTabsList tabValue={tabValue} />, [tabValue])
+
   return (
     <div>
       <ClientSideSuspense fallback={<></>}>
         <LiveCursorHoc />
       </ClientSideSuspense>
-      <DataTable
-        initialPinning={{
-          left: [],
-          right: ["actions"],
-        }}
-        columns={columnWithActions}
-        // onRowClick={openModal}
-        data={isLoading ? [] : ordersData?.data}
-        pageCount={isLoading ? 1 : ordersData.total_pages}
-        manualPagination={true}
-        tableState={tableState}
-        className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
-        menuId="airway-bill-dashboard"
-        showToolbarOnlyOnHover={true}
-        extraRightComponents={generateButton}
-        isCanExport={true}
-        onExport={() =>
-          onExport({ data: ordersData.data, filename: "AirwaybillsData" })
-        }
-      />
+      <Tabs
+        value={tabValue}
+        onValueChange={setTabValue}
+        className="space-y-4"
+      >
+        <TabsContent value="airway-bills" asChild>
+          <DataTable
+            initialPinning={{
+              left: [],
+              right: ["actions"],
+            }}
+            columns={columnWithActions}
+            // onRowClick={openModal}
+            data={isLoading ? [] : ordersData?.data}
+            pageCount={isLoading ? 1 : ordersData.total_pages}
+            manualPagination={true}
+            tableState={tableState}
+            className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
+            menuId="airway-bill-dashboard"
+            showToolbarOnlyOnHover={true}
+            extraRightComponents={generateButton}
+            isCanExport={true}
+            onExport={() =>
+              onExport({ data: ordersData.data, filename: "AirwaybillsData" })
+            }
+            extraLeftComponents={memoizedTabsList}
+          />
+        </TabsContent>
+        <TabsContent value="booking-type" asChild>
+          <BookingType tabComponent={memoizedTabsList} />
+        </TabsContent>
+        <TabsContent value="status" asChild>
+          <Status tabComponent={memoizedTabsList} />
+        </TabsContent>
+        <TabsContent value="location" asChild>
+          <Location tabComponent={memoizedTabsList} />
+        </TabsContent>
+        <TabsContent value="commodity-code" asChild>
+          <CommodityCode tabComponent={memoizedTabsList} />
+        </TabsContent>
+        <TabsContent value="transport-method" asChild>
+          <TransportMethod tabComponent={memoizedTabsList} />
+        </TabsContent>
+        <TabsContent value="time-zone" asChild>
+          <TimeZone tabComponent={memoizedTabsList} />
+        </TabsContent>
+      </Tabs>
       <NewOrderModal
         open={modalOpen}
         onOpenChange={onOpenChange}

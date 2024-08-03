@@ -20,7 +20,7 @@ import {
   DataFieldsItemContent,
 } from "./components/data-fields"
 
-const Status = () => {
+const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const [open, setOpen] = useState(false)
   const [selectedEditing, setSelectedEditing] = useState<string | null>(null)
 
@@ -46,47 +46,52 @@ const Status = () => {
     <div className="flex flex-col gap-8 py-4">
       <Form {...statusForm}>
         <DataFields>
-          <div className={cn("mb-2", { "flex justify-end": shouldUseModal })}>
-            {shouldUseModal ? (
-              <>
-                <FormDialog
+          <div className="flex justify-between">
+            {tabComponent && (
+              tabComponent
+            )}
+            <div className={cn("mb-2", { "flex justify-end": shouldUseModal })}>
+              {shouldUseModal ? (
+                <>
+                  <FormDialog
+                    form={form}
+                    open={shouldUseModal && open}
+                    setOpen={setOpen}
+                    title="Status"
+                    onSave={(data) => {
+                      const { id, option } = data
+
+                      console.log(data)
+
+                      if (id) {
+                        update.mutate({ id, name: option })
+                      } else {
+                        add.mutate({ name: option })
+                      }
+                    }}
+                  />
+                  <Button
+                    variant="button-primary"
+                    size="sm"
+                    onClick={() => setOpen(true)}
+                  >
+                    Add New
+                  </Button>
+                </>
+              ) : (
+                <FormDropdown
                   form={form}
-                  open={shouldUseModal && open}
-                  setOpen={setOpen}
-                  title="Status"
                   onSave={(data) => {
-                    const { id, option } = data
-
-                    console.log(data)
-
+                    const { id, name } = data
                     if (id) {
-                      update.mutate({ id, name: option })
+                      update.mutate({ id, name })
                     } else {
-                      add.mutate({ name: option })
+                      add.mutate({ name })
                     }
                   }}
                 />
-                <Button
-                  variant="button-primary"
-                  size="sm"
-                  onClick={() => setOpen(true)}
-                >
-                  Add New
-                </Button>
-              </>
-            ) : (
-              <FormDropdown
-                form={form}
-                onSave={(data) => {
-                  const { id, name } = data
-                  if (id) {
-                    update.mutate({ id, name })
-                  } else {
-                    add.mutate({ name })
-                  }
-                }}
-              />
-            )}
+              )}
+            </div>
           </div>
           {data?.map((item: any) => (
             <DataFieldsItem key={item.id}>

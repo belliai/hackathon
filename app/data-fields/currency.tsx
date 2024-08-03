@@ -7,7 +7,7 @@ import {
 
 import CrudTable from "./components/crud-table"
 
-const Currency = () => {
+const Currency = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = useCurrencies()
   const update = useUpdateCurrency()
   const add = useAddCurrency()
@@ -48,6 +48,7 @@ const Currency = () => {
           remove.mutate({ id: data.id })
         }
       }}
+      tabComponent={tabComponent}
     />
   )
 }
