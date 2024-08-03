@@ -29,6 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/use-toast"
+import CargoCapacityAreaChart from "@/components/charts/cargo-capacity-area-chart"
 import { DataTable } from "@/components/data-table/data-table"
 import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
 import Modal from "@/components/modal/modal"
@@ -175,7 +176,7 @@ export default function FlightsDashboardPage() {
       const { ID, ...rest } = data
       if (ID) await updateFlight({ ...rest, id: ID })
     },
-  }).filter(c => c.id !== "Tail Number") // Remove Tail Number column
+  }).filter((c) => c.id !== "Tail Number") // Remove Tail Number column
 
   const displayedFlightsColumns: ColumnDef<FlightWithActualInformation>[] = [
     ...(columns.slice(0, 2) as ColumnDef<FlightWithActualInformation>[]),
@@ -428,13 +429,16 @@ export default function FlightsDashboardPage() {
           setSelectedFlight(null)
         }}
       >
-        <DataTable
-          columns={selectedFlightColumn}
-          data={actualInformationForm.getValues().infos ?? []}
-          hidePagination
-          hideToolbar
-          className="mt-2"
-        />
+        <div className="flex w-full flex-col gap-8 max-w-full">
+          <DataTable
+            columns={selectedFlightColumn}
+            data={actualInformationForm.getValues().infos ?? []}
+            hidePagination
+            hideToolbar
+            className="mt-2"
+          />
+          <CargoCapacityAreaChart />
+        </div>
       </Modal>
       {isLoading || columnsQuery.isLoading ? (
         <div className="flex w-full justify-center py-20">
