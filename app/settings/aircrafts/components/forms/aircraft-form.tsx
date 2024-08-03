@@ -32,6 +32,7 @@ import {
   useUpsertAircraftVersions,
 } from "@/lib/hooks/aircrafts/aircraft-type/versions"
 import {
+  useAircrafts,
   useCreateAircraft,
   useDeleteAircraft,
   useUpdateAircraft,
@@ -196,9 +197,67 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
     </span>
   )
 
+  const { data: aircraftsData } = useAircrafts({
+    page: 1,
+    page_size: 999,
+  })
+
+  const getAircraftTypeString = (aircraft: Aircraft) =>
+    [
+      aircraft.manufacturer.name,
+      aircraft.aircraft_type.name,
+      aircraft.version.version,
+    ].join(" ")
+
+  const currentAircraftTypeList =
+    aircraftsData?.data.map((aircraft) => getAircraftTypeString(aircraft)) ?? []
+
+  const checkDuplicateAircraftType = useCallback(
+    (data: AircraftFormValues) => {
+      const currentAircraftType = [
+        aircraftManufacturerOptions.find(
+          (item) => item.value === data.manufacturer_id
+        )?.label,
+        aircraftTypesOptions.find(
+          (item) => item.value === data.aircraft_type_id
+        )?.label,
+        aircraftVersionsOptions.find((item) => item.value === data.version_id)
+          ?.label,
+      ].join(" ")
+      return currentAircraftTypeList.some(
+        (item) => item === currentAircraftType
+      )
+    },
+    [
+      aircraftManufacturerOptions,
+      aircraftTypesOptions,
+      aircraftVersionsOptions,
+      currentAircraftTypeList,
+    ]
+  )
+
   async function handleSubmitAircraft(data: AircraftFormValues) {
     const payload: CreateAircraftRequest = {
       ...data,
+    }
+
+    const currentAircraftType = [
+      aircraftManufacturerOptions.find(
+        (item) => item.value === data.manufacturer_id
+      )?.label,
+      aircraftTypesOptions.find((item) => item.value === data.aircraft_type_id)
+        ?.label,
+      aircraftVersionsOptions.find((item) => item.value === data.version_id)
+        ?.label,
+    ].join(" ")
+
+    if (checkDuplicateAircraftType(data)) {
+      toast({
+        title: "Oops!",
+        description: "Aircraft type already exists",
+      })
+      stepControl.setStep(1)
+      return
     }
 
     if (isEdit) {

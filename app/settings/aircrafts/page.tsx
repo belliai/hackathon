@@ -59,6 +59,10 @@ export default function MasterAircraftPage() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
+  const paramsTabValue = searchParams.get("tab")
+
+  const [tabValue, setTabValue] = useState(paramsTabValue || "tail-numbers")
+
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString())
@@ -72,19 +76,18 @@ export default function MasterAircraftPage() {
     router.replace(pathname + "?" + createQueryString(key, value))
   }
 
-  const currentTab = searchParams.get("tab") ?? undefined
   const handleTabChange = (val: string) => setSearchParams("tab", val)
 
   useEffect(() => {
-    if (!currentTab) handleTabChange("tail-numbers")
-  }, [currentTab])
+    handleTabChange(tabValue)
+  }, [tabValue])
 
   return (
     <PageContainer>
       <div>
         <Tabs
-          value={currentTab}
-          onValueChange={handleTabChange}
+          value={tabValue}
+          onValueChange={setTabValue}
           className="space-y-4"
         >
           <TabsContent value="aircraft-types" asChild>
