@@ -43,8 +43,8 @@ interface FlightsActualInformation {
 }
 
 type FlightWithActualInformation = Flight & {
-  actual_mtow: string
-  actual_landing_weight: string
+  // actual_mtow: string
+  // actual_landing_weight: string
   actual_cargo_capacity: string
 }
 
@@ -140,8 +140,6 @@ export default function FlightsDashboardPage() {
       const adjustedFlightsData = flightsData.map((flight) => {
         return {
           ...flight,
-          actual_mtow: "",
-          actual_landing_weight: "",
           actual_cargo_capacity: "",
         }
       })
@@ -267,9 +265,7 @@ export default function FlightsDashboardPage() {
         if (flight.id === selectedFlight?.id) {
           return {
             ...flight,
-            actual_mtow: data[0].actual ?? "",
-            actual_landing_weight: data[1].actual ?? "",
-            actual_cargo_capacity: data[2].actual ?? "",
+            actual_cargo_capacity: data[0].actual ?? "",
           }
         }
 
@@ -527,11 +523,11 @@ function ActualInformation({
         return <span>-</span>
       }
 
-      const backgroundPercentage = Number(percentage2) / 100
+      const backgroundAlphaDecimal = Number(percentage2) / 100
       const backgroundAlpha =
-        backgroundPercentage / 100 < 0.1
+        backgroundAlphaDecimal < 0.1
           ? 0.1 // Set minimum alpha to 0.1
-          : backgroundPercentage / 100
+          : backgroundAlphaDecimal
 
       return (
         <div className="flex w-fit shrink-0 items-center gap-2">
