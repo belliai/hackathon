@@ -10,11 +10,13 @@ import {
   Plane,
   PlaneIcon,
   PlaneTakeoff,
+  PlaneTakeoffIcon,
   Repeat,
   SaveIcon,
+  TimerIcon,
   XCircle,
 } from "lucide-react"
-import { useForm } from "react-hook-form"
+import { Path, useForm } from "react-hook-form"
 
 import {
   CreateFlightMasterPayload,
@@ -24,6 +26,7 @@ import {
   useCreateFlight,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
+import { get24HourTime, parseTime } from "@/lib/utils/time-picker-utils"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,6 +37,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { Card, CardHeader } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -63,19 +67,31 @@ type NewFlightModalProps = PropsWithChildren & {
 const schemas = flightMasterFormSchema
 const initialValues = getDefaults(schemas)
 
-const mappedData = (props: Flight) : CreateFlightMasterPayload => {
+const mappedData = (props: Flight): FlightSchema => {
+  const arrivalTime = parseTime(props.arrival_time)
+
+  console.log({ arrivalTime })
+
+  const departureDate = new Date(
+    `${props.departure_date}T${get24HourTime(props.departure_hour, props.departure_minute, props.departure_period)}`
+  )
+
+  const arrivalDate = new Date(
+    `${props.arrival_date}T${get24HourTime(arrivalTime.hour, arrivalTime.minute, arrivalTime.period)}`
+  )
+
   return {
     origin_id: props.origin.id,
     destination_id: props.destination.id,
-    departure_date: new Date(props.departure_date),
+    departure_date: departureDate,
     departure_hour: props.departure_hour,
     departure_minute: props.departure_minute,
+    arrival_date: arrivalDate,
     tail_id: props.tail.id,
     flight_number: props.flight_number,
     departure_period: props.departure_period,
     flight_duration_hour: props.flight_duration_hour,
     flight_duration_minute: props.flight_duration_minute,
-  
   }
 }
 
@@ -89,7 +105,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
   const update = useUpdateFlight()
   const create = useCreateFlight()
 
-  const form = useForm({
+  const form = useForm<FlightSchema>({
     resolver: zodResolver(flightSchema),
     defaultValues: {
       ...initialValues,
@@ -134,7 +150,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     value: string
     icon: any
     content: JSX.Element
-    fieldList: string[]
+    fieldList: Path<FlightSchema>[]
   }[] = [
     {
       label: "Flight Details",
@@ -148,6 +164,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         "departure_hour",
         "departure_minute",
         "departure_period",
+        "arrival_date",
         "destination_id",
         "flight_duration_hour",
         "flight_duration_minute",
@@ -179,7 +196,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       departure_minute: data.departure_minute,
       departure_period: data.departure_period,
       tail_id: data.tail_id,
-      departure_date: format(data.departure_date,"yyyy-MM-dd"),
+      departure_date: format(data.departure_date, "yyyy-MM-dd"),
       flight_duration_hour: data.flight_duration_hour,
       flight_duration_minute: data.flight_duration_minute,
     }
@@ -245,8 +262,10 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       <Button
         type="button"
         variant={"button-primary"}
-        onClick={ async () => {
-          isLastIndex()  ? await form.handleSubmit(onSubmit)() : nextTab()
+        onClick={async () => {
+          isLastIndex()
+            ? await form.handleSubmit(onSubmit, (err) => console.log(err))()
+            : nextTab()
         }}
       >
         {isLastIndex() ? (
@@ -280,7 +299,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         className={
           isFullScreen
             ? "h-screen w-screen max-w-none"
-            : "top-8 min-h-[65dvh] max-w-[1100px] translate-y-0"
+            : "top-8 min-h-[65dvh] max-w-[1000px] translate-y-0"
         }
         onInteractOutside={(e) => e.preventDefault()}
       >
@@ -343,6 +362,29 @@ export default function NewFlightModal(props: NewFlightModalProps) {
                       )
                     })}
                   </TabsList>
+                  <Card>
+                    <CardHeader className="flex flex-row gap-3 space-y-0">
+                      <TimerIcon className="size-4 text-foreground" />
+                      <div className="flex flex-col">
+                        <span className="text-xs font-light text-muted-foreground">
+                          Flight Duration
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {form.watch("flight_duration_hour") ?? "--"}h{" "}
+                          {form.watch("flight_duration_minute") ?? "--"}m
+                        </span>
+                        {(form.formState.errors.flight_duration_hour ||
+                          form.formState.errors.flight_duration_minute) && (
+                          <span className="mt-2 max-w-44 text-xs text-destructive">
+                            {form.formState.errors.flight_duration_hour
+                              ?.message ||
+                              form.formState.errors.flight_duration_minute
+                                ?.message}
+                          </span>
+                        )}
+                      </div>
+                    </CardHeader>
+                  </Card>
                 </div>
                 <div className="grid flex-1">
                   {TAB_LIST.map((item) => (

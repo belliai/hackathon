@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react"
 import { CalendarIcon } from "lucide-react"
+import { Matcher } from "react-day-picker"
 import { ControllerRenderProps } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -9,12 +10,12 @@ import { Button } from "./button"
 import { Calendar } from "./calendar"
 import { FormControl } from "./form"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
-import { Matcher } from "react-day-picker"
 
 type DateInputProps = ControllerRenderProps & {
   className?: HTMLDivElement["className"]
   disabledMatcher?: Matcher
   mode?: "single" | "range"
+  disabled?: boolean
 }
 
 const DateInput = forwardRef(
@@ -25,6 +26,7 @@ const DateInput = forwardRef(
       className,
       disabledMatcher,
       mode = "single",
+      ...props
     }: DateInputProps,
     ref
   ) => {
@@ -45,6 +47,7 @@ const DateInput = forwardRef(
       <Popover>
         <PopoverTrigger asChild>
           <Button
+            disabled={props.disabled}
             variant={"outline"}
             className={cn(
               "w-full pl-3 text-left font-normal",

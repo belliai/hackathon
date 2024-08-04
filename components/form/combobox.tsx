@@ -227,7 +227,14 @@ export function Combobox({
       disabled={disabled}
       render={({ field }) => (
         <FormItem>
-          {label && <FormLabel info={info}>{label}</FormLabel>}
+          {label && (
+            <FormLabel
+              className="text-xs font-semibold text-muted-foreground"
+              info={info}
+            >
+              {label}
+            </FormLabel>
+          )}
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
@@ -242,7 +249,8 @@ export function Combobox({
                 >
                   <span>
                     {field.value
-                      ? options?.find((opt) => opt?.value === field.value)?.label
+                      ? options?.find((opt) => opt?.value === field.value)
+                          ?.label
                       : placeholder ?? " "}
                   </span>
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -280,7 +288,7 @@ export function Combobox({
                             form.setValue(name, opt.value)
                           }}
                           className={cn(
-                            "flex h-8 items-center justify-between px-2.5 text-xs",
+                            "flex min-h-8 items-center justify-between px-2.5 text-xs",
                             {
                               "bg-zinc-900 pl-0 hover:bg-zinc-900": isEditing,
                             }
