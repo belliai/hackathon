@@ -1,13 +1,16 @@
 "use client"
 
 import React, { useEffect } from "react"
+import { FlightSchema } from "@/schemas/flight-master/flight"
 import { format } from "date-fns"
 import { fromZonedTime, getTimezoneOffset, toZonedTime } from "date-fns-tz"
+import { PlaneTakeoffIcon } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useLocations } from "@/lib/hooks/locations"
+import { getDateByType, getPeriod } from "@/lib/utils/time-picker-utils"
 import { Card } from "@/components/ui/card"
 import {
   FormControl,
@@ -17,6 +20,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import TimeInput from "@/components/ui/time-input"
 import { Combobox } from "@/components/form/combobox"
 import FormTextField from "@/components/form/FormTextField"
 import InputSwitch from "@/components/form/InputSwitch"
@@ -26,7 +31,7 @@ const isValidDate = (date: unknown): date is Date => {
 }
 
 const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
-  const form = useFormContext()
+  const form = useFormContext<FlightSchema>()
   const formData = form.watch()
 
   const { data: locations } = useLocations()
@@ -55,22 +60,39 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
   const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
     return (
-      <div className="grid grid-cols-7 items-center gap-4 text-left">
-        <div className="col-span-1 min-w-24">
-          <p>
-            {selectedAircraftType?.aircraft_type.name}-{tail}
-          </p>
-        </div>
-        <div className="col-span-1 min-w-24 text-xs text-zinc-500">
+      // <div className="space-y-2">
+      <div className="flex w-full flex-grow flex-row items-center justify-between gap-1">
+        <span className="min-w-16 text-start">{tail}</span>
+        <span className="text-muted-foreground">
+          {[
+            selectedAircraftType.manufacturer.name,
+            selectedAircraftType.aircraft_type.name,
+            selectedAircraftType.version.version,
+          ].join(" ")}
+        </span>
+        {/* </div> */}
+        {/* <div className="grid grid-cols-3 gap-3 text-start text-xs text-zinc-500">
           <p>{selectedAircraftType?.mtow} MTOW</p>
-        </div>
-        <div className="col-span-1 min-w-44 text-xs text-zinc-500">
           <p>{selectedAircraftType?.landing_weight} Landing Weight</p>
-        </div>
-        <div className="col-span-2 ml-10 text-xs text-zinc-500">
           <p>{selectedAircraftType?.cargo_capacity} Cargo Capacity</p>
-        </div>
+        </div> */}
       </div>
+      // <div className="grid grid-cols-7 items-center gap-4 text-left">
+      //   <div className="col-span-1 min-w-24">
+      //     <p>
+      //       {selectedAircraftType?.aircraft_type.name}-{tail}
+      //     </p>
+      //   </div>
+      //   <div className="col-span-1 min-w-24 text-xs text-zinc-500">
+      //     <p>{selectedAircraftType?.mtow} MTOW</p>
+      //   </div>
+      //   <div className="col-span-1 min-w-44 text-xs text-zinc-500">
+      //     <p>{selectedAircraftType?.landing_weight} Landing Weight</p>
+      //   </div>
+      //   <div className="col-span-2 ml-10 text-xs text-zinc-500">
+      //     <p>{selectedAircraftType?.cargo_capacity} Cargo Capacity</p>
+      //   </div>
+      // </div>
     )
   }
 
@@ -97,6 +119,49 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     )
 
     return date
+  }
+
+  const calculateFlightDuration = (
+    departureDate?: Date | null,
+    originTimezone?: string,
+    arrivalDate?: Date | null,
+    destinationTimezone?: string
+  ) => {
+    if (
+      !departureDate ||
+      !originTimezone ||
+      !arrivalDate ||
+      !destinationTimezone
+    ) {
+      return null
+    }
+
+    // Get offsets for each timezone
+    const originOffset = getTimezoneOffset(originTimezone, departureDate)
+    const destinationOffset = getTimezoneOffset(
+      destinationTimezone,
+      arrivalDate
+    )
+
+    // Create departure and arrival dates with times
+    const departure = new Date(departureDate)
+
+    const arrival = new Date(arrivalDate)
+
+    // Convert times to UTC
+    const departureUTC = new Date(departure.getTime() - originOffset)
+    const arrivalUTC = new Date(arrival.getTime() - destinationOffset)
+
+    // Calculate duration in milliseconds
+    const durationMs = arrivalUTC.getTime() - departureUTC.getTime()
+
+    // Convert duration to hours and minutes
+    const durationHours = Math.floor(durationMs / (1000 * 60 * 60))
+    const durationMinutes = Math.floor(
+      (durationMs % (1000 * 60 * 60)) / (1000 * 60)
+    )
+
+    return { hours: durationHours, minutes: durationMinutes }
   }
 
   const generateArrivalTime = (
@@ -143,21 +208,13 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
       .filter((tail) => !tail.is_deleted)
       .map((tail) => ({
         value: String(tail.id),
-        label: tail.tail_number,
+        label: `${tail.tail_number} - ${[list.manufacturer.name, list.aircraft_type.name, list.version.version].join(" ")}`,
         component: generateTailName(list, tail.tail_number),
       }))
   )
 
   useEffect(() => {}, [form.formState])
 
-  const departureDate = formData.departure_date
-    ? new Date(formData.departure_date)
-    : null
-  const departureHour = formData.departure_hour
-  const departureMinute = formData.departure_minute
-  const departureAmPm = formData.departure_period as "AM" | "PM"
-  const flightDurationHours = formData.flight_duration_hour
-  const flightDurationMinutes = formData.flight_duration_minute
   const originTimezone =
     locations &&
     formData.origin_id &&
@@ -168,130 +225,113 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     locations?.find((loc: any) => loc.ID === formData.destination_id).timezone
       ?.name
 
-  // Generate departure time if all required data is present
-  const departureTime =
-    departureDate &&
-    departureHour !== undefined &&
-    departureMinute !== undefined &&
-    departureAmPm
-      ? generateDepartureTime(
-          departureDate,
-          parseInt(departureHour),
-          parseInt(departureMinute),
-          departureAmPm
-        )
-      : null
+  console.log("departure", form.watch("departure_date"))
+  console.log("arrival", form.watch("arrival_date"))
 
-  // Generate arrival time if departure time and flight duration are available
-  const arrivalTime =
-    departureTime &&
-    flightDurationHours !== undefined &&
-    flightDurationMinutes !== undefined
-      ? generateArrivalTime(
-          departureTime,
-          parseInt(flightDurationHours),
-          parseInt(flightDurationMinutes),
-          originTimezone,
-          destinationTimezone
-        )
-      : null
+  console.log(formData.origin_id)
 
-  const isDateDifferent =
-    departureTime?.toDateString() !== arrivalTime?.toDateString()
+  useEffect(() => {
+    if (!formData.departure_date || !formData.arrival_date) return
+    const flightDuration = calculateFlightDuration(
+      new Date(formData.departure_date),
+      originTimezone,
+      new Date(formData.arrival_date),
+      destinationTimezone
+    )
+    if (flightDuration) {
+      form.setValue("flight_duration_hour", flightDuration.hours)
+      form.setValue("flight_duration_minute", flightDuration.minutes)
+    }
+  }, [
+    formData.arrival_date,
+    formData.departure_date,
+    originTimezone,
+    destinationTimezone,
+  ])
 
+  console.log(form.formState.errors)
 
+  useEffect(() => {
+    if (!formData.departure_date) return
+    const departureDate = new Date(formData.departure_date)
+    form.setValue(
+      "departure_hour",
+      Number(getDateByType(departureDate, "12hours"))
+    )
+    form.setValue("departure_minute", departureDate.getMinutes())
+    form.setValue("departure_period", getPeriod(departureDate))
+  }, [formData.departure_date])
 
   return (
-    <Card className="space-y-4 p-4" ref={ref}>
-      <div className="grid grid-cols-3 gap-4">
-        <FormField
-          control={form.control}
-          name="flight_number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel tooltipId="flight-number">Flight Number</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  className="h-[40px] border-2 border-foreground/30"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex space-x-2">
-          <InputSwitch
-            label="Flight Time"
-            name="flight_duration_hour"
-            type="stepper-number"
-            suffix="hrs"
-            max={100}
-            min={1}
-            step={1}
+    <Card className="p-4" ref={ref}>
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-2">
+          <InputSwitch<FlightSchema>
+            label="Flight Number"
+            name="flight_number"
+            type="text"
           />
-          <InputSwitch
-            label="&nbsp;&nbsp;&nbsp;&nbsp;"
-            name="flight_duration_minute"
-            type="stepper-number"
-             suffix="min"
-            max={59}
-            min={0}
-            step={1}
+          <InputSwitch<FlightSchema>
+            type="combobox"
+            name="tail_id"
+            label="Tail Number"
+            info="Select Tail number"
+            selectOptions={aircraftTailNumbers}
           />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4">
-        <Combobox
-          name="origin_id"
-          options={formattedLocation}
-          label="Origin"
-          info="Select the origin location"
-          editLink="/data-fields/airway-bills?tab=location"
-        />
-        <div className="flex items-end space-x-2">
-          <InputSwitch
-            label="Hours"
-            name="departure_hour"
-            type="stepper-number"
-            max={12}
-            min={1}
-            step={1}
+      <Separator className="mb-2 mt-4 opacity-30" />
+      <div className="grid grid-cols-2 gap-3">
+        <div className="grid flex-1 grid-cols-1 gap-2">
+          <InputSwitch<FlightSchema>
+            name="origin_id"
+            selectOptions={formattedLocation}
+            type="combobox"
+            label="Origin"
+            info="Select the origin location"
+            editLink="/data-fields/airway-bills?tab=location"
           />
-          <InputSwitch
-            label="Minutes"
-            name="departure_minute"
-            type="stepper-number"
-            max={59}
-            min={0}
-            step={1}
+          <InputSwitch<FlightSchema>
+            type="date"
+            name="departure_date"
+            label="Departure Date"
+            disabled={!formData.origin_id}
+            disabledMatcher={{ before: new Date() }}
           />
-          <InputSwitch
-            name="departure_period"
-            type="select"
-            selectOptions={[
-              { label: "AM", value: "AM" },
-              { label: "PM", value: "PM" },
-            ]}
-            label="AM/PM"
+          <InputSwitch<FlightSchema>
+            type="time"
+            name="departure_date"
+            disabled={!formData.origin_id}
+            label="Departure Time"
           />
         </div>
-        <InputSwitch
-          type="date"
-          name="departure_date"
-          label="Departure Date"
-          disabledMatcher={{ before: new Date() }}
-        />
+
+        <div className="grid flex-1 grid-cols-1 gap-2">
+          <InputSwitch<FlightSchema>
+            name="destination_id"
+            selectOptions={formattedLocation}
+            type="combobox"
+            label="Destination"
+            info="Select the destination location"
+            editLink="/data-fields/airway-bills?tab=location"
+          />
+          <InputSwitch<FlightSchema>
+            type="date"
+            name="arrival_date"
+            label="Arrival Date"
+            disabled={!formData.destination_id || !formData.departure_date}
+            disabledMatcher={{ before: new Date(formData.departure_date) }}
+          />
+          <InputSwitch<FlightSchema>
+            type="time"
+            name="arrival_date"
+            disabled={!formData.destination_id || !formData.departure_date}
+            label="Arrival Time"
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Combobox
-          name="destination_id"
-          options={formattedLocation}
-          label="Destination"
-          info="Select the source location"
-          editLink="/data-fields/airway-bills?tab=location"
-        />
+      {/* <div className="grid grid-cols-3 gap-4">
         <div className="flex-col">
           <label className="text-xs">Arrival Time</label>
           <p>
@@ -306,15 +346,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             </p>
           )}
         </div>
-      </div>
-      <div className="grid grid-cols-1 gap-4">
-        <Combobox
-          name="tail_id"
-          label="Tail Number"
-          info="Select Tail number"
-          options={aircraftTailNumbers}
-        />
-      </div>
+      </div> */}
     </Card>
   )
 })

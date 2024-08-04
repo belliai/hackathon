@@ -1,4 +1,5 @@
 import { ListIcon, SearchIcon } from "lucide-react"
+import { Matcher } from "react-day-picker"
 import { FieldValues, Path, PathValue, useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -25,9 +26,9 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Switch } from "../ui/switch"
+import TimeInput from "../ui/time-input"
 import { Combobox, ComboboxProps } from "./combobox"
 import NumberInputStepper from "./number-input-stepper"
-import { Matcher } from "react-day-picker"
 
 type BaseInputProps<DataType> = InputProps & {
   name: Path<DataType>
@@ -57,6 +58,9 @@ export type InputSwitchProps<DataType extends FieldValues> =
       type: "date"
       disabledMatcher?: Matcher
       mode?: "single" | "range"
+    })
+  | (BaseInputProps<DataType> & {
+      type: "time"
     })
   | (BaseInputProps<DataType> & {
       type: "select"
@@ -201,6 +205,32 @@ export default function InputSwitch<DataType extends FieldValues>(
                   disabled={props.disabled}
                   disabledMatcher={props.disabledMatcher}
                   mode={props.mode}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )
+      case "time":
+        return (
+          <FormField
+            key={props.name}
+            control={form.control}
+            name={props.name}
+            render={({ field }) => (
+              <FormItem className="flex-grow space-y-1">
+                {!!props.label && (
+                  <FormLabel
+                    info={props.info}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
+                    {props.label}
+                  </FormLabel>
+                )}
+                <TimeInput
+                  {...field}
+                  className={props.className}
+                  disabled={props.disabled}
                 />
                 <FormMessage />
               </FormItem>
