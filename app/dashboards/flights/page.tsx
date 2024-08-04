@@ -49,48 +49,51 @@ type FlightWithActualInformation = Flight & {
   actual_cargo_capacity: string
 }
 
-const SETTING_OPTIONS = [
-  {
-    label: "Aircraft Types",
-    link: "/settings/aircrafts?tab=aircraft-types",
-  },
-  {
-    label: "Tail Numbers",
-    link: "/settings/aircrafts?tab=tail-numbers",
-  },
-  {
-    label: "Flight Scheduler",
-    link: "/settings/flights",
-  },
-  {
-    label: "Custom Data Fields: Aircrafts",
-    link: "",
-    child: [
-      {
-        label: "Aircrafts",
-        link: "/data-fields/aircrafts?tab=aircrafts",
-      },
-      {
-        label: "Measurement Units",
-        link: "/data-fields/aircrafts?tab=measurement-units",
-      },
-    ],
-  },
-  {
-    label: "Custom Data Fields: Flights",
-    link: "",
-    child: [
-      {
-        label: "Display",
-        link: "/data-fields/flights?tab=display",
-      },
-      {
-        label: "Default Timezone",
-        link: "/data-fields/flights?tab=default-timezone",
-      },
-    ],
-  },
-]
+const SETTING_OPTIONS = {
+  width: 'w-[234px]',
+  data: [
+    {
+      label: "Aircraft Types",
+      value: "/settings/aircrafts?tab=aircraft-types",
+    },
+    {
+      label: "Tail Numbers",
+      value: "/settings/aircrafts?tab=tail-numbers",
+    },
+    {
+      label: "Flight Scheduler",
+      value: "/settings/flights",
+    },
+    {
+      label: "Custom Data Fields: Aircrafts",
+      value: "",
+      child: [
+        {
+          label: "Aircrafts",
+          value: "/data-fields/aircrafts?tab=aircrafts",
+        },
+        {
+          label: "Measurement Units",
+          value: "/data-fields/aircrafts?tab=measurement-units",
+        },
+      ],
+    },
+    {
+      label: "Custom Data Fields: Flights",
+      value: "",
+      child: [
+        {
+          label: "Display",
+          value: "/data-fields/flights?tab=display",
+        },
+        {
+          label: "Default Timezone",
+          value: "/data-fields/flights?tab=default-timezone",
+        },
+      ],
+    },
+  ]
+}
 
 export default function FlightsDashboardPage() {
   const displayOption: DisplayOption =
@@ -471,6 +474,7 @@ export default function FlightsDashboardPage() {
               filename: "DashboardFlightData",
             })
           }
+          settingOptions={SETTING_OPTIONS}
         />
       )}
     </div>

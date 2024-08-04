@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { DataTable } from "@components/data-table/data-table"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PlusIcon } from "@radix-ui/react-icons"
@@ -43,6 +43,7 @@ import Location from "@/app/data-fields/location"
 import CommodityCode from "@/app/data-fields/commodity-code"
 import TransportMethod from "@/app/data-fields/transport-method"
 import TimeZone from "@/app/data-fields/time-zone"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 const SETTING_OPTIONS = [
   {
@@ -77,6 +78,42 @@ const SETTING_OPTIONS = [
   },
 ]
 
+const SETTING_LIST = {
+  width: 'w-[128px]',
+  data: [
+    {
+      label: "Airway Bills",
+      value: "",
+      child: [
+        {
+          label: "Booking Type",
+          value: "/data-fields/airway-bills?tab=booking-type",
+        },
+        {
+          label: "Status",
+          value: "/data-fields/airway-bills?tab=status",
+        },
+        {
+          label: "Location",
+          value: "/data-fields/airway-bills?tab=location",
+        },
+        {
+          label: "Commodity Code",
+          value: "/data-fields/airway-bills?tab=commodity-code",
+        },
+        {
+          label: "Transport Method",
+          value: "/data-fields/airway-bills?tab=transport-method",
+        },
+        {
+          label: "Time Zone",
+          value: "/data-fields/airway-bills?tab=time-zone",
+        },
+      ],
+    },
+  ]
+}
+
 const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
   <TabsList className="gap-2 bg-transparent p-0">
     <TabsTrigger
@@ -86,7 +123,7 @@ const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
       <HomeIcon className="mr-2 size-4" />
       Airway Bills
     </TabsTrigger>
-    <DropdownMenu>
+    {/* <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
@@ -134,12 +171,15 @@ const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
           })}
         </DropdownMenuGroup>
       </DropdownMenuContent>
-    </DropdownMenu>
+    </DropdownMenu> */}
   </TabsList>
 )
 
 export default function Home() {
-  const data = getData()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get("tab")
   const { selectedBooking, setSelectedBooking } = useBookingContext()
   const [modalOpen, setModalOpen] = useState(false)
   const [modalType, setModalType] = useState<"edit" | "create">("create")
@@ -149,7 +189,7 @@ export default function Home() {
     pageIndex: 0,
     pageSize: 10,
   })
-  const [tabValue, setTabValue] = useState("airway-bills")
+  const [tabValue, setTabValue] = useState('')
 
   const {
     isLoading,
@@ -228,17 +268,40 @@ export default function Home() {
 
   const memoizedTabsList = useMemo(() => <AWBTabsList tabValue={tabValue} />, [tabValue])
 
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  const setSearchParams = (key: string, value: string) => {
+    router.push(pathname + "?" + createQueryString(key, value))
+  }
+
+  // useEffect(() => {
+  //   if (tabParam) {
+  //     setTabValue(tabParam)
+  //   }
+  // }, [tabParam])
+
+  // useEffect(() => {
+  //   setSearchParams("tab", tabValue)
+  // }, [tabValue])
+
   return (
     <div>
       <ClientSideSuspense fallback={<></>}>
         <LiveCursorHoc />
       </ClientSideSuspense>
-      <Tabs
+      {/* <Tabs
         value={tabValue}
         onValueChange={setTabValue}
         className="space-y-4"
       >
-        <TabsContent value="airway-bills" asChild>
+        <TabsContent value="airway-bills" asChild> */}
           <DataTable
             initialPinning={{
               left: [],
@@ -258,10 +321,11 @@ export default function Home() {
             onExport={() =>
               onExport({ data: ordersData.data, filename: "AirwaybillsData" })
             }
-            extraLeftComponents={memoizedTabsList}
+            // extraLeftComponents={memoizedTabsList}
+            settingOptions={SETTING_LIST}
           />
-        </TabsContent>
-        <TabsContent value="booking-type" asChild>
+        {/* </TabsContent> */}
+        {/* <TabsContent value="booking-type" asChild>
           <BookingType tabComponent={memoizedTabsList} />
         </TabsContent>
         <TabsContent value="status" asChild>
@@ -278,8 +342,8 @@ export default function Home() {
         </TabsContent>
         <TabsContent value="time-zone" asChild>
           <TimeZone tabComponent={memoizedTabsList} />
-        </TabsContent>
-      </Tabs>
+        </TabsContent> */}
+      {/* </Tabs> */}
       <NewOrderModal
         open={modalOpen}
         onOpenChange={onOpenChange}

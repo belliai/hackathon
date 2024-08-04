@@ -89,6 +89,58 @@ const SETTING_OPTIONS = [
   },
 ]
 
+const SETTING_LIST = {
+  width: 'w-[133px]',
+  data: [
+    {
+      label: "Payments",
+      value: "",
+      child: [
+        {
+          label: "Payment Mode",
+          value: "/data-fields/payments?tab=payment-mode",
+        },
+        {
+          label: "Currency",
+          value: "/data-fields/payments?tab=currency",
+        },
+      ],
+    },
+    {
+      label: "Organizations",
+      value: "organizations",
+      child: [
+        {
+          label: "Airline AWB Prefix",
+          value: "/data-fields/organizations?tab=airline-awb-prefix",
+        },
+        {
+          label: "IATA Airline Code",
+          value: "/data-fields/organizations?tab=iata-airline-code",
+        },
+        {
+          label: "Partner Type",
+          value: "/data-fields/organizations?tab=partner-type",
+        },
+      ],
+    },
+    {
+      label: "Customers",
+      value: "customers",
+      child: [
+        {
+          label: "Organizations",
+          value: "/data-fields/customers?tab=organizations",
+        },
+        {
+          label: "People",
+          value: "/data-fields/customers?tab=people",
+        },
+      ],
+    },
+  ],
+}
+
 const PartnersTabsList = ({ tabValue }: { tabValue: string }) => (
   <TabsList className="gap-2 bg-transparent p-0">
     <TabsTrigger
@@ -105,7 +157,7 @@ const PartnersTabsList = ({ tabValue }: { tabValue: string }) => (
       <Contact2Icon className="mr-2 size-4" />
       People
     </TabsTrigger>
-    <DropdownMenu>
+    {/* <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
@@ -153,7 +205,7 @@ const PartnersTabsList = ({ tabValue }: { tabValue: string }) => (
           })}
         </DropdownMenuGroup>
       </DropdownMenuContent>
-    </DropdownMenu>
+    </DropdownMenu> */}
   </TabsList>
 )
 
@@ -234,9 +286,10 @@ export default function MasterAircraftPage() {
               onExport={() =>
                 onExport({ data: PEOPLE_DUMMY_DATA, filename: "PartnersPeopleData" })
               }
+              settingOptions={SETTING_LIST}
             />
           </TabsContent>
-          <TabsContent value="payment-mode" asChild>
+          {/* <TabsContent value="payment-mode" asChild>
             <PaymentMode tabComponent={memoizedTabsList} />
           </TabsContent>
           <TabsContent value="currency" asChild>
@@ -256,7 +309,7 @@ export default function MasterAircraftPage() {
           </TabsContent>
           <TabsContent value="setting-people" asChild>
             <CustomersPeopleCrud tabComponent={memoizedTabsList} />
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </div>
     </PageContainer>
@@ -299,6 +352,7 @@ function CompanyDataTable({
               onExport={() =>
                 onExport({ data: DUMMY_COMPANIES_DATA, filename: "PartnersCompanyData" })
               }
+        settingOptions={SETTING_LIST}
       />
       <CompanyForm
         form={form}
