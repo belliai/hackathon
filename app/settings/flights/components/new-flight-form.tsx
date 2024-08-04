@@ -12,6 +12,7 @@ import {
   PlaneTakeoff,
   Repeat,
   SaveIcon,
+  Trash2,
   XCircle,
 } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -22,6 +23,7 @@ import {
 } from "@/types/flight-master/flight-master"
 import {
   useCreateFlight,
+  useDeleteFlight,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
 import {
@@ -29,6 +31,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -63,7 +66,7 @@ type NewFlightModalProps = PropsWithChildren & {
 const schemas = flightMasterFormSchema
 const initialValues = getDefaults(schemas)
 
-const mappedData = (props: Flight) : CreateFlightMasterPayload => {
+const mappedData = (props: Flight): CreateFlightMasterPayload => {
   return {
     origin_id: props.origin.id,
     destination_id: props.destination.id,
@@ -75,7 +78,6 @@ const mappedData = (props: Flight) : CreateFlightMasterPayload => {
     departure_period: props.departure_period,
     flight_duration_hour: props.flight_duration_hour,
     flight_duration_minute: props.flight_duration_minute,
-  
   }
 }
 
@@ -84,10 +86,12 @@ export default function NewFlightModal(props: NewFlightModalProps) {
   const [open, setOpen] = useState(props.open ?? false)
   const [isFullScreen, setFullScreen] = useState(false)
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
+  const [deleteWarningOpen, setDeleteWarningOpen] = useState(false)
   const [currentTab, setCurrentTab] = useState("flight-details")
 
   const update = useUpdateFlight()
   const create = useCreateFlight()
+  const deleteFlight = useDeleteFlight()
 
   const form = useForm({
     resolver: zodResolver(flightSchema),
@@ -179,7 +183,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       departure_minute: data.departure_minute,
       departure_period: data.departure_period,
       tail_id: data.tail_id,
-      departure_date: format(data.departure_date,"yyyy-MM-dd"),
+      departure_date: format(data.departure_date, "yyyy-MM-dd"),
       flight_duration_hour: data.flight_duration_hour,
       flight_duration_minute: data.flight_duration_minute,
     }
@@ -240,13 +244,28 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     if (mode === "create") form.reset(initialValues)
   }, [data, mode])
 
+  const renderDeleteButtons = () => {
+    return (
+      mode !== "create" && (
+        <Button
+          type="button"
+          variant={"secondary"}
+          onClick={() => setDeleteWarningOpen(true)}
+        >
+          <Trash2 className="mr-2 size-4" />
+          Delete
+        </Button>
+      )
+    )
+  }
+
   const renderSaveButtons = () => {
     return (
       <Button
         type="button"
         variant={"button-primary"}
-        onClick={ async () => {
-          isLastIndex()  ? await form.handleSubmit(onSubmit)() : nextTab()
+        onClick={async () => {
+          isLastIndex() ? await form.handleSubmit(onSubmit)() : nextTab()
         }}
       >
         {isLastIndex() ? (
@@ -361,6 +380,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
               </div>
             </Tabs>
             <DialogFooter>
+              {renderDeleteButtons()}
               <Button
                 type="button"
                 variant={"secondary"}
@@ -369,6 +389,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
                 <XCircle className="mr-2 size-4" />
                 Cancel
               </Button>
+
               {renderSaveButtons()}
             </DialogFooter>
           </form>
@@ -390,6 +411,35 @@ export default function NewFlightModal(props: NewFlightModalProps) {
               }}
             >
               Yes, discard changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={deleteWarningOpen} onOpenChange={setDeleteWarningOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure want to delete Flight?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This will delete flight number {data && `${data?.flight_number}`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant={"button-primary"}
+              onClick={async () => {
+                try {
+                  if (data?.id) await deleteFlight.mutateAsync({ id: data?.id })
+                  setDeleteWarningOpen(false)
+                  setOpen(false)
+                } catch (e) {
+                  console.log(e)
+                }
+              }}
+            >
+              Confirm Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
