@@ -16,43 +16,64 @@ import { useOrders, useUpdateOrder } from "@/lib/hooks/orders"
 import { useStatuses } from "@/lib/hooks/statuses"
 import { mapSchemaToJson } from "@/lib/mapper/order"
 
+const columnOrder = [
+  "In Flight",
+  "Active",
+  "Delayed",
+  "AXB Booked & Confirmed",
+  "Shipped",
+  "Delivered",
+  "Complete",
+]
+
 const CustomKanban = () => {
+  const { isLoading: isLoadingStatus, data: allStatus } = useStatuses()
+  console.warn("status", allStatus)
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 9999,
   })
-  const { data: data, isLoading } = useOrders({ pagination })
+  const { data, isLoading } = useOrders({ pagination })
 
-  if (isLoading) {
+  if (isLoading || isLoadingStatus) {
     return <></>
   }
 
-  console.warn("data", data)
+  const sortedStatuses = allStatus
+    .filter((status: IDNamePair) => columnOrder.includes(status.name))
+    .sort(
+      (a: IDNamePair, b: IDNamePair) =>
+        columnOrder.indexOf(a.name) - columnOrder.indexOf(b.name)
+    )
+
+  // Add the remaining statuses that are not in the predefined order at the end
+  const remainingStatuses = allStatus.filter(
+    (status: IDNamePair) => !columnOrder.includes(status.name)
+  )
+
+  const uniqueStatuses = [...sortedStatuses, ...remainingStatuses]
 
   return (
     <div className="h-screen w-full text-neutral-50">
-      <Board allCards={data.data} />
+      <Board allCards={data.data} allStatus={uniqueStatuses} />
     </div>
   )
 }
 
-const Board = ({ allCards }: { allCards: Shipment[] }) => {
+const Board = ({
+  allCards,
+  allStatus,
+}: {
+  allCards: Shipment[]
+  allStatus: IDNamePair[]
+}) => {
   const [cards, setCards] = useState<Shipment[]>(allCards)
   console.error("data is...", allCards, Array.isArray(allCards))
-  // GET the status array from the data
-  // const uniqueStatuses = Array.from(
-  //   new Set(data.map((shipment) => shipment.status))
-  // )
-
-  const uniqueStatuses = Array.from(
-    new Set(allCards.map((shipment) => JSON.stringify(shipment.status)))
-  ).map((status) => JSON.parse(status) as IDNamePair)
-
-  console.warn("all unique", uniqueStatuses)
 
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-2">
-      {uniqueStatuses.map((status: IDNamePair) => (
+      {allStatus.map((status: IDNamePair) => (
         <Column
           key={status.ID}
           title={status.name}
@@ -78,13 +99,11 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
   const update = useUpdateOrder()
 
   const handleDragStart = (e: DragEvent, card: CardType) => {
-    console.warn("dragging card", card)
     e.dataTransfer.setData("cardId", card.ID)
   }
 
   const handleDragEnd = async (e: DragEvent) => {
     const cardId = e.dataTransfer.getData("cardId")
-    console.warn("got the cardd id", cardId)
 
     setActive(false)
     clearHighlights()
@@ -96,12 +115,9 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
 
     if (before !== cardId) {
       let copy = [...cards]
-      console.warn("copy is", copy)
       let cardToTransfer = copy.find((c) => c.ID === cardId)
-      console.error("card to transfer", cardToTransfer)
       if (!cardToTransfer) return
       cardToTransfer = { ...cardToTransfer, status }
-      console.log("moving to this status", status)
 
       copy = copy.filter((c) => c.ID !== cardId)
 
@@ -365,8 +381,8 @@ const mapShipmentToOrder = (shipment: Shipment): Order => {
       action: log.action,
     })),
     awb: shipment.awb,
-    bill_to_id: shipment.bill_to.id,
-    bill_to_name: shipment.bill_to.name,
+    bill_to_id: shipment.bill_to?.id,
+    bill_to_name: shipment.bill_to?.name,
     booking_type_id: shipment.booking_type.ID,
     ch_weight_kg: shipment.ch_weight_kg
       ? String(shipment.ch_weight_kg)
