@@ -7,14 +7,17 @@ import React, {
   SetStateAction,
   useState,
 } from "react"
+import { PaginationState } from "@tanstack/react-table"
 import { motion } from "framer-motion"
 import { Flame, PlusIcon } from "lucide-react"
 
+import { useOrders } from "@/lib/hooks/orders"
+import { useStatuses } from "@/lib/hooks/statuses"
 import { TrashIcon } from "@/app/liveblock-spreadsheet/icons"
 
 const CustomKanban = () => {
   return (
-    <div className="h-screen w-full bg-neutral-900 text-neutral-50">
+    <div className="h-screen w-full text-neutral-50">
       <Board />
     </div>
   )
@@ -24,55 +27,38 @@ const Board = () => {
   const [cards, setCards] = useState(DEFAULT_CARDS)
 
   return (
-    <div className="flex h-full w-full gap-3 overflow-scroll p-12">
+    <div className="flex h-full w-full gap-3 overflow-scroll p-2">
       <Column
         title="Backlog"
         column="backlog"
-        headingColor="text-neutral-500"
         cards={cards}
         setCards={setCards}
       />
-      <Column
-        title="TODO"
-        column="todo"
-        headingColor="text-yellow-200"
-        cards={cards}
-        setCards={setCards}
-      />
+      <Column title="TODO" column="todo" cards={cards} setCards={setCards} />
       <Column
         title="In progress"
         column="doing"
-        headingColor="text-blue-200"
         cards={cards}
         setCards={setCards}
       />
       <Column
         title="Complete"
         column="done"
-        headingColor="text-emerald-200"
         cards={cards}
         setCards={setCards}
       />
-      <BurnBarrel setCards={setCards} />
     </div>
   )
 }
 
 type ColumnProps = {
   title: string
-  headingColor: string
   cards: CardType[]
   column: ColumnType
   setCards: Dispatch<SetStateAction<CardType[]>>
 }
 
-const Column = ({
-  title,
-  headingColor,
-  cards,
-  column,
-  setCards,
-}: ColumnProps) => {
+const Column = ({ title, cards, column, setCards }: ColumnProps) => {
   const [active, setActive] = useState(false)
 
   const handleDragStart = (e: DragEvent, card: CardType) => {
@@ -179,9 +165,9 @@ const Column = ({
   const filteredCards = cards.filter((c) => c.column === column)
 
   return (
-    <div className="w-56 shrink-0">
+    <div className="w-80 shrink-0">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className={`font-medium ${headingColor}`}>{title}</h3>
+        <h3 className={`font-medium text-white`}>{title}</h3>
         <span className="rounded text-sm text-neutral-400">
           {filteredCards.length}
         </span>
@@ -198,7 +184,6 @@ const Column = ({
           return <Card key={c.id} {...c} handleDragStart={handleDragStart} />
         })}
         <DropIndicator beforeId={null} column={column} />
-        <AddCard column={column} setCards={setCards} />
       </div>
     </div>
   )
@@ -217,6 +202,7 @@ const Card = ({ title, id, column, handleDragStart }: CardProps) => {
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { title, id, column })}
+        transition={{ duration: 0.1 }} // Adjust the duration as needed
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
         <p className="text-sm text-neutral-100">{title}</p>
@@ -280,71 +266,6 @@ const BurnBarrel = ({
   )
 }
 
-type AddCardProps = {
-  column: ColumnType
-  setCards: Dispatch<SetStateAction<CardType[]>>
-}
-
-const AddCard = ({ column, setCards }: AddCardProps) => {
-  const [text, setText] = useState("")
-  const [adding, setAdding] = useState(false)
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (!text.trim().length) return
-
-    const newCard = {
-      column,
-      title: text.trim(),
-      id: Math.random().toString(),
-    }
-
-    setCards((pv) => [...pv, newCard])
-
-    setAdding(false)
-  }
-
-  return (
-    <>
-      {adding ? (
-        <motion.form layout onSubmit={handleSubmit}>
-          <textarea
-            onChange={(e) => setText(e.target.value)}
-            autoFocus
-            placeholder="Add new task..."
-            className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
-          />
-          <div className="mt-1.5 flex items-center justify-end gap-1.5">
-            <button
-              onClick={() => setAdding(false)}
-              className="px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
-            >
-              Close
-            </button>
-            <button
-              type="submit"
-              className="flex items-center gap-1.5 rounded bg-neutral-50 px-3 py-1.5 text-xs text-neutral-950 transition-colors hover:bg-neutral-300"
-            >
-              <span>Add</span>
-              <PlusIcon />
-            </button>
-          </div>
-        </motion.form>
-      ) : (
-        <motion.button
-          layout
-          onClick={() => setAdding(true)}
-          className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
-        >
-          <span>Add card</span>
-          <PlusIcon />
-        </motion.button>
-      )}
-    </>
-  )
-}
-
 type ColumnType = "backlog" | "todo" | "doing" | "done"
 
 type CardType = {
@@ -355,7 +276,7 @@ type CardType = {
 
 const DEFAULT_CARDS: CardType[] = [
   // BACKLOG
-  { title: "Look into render bug in dashboard", id: "1", column: "backlog" },
+  { title: "AWB: 234-567782393", id: "1", column: "backlog" },
   { title: "SOX compliance checklist", id: "2", column: "backlog" },
   { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
   { title: "Document Notifications service", id: "4", column: "backlog" },
