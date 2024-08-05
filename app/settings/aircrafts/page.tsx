@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   aircraftFormSchema,
@@ -11,7 +11,13 @@ import {
   TailNumberFormValues,
 } from "@/schemas/aircraft/tail-numbers"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PlaneIcon, PlusIcon, ScrollTextIcon, Users } from "lucide-react"
+import {
+  CircleAlertIcon,
+  PlaneIcon,
+  PlusIcon,
+  ScrollTextIcon,
+  Users,
+} from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
@@ -20,7 +26,7 @@ import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useTailNumbers } from "@/lib/hooks/aircrafts/tail-numbers"
 import { onExport } from "@/lib/utils/export"
-import { isVallidUuid } from "@/lib/utils/string-utils"
+import { findDuplicates, isVallidUuid } from "@/lib/utils/string-utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -102,6 +108,13 @@ export default function MasterAircraftPage() {
   )
 }
 
+const getAircraftTypeString = (aircraft: Aircraft) =>
+  [
+    aircraft.manufacturer.name,
+    aircraft.aircraft_type.name,
+    aircraft.version.version,
+  ].join(" ")
+
 function AircraftDataTable() {
   const [currentOpenAircraftModal, setCurrentOpenAircraftModal] = useState<
     string | boolean
@@ -117,6 +130,12 @@ function AircraftDataTable() {
     page_size: 1000,
   })
   const aircraftsData = aircrafts?.data
+
+  const duplicateAircrafts = useMemo(() => {
+    const aircraftsList =
+      aircrafts?.data.map((aircraft) => getAircraftTypeString(aircraft)) ?? []
+    return findDuplicates(aircraftsList)
+  }, [aircraftsData])
 
   function handleAircraftRowClick(data: Aircraft) {
     setCurrentOpenAircraftModal(data.id)
@@ -155,40 +174,49 @@ function AircraftDataTable() {
         </Button>
       </div>
       <div className="no-scrollbar flex h-5 w-[60%] min-w-fit flex-1 grid-cols-1 flex-col gap-2 overflow-y-scroll">
-        {aircraftsData?.map((aircraft) => (
-          <Button
-            asChild
-            key={aircraft.id}
-            variant={"secondary"}
-            className="cursor-pointer text-foreground"
-            onClick={() => handleAircraftRowClick(aircraft)}
-          >
-            <Card className="sm group grid grid-cols-3 border bg-zinc-900/50 px-3 py-1.5 text-sm">
-              <span>
-                {aircraft.manufacturer.name} {aircraft.aircraft_type.name}{" "}
-                {aircraft.version.version}
-              </span>
-              <div className="inline-flex items-center gap-2 text-muted-foreground">
-                <span className="tabular-nums text-foreground">
-                  {aircraft.aircraft_tail_numbers?.filter(
-                    (item) =>
-                      item.status?.name?.toLowerCase() === "active" &&
-                      !item.is_deleted
-                  ).length ?? 0}
+        {aircraftsData?.map((aircraft) => {
+          const aircraftName = getAircraftTypeString(aircraft)
+          const isDuplicate = duplicateAircrafts.includes(aircraftName)
+          return (
+            <Button
+              asChild
+              key={aircraft.id}
+              variant={"secondary"}
+              className="cursor-pointer text-foreground"
+              onClick={() => handleAircraftRowClick(aircraft)}
+            >
+              <Card className="sm group grid grid-cols-3 border bg-zinc-900/50 px-3 py-1.5 text-sm">
+                <span>
+                  {aircraftName}{" "}
+                  {isDuplicate && (
+                    <span className="ml-1 inline-flex h-fit items-center gap-1 text-xs text-destructive">
+                      <CircleAlertIcon className="size-2" />
+                      possible duplicate
+                    </span>
+                  )}
                 </span>
-                <PlaneIcon className="size-4" />
-                <span className="text-xs">Active tail numbers</span>
-              </div>
-              <div className="inline-flex items-center gap-2 text-muted-foreground">
-                <span className="tabular-nums text-foreground">
-                  {aircraft.passenger_capacity || "-"}
-                </span>
-                <Users className="size-4" />
-                <span className="text-xs">Passenger Capacity</span>
-              </div>
-            </Card>
-          </Button>
-        ))}
+                <div className="inline-flex items-center gap-2 text-muted-foreground">
+                  <span className="tabular-nums text-foreground">
+                    {aircraft.aircraft_tail_numbers?.filter(
+                      (item) =>
+                        item.status?.name?.toLowerCase() === "active" &&
+                        !item.is_deleted
+                    ).length ?? 0}
+                  </span>
+                  <PlaneIcon className="size-4" />
+                  <span className="text-xs">Active tail numbers</span>
+                </div>
+                <div className="inline-flex items-center gap-2 text-muted-foreground">
+                  <span className="tabular-nums text-foreground">
+                    {aircraft.passenger_capacity || "-"}
+                  </span>
+                  <Users className="size-4" />
+                  <span className="text-xs">Passenger Capacity</span>
+                </div>
+              </Card>
+            </Button>
+          )
+        })}
       </div>
       {/* <DataTable
         showToolbarOnlyOnHover={true}
