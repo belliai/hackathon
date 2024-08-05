@@ -42,7 +42,7 @@ const WeeklyDateStepper = ({
         className={`hover:text-blue-300 cursor-pointer ${disabled ? "text-gray-400 cursor-not-allowed" : ""}`}
       />
       <div className="text-sm">
-        {format(value.from, "MMMM d, yyyy")} - {format(value.to, "MMMM d, yyyy")}
+        {format(value.from, "MMM d, yyyy")} - {format(value.to, "MMM d, yyyy")}
       </div>
       <ChevronRight
         onClick={!disabled ? handleNextWeek : undefined}

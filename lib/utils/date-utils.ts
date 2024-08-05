@@ -1,3 +1,4 @@
+import { format } from "date-fns"
 import { Frequency, Options, RRule, Weekday } from "rrule"
 
 export function formatDate(dateString: string): string {
@@ -152,24 +153,12 @@ export function generateRecurringOptions({
       value: `no-repeat`,
     },
     {
-      label: `${new RRule({ freq: RRule.DAILY, dtstart: startAt }).toText()}`,
+      label: `Daily`,
       value: new RRule({ freq: RRule.DAILY, dtstart: startAt }).toString(),
     },
     {
-      label: `${new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO], dtstart: startAt }).toText()}`,
+      label: `Weekly on ${format(new Date(startAt),'EEEE')}`,
       value: new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO], dtstart: startAt }).toString(),
-    },
-    {
-      label: `${new RRule({ freq: RRule.MONTHLY, bymonthday: [dayOfMonth], dtstart: startAt }).toText()}`,
-      value: new RRule({ freq: RRule.MONTHLY, bymonthday: [dayOfMonth], dtstart: startAt }).toString(),
-    },
-    {
-      label: `${new RRule({ freq: RRule.YEARLY, bymonthday: [dayOfMonth], bymonth: [startAt.getMonth() + 1], dtstart: startAt }).toText()} `,
-      value: new RRule({ freq: RRule.YEARLY, bymonthday: [dayOfMonth], bymonth: [startAt.getMonth() + 1], dtstart: startAt }).toString(),
-    },
-    {
-      label: `${new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR], dtstart: startAt }).toText()}`,
-      value: new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR], dtstart: startAt }).toString(),
     },
     {
       label: "Custom...",
