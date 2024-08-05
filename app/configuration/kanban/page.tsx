@@ -5,67 +5,104 @@ import React, {
   DragEvent,
   FormEvent,
   SetStateAction,
+  useCallback,
   useState,
 } from "react"
+import { Order } from "@/schemas/order/order"
 import { PaginationState } from "@tanstack/react-table"
 import { motion } from "framer-motion"
-import { Flame, PlusIcon } from "lucide-react"
 
-import { useOrders } from "@/lib/hooks/orders"
+import { useOrders, useUpdateOrder } from "@/lib/hooks/orders"
 import { useStatuses } from "@/lib/hooks/statuses"
-import { TrashIcon } from "@/app/liveblock-spreadsheet/icons"
+import { mapSchemaToJson } from "@/lib/mapper/order"
+
+const columnOrder = [
+  "In Flight",
+  "Active",
+  "Delayed",
+  "AXB Booked & Confirmed",
+  "Shipped",
+  "Delivered",
+  "Complete",
+]
 
 const CustomKanban = () => {
+  const { isLoading: isLoadingStatus, data: allStatus } = useStatuses()
+  console.warn("status", allStatus)
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 9999,
+  })
+  const { data, isLoading } = useOrders({ pagination })
+
+  if (isLoading || isLoadingStatus) {
+    return <></>
+  }
+
+  const sortedStatuses = allStatus
+    .filter((status: IDNamePair) => columnOrder.includes(status.name))
+    .sort(
+      (a: IDNamePair, b: IDNamePair) =>
+        columnOrder.indexOf(a.name) - columnOrder.indexOf(b.name)
+    )
+
+  // Add the remaining statuses that are not in the predefined order at the end
+  const remainingStatuses = allStatus.filter(
+    (status: IDNamePair) => !columnOrder.includes(status.name)
+  )
+
+  const uniqueStatuses = [...sortedStatuses, ...remainingStatuses]
+
   return (
     <div className="h-screen w-full text-neutral-50">
-      <Board />
+      <Board allCards={data.data} allStatus={uniqueStatuses} />
     </div>
   )
 }
 
-const Board = () => {
-  const [cards, setCards] = useState(DEFAULT_CARDS)
+const Board = ({
+  allCards,
+  allStatus,
+}: {
+  allCards: Shipment[]
+  allStatus: IDNamePair[]
+}) => {
+  const [cards, setCards] = useState<Shipment[]>(allCards)
+  console.error("data is...", allCards, Array.isArray(allCards))
 
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-2">
-      <Column
-        title="Backlog"
-        column="backlog"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column title="TODO" column="todo" cards={cards} setCards={setCards} />
-      <Column
-        title="In progress"
-        column="doing"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column
-        title="Complete"
-        column="done"
-        cards={cards}
-        setCards={setCards}
-      />
+      {allStatus.map((status: IDNamePair) => (
+        <Column
+          key={status.ID}
+          title={status.name}
+          status={status}
+          cards={cards}
+          setCards={setCards}
+        />
+      ))}
     </div>
   )
 }
 
 type ColumnProps = {
   title: string
-  cards: CardType[]
-  column: ColumnType
-  setCards: Dispatch<SetStateAction<CardType[]>>
+  cards: Shipment[]
+  status: IDNamePair
+  setCards: Dispatch<SetStateAction<Shipment[]>>
 }
 
-const Column = ({ title, cards, column, setCards }: ColumnProps) => {
+const Column = ({ title, cards, status, setCards }: ColumnProps) => {
   const [active, setActive] = useState(false)
+  // Filter cards for the specific column internally
+  const update = useUpdateOrder()
 
   const handleDragStart = (e: DragEvent, card: CardType) => {
-    e.dataTransfer.setData("cardId", card.id)
+    e.dataTransfer.setData("cardId", card.ID)
   }
 
-  const handleDragEnd = (e: DragEvent) => {
+  const handleDragEnd = async (e: DragEvent) => {
     const cardId = e.dataTransfer.getData("cardId")
 
     setActive(false)
@@ -78,23 +115,25 @@ const Column = ({ title, cards, column, setCards }: ColumnProps) => {
 
     if (before !== cardId) {
       let copy = [...cards]
-
-      let cardToTransfer = copy.find((c) => c.id === cardId)
+      let cardToTransfer = copy.find((c) => c.ID === cardId)
       if (!cardToTransfer) return
-      cardToTransfer = { ...cardToTransfer, column }
+      cardToTransfer = { ...cardToTransfer, status }
 
-      copy = copy.filter((c) => c.id !== cardId)
+      copy = copy.filter((c) => c.ID !== cardId)
 
       const moveToBack = before === "-1"
 
       if (moveToBack) {
         copy.push(cardToTransfer)
       } else {
-        const insertAtIndex = copy.findIndex((el) => el.id === before)
+        const insertAtIndex = copy.findIndex((el) => el.ID === before)
         if (insertAtIndex === undefined) return
 
         copy.splice(insertAtIndex, 0, cardToTransfer)
       }
+      const dataMapped = mapSchemaToJson(mapShipmentToOrder(cardToTransfer))
+
+      await update.mutateAsync({ ...(dataMapped as Order), id: cardId })
 
       setCards(copy)
     }
@@ -152,7 +191,7 @@ const Column = ({ title, cards, column, setCards }: ColumnProps) => {
   const getIndicators = () => {
     return Array.from(
       document.querySelectorAll(
-        `[data-column="${column}"]`
+        `[data-column="${status.name}"]`
       ) as unknown as HTMLElement[]
     )
   }
@@ -162,30 +201,32 @@ const Column = ({ title, cards, column, setCards }: ColumnProps) => {
     setActive(false)
   }
 
-  const filteredCards = cards.filter((c) => c.column === column)
+  const filteredCards = cards.filter((c) => c.status.name === status.name)
 
   return (
-    <div className="w-80 shrink-0">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className={`font-medium text-white`}>{title}</h3>
-        <span className="rounded text-sm text-neutral-400">
-          {filteredCards.length}
-        </span>
+    <>
+      <div className="w-80 shrink-0">
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className={`font-medium text-white`}>{title}</h3>
+          <span className="rounded text-sm text-neutral-400">
+            {filteredCards.length}
+          </span>
+        </div>
+        <div
+          onDrop={handleDragEnd}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          className={`h-full w-full transition-colors ${
+            active ? "bg-neutral-800/50" : "bg-neutral-800/0"
+          }`}
+        >
+          {filteredCards.map((c) => {
+            return <Card key={c.ID} {...c} handleDragStart={handleDragStart} />
+          })}
+          <DropIndicator beforeId={null} status={status} />
+        </div>
       </div>
-      <div
-        onDrop={handleDragEnd}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        className={`h-full w-full transition-colors ${
-          active ? "bg-neutral-800/50" : "bg-neutral-800/0"
-        }`}
-      >
-        {filteredCards.map((c) => {
-          return <Card key={c.id} {...c} handleDragStart={handleDragStart} />
-        })}
-        <DropIndicator beforeId={null} column={column} />
-      </div>
-    </div>
+    </>
   )
 }
 
@@ -193,19 +234,29 @@ type CardProps = CardType & {
   handleDragStart: Function
 }
 
-const Card = ({ title, id, column, handleDragStart }: CardProps) => {
+const Card = ({
+  awb,
+  origin,
+  destination,
+  ID,
+  status,
+  handleDragStart,
+}: CardProps) => {
   return (
     <>
-      <DropIndicator beforeId={id} column={column} />
+      <DropIndicator beforeId={ID} status={status} />
       <motion.div
         layout
-        layoutId={id}
+        layoutId={ID}
         draggable="true"
-        onDragStart={(e) => handleDragStart(e, { title, id, column })}
+        onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
-        <p className="text-sm text-neutral-100">{title}</p>
+        <p className="text-sm text-neutral-100">AWB: {awb}</p>
+        <p className="text-sm text-neutral-100">
+          Dest: {destination?.name} Org: {origin?.name}
+        </p>
       </motion.div>
     </>
   )
@@ -213,95 +264,223 @@ const Card = ({ title, id, column, handleDragStart }: CardProps) => {
 
 type DropIndicatorProps = {
   beforeId: string | null
-  column: string
+  status: IDNamePair
 }
 
-const DropIndicator = ({ beforeId, column }: DropIndicatorProps) => {
+const DropIndicator = ({ beforeId, status }: DropIndicatorProps) => {
   return (
     <div
       data-before={beforeId || "-1"}
-      data-column={column}
+      data-column={status.name}
       className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
     />
   )
 }
 
-const BurnBarrel = ({
-  setCards,
-}: {
-  setCards: Dispatch<SetStateAction<CardType[]>>
-}) => {
-  const [active, setActive] = useState(false)
-
-  const handleDragOver = (e: DragEvent) => {
-    e.preventDefault()
-    setActive(true)
-  }
-
-  const handleDragLeave = () => {
-    setActive(false)
-  }
-
-  const handleDragEnd = (e: DragEvent) => {
-    const cardId = e.dataTransfer.getData("cardId")
-
-    setCards((pv) => pv.filter((c) => c.id !== cardId))
-
-    setActive(false)
-  }
-
-  return (
-    <div
-      onDrop={handleDragEnd}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${
-        active
-          ? "border-red-800 bg-red-800/20 text-red-500"
-          : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
-      }`}
-    >
-      {active ? <Flame className="animate-bounce" /> : <TrashIcon />}
-    </div>
-  )
-}
-
-type ColumnType = "backlog" | "todo" | "doing" | "done"
+// type ColumnType = "backlog" | "todo" | "doing" | "done"
 
 type CardType = {
-  title: string
-  id: string
-  column: ColumnType
+  awb: string
+  origin: IDNamePair
+  destination: IDNamePair
+  ID: string
+  status: IDNamePair
 }
 
-const DEFAULT_CARDS: CardType[] = [
-  // BACKLOG
-  { title: "AWB: 234-567782393", id: "1", column: "backlog" },
-  { title: "SOX compliance checklist", id: "2", column: "backlog" },
-  { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
-  { title: "Document Notifications service", id: "4", column: "backlog" },
-  // TODO
-  {
-    title: "Research DB options for new microservice",
-    id: "5",
-    column: "todo",
-  },
-  { title: "Postmortem for outage", id: "6", column: "todo" },
-  { title: "Sync with product on Q3 roadmap", id: "7", column: "todo" },
+interface IDNamePair {
+  ID: string
+  name: string
+  created_at?: string
+  updated_at?: string
+  description?: string
+  timezone?: string | null
+}
 
-  // DOING
-  {
-    title: "Refactor context providers to use Zustand",
-    id: "8",
-    column: "doing",
-  },
-  { title: "Add logging to daily CRON", id: "9", column: "doing" },
-  // DONE
-  {
-    title: "Set up DD dashboards for Lambda listener",
-    id: "10",
-    column: "done",
-  },
-]
+interface User {
+  ID: string
+  created_at: string
+  updated_at: string
+  name: string
+  email: string
+}
+
+interface ActivityLog {
+  ID: string
+  created_at: string
+  updated_at: string
+  user: User
+  action: string
+  details: string[]
+}
+
+interface PaymentCurrency {
+  ID: string
+  created_at: string
+  updated_at: string
+  name: string
+}
+
+interface Organization {
+  id: string
+  name: string
+  code?: string
+}
+
+interface Shipment {
+  ID: string
+  created_at: string
+  updated_at: string
+  awb: string
+  is_physical: boolean
+  booking_type: IDNamePair
+  partner_prefix: IDNamePair | null
+  partner_code: IDNamePair
+  status: IDNamePair
+  origin: IDNamePair
+  destination: IDNamePair
+  commodity_code: IDNamePair | null
+  payment_mode: IDNamePair | null
+  volume_kg: number | null
+  currency: PaymentCurrency
+  rate: number | null
+  s_rate: number | null
+  s_freight: number | null
+  spot_id: number | null
+  gs_weight_kg: number | null
+  ch_weight_kg: number | null
+  amount_due: number | "NaN"
+  mode: string
+  total: number | null
+  activity_logs: ActivityLog[]
+  bill_to: Organization
+  shipper: Organization
+  consignee: Organization | null
+  customer: Organization | null
+  freight_forwarder: Organization | null
+  organization: Organization | null
+}
 
 export default CustomKanban
+
+// Function to map Shipment to Order
+const mapShipmentToOrder = (shipment: Shipment): Order => {
+  return {
+    ID: shipment.ID,
+    amount_due: shipment.amount_due ? String(shipment.amount_due) : undefined,
+    activity_logs: shipment.activity_logs?.map((log) => ({
+      ID: log.ID,
+      created_at: log.created_at,
+      updated_at: log.updated_at,
+      user: log.user
+        ? {
+            ID: log.user.ID,
+            name: log.user.name,
+            email: log.user.email,
+          }
+        : undefined,
+      action: log.action,
+    })),
+    awb: shipment.awb,
+    bill_to_id: shipment.bill_to?.id,
+    bill_to_name: shipment.bill_to?.name,
+    booking_type_id: shipment.booking_type.ID,
+    ch_weight_kg: shipment.ch_weight_kg
+      ? String(shipment.ch_weight_kg)
+      : undefined,
+    commodity_code_id: shipment.commodity_code?.ID,
+    consignee_id: shipment.consignee?.id,
+    currency_id: shipment.currency.ID,
+    customer_id: shipment.customer?.id,
+    destination_id: shipment.destination.ID,
+    freight_forwarder_id: shipment.freight_forwarder?.id,
+    gs_weight_kg: shipment.gs_weight_kg
+      ? String(shipment.gs_weight_kg)
+      : undefined,
+    is_physical: shipment.is_physical
+      ? String(shipment.is_physical)
+      : undefined,
+    mode: shipment.mode,
+    organization_id: shipment.organization?.id,
+    origin_id: shipment.origin.ID,
+    partner_code_id: shipment.partner_code.ID,
+    partner_prefix_id: shipment.partner_prefix?.ID,
+    payment_mode_id: shipment.payment_mode?.ID,
+    rate: shipment.rate ? String(shipment.rate) : undefined,
+    s_freight: shipment.s_freight ? String(shipment.s_freight) : undefined,
+    s_rate: shipment.s_rate ? String(shipment.s_rate) : undefined,
+    shipper_id: shipment.shipper?.id,
+    spot_id: shipment.spot_id ? String(shipment.spot_id) : undefined,
+    status_id: shipment.status.ID,
+    total: shipment.total ? String(shipment.total) : undefined,
+    volume_kg: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
+    use_freight_forwarder: shipment.freight_forwarder
+      ? String(!!shipment.freight_forwarder)
+      : undefined,
+    weight_and_volume_type: undefined, // Not available in Shipment
+    hawb_form: {
+      booking_type_id: shipment.booking_type.ID,
+      partner_prefix_id: shipment.partner_prefix?.ID,
+      awb: shipment.awb,
+      partner_code_id: shipment.partner_code.ID,
+      origin_id: shipment.origin.ID,
+      destination_id: shipment.destination.ID,
+      consignor_id: shipment.shipper?.id, // Assuming shipper is consignor
+      consignee_id: shipment.consignee?.id,
+      weight: shipment.gs_weight_kg ? String(shipment.gs_weight_kg) : undefined,
+      weight_unit: undefined, // Not available in Shipment
+      volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
+      volume_unit: undefined, // Not available in Shipment
+    },
+    individual_parcel_form: {
+      description: undefined, // Not available in Shipment
+      internal_id: undefined, // Not available in Shipment
+      external_id: undefined, // Not available in Shipment
+      weight: shipment.gs_weight_kg ? String(shipment.gs_weight_kg) : undefined,
+      weight_unit: undefined, // Not available in Shipment
+      volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
+      volume_unit: undefined, // Not available in Shipment
+      summary_weight: undefined, // Not available in Shipment
+      summary_length: undefined, // Not available in Shipment
+      summary_height: undefined, // Not available in Shipment
+      commodity_code_id: shipment.commodity_code?.ID,
+    },
+    total_weight_volume_form: {
+      description: undefined, // Not available in Shipment
+      internal_id: undefined, // Not available in Shipment
+      external_id: undefined, // Not available in Shipment
+      weight: shipment.gs_weight_kg ? String(shipment.gs_weight_kg) : undefined,
+      weight_unit: undefined, // Not available in Shipment
+      volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
+      volume_unit: undefined, // Not available in Shipment
+      summary_weight: undefined, // Not available in Shipment
+      summary_length: undefined, // Not available in Shipment
+      summary_height: undefined, // Not available in Shipment
+      commodity_code_id: shipment.commodity_code?.ID,
+    },
+    hawb_table: shipment.activity_logs.map((log) => ({
+      id: log.ID,
+      booking_type: shipment.booking_type.name,
+      booking_type_id: shipment.booking_type.ID,
+      awb: shipment.awb,
+      origin: shipment.origin.name,
+      origin_id: shipment.origin.ID,
+      destination: shipment.destination.name,
+      destination_id: shipment.destination.ID,
+      consignor: shipment.shipper?.name,
+      consignor_id: shipment.shipper?.id,
+      consignee: shipment.consignee?.name,
+      weight: shipment.gs_weight_kg ? String(shipment.gs_weight_kg) : undefined,
+      weight_unit: undefined, // Not available in Shipment
+      volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
+      volume_unit: undefined, // Not available in Shipment
+    })),
+    individual_parcel_table: undefined, // Assuming this information is not available in Shipment
+    total_weight: shipment.gs_weight_kg
+      ? String(shipment.gs_weight_kg)
+      : undefined,
+    total_volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
+    payment_form: {}, // Assuming this information is not available in Shipment
+    payment_table: undefined, // Assuming this information is not available in Shipment
+    total_paid: undefined, // Assuming this information is not available in Shipment
+  }
+}
