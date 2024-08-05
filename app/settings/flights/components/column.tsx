@@ -10,6 +10,7 @@ import { SelectOptions } from "@/components/form/InputSwitch"
 
 import { TableCellDropdown } from "./forms/table-cell-dropdown"
 import TailNumberForm from "./forms/tail-number-dropdown"
+import { format } from "date-fns"
 
 export type FlightMasterDataType = {
   entry_type: string
@@ -305,3 +306,130 @@ export const useListViewColumns = (
     },
   ]
 }
+
+
+export const useRecurringColumns = (
+  props: ListViewProps
+): ColumnDef<Flight>[] => {
+  return [
+    {
+      id: "Schedule", // Used to match the column_name from the columns configuration endpoint in the API
+      accessorKey: "schedule",
+      header: () => (
+        <TableHeaderWithTooltip header="Schedule" tooltipId="schedule" />
+      ),
+      cell: ({ row }) => {
+        const date = row.original.departure_date || ""
+        return "Daily"
+      },
+    },
+    {
+      id: "Departure Time",
+      accessorKey: "departure_d",
+      header: () => (
+        <TableHeaderWithTooltip header="Departure Time" tooltipId="departure-time" />
+      ),
+      cell: ({ row }) => {
+        const departure_h = row.original.departure_hour
+        const departure_m = row.original.departure_minute
+        const period = row.original.departure_period
+        const today = new Date()
+        today.setHours(departure_h)
+        today.setMinutes(departure_m)
+        const periodFormat = period.toLowerCase()
+        const hoursFormat = moment(today).format("HH:mm")
+        const abbr =  row.original.origin?.timezone?.abbreviation
+        const format_abbr = abbr.includes("+") || abbr.includes("-") ? "GMT"+abbr : abbr
+        return `${hoursFormat}${periodFormat} ${format_abbr}`
+      },
+    },
+    {
+      id: "Arrival Time",
+      accessorKey: "arrival_date",
+      header: () => (
+        <TableHeaderWithTooltip header="Arrival Time" tooltipId="arrival-time" />
+      ),
+      cell: ({ row }) => {
+        const arrival_time = row.original.arrival_time
+        const abbr =  row.original.destination?.timezone?.abbreviation
+        const format_abbr = abbr.includes("+") || abbr.includes("-") ? "GMT"+abbr : abbr
+        return `${arrival_time} ${format_abbr}`
+      },
+    },
+    {
+      id: "Flight",
+      accessorKey: "flight_number",
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Flight"
+          tooltipId="flight-master-flight-no"
+        />
+      ),
+    },
+    {
+      id: "Tail",
+      accessorKey: "tail.tail_number",
+      size: 400,
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Tail Number  "
+          tooltipId="flight-master-tail-no"
+        />
+      ),
+    },
+    {
+      id: "Aircraft",
+      accessorKey: "tail.aircraft_type.name",
+      size: 400,
+      header: () => (
+        <TableHeaderWithTooltip
+          header="Aircraft         "
+          tooltipId="flight-master-tail-no"
+        />
+      ),
+      cell: ({ row }) => {
+        const aircraft_type = row.original.tail.aircraft_type.name
+        const aircraft_version = row.original.tail.version.version
+        return `${aircraft_type}-${aircraft_version}`
+      },
+    },
+    {
+      id: "From",
+      accessorKey: "origin.name",
+      size: 400,
+      header: () => (
+        <TableHeaderWithTooltip
+          header="From "
+          tooltipId="origin-name"
+        />
+      ),
+    },
+    {
+      id: "To",
+      accessorKey: "destination.name",
+      size: 400,
+      header: () => (
+        <TableHeaderWithTooltip
+          header="To "
+          tooltipId="destination-name"
+        />
+      ),
+    },
+    {
+      id: "End Date",
+      accessorKey: "destination.name",
+      size: 400,
+      header: () => (
+        <TableHeaderWithTooltip
+          header="End Date "
+          tooltipId="destination-name"
+        />
+      ),
+      cell: ({ row }) => {
+        const arrival_date = row.original.arrival_date
+        const departure_date = row.original.departure_date
+        return `from ${format(new Date(departure_date),'MMM dd, yyyy')} to ${format(new Date(arrival_date),'MMM dd, yyyy')}`
+      },
+    },
+  ]
+  }

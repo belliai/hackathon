@@ -33,28 +33,62 @@ const getPeriods = (val: number) => {
   const addition = val > 1 ? "s" : ""
 
   const list = [
-    {
-      label: "Day",
-      value: "daily",
-    },
+    // {
+    //   label: "Day",
+    //   value: "daily",
+    // },
     {
       label: "Week",
       value: "weekly",
     },
-    {
-      label: "Month",
-      value: "monthly",
-    },
-    {
-      label: "Year",
-      value: "yearly",
-    },
+    // {
+    //   label: "Month",
+    //   value: "monthly",
+    // },
+    // {
+    //   label: "Year",
+    //   value: "yearly",
+    // },
   ]
 
   return list.map((item) => ({
     value: item.value,
     label: item.label + addition,
   }))
+}
+
+
+const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const daysMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+interface WeeklyCheckboxProps {
+  day: string
+  checked: boolean
+  onChange: () => void
+}
+
+const WeeklyCheckbox: React.FC<WeeklyCheckboxProps> = ({
+  day,
+  checked,
+  onChange,
+}) => {
+  return (
+    <label className="flex cursor-pointer flex-col items-center">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        className="hidden"
+      />
+      <span
+        className={`flex h-7 w-7 items-center justify-center rounded-full text-sm ${
+          checked ? "bg-[#fb5727] text-white" : "bg-gray-400 text-gray-700"
+        }`}
+      >
+        {day}
+      </span>
+    </label>
+  )
 }
 
 const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
@@ -110,37 +144,36 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
               selectOptions={optionsPeriod}
             />
           </div>
-          {formData.period === "weekly" && (
+          {formData.recurring_period === "weekly" && (
             <div className="grid grid-cols-1 gap-4">
               <Label>Repeat on</Label>
               <div className="flex">
-                {["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map(
+                {daysOfWeek.map(
                   (day: string, index) => (
                     <FormField
                       key={day}
                       control={form.control}
                       name="days"
                       render={({ field }) => {
+                        const value = field.value || [] // Ensure value is an array
+                        const mappedDay = daysMap[index];
                         return (
                           <FormItem
-                            key={day}
+                            key={mappedDay}
                             className="mr-3 flex flex-row items-start gap-1 space-y-0"
                           >
                             <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(day)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, day])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value: string) => value !== day
-                                        )
-                                      )
+                              <WeeklyCheckbox
+                                day={day}
+                                checked={value.includes(mappedDay)}
+                                onChange={() => {
+                                  const newValue = value.includes(mappedDay)
+                                    ? value.filter((d:string) => d !== mappedDay)
+                                    : [...value, mappedDay]
+                                  field.onChange(newValue)
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">{day}</FormLabel>
                           </FormItem>
                         )
                       }}
@@ -177,7 +210,8 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
                     label=""
                     name="recurring_ends_on"
                     type="date"
-                    disabledMatcher={repeatEnd !== "ends_on"}
+                    disabled={repeatEnd !== "ends_on"}
+                    disabledMatcher={()=>false}
                   />
                 </div>
               </div>

@@ -63,7 +63,7 @@ import DataTableFilterForm from "@/components/data-table/data-table-filter-form"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
-import { useListViewColumns } from "./components/column"
+import { useListViewColumns, useRecurringColumns } from "./components/column"
 import { formFilters, listViewFilters } from "./components/filter"
 import FlightMasterForm from "./components/flight-master-form"
 import FlightMasterFormRecurring from "./components/flight-master-form-recurring"
@@ -122,21 +122,25 @@ const initialWeeklyToDate = endOfWeek(initialWeeklyFromDate, {
 const initialMonthlyFromDate = startOfMonth(new Date()) // Start of the current month
 const initialMonthlyToDate = endOfMonth(initialMonthlyFromDate) // End of the current month
 
+const initialPagination = {
+  pageIndex: 0,
+  pageSize: 20,
+}
+
 export default function Page() {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [modalType, setModalType] = useState<"edit" | "create">("create")
+  const [currentTab, setCurrentTab] = useState<string>("list-view")
 
   const [openModalRecurring, setOpenModalRecurring] = useState<
     string | boolean
   >(false)
   const [deleteConfirm, setDeleteConfirm] = useState<Flight | null>(null)
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
+  const [pagination, setPagination] =
+    useState<PaginationState>(initialPagination)
 
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "departure_date", desc: false }
+    { id: "departure_date", desc: false },
   ])
 
   const [selectedData, setSelectedData] = useState<Flight | null>(null)
@@ -160,17 +164,21 @@ export default function Page() {
     [pagination]
   )
 
-  const sortingDetails = useMemo(()=>({
-    //curently only sort by column departure_date
-    //TODO implement all column sorting
-    sort_by: sorting[0]?.id || "departure_date",
-    sort_dir: sorting[0]?.desc ? "desc" :  "asc" || "asc",
-  }),[sorting])
+  const sortingDetails = useMemo(
+    () => ({
+      //curently only sort by column departure_date
+      //TODO implement all column sorting
+      sort_by: sorting[0]?.id || "departure_date",
+      sort_dir: sorting[0]?.desc ? "desc" : "asc" || "asc",
+    }),
+    [sorting]
+  )
 
   const filtersHookForm = useForm({
     resolver: zodResolver(filtersSchema),
     defaultValues: {
-      period: "all",
+      list_period: "all",
+      recurring_period: "all",
       from_date: new Date(),
       range_date: {
         from: new Date(),
@@ -183,24 +191,33 @@ export default function Page() {
 
   useEffect(() => {}, [filterData])
 
+  
+
   const { data: flightData, isLoading } = useFlightList({
     ...paginationDetails,
     ...sortingDetails,
     start_date:
-      filterData.period === "all"
-        ? format(new Date(), "yyyy-MM-dd")
-        : filterData.period === "daily"
-          ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
-          : filterData.range_date.from &&
-            format(filterData.range_date.from, "yyyy-MM-dd"),
+      currentTab === "list-view"
+        ? filterData.list_period === "all"
+          ? undefined // format(new Date(), "yyyy-MM-dd") // filter by today
+          : filterData.list_period === "daily"
+            ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
+            : filterData.range_date.from &&
+              format(filterData.range_date.from, "yyyy-MM-dd")
+        : filterData.recurring_period === "weekly"
+          ? format(filterWeekly.from, "yyyy-MM-dd")
+          : format(filterMonthly.from, "yyyy-MM-dd"),
     end_date:
-      filterData.period === "all"
-        ? undefined
-        : filterData.period === "daily"
-          ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
-          : filterData.range_date.to &&
-            format(filterData.range_date.to, "yyyy-MM-dd"),
-   
+      currentTab === "list-view"
+        ? filterData.list_period === "all"
+          ? undefined
+          : filterData.list_period === "daily"
+            ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
+            : filterData.range_date.to &&
+              format(filterData.range_date.to, "yyyy-MM-dd")
+        : filterData.recurring_period === "weekly"
+          ? format(filterWeekly.to, "yyyy-MM-dd")
+          : format(filterMonthly.to, "yyyy-MM-dd"),
   })
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
@@ -317,7 +334,6 @@ export default function Page() {
 
   const tableState = useCallback(async ({ pagination }: any) => {
     setPagination(pagination)
-
   }, [])
 
   const listViewColumns = useListViewColumns({
@@ -329,6 +345,10 @@ export default function Page() {
       const { ID, ...rest } = data
       if (ID) await updateFlight({ ...rest, id: ID })
     },
+  })
+
+  const recurringColumns = useRecurringColumns({
+    aircraftOptions: aircraftTailNumbers || [],
   })
 
   // this temporary sorting in client side, if  nested sorting in BE ready it can be removed.
@@ -353,16 +373,21 @@ export default function Page() {
           departureDatetime,
         }
       })
-      .sort(
-        (a, b) =>  { 
-          if(sorting[0].desc) b.departureDatetime.getTime() - a.departureDatetime.getTime()
-          return a.departureDatetime.getTime() - b.departureDatetime.getTime() }
-      )
+      .sort((a, b) => {
+        if (sorting[0].desc)
+          b.departureDatetime.getTime() - a.departureDatetime.getTime()
+        return a.departureDatetime.getTime() - b.departureDatetime.getTime()
+      })
 
   return (
     <>
       <PageContainer>
-        <Tabs defaultValue="list-view" className="w-full">
+        <Tabs
+          value={currentTab}
+          onValueChange={setCurrentTab}
+          defaultValue="list-view"
+          className="w-full"
+        >
           <TabsContent value="list-view" className="mt-0">
             <DataTable
               showToolbarOnlyOnHover={true}
@@ -390,7 +415,7 @@ export default function Page() {
                   </TabsTrigger>
                   <Form {...filtersHookForm}>
                     <InputSwitch
-                      name="period"
+                      name="list_period"
                       type="select"
                       defaultValue="daily"
                       className="h-8 w-40"
@@ -409,20 +434,20 @@ export default function Page() {
                         },
                       ]}
                     />
-                    {filterData.period === "daily" && (
+                    {filterData.list_period === "daily" && (
                       <InputSwitch
                         name="from_date"
                         type="date"
                         className="h-8 w-36"
-                        disabledMatcher={(date)=>false}
+                        disabledMatcher={(date) => false}
                       />
                     )}
-                    {filterData.period === "range" && (
+                    {filterData.list_period === "range" && (
                       <InputSwitch
                         name="range_date"
                         type="date"
                         // enable all date
-                        disabledMatcher={(date)=>false}
+                        disabledMatcher={(date) => false}
                         className="h-8 w-56"
                         mode="range"
                       />
@@ -449,7 +474,7 @@ export default function Page() {
           <TabsContent value="create-recurring-flight" className="mt-0">
             <DataTable
               showToolbarOnlyOnHover={true}
-              columns={listViewColumns}
+              columns={recurringColumns}
               data={isLoading ? [] : (flightData && flightData.data) || []}
               extraRightComponents={createButtonRecurringFlight}
               extraLeftComponents={
@@ -471,15 +496,11 @@ export default function Page() {
                   </TabsTrigger>
                   <Form {...filtersHookForm}>
                     <InputSwitch
-                      name="period"
+                      name="recurring_period"
                       type="select"
-                      defaultValue="daily"
+                      defaultValue="weekly"
                       className=""
                       selectOptions={[
-                        {
-                          label: "Daily",
-                          value: "daily",
-                        },
                         {
                           label: "Weekly",
                           value: "weekly",
@@ -490,19 +511,13 @@ export default function Page() {
                         },
                       ]}
                     />
-                    {filterData.period === "daily" && (
-                      <InputSwitch 
-                      name="fromDate" type="date" className="" 
-                      disabledMatcher={(date)=>false}
-                      />
-                    )}
-                    {filterData.period === "weekly" && (
+                    {filterData.recurring_period === "weekly" && (
                       <WeeklyDateStepper
                         value={filterWeekly}
                         onChange={setFilterWeekly}
                       />
                     )}
-                    {filterData.period === "monthly" && (
+                    {filterData.recurring_period === "monthly" && (
                       <MonthlyDateStepper
                         value={filterMonthly}
                         onChange={setFilterMonthly}
