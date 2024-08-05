@@ -209,55 +209,35 @@ export default function AircraftTypeForm(props: AircraftTypeFormProps) {
       aircraft.version.version,
     ].join(" ")
 
-  const currentAircraftTypeList =
-    aircraftsData?.data.map((aircraft) => getAircraftTypeString(aircraft)) ?? []
-
-  const checkDuplicateAircraftType = useCallback(
-    (data: AircraftFormValues) => {
-      const currentAircraftType = [
-        aircraftManufacturerOptions.find(
-          (item) => item.value === data.manufacturer_id
-        )?.label,
-        aircraftTypesOptions.find(
-          (item) => item.value === data.aircraft_type_id
-        )?.label,
-        aircraftVersionsOptions.find((item) => item.value === data.version_id)
-          ?.label,
-      ].join(" ")
-      return currentAircraftTypeList.some(
-        (item) => item === currentAircraftType
-      )
-    },
-    [
-      aircraftManufacturerOptions,
-      aircraftTypesOptions,
-      aircraftVersionsOptions,
-      currentAircraftTypeList,
-    ]
+  const currentAircraftTypeList = useMemo(
+    () =>
+      aircraftsData?.data.map((aircraft) => getAircraftTypeString(aircraft)),
+    [aircraftsData]
   )
+
+  const currentSelectedAircraft = useMemo(() => {
+    return [
+      selectedManufacturer?.label,
+      selectedType?.label,
+      selectedVersion?.label,
+    ].join(" ")
+  }, [selectedManufacturer, selectedType, selectedVersion])
+
+  useEffect(() => {
+    if (
+      currentAircraftTypeList?.some((item) => item === currentSelectedAircraft)
+    ) {
+      form.setError("version_id", {
+        message: "Warning: Aircraft already exists",
+      })
+    } else {
+      form.clearErrors("version_id")
+    }
+  }, [currentAircraftTypeList, currentSelectedAircraft])
 
   async function handleSubmitAircraft(data: AircraftFormValues) {
     const payload: CreateAircraftRequest = {
       ...data,
-    }
-
-    const currentAircraftType = [
-      aircraftManufacturerOptions.find(
-        (item) => item.value === data.manufacturer_id
-      )?.label,
-      aircraftTypesOptions.find((item) => item.value === data.aircraft_type_id)
-        ?.label,
-      aircraftVersionsOptions.find((item) => item.value === data.version_id)
-        ?.label,
-    ].join(" ")
-
-    if (checkDuplicateAircraftType(data)) {
-      toast({
-        title: "Oops!",
-        description: "Aircraft type already exists",
-      })
-      stepControl.setStep(1)
-      return
     }
 
     if (isEdit) {
