@@ -8,6 +8,8 @@ import { Form } from "@/components/ui/form"
 import { Combobox } from "@/components/form/combobox"
 import { SelectOptions } from "@/components/form/InputSwitch"
 
+import { TableCellDropdown } from "./table-cell-dropdown"
+
 type CellProps = {
   row: any
   aircraftOptions: SelectOptions
@@ -19,16 +21,10 @@ const TailNumberForm = ({
   aircraftOptions,
   onChangeTailNumber,
 }: CellProps) => {
-  const original: Flight = row.original
+  const original = row.original
   const tail = row.original.tail
 
-  const form = useForm({
-    defaultValues: {
-      tail_id: tail?.id,
-    },
-  })
-
-  const onChangeSelect = (tail_id: string | null) => {
+  const onChangeSelect = ({ tail_id }: { tail_id: string | null }) => {
     const payload: CreateFlightMasterPayload = {
       ID: original.id,
       destination_id: original.destination.id,
@@ -41,23 +37,17 @@ const TailNumberForm = ({
       flight_duration_hour: original.flight_duration_hour,
       departure_period: original.departure_period,
     }
-    if (tail_id !== null && onChangeTailNumber)
-      onChangeTailNumber({ tail_id, ...payload })
+    if (original.tail_id !== null && onChangeTailNumber)
+      onChangeTailNumber({ tail_id: tail_id || undefined, ...payload })
   }
 
   return (
-    <Form {...form}>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Combobox
-          name="tail_id"
-          label=""
-          info="Select Tail number"
-          options={aircraftOptions}
-          onChangeValue={onChangeSelect}
-          className="h-[30px] border-0 border-zinc-900 bg-transparent p-1"
-        />
-      </div>
-    </Form>
+    <TableCellDropdown
+      name="tail_id"
+      defaultValue={tail?.id}
+      options={aircraftOptions}
+      onChangeSelect={onChangeSelect}
+    />
   )
 }
 

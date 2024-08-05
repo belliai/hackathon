@@ -99,7 +99,7 @@ export default function FlightsDashboardPage() {
   const displayOption: DisplayOption =
     useReadLocalStorage("display_option", {
       initializeWithValue: false, // For SSR compatibility
-    }) || "numbers"
+    }) || "numbers-percentages"
 
   const [selectedFlight, setSelectedFlight] =
     useState<FlightWithActualInformation | null>(null)

@@ -30,10 +30,10 @@ export function TableCellDropdown<TData>({
           name={name}
           label=""
           options={options}
-          onChangeValue={() =>
-            onChangeSelect({ ...defaultValue, [name]: form.getValues(name) })
+          onChangeValue={(changedValue) =>
+            onChangeSelect({ [name]: changedValue } as TData)
           }
-          className="h-[30px] border-0 border-zinc-900 bg-transparent p-1"
+          className="h-[20px] border-0 border-zinc-900 bg-transparent hover:bg-transparent"
         />
       </div>
     </Form>
