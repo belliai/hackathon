@@ -540,7 +540,7 @@ function ActualInformation({
       return (
         <div className="flex w-fit shrink-0 items-center gap-2">
           <span
-            className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 py-0.5 text-center text-sm text-white"
+            className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 text-center text-sm text-white"
             style={{
               backgroundColor: `rgba(251, 87, 39, ${backgroundAlpha})`,
             }}
