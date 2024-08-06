@@ -1,8 +1,7 @@
 "use client"
 
-import DataFieldsPageTemplate from "../components/datafields-page-template"
-import { flightsTabs } from "../data/flights"
+import FlightsDataFields from "./flight-data-fields"
 
 export default function FlightsCustomFieldsPage() {
-  return <DataFieldsPageTemplate tabs={flightsTabs} />
+  return <FlightsDataFields />
 }

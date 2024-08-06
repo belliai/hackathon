@@ -28,12 +28,14 @@ interface DataFieldsPageTemplateProps {
   tabs: DataFieldsTab[]
   tabsOrientation?: "horizontal" | "vertical"
   containerClassName?: string
+  isSetting?: boolean
 }
 
 export default function DataFieldsPageTemplate({
   tabs,
   tabsOrientation = "vertical",
   containerClassName,
+  isSetting = false,
 }: DataFieldsPageTemplateProps) {
   const tooltips = getTooltipContents()
 
@@ -69,11 +71,13 @@ export default function DataFieldsPageTemplate({
 
   // Handle tab change
   const handleTabChange = (val: any) => {
-    router.push(
-      pathname +
-        "?" +
-        createQueryString("tab", val.toLowerCase().replace(/\s+/g, "-"))
-    )
+    if (!isSetting) {
+      router.push(
+        pathname +
+          "?" +
+          createQueryString("tab", val.toLowerCase().replace(/\s+/g, "-"))
+      )
+    }
   }
 
   useEffect(() => {

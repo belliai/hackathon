@@ -1,8 +1,7 @@
 "use client"
 
-import DataFieldsPageTemplate from "../components/datafields-page-template"
-import { tabs } from "../data/payment-mode"
+import PaymentModeDataFields from "./payments-data-fields"
 
-export default function PaymentModeDataFields() {
-  return <DataFieldsPageTemplate tabs={tabs} />
+export default function Page() {
+  return <PaymentModeDataFields />
 }

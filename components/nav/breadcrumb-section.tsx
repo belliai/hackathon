@@ -4,7 +4,7 @@ import React, { useMemo } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useOrganization } from "@clerk/nextjs"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
-import { Loader, StarIcon } from "lucide-react"
+import { CogIcon, Loader, StarIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { operationsNavigation } from "@/components/nav/data/operationsNavigation"
@@ -26,6 +26,7 @@ import { settingNavigation } from "./data/settingNavigation"
 import { skNavigation } from "./data/skNavigation"
 import { Path, useFavorites } from "./favorites/favorites-provider"
 import { TSidebarItem } from "./SidebarItem"
+import Link from "next/link"
 
 const findCurrentPaths = (
   items: TSidebarItem[],
@@ -36,7 +37,7 @@ const findCurrentPaths = (
     // Create a new path array including the current item
     const currentPath: TSidebarItem[] = [
       ...path,
-      { name: item.name, href: item.href, children: undefined },
+      { name: item.name, href: item.href, children: undefined, hasSetting: item.hasSetting },
     ]
 
     // Check if the current item's href matches the pathname
@@ -45,6 +46,7 @@ const findCurrentPaths = (
     }
 
     // If the item has children, search recursively in the children
+    
     if (item.children) {
       const result = findCurrentPaths(item.children, pathname, currentPath)
       if (result) {
@@ -122,10 +124,11 @@ export default function BreadCrumbSection() {
   )
 
   const currentPaths = getCurrentPaths(pathname, searchParams)
+  const currentPage = currentPaths.find(item => item.href === pathname)
 
   return (
     <div className="sticky top-0 z-10 flex h-12 w-full flex-row items-center justify-between gap-4 border-b bg-background/90 px-4 backdrop-blur-sm">
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-row items-center gap-6">
         <Breadcrumb>
           <BreadcrumbList>
             <>
@@ -141,21 +144,29 @@ export default function BreadCrumbSection() {
             {currentPaths.map((path, index) => (
               <React.Fragment key={index}>
                 {index !== 0 && <BreadcrumbSeparator />}
-                <BreadcrumbItem>
-                  <BreadcrumbLink
-                    className={cn(
-                      index === currentPaths.length - 1 &&
-                        "text-white hover:text-button-primary"
-                    )}
-                    href={path.href}
-                  >
-                    {path.name}
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      className={cn(
+                        index === currentPaths.length - 1 &&
+                          "text-white hover:text-button-primary"
+                      )}
+                      href={path.href}
+                    >
+                      {path.name}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
               </React.Fragment>
             ))}
           </BreadcrumbList>
         </Breadcrumb>
+        
+        {currentPage?.hasSetting && (
+          <Link href={`${pathname}/settings`} className="h-8 rounded-md px-3 border border-input bg-background shadow-sm text-muted-foreground text-sm hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center gap-2">
+            <CogIcon className="size-4" />
+            Settings
+          </Link>
+        )}
+        
         {/* <Button
           onClick={() => {
             if (isFavorited) {

@@ -1,8 +1,7 @@
 "use client"
 
-import DataFieldsPageTemplate from "../components/datafields-page-template"
-import { tabs } from "../data/organizations"
+import OrganizationsDataFields from "./organizations-data-fields"
 
-export default function OrganizationsDataFields() {
-  return <DataFieldsPageTemplate tabs={tabs} />
+export default function Page() {
+  return <OrganizationsDataFields />
 }

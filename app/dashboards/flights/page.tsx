@@ -33,7 +33,6 @@ import CargoCapacityAreaChart from "@/components/charts/cargo-capacity-area-char
 import { DataTable } from "@/components/data-table/data-table"
 import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
 import Modal from "@/components/modal/modal"
-import SettingMenuToggle from "@/components/setting-menu-toggle/setting-menu-toggle"
 import { DisplayOption } from "@/app/data-fields/display"
 import { useListViewColumns } from "@/app/settings/flights/components/column"
 
@@ -474,7 +473,7 @@ export default function FlightsDashboardPage() {
               filename: "DashboardFlightData",
             })
           }
-          settingOptions={SETTING_OPTIONS}
+          // settingOptions={SETTING_OPTIONS}
         />
       )}
     </div>

@@ -157,55 +157,6 @@ const PartnersTabsList = ({ tabValue }: { tabValue: string }) => (
       <Contact2Icon className="mr-2 size-4" />
       People
     </TabsTrigger>
-    {/* <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className={`h-8 border border-secondary ${tabValue !== 'companies' && tabValue !== 'people' ? 'border-muted-foreground/40 bg-secondary text-white' : ''}`}
-        >
-          <CogIcon className="mr-2 size-4" />
-          Settings
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-fit" align="start">
-        <DropdownMenuGroup>
-          {SETTING_OPTIONS.map((item, index) => {
-            if (item.child) {
-              return (
-                <DropdownMenuSub key={`setting-${index}`}>
-                  <DropdownMenuSubTrigger>
-                    <span>{item.label}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent className="ml-2">
-                      {item.child.map((childMenu, childId) => (
-                        <DropdownMenuItem key={`child-${index}-${childId}`} className="cursor-pointer">
-                          <TabsTrigger
-                            value={childMenu.value}
-                            className="data-[state=active]:bg-transparent"
-                          >
-                            {childMenu.label}
-                          </TabsTrigger>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-              )
-            }
-            return (
-              <DropdownMenuItem key={`setting-${index}`} className="cursor-pointer">
-                <TabsTrigger
-                  value={item.value}
-                >
-                  {item.label}
-                </TabsTrigger>
-              </DropdownMenuItem>
-            )
-          })}
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu> */}
   </TabsList>
 )
 
@@ -286,30 +237,9 @@ export default function MasterAircraftPage() {
               onExport={() =>
                 onExport({ data: PEOPLE_DUMMY_DATA, filename: "PartnersPeopleData" })
               }
-              settingOptions={SETTING_LIST}
+              // settingOptions={SETTING_LIST}
             />
           </TabsContent>
-          {/* <TabsContent value="payment-mode" asChild>
-            <PaymentMode tabComponent={memoizedTabsList} />
-          </TabsContent>
-          <TabsContent value="currency" asChild>
-            <Currency tabComponent={memoizedTabsList} />
-          </TabsContent>
-          <TabsContent value="Airline-AWB-Prefix" asChild>
-            <PartnerPrefix tabComponent={memoizedTabsList} />
-          </TabsContent>
-          <TabsContent value="IATA-airline-code" asChild>
-            <PartnerCode tabComponent={memoizedTabsList} />
-          </TabsContent>
-          <TabsContent value="partner-type" asChild>
-            <PartnerType tabComponent={memoizedTabsList} />
-          </TabsContent>
-          <TabsContent value="organizations" asChild>
-            <CustomersOrganizationsCrud tabComponent={memoizedTabsList} />
-          </TabsContent>
-          <TabsContent value="setting-people" asChild>
-            <CustomersPeopleCrud tabComponent={memoizedTabsList} />
-          </TabsContent> */}
         </Tabs>
       </div>
     </PageContainer>
@@ -352,7 +282,7 @@ function CompanyDataTable({
               onExport={() =>
                 onExport({ data: DUMMY_COMPANIES_DATA, filename: "PartnersCompanyData" })
               }
-        settingOptions={SETTING_LIST}
+        // settingOptions={SETTING_LIST}
       />
       <CompanyForm
         form={form}

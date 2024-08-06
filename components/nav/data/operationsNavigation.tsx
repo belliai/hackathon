@@ -1,6 +1,6 @@
 import { HomeIcon, TvIcon } from "@heroicons/react/24/outline"
 import { CubeIcon, DashboardIcon, ReaderIcon } from "@radix-ui/react-icons"
-import { Handshake, LayoutDashboardIcon } from "lucide-react"
+import { CogIcon, Handshake, LayoutDashboardIcon } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -18,6 +18,16 @@ export const operationsNavigation: TSidebarItem[] = [
         icon: DashboardIcon,
         current: false,
         isCanCreate: false,
+        hasSetting: true,
+        children: [
+          {
+            name: "Settings",
+            href: "/dashboards/flights/settings",
+            icon: CogIcon,
+            current: false,
+            isCanCreate: false,
+          },
+        ],
       },
       {
         name: "Airway Bills",
@@ -25,6 +35,16 @@ export const operationsNavigation: TSidebarItem[] = [
         icon: HomeIcon,
         current: false,
         isCanCreate: false,
+        hasSetting: true,
+        children: [
+          {
+            name: "Settings",
+            href: "/dashboards/airway-bills/settings",
+            icon: CogIcon,
+            current: false,
+            isCanCreate: false,
+          },
+        ],
       },
       {
         name: "Partners",
@@ -32,6 +52,16 @@ export const operationsNavigation: TSidebarItem[] = [
         icon: Handshake,
         current: false,
         isCanCreate: false,
+        hasSetting: true,
+        children: [
+          {
+            name: "Settings",
+            href: "/dashboards/partners/settings",
+            icon: CogIcon,
+            current: false,
+            isCanCreate: false,
+          },
+        ],
       },
     ],
   },

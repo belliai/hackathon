@@ -322,7 +322,7 @@ export default function Home() {
               onExport({ data: ordersData.data, filename: "AirwaybillsData" })
             }
             // extraLeftComponents={memoizedTabsList}
-            settingOptions={SETTING_LIST}
+            // settingOptions={SETTING_LIST}
           />
         {/* </TabsContent> */}
         {/* <TabsContent value="booking-type" asChild>

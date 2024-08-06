@@ -29,6 +29,7 @@ export type TSidebarItem = {
   children?: TSidebarItem[]
   isCanCreate?: boolean
   disabled?: boolean
+  hasSetting?: boolean
 }
 
 interface SidebarItemProps {
@@ -118,7 +119,7 @@ export default function SidebarItem({
       )}
       <AccordionContent className="relative pb-0">
         {item?.children?.map((childMenu) => {
-          if (childMenu?.children) {
+          if (childMenu?.children && !childMenu?.hasSetting) {
             return (
               <Accordion
                 type="single"
