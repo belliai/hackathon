@@ -84,6 +84,15 @@ const getCurrentPaths = (pathname: string, searchParams: URLSearchParams) => {
     currentPaths = result
   }
 
+  const section = searchParams.get("section")
+  if (section) {
+    currentPaths.push({
+      name: transformTabName(section),
+      href: `${pathname}?section=${section}`,
+      children: undefined,
+    })
+  }
+
   const tab = searchParams.get("tab")
   if (tab) {
     currentPaths.push({
