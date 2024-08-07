@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -18,8 +19,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { usePathname } from "next/navigation"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export type TSidebarItem = {
   name: string
@@ -30,6 +34,7 @@ export type TSidebarItem = {
   isCanCreate?: boolean
   disabled?: boolean
   hasSetting?: boolean
+  shortcut?: string
 }
 
 interface SidebarItemProps {
@@ -49,9 +54,7 @@ export default function SidebarItem({
     const className = cn(
       "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-sm py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-800",
       !isExpanded ? "justify-center" : "",
-      currentActive
-        ? "text-white bg-zinc-900 [&_svg]:text-white"
-        : ""
+      currentActive ? "text-white bg-zinc-900 [&_svg]:text-white" : ""
     )
 
     return className
@@ -62,9 +65,7 @@ export default function SidebarItem({
   const renderWithTooltips = (comp: React.ReactNode, name: string) => {
     return (
       <Tooltip delayDuration={200}>
-        <TooltipTrigger asChild>
-          {comp}
-        </TooltipTrigger>
+        <TooltipTrigger asChild>{comp}</TooltipTrigger>
         <TooltipContent className="border bg-card text-foreground" side="right">
           {name}
         </TooltipContent>
@@ -74,7 +75,9 @@ export default function SidebarItem({
 
   const renderItem = (item: TSidebarItem) => {
     return (
-      <div className={`flex items-center gap-x-[7px] ${!isExpanded ? 'justify-center' : ''}`}>
+      <div
+        className={`flex items-center gap-x-[7px] ${!isExpanded ? "justify-center" : ""}`}
+      >
         {item.icon && (
           <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
             <item.icon
@@ -84,7 +87,15 @@ export default function SidebarItem({
           </span>
         )}
         {isExpanded && (
-          <div className="flex-grow text-left overflow-hidden text-ellipsis text-nowrap">{item.name}</div>
+          <div className="flex-grow overflow-hidden text-ellipsis text-nowrap text-left">
+            {item.name}{" "}
+            {item.shortcut && (
+              <span className="ml-2 rounded-md bg-zinc-800 px-2 py-1 text-xs text-zinc-500">
+                {" "}
+                {item.shortcut}
+              </span>
+            )}
+          </div>
         )}
       </div>
     )
@@ -104,7 +115,9 @@ export default function SidebarItem({
           disabled={disabled}
           hideArrow={!isExpanded || disabled}
         >
-          {isExpanded ? renderItem(item) : renderWithTooltips(renderItem(item), item.name)}
+          {isExpanded
+            ? renderItem(item)
+            : renderWithTooltips(renderItem(item), item.name)}
         </AccordionTrigger>
       ) : (
         <Link
@@ -114,7 +127,9 @@ export default function SidebarItem({
             disabled && "pointer-events-none"
           )}
         >
-          {isExpanded ? renderItem(item) : renderWithTooltips(renderItem(item), item.name)}
+          {isExpanded
+            ? renderItem(item)
+            : renderWithTooltips(renderItem(item), item.name)}
         </Link>
       )}
       <AccordionContent className="relative pb-0">
@@ -139,7 +154,12 @@ export default function SidebarItem({
                     }
                     hideArrow={!isExpanded}
                   >
-                    {isExpanded ? renderItem(childMenu) : renderWithTooltips(renderItem(childMenu), childMenu.name)}
+                    {isExpanded
+                      ? renderItem(childMenu)
+                      : renderWithTooltips(
+                          renderItem(childMenu),
+                          childMenu.name
+                        )}
                   </AccordionTrigger>
                   <AccordionContent className="relative pb-0 pl-[46px]">
                     <span className="absolute left-8 top-0 my-0.5 h-full w-[1px] bg-border" />
@@ -226,11 +246,13 @@ export default function SidebarItem({
               href={childMenu.href}
               className={cn(
                 getBaseItemClassName(childMenu.href === pathname),
-                "gap-2.5 my-1",
-                isExpanded ? "pl-6" : "",
+                "my-1 gap-2.5",
+                isExpanded ? "pl-6" : ""
               )}
             >
-              {isExpanded ? renderItem(childMenu) : renderWithTooltips(renderItem(childMenu), childMenu.name)}
+              {isExpanded
+                ? renderItem(childMenu)
+                : renderWithTooltips(renderItem(childMenu), childMenu.name)}
             </Link>
           )
         })}

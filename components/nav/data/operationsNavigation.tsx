@@ -19,6 +19,7 @@ export const operationsNavigation: TSidebarItem[] = [
         current: false,
         isCanCreate: false,
         hasSetting: true,
+        shortcut: "F",
         children: [
           {
             name: "Settings",
@@ -36,6 +37,7 @@ export const operationsNavigation: TSidebarItem[] = [
         current: false,
         isCanCreate: false,
         hasSetting: true,
+        shortcut: "A",
         children: [
           {
             name: "Settings",
@@ -53,6 +55,7 @@ export const operationsNavigation: TSidebarItem[] = [
         current: false,
         isCanCreate: false,
         hasSetting: true,
+        shortcut: "P",
         children: [
           {
             name: "Settings",
