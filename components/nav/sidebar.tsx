@@ -31,6 +31,7 @@ import FavoritesMenu from "./favorites/favorites-menu"
 import { TSidebarItem } from "./SidebarItem"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
+import useKeyPressNavigation from "./shortcuts/keypress-navigation"
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -99,6 +100,8 @@ export default function SideBar({
       ],
     },
   ]
+
+  useKeyPressNavigation(operationsNavigation);
 
   return (
     <Suspense>
