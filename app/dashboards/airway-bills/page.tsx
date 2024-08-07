@@ -1,14 +1,23 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { DataTable } from "@components/data-table/data-table"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
-import { CogIcon, HomeIcon, Loader } from "lucide-react"
+import {
+  CogIcon,
+  HomeIcon,
+  KanbanSquare,
+  Loader,
+  SquareKanban,
+  SquareKanbanIcon,
+} from "lucide-react"
 
 import { getData } from "@/lib/data"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
+import { useStatuses } from "@/lib/hooks/statuses"
 import { onExport } from "@/lib/utils/export"
 import {
   AlertDialog,
@@ -21,11 +30,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { useBookingContext } from "@/components/dashboard/BookingContext"
-import { columns, Order } from "@/components/dashboard/columns"
-import NewOrderModal from "@/components/dashboard/new-order-modal"
-import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,13 +41,19 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useBookingContext } from "@/components/dashboard/BookingContext"
+import { columns, Order } from "@/components/dashboard/columns"
+import NewOrderModal from "@/components/dashboard/new-order-modal"
+import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 import BookingType from "@/app/data-fields/booking-type"
-import Status from "@/app/data-fields/status"
-import Location from "@/app/data-fields/location"
 import CommodityCode from "@/app/data-fields/commodity-code"
-import TransportMethod from "@/app/data-fields/transport-method"
+import Location from "@/app/data-fields/location"
+import Status from "@/app/data-fields/status"
 import TimeZone from "@/app/data-fields/time-zone"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import TransportMethod from "@/app/data-fields/transport-method"
+
+import CustomKanban, { Shipment } from "./kanban"
 
 const SETTING_OPTIONS = [
   {
@@ -79,7 +89,7 @@ const SETTING_OPTIONS = [
 ]
 
 const SETTING_LIST = {
-  width: 'w-[128px]',
+  width: "w-[128px]",
   data: [
     {
       label: "Airway Bills",
@@ -111,17 +121,24 @@ const SETTING_LIST = {
         },
       ],
     },
-  ]
+  ],
 }
 
 const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
   <TabsList className="gap-2 bg-transparent p-0">
     <TabsTrigger
       className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
-      value="airway-bills"
+      value="list-view"
     >
       <HomeIcon className="mr-2 size-4" />
-      Airway Bills
+      List View
+    </TabsTrigger>
+    <TabsTrigger
+      className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+      value="kanban-view"
+    >
+      <SquareKanbanIcon className="mr-2 size-4" />
+      Kanban View
     </TabsTrigger>
     {/* <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -189,7 +206,9 @@ export default function Home() {
     pageIndex: 0,
     pageSize: 10,
   })
-  const [tabValue, setTabValue] = useState('')
+  const [tabValue, setTabValue] = useState("list-view") // If no tabParam, default to list-view
+
+  // const { data: allStatus } = useStatuses()
 
   const {
     isLoading,
@@ -199,7 +218,14 @@ export default function Home() {
   } = useOrders({ pagination })
   const remove = useRemoveOrder()
 
+  const [cards, setCards] = useState<Shipment[]>(ordersData?.data || [])
+
+  useEffect(() => {
+    setCards(ordersData?.data || [])
+  }, [ordersData])
+
   const openModal = (data: Order, columnId: string) => {
+    console.error("opening modal from airwaybill", data)
     setSelectedBooking(data)
     setSelectedColumnId(columnId)
     setModalOpen(true)
@@ -266,7 +292,10 @@ export default function Home() {
     },
   }))
 
-  const memoizedTabsList = useMemo(() => <AWBTabsList tabValue={tabValue} />, [tabValue])
+  const memoizedTabsList = useMemo(
+    () => <AWBTabsList tabValue={tabValue} />,
+    [tabValue]
+  )
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -296,12 +325,8 @@ export default function Home() {
       <ClientSideSuspense fallback={<></>}>
         <LiveCursorHoc />
       </ClientSideSuspense>
-      {/* <Tabs
-        value={tabValue}
-        onValueChange={setTabValue}
-        className="space-y-4"
-      >
-        <TabsContent value="airway-bills" asChild> */}
+      <Tabs value={tabValue} onValueChange={setTabValue} className="space-y-4">
+        <TabsContent value="list-view" asChild>
           <DataTable
             initialPinning={{
               left: [],
@@ -321,12 +346,23 @@ export default function Home() {
             onExport={() =>
               onExport({ data: ordersData.data, filename: "AirwaybillsData" })
             }
-            // extraLeftComponents={memoizedTabsList}
+            extraLeftComponents={memoizedTabsList}
             // settingOptions={SETTING_LIST}
           />
-        {/* </TabsContent> */}
-        {/* <TabsContent value="booking-type" asChild>
-          <BookingType tabComponent={memoizedTabsList} />
+        </TabsContent>
+        <TabsContent value="kanban-view" asChild>
+          <>
+            <div className="flex justify-between gap-2">
+              {memoizedTabsList}
+              {generateButton}
+            </div>
+
+            <CustomKanban
+              ordersData={ordersData}
+              cards={cards}
+              setCards={setCards}
+            />
+          </>
         </TabsContent>
         <TabsContent value="status" asChild>
           <Status tabComponent={memoizedTabsList} />
@@ -342,8 +378,8 @@ export default function Home() {
         </TabsContent>
         <TabsContent value="time-zone" asChild>
           <TimeZone tabComponent={memoizedTabsList} />
-        </TabsContent> */}
-      {/* </Tabs> */}
+        </TabsContent>
+      </Tabs>
       <NewOrderModal
         open={modalOpen}
         onOpenChange={onOpenChange}

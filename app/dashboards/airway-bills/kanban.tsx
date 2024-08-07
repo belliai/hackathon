@@ -6,6 +6,7 @@ import React, {
   FormEvent,
   SetStateAction,
   useCallback,
+  useEffect,
   useState,
 } from "react"
 import { Order } from "@/schemas/order/order"
@@ -19,28 +20,34 @@ import { useBookingContext } from "@/components/dashboard/BookingContext"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
 
 const columnOrder = [
-  "In Flight",
-  "Active",
+  "Complete",
   "Delayed",
   "AXB Booked & Confirmed",
   "Shipped",
   "Delivered",
-  "Complete",
+  "In Flight",
+  "Active",
 ]
 
-const CustomTestKanban = () => {
-  const { isLoading: isLoadingStatus, data: allStatus } = useStatuses()
-  console.warn("status", allStatus)
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 9999,
-  })
-  const { data, isLoading } = useOrders({ pagination })
-
-  if (isLoading || isLoadingStatus) {
-    return <></>
+interface CustomKanbanProps {
+  ordersData: {
+    data: Shipment[]
   }
+  cards: Shipment[]
+  setCards: Dispatch<SetStateAction<Shipment[]>>
+}
+const CustomKanban: React.FC<CustomKanbanProps> = ({
+  ordersData,
+  cards,
+  setCards,
+}) => {
+  const { isLoading: isLoadingStatus, data: allStatus } = useStatuses()
+
+  // const { data, isLoading } = useOrders({ pagination })
+
+  // if (isLoading || isLoadingStatus) {
+  //   return <></>
+  // }
 
   const sortedStatuses = allStatus
     .filter((status: IDNamePair) => columnOrder.includes(status.name))
@@ -58,20 +65,27 @@ const CustomTestKanban = () => {
 
   return (
     <div className="h-screen w-full text-neutral-50">
-      <Board allCards={data.data} allStatus={uniqueStatuses} />
+      <Board allCards={cards} allStatus={uniqueStatuses} setCards={setCards} />
     </div>
   )
 }
 
 const Board = ({
   allCards,
+  setCards,
   allStatus,
 }: {
   allCards: Shipment[]
+  setCards: Dispatch<SetStateAction<Shipment[]>>
   allStatus: IDNamePair[]
 }) => {
-  const [cards, setCards] = useState<Shipment[]>(allCards)
-  console.error("data is...", allCards, Array.isArray(allCards))
+  // const [cards, setCards] = useState<Shipment[]>(allCards)
+
+  // useEffect(() => {
+  //   setCards(allCards)
+  // }, [allCards])
+
+  // console.error("data is...", allCards, Array.isArray(allCards))
 
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-2">
@@ -80,7 +94,7 @@ const Board = ({
           key={status.ID}
           title={status.name}
           status={status}
-          cards={cards}
+          cards={allCards}
           setCards={setCards}
         />
       ))}
@@ -209,7 +223,6 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
   const handleCardClick = (id: string) => {
     const cardFound = cards.find((c) => c.ID === id)
     if (cardFound) {
-      console.warn("clicked on this id ", id, cardFound)
       // openModal(mapShipmentToOrder(cardFound), id)
       openModal(cardFound, id)
     }
@@ -220,7 +233,6 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
   const [selectedColumnId, setSelectedColumnId] = useState("booking_type_name")
 
   const onOpenChange = useCallback((open: boolean) => {
-    console.error("open modal changedd.... becoming", open)
     // refetchOrders() // Refetch the orders after updating
 
     setModalOpen(open)
@@ -228,7 +240,6 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
   }, [])
 
   const openModal = (data: any, columnId: string) => {
-    console.warn("opening modal...", data, modalOpen)
     setSelectedBooking(data)
     setSelectedColumnId(columnId)
     setModalOpen(true)
@@ -374,7 +385,7 @@ interface Organization {
   code?: string
 }
 
-interface Shipment {
+export interface Shipment {
   ID: string
   created_at: string
   updated_at: string
@@ -408,7 +419,7 @@ interface Shipment {
   organization: Organization | null
 }
 
-export default CustomTestKanban
+export default CustomKanban
 
 // Function to map Shipment to Order
 const mapShipmentToOrder = (shipment: Shipment): Order => {
