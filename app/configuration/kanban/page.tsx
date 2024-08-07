@@ -6,6 +6,7 @@ import React, {
   FormEvent,
   SetStateAction,
   useCallback,
+  useEffect,
   useState,
 } from "react"
 import { Order } from "@/schemas/order/order"
@@ -15,6 +16,8 @@ import { motion } from "framer-motion"
 import { useOrders, useUpdateOrder } from "@/lib/hooks/orders"
 import { useStatuses } from "@/lib/hooks/statuses"
 import { mapSchemaToJson } from "@/lib/mapper/order"
+import { useBookingContext } from "@/components/dashboard/BookingContext"
+import NewOrderModal from "@/components/dashboard/new-order-modal"
 
 const columnOrder = [
   "In Flight",
@@ -28,7 +31,6 @@ const columnOrder = [
 
 const CustomKanban = () => {
   const { isLoading: isLoadingStatus, data: allStatus } = useStatuses()
-  console.warn("status", allStatus)
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -69,7 +71,12 @@ const Board = ({
   allStatus: IDNamePair[]
 }) => {
   const [cards, setCards] = useState<Shipment[]>(allCards)
-  console.error("data is...", allCards, Array.isArray(allCards))
+
+  useEffect(() => {
+    setCards(allCards)
+  }, [allCards])
+
+  // console.error("data is...", allCards, Array.isArray(allCards))
 
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-2">
@@ -203,8 +210,41 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
 
   const filteredCards = cards.filter((c) => c.status.name === status.name)
 
+  const { selectedBooking, setSelectedBooking } = useBookingContext()
+  const handleCardClick = (id: string) => {
+    const cardFound = cards.find((c) => c.ID === id)
+    if (cardFound) {
+      // openModal(mapShipmentToOrder(cardFound), id)
+      openModal(cardFound, id)
+    }
+  }
+
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalType, setModalType] = useState<"edit" | "create">("edit")
+  const [selectedColumnId, setSelectedColumnId] = useState("booking_type_name")
+
+  const onOpenChange = useCallback((open: boolean) => {
+    // refetchOrders() // Refetch the orders after updating
+
+    setModalOpen(open)
+    if (!open) setSelectedColumnId("")
+  }, [])
+
+  const openModal = (data: any, columnId: string) => {
+    setSelectedBooking(data)
+    setSelectedColumnId(columnId)
+    setModalOpen(true)
+    setModalType("edit")
+  }
   return (
     <>
+      <NewOrderModal
+        selectedColumnId={selectedColumnId}
+        open={modalOpen}
+        onOpenChange={onOpenChange}
+        mode={modalType}
+      />
+
       <div className="w-80 shrink-0">
         <div className="mb-3 flex items-center justify-between">
           <h3 className={`font-medium text-white`}>{title}</h3>
@@ -221,7 +261,14 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
           }`}
         >
           {filteredCards.map((c) => {
-            return <Card key={c.ID} {...c} handleDragStart={handleDragStart} />
+            return (
+              <Card
+                key={c.ID}
+                {...c}
+                handleDragStart={handleDragStart}
+                handleCardClick={handleCardClick}
+              />
+            )
           })}
           <DropIndicator beforeId={null} status={status} />
         </div>
@@ -232,6 +279,7 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
 
 type CardProps = CardType & {
   handleDragStart: Function
+  handleCardClick: (id: string) => void
 }
 
 const Card = ({
@@ -241,6 +289,7 @@ const Card = ({
   ID,
   status,
   handleDragStart,
+  handleCardClick,
 }: CardProps) => {
   return (
     <>
@@ -252,6 +301,7 @@ const Card = ({
         onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+        onClick={() => handleCardClick(ID)}
       >
         <p className="text-sm text-neutral-100">AWB: {awb}</p>
         <p className="text-sm text-neutral-100">
@@ -389,9 +439,9 @@ const mapShipmentToOrder = (shipment: Shipment): Order => {
       : undefined,
     commodity_code_id: shipment.commodity_code?.ID,
     consignee_id: shipment.consignee?.id,
-    currency_id: shipment.currency.ID,
+    currency_id: shipment.currency?.ID,
     customer_id: shipment.customer?.id,
-    destination_id: shipment.destination.ID,
+    destination_id: shipment.destination?.ID,
     freight_forwarder_id: shipment.freight_forwarder?.id,
     gs_weight_kg: shipment.gs_weight_kg
       ? String(shipment.gs_weight_kg)
@@ -418,12 +468,12 @@ const mapShipmentToOrder = (shipment: Shipment): Order => {
       : undefined,
     weight_and_volume_type: undefined, // Not available in Shipment
     hawb_form: {
-      booking_type_id: shipment.booking_type.ID,
+      booking_type_id: shipment.booking_type?.ID,
       partner_prefix_id: shipment.partner_prefix?.ID,
       awb: shipment.awb,
-      partner_code_id: shipment.partner_code.ID,
-      origin_id: shipment.origin.ID,
-      destination_id: shipment.destination.ID,
+      partner_code_id: shipment.partner_code?.ID,
+      origin_id: shipment.origin?.ID,
+      destination_id: shipment.destination?.ID,
       consignor_id: shipment.shipper?.id, // Assuming shipper is consignor
       consignee_id: shipment.consignee?.id,
       weight: shipment.gs_weight_kg ? String(shipment.gs_weight_kg) : undefined,
@@ -459,13 +509,13 @@ const mapShipmentToOrder = (shipment: Shipment): Order => {
     },
     hawb_table: shipment.activity_logs.map((log) => ({
       id: log.ID,
-      booking_type: shipment.booking_type.name,
-      booking_type_id: shipment.booking_type.ID,
+      booking_type: shipment.booking_type?.name,
+      booking_type_id: shipment.booking_type?.ID,
       awb: shipment.awb,
-      origin: shipment.origin.name,
-      origin_id: shipment.origin.ID,
-      destination: shipment.destination.name,
-      destination_id: shipment.destination.ID,
+      origin: shipment.origin?.name,
+      origin_id: shipment.origin?.ID,
+      destination: shipment.destination?.name,
+      destination_id: shipment.destination?.ID,
       consignor: shipment.shipper?.name,
       consignor_id: shipment.shipper?.id,
       consignee: shipment.consignee?.name,

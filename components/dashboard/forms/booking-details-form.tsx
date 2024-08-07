@@ -66,7 +66,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
   const awbList =
     selectedBookingType?.label.toLowerCase() === "hawb"
-      ? ordersData.data
+      ? ordersData?.data
           .filter(
             (order: any) => order.booking_type?.name.toLowerCase() === "mawb"
           )
