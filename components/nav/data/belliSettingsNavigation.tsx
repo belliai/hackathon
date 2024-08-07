@@ -25,13 +25,6 @@ export const belliSettingsNavigation: TSidebarItem[] = [
         current: false,
         isCanCreate: true,
       },
-      {
-        name: "Data",
-        href: "/settings/data",
-        icon: Waypoints,
-        current: false,
-        isCanCreate: false,
-      },
     ],
   },
 ]
