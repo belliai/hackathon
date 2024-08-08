@@ -44,7 +44,7 @@ export const useListViewColumns = (
       id: "Date", // Used to match the column_name from the columns configuration endpoint in the API
       accessorKey: "departure_date",
       header: () => (
-        <TableHeaderWithTooltip header="Date" tooltipId="next_at" />
+        <TableHeaderWithTooltip header="Date" tooltipId="next-at" />
       ),
       cell: ({ row }) => {
         const date = row.original.departure_date || ""
@@ -94,7 +94,7 @@ export const useListViewColumns = (
       // TODO: Integrate with API
       id: "Landing Wt", // We set the id to Landing Wt because currently the "Status" column doesn't exist in the API (should be replaced later)
       accessorKey: "status",
-      header: () => <TableHeaderWithTooltip header="Status" tooltipId="status" />,
+      header: () => <TableHeaderWithTooltip header="Status" tooltipId="flight-status" />,
       cell: ({ row }) => {
         const status = "active"
         return (
