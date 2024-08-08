@@ -249,7 +249,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
           "p-0",
           isFullScreen
             ? "h-screen w-screen max-w-none"
-            : "top-8 h-[90dvh] max-w-6xl translate-y-0"
+            : "top-8 max-h-[90dvh] max-w-6xl translate-y-0"
         )}
         onInteractOutside={(e) => e.preventDefault()}
       >

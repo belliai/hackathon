@@ -189,7 +189,7 @@ export default function CompanyForm(props: AircraftTypeFormProps) {
         if (!_open) setCloseWarningOpen(true)
       }}
     >
-      <DialogContent hideCloseButton className="h-[90dvh] min-w-[1100px]">
+      <DialogContent hideCloseButton className="max-h-[90dvh] min-w-[1100px]">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(
