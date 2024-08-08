@@ -7,7 +7,7 @@ import { TSidebarItem } from "@/components/nav/SidebarItem"
 export const operationsNavigation: TSidebarItem[] = [
   {
     name: "Dashboards",
-    href: "/dashboards",
+    href: "#",
     current: false,
     icon: TvIcon,
     disabled: true,
@@ -49,6 +49,14 @@ export const operationsNavigation: TSidebarItem[] = [
         ],
       },
       {
+        name: "Reports",
+        href: "/dashboards/reports",
+        icon: BarChartBigIcon,
+        current: false,
+        isCanCreate: false,
+        shortcut: "R",
+      },
+      {
         name: "Partners",
         href: "/dashboards/partners",
         icon: Handshake,
@@ -73,14 +81,6 @@ export const operationsNavigation: TSidebarItem[] = [
         current: false,
         isCanCreate: false,
         shortcut: "D",
-      },
-      {
-        name: "Reports",
-        href: "/dashboards/reports",
-        icon: BarChartBigIcon,
-        current: false,
-        isCanCreate: false,
-        shortcut: "R",
       },
     ],
   },
