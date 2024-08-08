@@ -1,6 +1,6 @@
 import { HomeIcon, TvIcon } from "@heroicons/react/24/outline"
 import { CubeIcon, DashboardIcon, ReaderIcon } from "@radix-ui/react-icons"
-import { CogIcon, Handshake, LayoutDashboardIcon, Waypoints } from "lucide-react"
+import { BarChartBigIcon, CogIcon, Handshake, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -73,6 +73,14 @@ export const operationsNavigation: TSidebarItem[] = [
         current: false,
         isCanCreate: false,
         shortcut: "D",
+      },
+      {
+        name: "Reports",
+        href: "/dashboards/reports",
+        icon: BarChartBigIcon,
+        current: false,
+        isCanCreate: false,
+        shortcut: "R",
       },
     ],
   },
