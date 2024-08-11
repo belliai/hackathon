@@ -12,6 +12,7 @@ import { Order, orderSchema } from "@/schemas/order/order"
 import { getDefaults } from "@/schemas/utils"
 import {
   ArrowsPointingOutIcon,
+  ArrowsPointingInIcon,
   DeviceTabletIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline"
@@ -324,7 +325,7 @@ const TAB_LIST: {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        className={cn("py-4 w-full sm:max-w-4xl", { "h-screen w-screen max-w-none": isFullScreen })}
+        className={cn("py-4 w-full sm:max-w-4xl", { "h-screen w-screen max-w-none sm:max-w-none": isFullScreen })}
         onInteractOutside={(e) => e.preventDefault()}
         hideCloseButton
       >
@@ -359,7 +360,10 @@ const TAB_LIST: {
                   className="h-6 w-6"
                   type="button"
                 >
-                  <ArrowsPointingOutIcon className="h-4 w-4" />
+                  {!isFullScreen ? 
+                  <ArrowsPointingOutIcon className="h-4 w-4" /> : 
+                  <ArrowsPointingInIcon className="h-4 w-4" />  
+                }
                 </Button>
                 <Button
                   onClick={() => setCloseWarningOpen(true)}
