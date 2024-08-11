@@ -3,6 +3,7 @@ import * as React from "react"
 import { getTooltipContents } from "@/lib/contentful"
 import { cn } from "@/lib/utils"
 
+import TopBottomScrollBars from "../top-bottom-scrollbar"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 
 const Table = React.forwardRef<
@@ -10,20 +11,17 @@ const Table = React.forwardRef<
   React.HTMLAttributes<HTMLTableElement> & {
     containerClassName?: HTMLDivElement["className"]
   }
->(({ className, ...props }, ref) => (
-  <div
-    className={cn(
-      "custom-scrollbar relative w-full overflow-auto",
-      props.containerClassName
-    )}
-  >
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
-      {...props}
-    />
-  </div>
-))
+>(({ className, ...props }, ref) => {
+  return (
+    <TopBottomScrollBars>
+      <table
+        ref={ref}
+        className={cn("w-full caption-bottom text-sm", className)}
+        {...props}
+      />
+    </TopBottomScrollBars>
+  )
+})
 Table.displayName = "Table"
 
 const TableHeader = React.forwardRef<

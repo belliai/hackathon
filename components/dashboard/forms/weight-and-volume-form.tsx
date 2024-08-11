@@ -175,7 +175,7 @@ const WeightAndVolumeForm = React.forwardRef<HTMLDivElement, any>(
     return (
       <>
         <Card className="flex flex-col gap-3 p-4" ref={ref}>
-          <div className="grid grid-cols-3">
+          <div className="flex">
             <Combobox
               name="weight_and_volume_type"
               options={WEIGHT_AND_VOLUME_LIST}

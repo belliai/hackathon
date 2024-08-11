@@ -186,7 +186,7 @@ export function DataTable<TData, TValue>({
       <div className="relative">
         <div
           className={cn(
-            "border-none [&>div]:overflow-hidden [&>div]:pb-4 [&>div]:group-hover:overflow-x-scroll [&>div]:group-hover:pb-2 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground",
+            "border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground",
             className
           )}
         >
