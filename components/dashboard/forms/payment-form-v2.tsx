@@ -83,7 +83,7 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
 
       form.setValue('payment_table', formattedData)
     }
-
+    
     const actionColumn = [
       {
         header: '',
@@ -127,6 +127,7 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
 
       form.setValue('total_paid', paid)
     }, [formValues.payment_table])
+
     return (
       <>
         <Card className="grid grid-cols-1 gap-x-3 gap-y-2 p-4" ref={ref}>

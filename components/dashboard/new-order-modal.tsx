@@ -60,6 +60,7 @@ import PayerForm from "./forms/payer-form"
 import PaymentFormV2 from "./forms/payment-form-v2"
 import { useBookingTypes } from "@/lib/hooks/booking-types"
 import HAWBTable from "./forms/hawb-table"
+import WeightAndVolumeFormV2 from "./forms/weight-and-volume-form-v2"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -93,6 +94,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       individual_parcel_table: [],
       hawb_table: [],
       payment_table: [],
+      weight_and_volume_table: [],
     }),
     [selectedBooking]
   )
@@ -147,7 +149,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       label: 'Weight & Volume',
       value: 'weight-and-volume',
       icon: Package2Icon,
-      content: <WeightAndVolumeForm />,
+      content: <WeightAndVolumeFormV2 />,
       fieldList: ['origin_id', 'shipper_id'],
       columnList: ['origin_name', 'shipper_name'],
     },

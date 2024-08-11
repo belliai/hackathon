@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 import { Combobox } from "@/components/form/combobox"
 import {
   FormControl,
@@ -11,14 +11,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useFormContext } from "react-hook-form"
-import { Button } from "@/components/ui/button"
 import { useBookingTypes } from "@/lib/hooks/booking-types"
 import { usePartnerCodes } from "@/lib/hooks/partner-codes"
 import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
 import { useLocations } from "@/lib/hooks/locations"
 import { useCustomers } from "@/lib/hooks/customers"
-import { orderSchema } from "@/schemas/order/order"
-import { getDefaults } from "@/schemas/utils"
+import { EqualIcon } from "lucide-react"
 
 const HAWBForm = React.forwardRef<HTMLDivElement, any>(
   (props, ref) => {
@@ -30,7 +28,6 @@ const HAWBForm = React.forwardRef<HTMLDivElement, any>(
     const { data: customers } = useCustomers()
 
     const form = useFormContext()
-    const initialData = getDefaults(orderSchema)
     const formValues = form.watch()
 
     const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
@@ -61,29 +58,34 @@ const HAWBForm = React.forwardRef<HTMLDivElement, any>(
       label: customer.name,
     }))
 
-    const createPayload = () => {
-      const generateID = `hawb-${Math.floor(1000 + Math.random() * 9000)}-${Date.now()}`
-      const searchBookingType = bookingTypeOptions?.find((item: { value: string }) => item.value === formValues.hawb_form.booking_type_id)
-      const searchOrigin = locationsOptions?.find((item: { value: string }) => item.value === formValues.hawb_form.origin_id)
-      const searchDestination = locationsOptions?.find((item: { value: string }) => item.value === formValues.hawb_form.destination_id)
-      const searchConsignor = customerOptions?.find((item: { value: string }) => item.value === formValues.hawb_form.consignor_id)
-      const searchConsignee = customerOptions?.find((item: { value: string }) => item.value === formValues.hawb_form.consignee_id)
-      const payload = {
-        ...formValues.hawb_form,
-        ...searchBookingType && { booking_type: searchBookingType.label },
-        ...searchOrigin && { origin: searchOrigin.label },
-        ...searchDestination && { destination: searchDestination.label },
-        ...searchConsignor && { consignor: searchConsignor.label },
-        ...searchConsignee && { consignee: searchConsignee.label },
-        ...formType === 'create' && { id: generateID }
-      }
+    useEffect(() => {
+      const qty = parseFloat(formValues.hawb_form?.qty || 0);
+      const width = parseFloat(formValues.hawb_form?.width || 0);
+      const height = parseFloat(formValues.hawb_form?.height || 0);
+      const length = parseFloat(formValues.hawb_form?.length || 0);
       
-      handleAction('hawb', payload)
-      form.setValue('hawb_form', initialData.hawb_form)
-    }
+      const totalVolume = (qty * width * height * length) / 6000;
+
+      form.setValue('hawb_form.volume', Math.round(totalVolume).toString())
+
+      const volume = parseFloat(formValues.hawb_form?.volume || 0);
+      const subtotal = volume / 166.6;
+
+      form.setValue('hawb_form.subtotal', subtotal.toFixed(2));
+
+      const total = width + height + length;
+      let skid = 0;
+      if (total > 300) {
+        const subtotal = parseFloat(formValues.hawb_form?.subtotal || 0)
+        skid = (subtotal * 1.3) - subtotal
+      }
+
+      form.setValue('hawb_form.skid', Math.ceil(skid))
+    }, [formValues.hawb_form.qty, formValues.hawb_form.weight, formValues.hawb_form.width, formValues.hawb_form.length, formValues.hawb_form.height, formValues.hawb_form.volume, formValues.hawb_form.subtotal])
+
 
     return (
-      <>
+      <div className="grid grid-cols-1 gap-3">
         <div className="grid grid-cols-4 gap-3">
           <Combobox
             name="hawb_form.booking_type_id"
@@ -153,86 +155,183 @@ const HAWBForm = React.forwardRef<HTMLDivElement, any>(
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
-          <div className="grid grid-cols-2 gap-3">
-            <FormField
-              control={form.control}
-              name="hawb_form.weight"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel info="hellow world!, this is info">
-                  Weight
-                  </FormLabel>
-                  <FormControl>
-                  <Input
-                      defaultValue={formValues.weight}
-                      {...field}
-                      className="border-2 border-foreground/30 h-[40px]"
-                  />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className="grid grid-cols-1 gap-3">
+          <div className="flex gap-3">
+            <div className="grow grid grid-cols-5 gap-3">
+              <FormField
+                control={form.control}
+                name="hawb_form.qty"
+                render={({ field }) => (
+                    <FormItem>
+                      <FormLabel info="hellow world!, this is info">
+                        Qty
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          defaultValue={formValues.hawb_form.qty}
+                          {...field}
+                          className="border-2 border-foreground/30 h-[40px]"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                )}
+              />
 
-            <Combobox
-              name="hawb_form.weight_unit"
-              options={weightUnitOptions}
-              label="Unit"
-            />
-          </div>
+              <FormField
+                control={form.control}
+                name="hawb_form.weight"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel info="hellow world!, this is info">
+                      Weight
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        defaultValue={formValues.hawb_form.weight}
+                        {...field}
+                        className="border-2 border-foreground/30 h-[40px]"
+                        type="number"
+                      />
+                      </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="grid grid-cols-2 gap-3">
-            <FormField
-              control={form.control}
-              name="hawb_form.volume"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel info="hellow world!, this is info">
-                    Volume
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      defaultValue={formValues.volume}
-                      {...field}
-                      className="border-2 border-foreground/30 h-[40px]"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="hawb_form.width"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel info="hellow world!, this is info">
+                      Width
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        defaultValue={formValues.hawb_form.width}
+                        {...field}
+                        className="border-2 border-foreground/30 h-[40px]"
+                        type="number"
+                      />
+                      </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <Combobox
-              name="hawb_form.volume_unit"
-              options={volumeUnitOptions}
-              label="Unit"
-            />
-          </div>
+              <FormField
+                control={form.control}
+                name="hawb_form.length"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel info="hellow world!, this is info">
+                      Length
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        defaultValue={formValues.hawb_form.length}
+                        {...field}
+                        className="border-2 border-foreground/30 h-[40px]"
+                        type="number"
+                      />
+                      </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="flex gap-2 justify-end items-end">
-            {formType === 'edit' && (
-              <Button
-                type="button"
-                variant={"secondary"}
-                onClick={() => {
-                  form.setValue('hawb_form', initialData.hawb_form)
-                  setFormType('create')
-                }}
-              >
-                Cancel
-              </Button>
-            )}
-            <Button
-              type="button"
-              variant={"button-primary"}
-              onClick={() => { createPayload() }}
-            >
-              {formType === 'create' ? 'Add New' : 'Save'}
-            </Button>
+              <FormField
+                control={form.control}
+                name="hawb_form.height"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel info="hellow world!, this is info">
+                      Height
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        defaultValue={formValues.hawb_form.height}
+                        {...field}
+                        className="border-2 border-foreground/30 h-[40px]"
+                        type="number"
+                      />
+                      </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="pt-10 grow-0">
+                <EqualIcon className="size-4" />
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <FormField
+                control={form.control}
+                name="hawb_form.volume"
+                render={({ field }) => (
+                    <FormItem>
+                      <FormLabel info="hellow world!, this is info">
+                        Volume
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          defaultValue={formValues.hawb_form.volume}
+                          {...field}
+                          className="border-2 border-foreground/30 h-[40px]"
+                          readOnly
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="hawb_form.subtotal"
+                render={({ field }) => (
+                    <FormItem>
+                      <FormLabel info="hellow world!, this is info">
+                        Subtotal
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          defaultValue={formValues.hawb_form.subtotal}
+                          {...field}
+                          className="border-2 border-foreground/30 h-[40px]"
+                          readOnly
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="hawb_form.skid"
+                render={({ field }) => (
+                    <FormItem>
+                      <FormLabel info="hellow world!, this is info">
+                        Skid
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          defaultValue={formValues.hawb_form.skid}
+                          {...field}
+                          className="border-2 border-foreground/30 h-[40px]"
+                          readOnly
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                )}
+              />
+            </div>
+            
           </div>
         </div>
-      </>
+      </div>
     )
   }
 )
