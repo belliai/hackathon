@@ -52,14 +52,13 @@ import { Combobox } from "@/components/form/combobox"
 import BookingDetailsForm from "./forms/booking-details-form"
 import ConsignorForm from "./forms/consignor-form"
 import ConsigneeForm from "./forms/consignee-form"
-import PaymentForm from "./forms/payment-form"
 import HeaderSection from "./header-section"
 import SummaryTotal from "./summary-total"
-import WeightAndVolumeForm from "./forms/weight-and-volume-form"
 import PayerForm from "./forms/payer-form"
 import PaymentFormV2 from "./forms/payment-form-v2"
 import { useBookingTypes } from "@/lib/hooks/booking-types"
 import HAWBTable from "./forms/hawb-table"
+import WeightAndVolumeFormV2 from "./forms/weight-and-volume-form-v2"
 
 type NewOrderModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -93,6 +92,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       individual_parcel_table: [],
       hawb_table: [],
       payment_table: [],
+      weight_and_volume_table: [],
     }),
     [selectedBooking]
   )
@@ -144,14 +144,6 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       columnList: ['awb', 'partner_code_name', 'partner_prefix_name', 'commodity_code_name', 'gs_weight_kg', 'volume_kg'],
     },
     {
-      label: 'Weight & Volume',
-      value: 'weight-and-volume',
-      icon: Package2Icon,
-      content: <WeightAndVolumeForm />,
-      fieldList: ['origin_id', 'shipper_id'],
-      columnList: ['origin_name', 'shipper_name'],
-    },
-    {
       label: 'Consignor (Sender)',
       value: 'consignor',
       icon: PlaneTakeoffIcon,
@@ -174,6 +166,14 @@ export default function NewOrderModal(props: NewOrderModalProps) {
       content: <PayerForm />,
       fieldList: ['bill_to_id', 'total', 'currency'],
       columnList: ['bill_to_name', 'total', 'currency'],
+    },
+    {
+      label: 'Weight & Volume',
+      value: 'weight-and-volume',
+      icon: Package2Icon,
+      content: <WeightAndVolumeFormV2 />,
+      fieldList: ['origin_id', 'shipper_id'],
+      columnList: ['origin_name', 'shipper_name'],
     },
     {
       label: 'Payment History',
@@ -399,7 +399,7 @@ export default function NewOrderModal(props: NewOrderModalProps) {
                 <XCircle className="mr-2 size-4" />
                 Cancel
               </Button>
-              {getCurrentIndex(currentTab) > 0 || currentTab !== 'hawb' && (
+              {(getCurrentIndex(currentTab) > 0 && currentTab !== 'hawb') && (
                 <Button
                   type="button"
                   variant={"secondary"}

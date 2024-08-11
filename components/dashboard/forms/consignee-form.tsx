@@ -23,7 +23,7 @@ const ConsigneeForm = React.forwardRef<HTMLDivElement, any>(
 
 
     return (
-      <Card className="grid grid-cols-3 gap-x-3 gap-y-2 p-4" ref={ref}>
+      <Card className="grid grid-cols-3 gap-x-3 gap-y-2 p-4 h-fit" ref={ref}>
         <Combobox
           name="destination_id"
           options={locationsOptions}

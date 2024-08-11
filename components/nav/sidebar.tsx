@@ -36,6 +36,7 @@ import useKeyPressNavigation from "./shortcuts/keypress-navigation"
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
   SETTING: 2,
+  BELLI_SETTING: 3,
 }
 
 export default function SideBar({
@@ -103,6 +104,12 @@ export default function SideBar({
 
   useKeyPressNavigation(operationsNavigation);
 
+  useEffect(() => {
+    if (sidebarType === SIDEBAR_TYPE.BELLI_SETTING) {
+      router.push("/settings/aircrafts?tab=tail-numbers")
+    }
+  }, [sidebarType])
+
   return (
     <Suspense>
       <div className="no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border">
@@ -115,19 +122,21 @@ export default function SideBar({
               isExpanded={isExpanded}
             />
           )}
-          {sidebarType === SIDEBAR_TYPE.SETTING && (
+          {(sidebarType === SIDEBAR_TYPE.SETTING || sidebarType === SIDEBAR_TYPE.BELLI_SETTING) && (
             <div
-              className="flex cursor-pointer items-center gap-x-2"
+              className="flex cursor-pointer items-center gap-2"
               onClick={() => {
                 setNavigationType(SIDEBAR_TYPE.DEFAULT)
                 router.push("/")
               }}
             >
               <ChevronLeftIcon
-                className="h-5 w-5 text-zinc-500"
+                className="size-4 text-zinc-500"
                 aria-hidden="true"
               />
-              <span className="font-bold text-white">Settings</span>
+              {isExpanded && (
+                <span className="font-bold text-white text-sm">Settings</span>
+              )}
             </div>
           )}
           <Tooltip>
@@ -153,26 +162,6 @@ export default function SideBar({
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
             <ul role="list" className="-mx-2">
-              {/* {sidebarType === SIDEBAR_TYPE.DEFAULT && (
-                <li>
-                  <NewOrderModal
-                    open={isDialogOpen}
-                    onOpenChange={(open) => {
-                      setDialogOpen(open)
-                    }}
-                    mode="create"
-                  >
-                    <Button
-                      variant="ghost"
-                      onClick={() => setDialogOpen(true)}
-                      className={`mb-5 h-8 w-full justify-start rounded-sm px-2 text-[13px] text-white ${activeItem?.item?.isCanCreate ? "bg-accent" : "bg-button-primary hover:bg-button-primary/80"}`}
-                    >
-                      <PlusSquare className="mr-2.5 h-4 w-4" />
-                      {variant && variant === "test" ? "Create" : "New"} Order
-                    </Button>
-                  </NewOrderModal>
-                </li>
-              )} */}
               {sidebarType === SIDEBAR_TYPE.SETTING && (
                 <li className="mb-2 flex items-center gap-x-[7px] text-zinc-500">
                   <span className="duration-400 flex items-center justify-center rounded-sm p-0.5 transition-colors">
@@ -185,13 +174,14 @@ export default function SideBar({
                 </li>
               )}
               <ul className="flex flex-col gap-1">
-                {sidebarType === SIDEBAR_TYPE.DEFAULT ? (
-                  <>
-                    {/* <FavoritesMenu /> */}
-                    <SidebarMenu items={operationsNavigation} collapsible isExpanded={isExpanded} />
-                  </>
-                ) : (
+                {sidebarType === SIDEBAR_TYPE.DEFAULT && (
+                  <SidebarMenu items={operationsNavigation} collapsible isExpanded={isExpanded} />
+                )}
+                {sidebarType === SIDEBAR_TYPE.SETTING && (
                   <SidebarMenu items={settingNavigation[0].children ?? []} />
+                )}
+                {sidebarType === SIDEBAR_TYPE.BELLI_SETTING && (
+                  <SidebarMenu items={belliSettingsNavigation[0].children ?? []} collapsible isExpanded={isExpanded} />
                 )}
               </ul>
               {sidebarType === SIDEBAR_TYPE.SETTING && (
@@ -213,7 +203,7 @@ export default function SideBar({
             </ul>
           </ul>
           <ul className="flex flex-col gap-1 -mx-2">
-            <SidebarMenu items={belliSettingsNavigation} collapsible isExpanded={isExpanded} />
+            {/* <SidebarMenu items={belliSettingsNavigation} collapsible isExpanded={isExpanded} /> */}
             <SidebarMenu
               items={customDataFieldsNavigation}
               collapsible

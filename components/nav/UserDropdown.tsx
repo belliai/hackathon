@@ -35,7 +35,7 @@ export type UserDropdownItem = {
   route: string
   label: string
   separator?: boolean
-  changeNavigation?: boolean
+  changeNavigation?: number
   isExpanded?: boolean
 }
 
@@ -94,6 +94,11 @@ export default function UserDropdown({
     {
       label: "Profile",
       route: "/settings/profile",
+    },
+    {
+      label: "Settings",
+      route: "",
+      changeNavigation: 3,
     },
     {
       label: "Organization",
@@ -198,7 +203,7 @@ export default function UserDropdown({
                 <DropdownMenuItem
                   className="min-w-40 cursor-pointer rounded-lg px-3.5 py-2"
                   onClick={() => {
-                    if (item.changeNavigation) doChangeNavigation(2)
+                    if (item.changeNavigation) doChangeNavigation(item.changeNavigation)
                     router.push(item.route)
                   }}
                 >

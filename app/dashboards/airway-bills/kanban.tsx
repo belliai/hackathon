@@ -498,42 +498,9 @@ const mapShipmentToOrder = (shipment: Shipment): Order => {
       weight_unit: undefined, // Not available in Shipment
       volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
       volume_unit: undefined, // Not available in Shipment
-      summary_weight: undefined, // Not available in Shipment
-      summary_length: undefined, // Not available in Shipment
-      summary_height: undefined, // Not available in Shipment
       commodity_code_id: shipment.commodity_code?.ID,
     },
-    total_weight_volume_form: {
-      description: undefined, // Not available in Shipment
-      internal_id: undefined, // Not available in Shipment
-      external_id: undefined, // Not available in Shipment
-      weight: shipment.gs_weight_kg ? String(shipment.gs_weight_kg) : undefined,
-      weight_unit: undefined, // Not available in Shipment
-      volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
-      volume_unit: undefined, // Not available in Shipment
-      summary_weight: undefined, // Not available in Shipment
-      summary_length: undefined, // Not available in Shipment
-      summary_height: undefined, // Not available in Shipment
-      commodity_code_id: shipment.commodity_code?.ID,
-    },
-    hawb_table: shipment.activity_logs.map((log) => ({
-      id: log.ID,
-      booking_type: shipment.booking_type?.name,
-      booking_type_id: shipment.booking_type?.ID,
-      awb: shipment.awb,
-      origin: shipment.origin?.name,
-      origin_id: shipment.origin?.ID,
-      destination: shipment.destination?.name,
-      destination_id: shipment.destination?.ID,
-      consignor: shipment.shipper?.name,
-      consignor_id: shipment.shipper?.id,
-      consignee: shipment.consignee?.name,
-      weight: shipment.gs_weight_kg ? String(shipment.gs_weight_kg) : undefined,
-      weight_unit: undefined, // Not available in Shipment
-      volume: shipment.volume_kg ? String(shipment.volume_kg) : undefined,
-      volume_unit: undefined, // Not available in Shipment
-    })),
-    individual_parcel_table: undefined, // Assuming this information is not available in Shipment
+    weight_and_volume_table: [], // Assuming this information is not available in Shipment
     total_weight: shipment.gs_weight_kg
       ? String(shipment.gs_weight_kg)
       : undefined,
