@@ -45,6 +45,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 import { columns, Order } from "@/components/dashboard/columns"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
+import NewOrderSideModal from "@/components/dashboard/new-order-side-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 import BookingType from "@/app/data-fields/booking-type"
 import CommodityCode from "@/app/data-fields/commodity-code"
@@ -380,9 +381,9 @@ export default function Home() {
           <TimeZone tabComponent={memoizedTabsList} />
         </TabsContent>
       </Tabs>
-      <NewOrderModal
-        open={modalOpen}
+      <NewOrderSideModal
         onOpenChange={onOpenChange}
+        open={modalOpen}
         mode={modalType}
         selectedColumnId={selectedColumnId}
       />
