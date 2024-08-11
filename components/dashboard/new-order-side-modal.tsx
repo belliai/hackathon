@@ -68,11 +68,10 @@ import ConsigneeForm from "./forms/consignee-form"
 import ConsignorForm from "./forms/consignor-form"
 import HAWBTable from "./forms/hawb-table"
 import PayerForm from "./forms/payer-form"
-import PaymentForm from "./forms/payment-form"
 import PaymentFormV2 from "./forms/payment-form-v2"
-import WeightAndVolumeForm from "./forms/weight-and-volume-form"
 import HeaderSection from "./header-section"
 import SummaryTotal from "./summary-total"
+import WeightAndVolumeFormV2 from "./forms/weight-and-volume-form-v2"
 
 type NewOrderSideModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -111,6 +110,7 @@ export default function NewOrderSideModal({
       individual_parcel_table: [],
       hawb_table: [],
       payment_table: [],
+      weight_and_volume_table: [],
     }),
     [selectedBooking]
   )
@@ -149,106 +149,62 @@ export default function NewOrderSideModal({
     // })
   }
 
-  const TAB_LIST: {
-    label: string
-    value: string
-    icon: any
-    content: JSX.Element
-    fieldList: string[]
-    columnList: string[]
+const TAB_LIST: {
+    label: string;
+    value: string;
+    icon: any;
+    content: JSX.Element;
+    fieldList: string[];
+    columnList: string[];
   }[] = [
     {
-      label: "Booking Details",
-      value: "booking-details",
+      label: 'Booking Details',
+      value: 'booking-details',
       icon: SquarePenIcon,
       content: <BookingDetailsForm />,
-      fieldList: [
-        "booking_type_id",
-        "partner_prefix_id",
-        "awb",
-        "partner_code_id",
-        "is_physical",
-        "commodity_code_id",
-        "commodity_name",
-        "pieces",
-        "gs_weight_kg",
-        "volume_kg",
-      ],
-      columnList: [
-        "awb",
-        "partner_code_name",
-        "partner_prefix_name",
-        "commodity_code_name",
-        "gs_weight_kg",
-        "volume_kg",
-      ],
+      fieldList: ['booking_type_id', 'partner_prefix_id', 'awb', 'partner_code_id', 'is_physical', 'commodity_code_id', 'commodity_name', 'pieces', 'gs_weight_kg', 'volume_kg'],
+      columnList: ['awb', 'partner_code_name', 'partner_prefix_name', 'commodity_code_name', 'gs_weight_kg', 'volume_kg'],
     },
     {
-      label: "Weight & Volume",
-      value: "weight-and-volume",
-      icon: Package2Icon,
-      content: <WeightAndVolumeForm />,
-      fieldList: ["origin_id", "shipper_id"],
-      columnList: ["origin_name", "shipper_name"],
-    },
-    {
-      label: "Consignor (Sender)",
-      value: "consignor",
+      label: 'Consignor (Sender)',
+      value: 'consignor',
       icon: PlaneTakeoffIcon,
       content: <ConsignorForm />,
-      fieldList: ["origin_id", "shipper_id"],
-      columnList: ["origin_name", "shipper_name"],
+      fieldList: ['origin_id', 'shipper_id'],
+      columnList: ['origin_name', 'shipper_name'],
     },
     {
-      label: "Consignee (Receiver)",
-      value: "consignee",
+      label: 'Consignee (Receiver)',
+      value: 'consignee',
       icon: PlaneLandingIcon,
       content: <ConsigneeForm />,
-      fieldList: ["destination_id", "consignee_id"],
-      columnList: ["destination_name"],
+      fieldList: ['destination_id', 'consignee_id'],
+      columnList: ['destination_name'],
     },
     {
-      label: "Payer",
-      value: "payer",
+      label: 'Payer',
+      value: 'payer',
       icon: UserCheck,
       content: <PayerForm />,
-      fieldList: ["bill_to_id", "total", "currency"],
-      columnList: ["bill_to_name", "total", "currency"],
+      fieldList: ['bill_to_id', 'total', 'currency'],
+      columnList: ['bill_to_name', 'total', 'currency'],
     },
     {
-      label: "Payment History",
-      value: "payment-history",
+      label: 'Weight & Volume',
+      value: 'weight-and-volume',
+      icon: Package2Icon,
+      content: <WeightAndVolumeFormV2 />,
+      fieldList: ['origin_id', 'shipper_id'],
+      columnList: ['origin_name', 'shipper_name'],
+    },
+    {
+      label: 'Payment History',
+      value: 'payment-history',
       icon: Banknote,
       content: <PaymentFormV2 />,
-      fieldList: [
-        "use_freight_forwarder",
-        "freight_forwarder_id",
-        "organization_id",
-        "bill_to_id",
-        "bill_to_name",
-        "customer_id",
-        "customer_name",
-        "partner_prefix_id",
-        "rate",
-        "s_rate",
-        "s_freight",
-        "spot_id",
-        "gs_weight_kg",
-        "ch_weight_kg",
-      ],
-      columnList: [
-        "bill_to_name",
-        "rate",
-        "currency_name",
-        "freight_forwarder_name",
-        "s_freight",
-        "s_rate",
-        "total",
-        "mode",
-        "ch_weight_kg",
-        "payment_mode_name",
-      ],
-    },
+      fieldList: ['use_freight_forwarder', 'freight_forwarder_id', 'organization_id', 'bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg'],
+      columnList: ['bill_to_name', 'rate', 'currency_name', 'freight_forwarder_name', 's_freight', 's_rate', 'total', 'mode', 'ch_weight_kg', 'payment_mode_name'],
+    }
   ]
 
   useEffect(() => {
@@ -497,8 +453,7 @@ export default function NewOrderSideModal({
                 <XCircle className="mr-2 size-4" />
                 Cancel
               </Button>
-              {getCurrentIndex(currentTab) > 0 ||
-                (currentTab !== "hawb" && (
+              {(getCurrentIndex(currentTab) > 0 && currentTab !== 'hawb') && (
                   <Button
                     type="button"
                     variant={"secondary"}
@@ -510,7 +465,7 @@ export default function NewOrderSideModal({
                     <ChevronLeft className="mr-2 size-4" />
                     Previous
                   </Button>
-                ))}
+                )}
               {renderSaveButtons()}
             </SheetFooter>
           </form>
