@@ -80,12 +80,12 @@ export default function RootLayout({
       <html
         lang="en"
         className={cn(
-          "scrollbar dark h-full scroll-smooth antialiased",
+          "scrollbar h-full scroll-smooth antialiased",
           `${inter.className}`
         )}
       >
         {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
-        <body className="h-full overflow-y-hidden bg-background text-white">
+        <body className="h-full overflow-y-hidden bg-background">
           <PostHogPageView />
           <InnerRootProviders>{children}</InnerRootProviders>
         </body>

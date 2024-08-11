@@ -133,7 +133,7 @@ export default function UserDropdown({
               />
               {isExpanded && (
                 <>
-                  <span className="text-sm text-white">
+                  <span className="text-sm dark:text-white">
                     {userSession.user?.fullName}
                   </span>
                   <ChevronDownIcon
@@ -150,7 +150,7 @@ export default function UserDropdown({
                   B
                 </AvatarFallback>
               </Avatar>
-              <span className="text-white">Belli</span>
+              <span className="dark:text-white">Belli</span>
               <ChevronDownIcon
                 className="h-4 w-4 text-zinc-500"
                 aria-hidden="true"
@@ -159,7 +159,7 @@ export default function UserDropdown({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="rounded-xl bg-zinc-950"
+          className="rounded-xl dark:bg-zinc-950"
           align="start"
           sideOffset={8}
         >
@@ -172,7 +172,7 @@ export default function UserDropdown({
                 <DropdownMenuSubTrigger className="min-w-40 cursor-pointer rounded-lg px-3.5 py-2">
                   Change Organization
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="rounded-xl bg-zinc-950">
+                <DropdownMenuSubContent className="rounded-xl dark:bg-zinc-950">
                   {userMemberships.data.map((orgmem) => {
                     const organization = orgmem.organization
                     const isActive = organization.id === auth.orgId

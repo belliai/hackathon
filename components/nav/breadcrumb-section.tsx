@@ -157,7 +157,7 @@ export default function BreadCrumbSection() {
                     <BreadcrumbLink
                       className={cn(
                         index === currentPaths.length - 1 &&
-                          "text-white hover:text-button-primary"
+                          "text-zinc-900 dark:text-white hover:text-button-primary"
                       )}
                       href={path.href}
                     >

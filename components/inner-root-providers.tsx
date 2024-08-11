@@ -11,6 +11,8 @@ import { BookingProvider } from "@/components/dashboard/BookingContext"
 import { RouteRoom } from "@/components/liveblocks/route-room"
 import { FavoritesProvider } from "@/components/nav/favorites/favorites-provider"
 
+import NextThemeProvider from "./next-theme-provider"
+
 const StiggProvider = dynamic(() => import("@/components/stigg-provider"), {
   ssr: false,
 })
@@ -24,7 +26,14 @@ const InnerRootProviders = ({ children }: { children: React.ReactNode }) => {
             <BookingProvider>
               <FavoritesProvider>
                 <RouteRoom>
-                  <UIWrapper>{children}</UIWrapper>
+                  <NextThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem
+                    disableTransitionOnChange
+                  >
+                    <UIWrapper>{children}</UIWrapper>
+                  </NextThemeProvider>
                 </RouteRoom>
               </FavoritesProvider>
               <Toaster />

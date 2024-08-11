@@ -135,7 +135,7 @@ export default function SideBar({
                 aria-hidden="true"
               />
               {isExpanded && (
-                <span className="font-bold text-white text-sm">Settings</span>
+                <span className="font-bold text-sm">Settings</span>
               )}
             </div>
           )}

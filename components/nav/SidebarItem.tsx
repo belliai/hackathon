@@ -52,9 +52,11 @@ export default function SidebarItem({
 }: SidebarItemProps) {
   function getBaseItemClassName(currentActive: boolean) {
     const className = cn(
-      "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:text-white text-[#E2E3E5] justify-start text-[13px] hover:bg-zinc-800 hover:text-white items-center gap-x-1 !h-7 rounded-sm py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-800",
+      "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:dark:text-white dark:text-[#E2E3E5] justify-start text-[13px] dark:hover:text-white items-center gap-x-1 !h-7 rounded-sm py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-100 dark:hover:bg-zinc-800",
       !isExpanded ? "justify-center" : "",
-      currentActive ? "text-white bg-zinc-900 [&_svg]:text-white" : ""
+      currentActive
+        ? "dark:text-white dark:bg-zinc-900 dark:[&_svg]:text-white"
+        : ""
     )
 
     return className
@@ -90,7 +92,7 @@ export default function SidebarItem({
           <div className="flex-grow overflow-hidden text-ellipsis text-nowrap text-left">
             {item.name}{" "}
             {item.shortcut && (
-              <span className="ml-2 rounded-md bg-zinc-800 px-2 py-1 text-xs text-zinc-500">
+              <span className="ml-2 rounded-md bg-zinc-200 px-2 py-1 text-xs text-zinc-500 dark:bg-zinc-800">
                 {" "}
                 {item.shortcut}
               </span>
