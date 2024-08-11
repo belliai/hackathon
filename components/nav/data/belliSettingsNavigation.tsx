@@ -13,14 +13,14 @@ export const belliSettingsNavigation: TSidebarItem[] = [
     children: [
       {
         name: "Aircrafts",
-        href: "/settings/aircrafts",
+        href: "/dashboards/flights/settings?section=aircraft-types",
         icon: PlaneIcon,
         current: false,
         isCanCreate: true,
       },
       {
         name: "Flights",
-        href: "/settings/flights",
+        href: "/dashboards/flights/settings?section=flight-scheduler",
         icon: PaperPlaneIcon,
         current: false,
         isCanCreate: true,

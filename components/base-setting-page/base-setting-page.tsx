@@ -18,8 +18,9 @@ interface BaseSettingPageProps {
 const BaseSettingPage: React.FC<BaseSettingPageProps> = ({ settingList }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [currentTab, setCurrentTab] = useState<string | null>(null)
+  const [currentTab, setCurrentTab] = useState<string | null>(searchParams.get('section') || '')
   const observerRef = useRef<IntersectionObserver | null>(null)
+  const initialScrollCompleted = useRef(false)
 
   const updateQueryParam = useCallback((value: string) => {
     const currentParams = new URLSearchParams(searchParams.toString())
@@ -33,16 +34,17 @@ const BaseSettingPage: React.FC<BaseSettingPageProps> = ({ settingList }) => {
     let intersectionRatios: { [key: string]: number } = {}
 
     const observerOptions = {
-      threshold: new Array(101).fill(0).map((_, i) => i / 100), // Creates thresholds from 0 to 1 in 0.01 steps
+      threshold: new Array(101).fill(0).map((_, i) => i / 100),
       rootMargin: '0px'
     }
 
     observerRef.current = new IntersectionObserver((entries) => {
+      if (!initialScrollCompleted.current) return;
+
       entries.forEach((entry) => {
         intersectionRatios[entry.target.id] = entry.intersectionRatio
       })
 
-      // Find the most visible element
       const mostVisibleElement = Object.keys(intersectionRatios).reduce((a, b) => 
         intersectionRatios[a] > intersectionRatios[b] ? a : b
       )
@@ -66,6 +68,30 @@ const BaseSettingPage: React.FC<BaseSettingPageProps> = ({ settingList }) => {
       }
     }
   }, [settingList, updateQueryParam, currentTab])
+
+  useEffect(() => {
+    const section = searchParams.get('section')
+    if (!section && settingList.length > 0) {
+      const firstSection = settingList[0].value
+      updateQueryParam(firstSection)
+      setCurrentTab(firstSection)
+    } else if (section) {
+      const element = document.getElementById(section)
+      if (element) {
+        observerRef.current?.disconnect()
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        setTimeout(() => {
+          initialScrollCompleted.current = true
+          settingList.forEach((setting) => {
+            const element = document.getElementById(setting.value)
+            if (element) {
+              observerRef.current?.observe(element)
+            }
+          })
+        }, 1000)
+      }
+    }
+  }, [searchParams, settingList, updateQueryParam])
 
   return (
     <PageContainer className="gap-6">

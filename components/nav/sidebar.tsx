@@ -106,7 +106,7 @@ export default function SideBar({
 
   useEffect(() => {
     if (sidebarType === SIDEBAR_TYPE.BELLI_SETTING) {
-      router.push("/settings/aircrafts?tab=tail-numbers")
+      router.push("/dashboards/flights/settings?section=tail-numbers")
     }
   }, [sidebarType])
 
@@ -181,7 +181,15 @@ export default function SideBar({
                   <SidebarMenu items={settingNavigation[0].children ?? []} />
                 )}
                 {sidebarType === SIDEBAR_TYPE.BELLI_SETTING && (
-                  <SidebarMenu items={belliSettingsNavigation[0].children ?? []} collapsible isExpanded={isExpanded} />
+                  <>
+                    <SidebarMenu items={belliSettingsNavigation[0].children ?? []} collapsible isExpanded={isExpanded} />
+                    <SidebarMenu
+                      items={customDataFieldsNavigation}
+                      collapsible
+                      isExpanded={isExpanded}
+                    />
+                  </>
+                  
                 )}
               </ul>
               {sidebarType === SIDEBAR_TYPE.SETTING && (
@@ -202,15 +210,7 @@ export default function SideBar({
               )}
             </ul>
           </ul>
-          <ul className="flex flex-col gap-1 -mx-2">
-            {/* <SidebarMenu items={belliSettingsNavigation} collapsible isExpanded={isExpanded} /> */}
-            <SidebarMenu
-              items={customDataFieldsNavigation}
-              collapsible
-              isExpanded={isExpanded}
-            />
-          </ul>
-          {(isBelliAdmin && isExpanded) &&  (
+          {(isBelliAdmin && isExpanded && sidebarType === SIDEBAR_TYPE.BELLI_SETTING) &&  (
             <ul role="list" className="-mx-2">
               <SidebarMenu items={adminOnlyItems} collapsible />
             </ul>
