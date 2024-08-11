@@ -24,7 +24,7 @@ const ConsignorForm = React.forwardRef<HTMLDivElement, any>(
     }))
 
     return (
-      <Card className="grid grid-cols-3 gap-3 p-4" ref={ref}>
+      <Card className="grid grid-cols-3 gap-3 p-4 h-fit" ref={ref}>
         <Combobox
           name="origin_id"
           options={locationsOptions}

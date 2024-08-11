@@ -1,14 +1,12 @@
 "use client"
 
 import React, { useEffect } from "react"
-import { ListIcon } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 
 import { useBookingTypes } from "@/lib/hooks/booking-types"
 import { useOrders } from "@/lib/hooks/orders"
 import { usePartnerCodes } from "@/lib/hooks/partner-codes"
 import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
-import { useStatuses } from "@/lib/hooks/statuses"
 import { Card } from "@/components/ui/card"
 import {
   FormControl,
@@ -90,7 +88,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   useEffect(() => {}, [form.formState])
 
   return (
-    <Card className="grid grid-cols-1 gap-3 p-4" ref={ref}>
+    <Card className="flex flex-col gap-3 p-4 h-fit" ref={ref}>
       <div className="grid grid-cols-3 gap-3">
         <Combobox
           name="booking_type_id"
@@ -143,12 +141,12 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           additionalColumn={["description"]}
           tooltipId="description"
         />
-        <Combobox
+        {/* <Combobox
           name="is_physical"
           options={IS_PHYSICAL_LIST}
           label="Is Physical"
           info="Select is Physical"
-        />
+        /> */}
       </div>
     </Card>
   )
