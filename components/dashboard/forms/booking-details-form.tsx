@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/form/combobox"
+import { useCommodityCodes } from "@/lib/hooks/commodity-codes"
+import { useLocations } from "@/lib/hooks/locations"
 
 const generateAWBNumbers = (start: number, length: number) => {
   return Array.from({ length }, (_, i) => {
@@ -36,6 +38,8 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const { data: partnerPrefixes } = usePartnerPrefixes()
   const { data: partnerCodes } = usePartnerCodes()
   const { data: bookingTypes } = useBookingTypes()
+  const { data: commodityCodes } = useCommodityCodes()
+  const { data: locations } = useLocations()
   const { data: ordersData } = useOrders({
     pagination: { pageIndex: 0, pageSize: 20 },
   })
@@ -58,9 +62,19 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     description: code.description,
   }))
 
+  const commodityCodeOptions = commodityCodes?.map((code: any) => ({
+    value: code.ID,
+    label: `${code.name}: ${code.description}`,
+  }));
+
   const selectedBookingType = bookingTypeOptions.find(
     (bookingType) => bookingType.value === formValues.booking_type_id
   )
+
+  const locationsOptions = locations?.map((location: any) => ({
+    label: location.name,
+    value: location.ID,
+  }))
 
   const awbList =
     selectedBookingType?.label.toLowerCase() === "hawb"
@@ -107,6 +121,13 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             info="Select the MAWB"
           />
         )}
+        <Combobox
+          name="commodity_code_id"
+          options={commodityCodeOptions}
+          label="Commodity Code"
+          info="Select the Commodity Code"
+          editLink="/data-fields/airway-bills?tab=commodity-code"
+        />
       </div>
       <div className="grid grid-cols-3 gap-3">
         <Combobox
@@ -141,12 +162,20 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           additionalColumn={["description"]}
           tooltipId="description"
         />
-        {/* <Combobox
-          name="is_physical"
-          options={IS_PHYSICAL_LIST}
-          label="Is Physical"
-          info="Select is Physical"
-        /> */}
+        <Combobox
+          name="origin_id"
+          options={locationsOptions}
+          label="Origin"
+          info="Select the origin location"
+          editLink="/data-fields/airway-bills?tab=location"
+        />
+        <Combobox
+          name="destination_id"
+          options={locationsOptions}
+          label="Destination"
+          info="Select the Destination location"
+          editLink="/data-fields/airway-bills?tab=location"
+        />
       </div>
     </Card>
   )
