@@ -103,6 +103,7 @@ const BookingType = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
               title={item.name}
               columnSpans={[2, 7, 3]}
               subtitle={item.booking_type}
+              disableAction={item.name === 'MAWB' || item.name === 'HAWB'}
               onSave={(data) => {
                 const { id, ID, ...rest } = data
                 const actualId = id || ID

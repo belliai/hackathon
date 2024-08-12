@@ -30,100 +30,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 import { columns, Order } from "@/components/dashboard/columns"
-import NewOrderModal from "@/components/dashboard/new-order-modal"
 import NewOrderSideModal from "@/components/dashboard/new-order-side-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
-import BookingType from "@/app/data-fields/booking-type"
-import CommodityCode from "@/app/data-fields/commodity-code"
-import Location from "@/app/data-fields/location"
-import Status from "@/app/data-fields/status"
-import TimeZone from "@/app/data-fields/time-zone"
-import TransportMethod from "@/app/data-fields/transport-method"
 
 import CustomKanban, { Shipment } from "./kanban"
-
-const SETTING_OPTIONS = [
-  {
-    label: "Airway Bills",
-    value: "",
-    child: [
-      {
-        label: "Booking Type",
-        value: "booking-type",
-      },
-      {
-        label: "Status",
-        value: "status",
-      },
-      {
-        label: "Location",
-        value: "location",
-      },
-      {
-        label: "Commodity Code",
-        value: "commodity-code",
-      },
-      {
-        label: "Transport Method",
-        value: "transport-method",
-      },
-      {
-        label: "Time Zone",
-        value: "time-zone",
-      },
-    ],
-  },
-]
-
-const SETTING_LIST = {
-  width: "w-[128px]",
-  data: [
-    {
-      label: "Airway Bills",
-      value: "",
-      child: [
-        {
-          label: "Booking Type",
-          value: "/data-fields/airway-bills?tab=booking-type",
-        },
-        {
-          label: "Status",
-          value: "/data-fields/airway-bills?tab=status",
-        },
-        {
-          label: "Location",
-          value: "/data-fields/airway-bills?tab=location",
-        },
-        {
-          label: "Commodity Code",
-          value: "/data-fields/airway-bills?tab=commodity-code",
-        },
-        {
-          label: "Transport Method",
-          value: "/data-fields/airway-bills?tab=transport-method",
-        },
-        {
-          label: "Time Zone",
-          value: "/data-fields/airway-bills?tab=time-zone",
-        },
-      ],
-    },
-  ],
-}
 
 const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
   <TabsList className="gap-2 bg-transparent p-0">
@@ -141,55 +54,6 @@ const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
       <SquareKanbanIcon className="mr-2 size-4" />
       Kanban View
     </TabsTrigger>
-    {/* <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className={`h-8 border border-secondary ${tabValue !== 'airway-bills' ? 'border-muted-foreground/40 bg-secondary text-white' : ''}`}
-        >
-          <CogIcon className="mr-2 size-4" />
-          Settings
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-fit" align="start">
-        <DropdownMenuGroup>
-          {SETTING_OPTIONS.map((item, index) => {
-            if (item.child) {
-              return (
-                <DropdownMenuSub key={`setting-${index}`}>
-                  <DropdownMenuSubTrigger>
-                    <span>{item.label}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent className="ml-2">
-                      {item.child.map((childMenu, childId) => (
-                        <DropdownMenuItem key={`child-${index}-${childId}`} className="cursor-pointer">
-                          <TabsTrigger
-                            value={childMenu.value}
-                            className="data-[state=active]:bg-transparent"
-                          >
-                            {childMenu.label}
-                          </TabsTrigger>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-              )
-            }
-            return (
-              <DropdownMenuItem key={`setting-${index}`} className="cursor-pointer">
-                <TabsTrigger
-                  value={item.value}
-                >
-                  {item.label}
-                </TabsTrigger>
-              </DropdownMenuItem>
-            )
-          })}
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu> */}
   </TabsList>
 )
 
@@ -208,8 +72,6 @@ export default function Home() {
     pageSize: 10,
   })
   const [tabValue, setTabValue] = useState("list-view") // If no tabParam, default to list-view
-
-  // const { data: allStatus } = useStatuses()
 
   const {
     isLoading,
@@ -311,16 +173,6 @@ export default function Home() {
     router.push(pathname + "?" + createQueryString(key, value))
   }
 
-  // useEffect(() => {
-  //   if (tabParam) {
-  //     setTabValue(tabParam)
-  //   }
-  // }, [tabParam])
-
-  // useEffect(() => {
-  //   setSearchParams("tab", tabValue)
-  // }, [tabValue])
-
   return (
     <div>
       <ClientSideSuspense fallback={<></>}>
@@ -334,7 +186,6 @@ export default function Home() {
               right: ["actions"],
             }}
             columns={columnWithActions}
-            // onRowClick={openModal}
             data={isLoading ? [] : ordersData?.data}
             pageCount={isLoading ? 1 : ordersData.total_pages}
             manualPagination={true}
@@ -348,7 +199,6 @@ export default function Home() {
               onExport({ data: ordersData.data, filename: "AirwaybillsData" })
             }
             extraLeftComponents={memoizedTabsList}
-            // settingOptions={SETTING_LIST}
           />
         </TabsContent>
         <TabsContent value="kanban-view" asChild>
@@ -364,21 +214,6 @@ export default function Home() {
               setCards={setCards}
             />
           </>
-        </TabsContent>
-        <TabsContent value="status" asChild>
-          <Status tabComponent={memoizedTabsList} />
-        </TabsContent>
-        <TabsContent value="location" asChild>
-          <Location tabComponent={memoizedTabsList} />
-        </TabsContent>
-        <TabsContent value="commodity-code" asChild>
-          <CommodityCode tabComponent={memoizedTabsList} />
-        </TabsContent>
-        <TabsContent value="transport-method" asChild>
-          <TransportMethod tabComponent={memoizedTabsList} />
-        </TabsContent>
-        <TabsContent value="time-zone" asChild>
-          <TimeZone tabComponent={memoizedTabsList} />
         </TabsContent>
       </Tabs>
       <NewOrderSideModal

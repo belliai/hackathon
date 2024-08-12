@@ -182,7 +182,7 @@ export function Combobox({
   const renderOptionItem = (data: ComboboxOption) => {
     return (
       <div className="flex max-w-full items-center gap-3">
-        <div className="flex gap-3 [&>svg]:h-4 [&>svg]:w-4">
+        <div className="flex text-left gap-3 [&>svg]:h-4 [&>svg]:w-4">
           {data?.icon}
           {data?.component ? data.component : data?.label}
         </div>

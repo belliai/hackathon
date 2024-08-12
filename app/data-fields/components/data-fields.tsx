@@ -27,6 +27,7 @@ interface DataFieldsItemContentProps<T extends FieldValues> {
   className?: string
   actionsClassName?: string
   isNew?: boolean
+  disableAction?: boolean
 }
 
 function DataFieldsItemContent<T extends FieldValues>({
@@ -43,6 +44,7 @@ function DataFieldsItemContent<T extends FieldValues>({
   className,
   actionsClassName,
   isNew,
+  disableAction,
 }: DataFieldsItemContentProps<T>) {
   const formContext = useFormContext()
 
@@ -180,28 +182,32 @@ function DataFieldsItemContent<T extends FieldValues>({
               actionsClassName
             )}
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
-              onClick={(e) => {
-                e.stopPropagation()
-                handleOpenEdit()
-              }}
-            >
-              <PencilIcon type="button" size={14} />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
-              onClick={(e) => {
-                e.stopPropagation()
-                onDelete?.()
-              }}
-            >
-              <Trash2 type="button" size={14} />
-            </Button>
+          {!disableAction && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleOpenEdit()
+                }}
+              >
+                <PencilIcon type="button" size={14} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete?.()
+                }}
+              >
+                <Trash2 type="button" size={14} />
+              </Button>
+            </>
+          )}
           </div>
         </div>
       )}

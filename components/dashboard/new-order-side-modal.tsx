@@ -325,7 +325,7 @@ const TAB_LIST: {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        className={cn("py-4 w-full sm:max-w-4xl", { "h-screen w-screen max-w-none sm:max-w-none": isFullScreen })}
+        className={cn("py-4 w-full sm:max-w-6xl", { "h-screen w-screen max-w-none sm:max-w-none": isFullScreen })}
         onInteractOutside={(e) => e.preventDefault()}
         hideCloseButton
       >
