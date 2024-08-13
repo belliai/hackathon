@@ -4,5 +4,6 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta {
     isDateFilter?: boolean
     filterSelectOptions?: { value: string; label: string }[]
+    columnType?: 'profile' | 'text' | 'date'
   }
 }

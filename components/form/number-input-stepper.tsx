@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 type NumberInputStepperProps = {
   value: number
@@ -9,6 +10,7 @@ type NumberInputStepperProps = {
   step?: number
   disabled?: boolean
   suffix?: string
+  className?: string
 }
 
 const NumberInputStepper = ({
@@ -19,6 +21,7 @@ const NumberInputStepper = ({
   step = 1,
   disabled = false,
   suffix,
+  className
 }: NumberInputStepperProps) => {
 
   const handleAction = () => {
@@ -41,7 +44,7 @@ const NumberInputStepper = ({
   }
 
   return (
-    <div className="flex items-center space-x-1">
+    <div className={cn("flex items-center space-x-1",className)}>
       {suffix && <p className="ml-[-5px] text-xs">{suffix}</p>}
       <div className="flex-col items-center space-y-1">
         <ChevronUp

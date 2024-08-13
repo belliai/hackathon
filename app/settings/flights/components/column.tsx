@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
+import { format } from "date-fns"
 import moment from "moment"
 
 import {
@@ -10,7 +11,6 @@ import { SelectOptions } from "@/components/form/InputSwitch"
 
 import { TableCellDropdown } from "./forms/table-cell-dropdown"
 import TailNumberForm from "./forms/tail-number-dropdown"
-import { format } from "date-fns"
 
 export type FlightMasterDataType = {
   entry_type: string
@@ -50,6 +50,9 @@ export const useListViewColumns = (
         const date = row.original.departure_date || ""
         return moment(date).format("YYYY-MM-DD")
       },
+      meta: {
+        columnType: "date",
+      },
     },
     {
       id: "Day",
@@ -71,6 +74,9 @@ export const useListViewColumns = (
           tooltipId="flight-master-flight-no"
         />
       ),
+      meta: {
+        columnType: "profile",
+      },
     },
     {
       id: "Departure",
@@ -94,7 +100,9 @@ export const useListViewColumns = (
       // TODO: Integrate with API
       id: "Landing Wt", // We set the id to Landing Wt because currently the "Status" column doesn't exist in the API (should be replaced later)
       accessorKey: "status",
-      header: () => <TableHeaderWithTooltip header="Status" tooltipId="flight-status" />,
+      header: () => (
+        <TableHeaderWithTooltip header="Status" tooltipId="flight-status" />
+      ),
       cell: ({ row }) => {
         const status = "active"
         return (
@@ -307,7 +315,6 @@ export const useListViewColumns = (
   ]
 }
 
-
 export const useRecurringColumns = (
   props: ListViewProps
 ): ColumnDef<Flight>[] => {
@@ -327,7 +334,10 @@ export const useRecurringColumns = (
       id: "Departure Time",
       accessorKey: "departure_d",
       header: () => (
-        <TableHeaderWithTooltip header="Departure Time" tooltipId="departure-time" />
+        <TableHeaderWithTooltip
+          header="Departure Time"
+          tooltipId="departure-time"
+        />
       ),
       cell: ({ row }) => {
         const departure_h = row.original.departure_hour
@@ -338,8 +348,9 @@ export const useRecurringColumns = (
         today.setMinutes(departure_m)
         const periodFormat = period.toLowerCase()
         const hoursFormat = moment(today).format("HH:mm")
-        const abbr =  row.original.origin?.timezone?.abbreviation
-        const format_abbr = abbr.includes("+") || abbr.includes("-") ? "GMT"+abbr : abbr
+        const abbr = row.original.origin?.timezone?.abbreviation
+        const format_abbr =
+          abbr.includes("+") || abbr.includes("-") ? "GMT" + abbr : abbr
         return `${hoursFormat}${periodFormat} ${format_abbr}`
       },
     },
@@ -347,12 +358,16 @@ export const useRecurringColumns = (
       id: "Arrival Time",
       accessorKey: "arrival_date",
       header: () => (
-        <TableHeaderWithTooltip header="Arrival Time" tooltipId="arrival-time" />
+        <TableHeaderWithTooltip
+          header="Arrival Time"
+          tooltipId="arrival-time"
+        />
       ),
       cell: ({ row }) => {
         const arrival_time = row.original.arrival_time
-        const abbr =  row.original.destination?.timezone?.abbreviation
-        const format_abbr = abbr.includes("+") || abbr.includes("-") ? "GMT"+abbr : abbr
+        const abbr = row.original.destination?.timezone?.abbreviation
+        const format_abbr =
+          abbr.includes("+") || abbr.includes("-") ? "GMT" + abbr : abbr
         return `${arrival_time} ${format_abbr}`
       },
     },
@@ -398,10 +413,7 @@ export const useRecurringColumns = (
       accessorKey: "origin.name",
       size: 400,
       header: () => (
-        <TableHeaderWithTooltip
-          header="From "
-          tooltipId="origin-name"
-        />
+        <TableHeaderWithTooltip header="From " tooltipId="origin-name" />
       ),
     },
     {
@@ -409,10 +421,7 @@ export const useRecurringColumns = (
       accessorKey: "destination.name",
       size: 400,
       header: () => (
-        <TableHeaderWithTooltip
-          header="To "
-          tooltipId="destination-name"
-        />
+        <TableHeaderWithTooltip header="To " tooltipId="destination-name" />
       ),
     },
     {
@@ -428,8 +437,8 @@ export const useRecurringColumns = (
       cell: ({ row }) => {
         const arrival_date = row.original.arrival_date
         const departure_date = row.original.departure_date
-        return `from ${format(new Date(departure_date),'MMM dd, yyyy')} to ${format(new Date(arrival_date),'MMM dd, yyyy')}`
+        return `from ${format(new Date(departure_date), "MMM dd, yyyy")} to ${format(new Date(arrival_date), "MMM dd, yyyy")}`
       },
     },
   ]
-  }
+}
