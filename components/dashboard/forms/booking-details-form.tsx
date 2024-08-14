@@ -104,15 +104,17 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   return (
     <Card className="flex flex-col gap-3 p-4" ref={ref}>
       <div className="grid grid-cols-3 gap-3">
-        <Combobox
-          name="booking_type_id"
-          options={bookingTypeOptions}
-          label="Booking Type"
-          info="Select the booking type"
-          editLink="/data-fields/airway-bills?tab=booking-type"
-          additionalColumn={["name"]}
-          tooltipId="description"
-        />
+        {!(bookingTypeOptions.length === 2 && (bookingTypeOptions.some(option => option.label.toLowerCase() === "hawb") || bookingTypeOptions.some(option => option.label.toLowerCase() === "mawb"))) && (
+          <Combobox
+            name="booking_type_id"
+            options={bookingTypeOptions}
+            label="Booking Type"
+            info="Select the booking type"
+            editLink="/data-fields/airway-bills?tab=booking-type"
+            additionalColumn={["name"]}
+            tooltipId="description"
+          />
+        )}
         {selectedBookingType?.label.toLowerCase() === "hawb" && (
           <Combobox
             name="mawb"
