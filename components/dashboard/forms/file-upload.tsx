@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FilePond, registerPlugin, FilePondFile } from 'react-filepond';
+import { FilePond, registerPlugin } from 'react-filepond';
+import {FilePondFile, FilePondInitialFile} from 'filepond'
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -9,7 +10,7 @@ import { Select, SelectGroup, SelectLabel, SelectContent, SelectTrigger, SelectI
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 const UploadFile: React.FC = () => {
-  const [files, setFiles] = useState<FilePondFile[]>([]);
+  const [files, setFiles] = useState<Blob[]>([]);
   const [category, setCategory] = useState<string>('');
 
   const handleCategoryChange = (value: string) => {
@@ -17,6 +18,7 @@ const UploadFile: React.FC = () => {
   };
 
   const handleFileUpdate = (fileItems: FilePondFile[]) => {
+    // setFiles(fileItems.map(fileItem => fileItem.file));
     setFiles(fileItems.map(fileItem => fileItem.file));
   };
 
