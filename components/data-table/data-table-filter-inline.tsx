@@ -1,7 +1,20 @@
 import { ReactNode, useEffect, useState } from "react"
 import { SelectTrigger, SelectValue } from "@radix-ui/react-select"
 import { Table } from "@tanstack/react-table"
-import { addDays, format, subDays } from "date-fns"
+import {
+  add,
+  addDays,
+  endOfMonth,
+  endOfWeek,
+  endOfYear,
+  format,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+  sub,
+  subDays,
+} from "date-fns"
 import {
   Calendar as CalendarIcon,
   ChevronDown,
@@ -32,12 +45,16 @@ import MultipleSelector from "../ui/multi-selector"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import DataTableSelect from "./data-table-select"
 
+type FilterValue = string | number | Date | Date[] | DateRange | undefined
+type FilterType = "text" | "date" | "profile"
+type FilterCondition = string
+
 interface FilterData {
   id: number
   column: string
-  value: string | number | Date | Date[] | DateRange | undefined
-  type: string
-  condition?: string
+  value: FilterValue
+  type: FilterType
+  condition?: FilterCondition
   isLocked?: boolean
 }
 const DEFAULT_FILTER_DATA: FilterData = {
@@ -47,16 +64,17 @@ const DEFAULT_FILTER_DATA: FilterData = {
   type: "text",
 }
 
-type FilterKey = "column" | "value" | "type" | "condition"
+type FilterKey = keyof FilterData
 
-interface DataTableFilterOptionsProps<TData> {
-  table: Table<TData>
-  isLocked: boolean
-  lockedPageFilters: any
-  onOpenChange: (open: boolean) => void
+interface Option {
+  label: string
+  value: string
 }
 
-const dummyUserOptions = [
+type OptionWithUrl = Option & { url?: string }
+type OptionWithType = Option & { type?: FilterType }
+
+const dummyUserOptions: OptionWithUrl[] = [
   { label: "User1", value: "user1", url: "#" },
   { label: "User2", value: "user2", url: "#" },
   { label: "User3", value: "user3", url: "#" },
@@ -67,7 +85,7 @@ const dummyUserOptions = [
   { label: "User8", value: "user8", url: "#" },
 ]
 
-const datefiltersOptions: { value: string; label: string }[] = [
+const datefiltersOptions: Option[] = [
   { value: "is", label: "Is" },
   { value: "is-before", label: "Is before" },
   { value: "is-after", label: "Is after" },
@@ -79,7 +97,7 @@ const datefiltersOptions: { value: string; label: string }[] = [
   { value: "is-not-empty", label: "Is not empty" },
 ]
 
-const textFilterOptions: { value: string; label: string }[] = [
+const textFilterOptions: Option[] = [
   { value: "is", label: "Is" },
   { value: "is-not", label: "Is not" },
   { value: "contains", label: "Contains" },
@@ -90,7 +108,7 @@ const textFilterOptions: { value: string; label: string }[] = [
   { value: "is-not-empty", label: "Is not empty" },
 ]
 
-const dateFiltersPresetOptions: { value: string; label: string }[] = [
+const dateFiltersPresetOptions: Option[] = [
   { value: "today", label: "Today" },
   { value: "tomorrow", label: "Tomorrow" },
   { value: "yesterday", label: "Yesterday" },
@@ -101,9 +119,7 @@ const dateFiltersPresetOptions: { value: string; label: string }[] = [
   { value: "custom-date", label: "Custom date" },
 ]
 
-const datePeriodOptions = (
-  additional?: string
-): { value: string; label: string }[] => {
+const datePeriodOptions = (additional?: string): Option[] => {
   const s = additional || ""
   return [
     { value: "day", label: "Day" + s },
@@ -113,7 +129,7 @@ const datePeriodOptions = (
   ]
 }
 
-const profileFilterOptions: { value: string; label: string }[] = [
+const profileFilterOptions: Option[] = [
   { value: "contains", label: "Contains" },
   { value: "does-not-contains", label: "Does not contains" },
   { value: "is-empty", label: "Is empty" },
@@ -143,6 +159,94 @@ function mapValueToDate(value: string, customDate?: Date): Date | undefined {
     default:
       return undefined
   }
+}
+
+type Direction = "this" | "past" | "next"
+type Period = "day" | "week" | "month" | "year"
+
+function mapRelativeValueToDate(
+  direction: Direction,
+  period: Period,
+  count: number = 1
+): Date | DateRange {
+  const today = new Date()
+
+  switch (direction) {
+    case "this":
+      switch (period) {
+        case "day":
+          return startOfDay(today)
+        case "week":
+          return {
+            from: startOfWeek(today),
+            to: endOfWeek(today),
+          }
+        case "month":
+          return {
+            from: startOfMonth(today),
+            to: endOfMonth(today),
+          }
+        case "year":
+          return {
+            from: startOfYear(today),
+            to: endOfYear(today),
+          }
+      }
+      break
+
+    case "past":
+      switch (period) {
+        case "day":
+          return sub(today, { days: count })
+        case "week":
+          return {
+            from: sub(startOfWeek(today), { weeks: count }),
+            to: sub(endOfWeek(today), { weeks: count }),
+          }
+        case "month":
+          return {
+            from: sub(startOfMonth(today), { months: count }),
+            to: sub(endOfMonth(today), { months: count }),
+          }
+        case "year":
+          return {
+            from: sub(startOfYear(today), { years: count }),
+            to: sub(endOfYear(today), { years: count }),
+          }
+      }
+      break
+
+    case "next":
+      switch (period) {
+        case "day":
+          return add(today, { days: count })
+        case "week":
+          return {
+            from: add(startOfWeek(today), { weeks: count }),
+            to: add(endOfWeek(today), { weeks: count }),
+          }
+        case "month":
+          return {
+            from: add(startOfMonth(today), { months: count }),
+            to: add(endOfMonth(today), { months: count }),
+          }
+        case "year":
+          return {
+            from: add(startOfYear(today), { years: count }),
+            to: add(endOfYear(today), { years: count }),
+          }
+      }
+      break
+  }
+
+  return today // Fallback to today if no case matches
+}
+
+interface DataTableFilterOptionsProps<TData> {
+  table: Table<TData>
+  isLocked: boolean
+  lockedPageFilters: any
+  onOpenChange: (open: boolean) => void
 }
 
 export function DataTableFilterInline<TData>({
@@ -188,7 +292,7 @@ export function DataTableFilterInline<TData>({
     type,
   }: {
     column: string
-    type: string
+    type: FilterType
   }) => {
     setFilterList([
       ...filterList,
@@ -299,7 +403,7 @@ export function DataTableFilterInline<TData>({
 
 interface DataTableFilterOption<TData> {
   children: ReactNode
-  options: { label: string; value: string; type?: string }[]
+  options: OptionWithType[]
   onValueChange: (val: string) => void
 }
 
@@ -368,8 +472,8 @@ interface DataTableFilterProps {
 export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
   const [condition, setCondition] = useState("is")
-  const [current, setCurrent] = useState("this")
-  const [period, setPeriod] = useState("day")
+  const [direction, setDirection] = useState<Direction>("this")
+  const [period, setPeriod] = useState<Period>("day")
   const [count, setCount] = useState(1)
   const [calendarMode, setCalendarMode] = useState<any>("single")
   const [value, setValue] = useState("")
@@ -377,24 +481,60 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
   const [date, setDate] = useState<DateRange | Date | undefined>(
     calendarMode === "range"
       ? {
-          from: new Date(2022, 0, 20),
-          to: addDays(new Date(2022, 0, 20), 20),
+          from: undefined,
+          to: undefined,
         }
-      : new Date(2022, 0, 20)
+      : undefined
   )
 
   useEffect(() => {
-    if (condition === "is-between") setCalendarMode("range")
-    else setCalendarMode("single")
+    if (condition === "is-between") {
+      setCalendarMode("range")
+    } else setCalendarMode("single")
     //reset date
     setDate(undefined)
+    if (condition === "is-relative-to-today") {
+      const relativeDate = mapRelativeValueToDate(direction, period, 1)
+      setDate(relativeDate)
+    }
   }, [condition])
+
+  useEffect(() => {
+    if (condition === "is-relative-to-today") {
+      const relativeDate = mapRelativeValueToDate(direction, period, count)
+      setDate(relativeDate)
+    }
+  }, [direction, period, count])
+
+  useEffect(() => {
+    if (isValidDate(date)) setMonth(date)
+    if (date && "from" in date && isValidDate(date.from)) setMonth(date?.from)
+  }, [date])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant={"outline"} className="gap-2">
+        <Button
+          variant={"outline"}
+          className={cn(
+            "gap-2 rounded-md text-xs",
+            date &&
+              "border-[#fb5727] text-button-primary hover:text-button-primary"
+          )}
+        >
           <CalendarIcon size={14} /> Date
+          {isValidDate(date) && (
+            <span> :&nbsp; {format(date as Date, "LLL dd, yyyy")}</span>
+          )}
+          {date && "from" in date && isValidDate(date?.from) && (
+            <span>
+              {" "}
+              : {format(date.from, "LLL dd, yyyy")} -{" "}
+              {"to" in date &&
+                isValidDate(date?.to) &&
+                format(date.to, "LLL dd, yyyy")}{" "}
+            </span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto max-w-[260px] gap-0 bg-zinc-900 p-0">
@@ -503,8 +643,8 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
           {["is-relative-to-today"].includes(condition) && (
             <div className="flex items-center space-x-2 px-2">
               <DataTableSelect
-                value={current}
-                onValueChange={setCurrent}
+                value={direction}
+                onValueChange={setDirection}
                 options={[
                   { label: "Past", value: "past" },
                   { label: "Next", value: "next" },
@@ -519,7 +659,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
                   <ChevronDown size={12} />
                 </SelectTrigger>
               </DataTableSelect>
-              {["past", "next"].includes(current) && (
+              {["past", "next"].includes(direction) && (
                 <div className="relative flex items-center justify-between text-xs">
                   <Input value={count} className="h-8 w-12 bg-zinc-900 p-2" />
                   <NumberInputStepper
@@ -536,7 +676,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
                 value={period}
                 onValueChange={setPeriod}
                 options={datePeriodOptions(
-                  count > 1 && current !== "this" ? "s" : ""
+                  count > 1 && direction !== "this" ? "s" : ""
                 )}
               >
                 <SelectTrigger className="flex items-center gap-2 rounded-md border p-2 text-xs">
@@ -574,13 +714,22 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
 export function DataTableFilterText({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("is")
+  const [text, setText] = useState("")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant={"outline"} className="gap-2">
+        <Button
+          variant={"outline"}
+          className={cn(
+            "gap-2 rounded-md text-xs",
+            text &&
+              "border-[#fb5727] text-button-primary hover:text-button-primary"
+          )}
+        >
           <Text size={14} />
           {props.column}
+          {text && <p>:&nbsp;{text}</p>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto max-w-[260px] gap-0 bg-zinc-900 p-0 px-4 py-2">
@@ -601,7 +750,12 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
               </SelectTrigger>
             </DataTableSelect>
           </div>
-          {!["is-empty", "is-not-empty"].includes(value) && <Input className="h-8 bg-zinc-900" /> }
+          {!["is-empty", "is-not-empty"].includes(value) && (
+            <Input
+              className="h-8 bg-zinc-900"
+              onChange={(e) => setText(e.target.value)}
+            />
+          )}
         </div>
       </PopoverContent>
     </Popover>
@@ -611,18 +765,39 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
 export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("contains")
+  const [profiles, setProfiles] = useState<OptionWithUrl[]>([])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant={"outline"} className="gap-2">
+        <Button
+          variant={"outline"}
+          className={cn(
+            "gap-2 rounded-md text-xs",
+            profiles.length > 0 &&
+              "border-[#fb5727] text-button-primary hover:text-button-primary"
+          )}
+        >
           <UserIcon size={14} />
           {props.column}
+          {profiles.length > 0 && (
+            <p>
+              :&nbsp;
+              {profiles.map((profile,id) => (
+                <span key={id}>{profile.label},&nbsp;</span>
+              ))}
+            </p>
+          )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(" max-w-[260px] gap-0 bg-zinc-900 p-0 px-2",
-        ["contains","does-not-contains"].includes(value) ? "h-[380px]" : "w-auto h-auto"
-      )}>
+      <PopoverContent
+        className={cn(
+          "max-w-[260px] gap-0 bg-zinc-900 p-0 px-2",
+          ["contains", "does-not-contains"].includes(value)
+            ? "h-[380px]"
+            : "h-auto w-auto"
+        )}
+      >
         <div className="space-y-1 p-1">
           <div className="flex justify-start space-x-2">
             <Label className="text-xs text-zinc-400">{props.column}: </Label>
@@ -641,7 +816,14 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
             </DataTableSelect>
           </div>
           {["contains", "does-not-contains"].includes(value) && (
-            <MultipleSelector options={props.options} />
+            <MultipleSelector
+              onChange={(profiles) => {
+                setProfiles(profiles)
+              }}
+              className="border-zinc-500 p-1"
+              badgeClassName="bg-transparent hover:bg-transparent border-zinc-700"
+              options={props.options}
+            />
           )}
         </div>
       </PopoverContent>
