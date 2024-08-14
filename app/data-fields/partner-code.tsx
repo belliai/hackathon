@@ -24,12 +24,41 @@ const PartnerCode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
     <CrudTable
       isLoading={isPending}
       title="IATA Airline Code"
-      columns={[{ accessorKey: "option", header: 'Name' }, { accessorKey: 'description', header: 'Description' }]}
+      columns={[
+        { accessorKey: "option", header: 'Name' },
+        { accessorKey: 'description', header: 'Description'},
+        { accessorKey: "visibility", header: 'Visibility' },
+        { accessorKey: "is_default", header: 'Default' }
+      ]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "IATA Airline Code" },
+        {
+          name: "visibility",
+          type: "select",
+          label: "Visibility",
+          selectOptions: [
+            { label: "Visible", value: "Visible" },
+            { label: "Hidden", value: "Hidden" },
+          ],
+        },
+        {
+          name: "is_default",
+          type: "select",
+          label: "Default",
+          selectOptions: [
+            { label: "Yes", value: "Yes" },
+            { label: "No", value: "No" },
+          ],
+        },
       ]}
-      data={data?.map((item: any) => ({ ...item, option: item.name, id: item.ID }))}
+      data={data?.map((item: any) => ({
+        ...item,
+        option: item.name,
+        id: item.ID,
+        visibility: 'Visible',
+        is_default: 'No',
+      }))}
       onSave={(data) => {
         // configure logic for add or edit, for edit the id will be zero
         const { id, option } = data

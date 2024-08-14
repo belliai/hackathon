@@ -142,6 +142,7 @@ export const orderSchema = z.object({
     transaction_id: z.string().optional(),
     notes: z.string().optional(),
     send_payment_receipt: z.string().optional(),
+    payment_type: z.string().optional(),
   }),
   payment_table: z.array(
     z.object({
@@ -152,6 +153,7 @@ export const orderSchema = z.object({
       employee: z.string().optional(),
       amount: z.string().optional(),
       transaction_id: z.string().optional(),
+      payment_type: z.string().optional(),
     }).optional(),
   ).optional(),
   total_paid: z.number().or(z.string()).optional(),

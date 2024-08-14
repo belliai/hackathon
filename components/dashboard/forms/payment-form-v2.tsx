@@ -26,6 +26,7 @@ import { Pencil1Icon } from "@radix-ui/react-icons"
 
 const TABLE_COLUMN = [
   { header: "Amount", accessorKey: "amount" },
+  { header: "Type", accessorKey: "payment_type" },
   { header: "Method", accessorKey: "payment_method" },
   { header: "Employee", accessorKey: "employee" },
   { header: "Transaction ID", accessorKey: "transaction_id" },
@@ -50,6 +51,21 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
       value: user.id,
       label: user.name,
     }));
+
+    const paymentTypeOptions = [
+      {
+        value: 'payment',
+        label: 'Payment',
+      },
+      {
+        value: 'refund',
+        label: 'Refund',
+      },
+      {
+        value: 'adjustment',
+        label: 'Adjustment',
+      }
+    ]
 
     const handleAction = (payload: any) => {
       if (formType === 'create') {
@@ -123,7 +139,10 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
     ]
 
     useEffect(() => {
-      const paid = formValues.payment_table.reduce((acc: number, item: { amount: string }) => acc + parseFloat(item.amount), 0)
+      const paid = formValues.payment_table.reduce((acc: number, item: { amount: string; payment_type: string }) => {
+        const amount = parseFloat(item.amount);
+        return item.payment_type === 'refund' ? acc - amount : acc + amount;
+      }, 0)
 
       form.setValue('total_paid', paid)
     }, [formValues.payment_table])
@@ -133,10 +152,19 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
         <Card className="grid grid-cols-1 gap-x-3 gap-y-2 p-4" ref={ref}>
           <div className="grid grid-cols-3 gap-x-3 gap-y-2">
             <Combobox
-              name="payment_form.payment_method_id"
-              options={paymentModeOptions}
-              label="Payment Method"
+              name="payment_form.payment_type"
+              options={paymentTypeOptions}
+              label="Payment Type"
             />
+
+            {formValues.payment_form.payment_type === 'payment' && (
+              <Combobox
+                name="payment_form.payment_method_id"
+                options={paymentModeOptions}
+                label="Payment Method"
+              />
+            )}
+            
             <Combobox
               name="payment_form.employee_id"
               options={userOptions}
