@@ -27,8 +27,9 @@ import {
   PlaneTakeoffIcon,
   SaveIcon,
   SquarePenIcon,
+  Upload,
   UserCheck,
-  XCircle,
+  XCircle
 } from "lucide-react"
 import { useForm } from "react-hook-form"
 
@@ -73,6 +74,7 @@ import PaymentFormV2 from "./forms/payment-form-v2"
 import HeaderSection from "./header-section"
 import SummaryTotal from "./summary-total"
 import WeightAndVolumeFormV2 from "./forms/weight-and-volume-form-v2"
+import UploadFile from "./forms/file-upload"
 
 type NewOrderSideModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -205,6 +207,14 @@ const TAB_LIST: {
       content: <PaymentFormV2 />,
       fieldList: ['use_freight_forwarder', 'freight_forwarder_id', 'organization_id', 'bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg'],
       columnList: ['bill_to_name', 'rate', 'currency_name', 'freight_forwarder_name', 's_freight', 's_rate', 'total', 'mode', 'ch_weight_kg', 'payment_mode_name'],
+    },
+    {
+      label: 'Upload File',
+      value: 'upload-file',
+      icon: Upload,
+      content: <UploadFile />,
+      fieldList: [],
+      columnList: [],
     }
   ]
 

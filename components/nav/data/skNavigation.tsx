@@ -878,6 +878,12 @@ export const skNavigation: TSidebarItem[] = [
         icon: CubeIcon,
         current: false,
       },
+      {
+        name: "File Upload",
+        href: "/sk/file-upload",
+        icon: CubeIcon,
+        current: false,
+      },
     ],
   },
 ]
