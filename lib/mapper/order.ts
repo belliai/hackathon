@@ -104,14 +104,18 @@ export const mapSchemaToJson = (data: any) => {
     awb: data.awb || "",
     bill_to_id: data.bill_to_id || null,
     booking_type_id: data.booking_type_id || null,
-    ch_weight_kg: data?.ch_weight_kg.toString() || "0",
+    ch_weight_kg: data?.ch_weight_kg !== undefined && data.ch_weight_kg !== null
+      ? data.ch_weight_kg.toString()
+      : "0",
     commodity_code_id: data.commodity_code_id || null,
     consignee_id: data.consignee_id || null,
     customer_id: data.consignee_id || null,
     currency_id: data.currency_id || null,
     destination_id: data.destination_id,
     freight_forwarder_id: data.freight_forwarder_id || null,
-    gs_weight_kg: data?.total_weight.toString() || "0",
+    gs_weight_kg: data?.total_weight !== undefined && data.total_weight !== null
+      ? data.total_weight.toString()
+      : "0",
     is_physical: data.is_physical === 'yes',
     mode: "Card",
     organization_id: data.organization_id || null,
@@ -127,7 +131,9 @@ export const mapSchemaToJson = (data: any) => {
     spot_id: data.spot_id || null,
     status_id: data.status_id || '185b62d7-5d5b-4051-ba3c-b7c61bfe653d',
     total: data.total || "",
-    volume_kg: data?.total_volume.toString() || "0",
+    volume_kg: data?.total_volume !== undefined && data.total_volume !== null
+      ? data.total_volume.toString()
+      : "0",
   }
 
   return mappedData
