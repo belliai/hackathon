@@ -1,7 +1,7 @@
 import { addDays, format, subDays } from "date-fns"
 
 // Define the TypeScript type for the data
-type FlightData = {
+export type FlightData = {
   route: string
   volume: number
   volumeCapacity: number
