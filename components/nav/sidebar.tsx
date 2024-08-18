@@ -175,20 +175,22 @@ export default function SideBar({
               )}
               <ul className="flex flex-col gap-1">
                 {sidebarType === SIDEBAR_TYPE.DEFAULT && (
-                  <SidebarMenu items={operationsNavigation} collapsible isExpanded={isExpanded} />
+                  <div className="animate-fade-right">
+                    <SidebarMenu items={operationsNavigation} collapsible isExpanded={isExpanded} />
+                  </div>
                 )}
                 {sidebarType === SIDEBAR_TYPE.SETTING && (
                   <SidebarMenu items={settingNavigation[0].children ?? []} />
                 )}
                 {sidebarType === SIDEBAR_TYPE.BELLI_SETTING && (
-                  <>
+                  <div className="animate-fade-left">
                     <SidebarMenu items={belliSettingsNavigation[0].children ?? []} collapsible isExpanded={isExpanded} />
                     <SidebarMenu
                       items={customDataFieldsNavigation}
                       collapsible
                       isExpanded={isExpanded}
                     />
-                  </>
+                  </div>
                   
                 )}
               </ul>

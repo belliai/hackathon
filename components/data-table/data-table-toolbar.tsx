@@ -28,6 +28,7 @@ import {
   DataTableViewOptions,
 } from "./data-table-view-options"
 import { DataTableFilterInline } from "./data-table-filter-inline"
+import { DataTableViewOptionsV2 } from "./data-table-view-options-v2"
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -209,7 +210,7 @@ export function DataTableToolbar<TData>({
               </Tooltip>
             </div>
             <Tooltip delayDuration={100}>
-              <DataTableViewOptions
+              <DataTableViewOptionsV2
                 onOpenChange={setViewOpen}
                 table={table}
                 initialVisibility={props.initialVisibility ?? {}}
@@ -228,7 +229,7 @@ export function DataTableToolbar<TData>({
                     />
                   </Button>
                 </TooltipTrigger>
-              </DataTableViewOptions>
+              </DataTableViewOptionsV2>
               <TooltipContent
                 side="top"
                 className="border bg-background text-foreground"
