@@ -318,7 +318,7 @@ const WeightAndVolumeFormV2 = React.forwardRef<HTMLDivElement, any>(
     const formTitle = formValues.weight_and_volume_type === 'all' ? 'Data' : selectedType?.label;
 
     return (
-      <div>
+      <div className="animate-fade-left">
         <Card className="flex flex-col gap-3 p-4 h-fit" ref={ref}>
           <div className="grid grid-cols-3 gap-3">
             <FormField

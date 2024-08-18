@@ -45,7 +45,7 @@ const ActivityLog = React.forwardRef<HTMLDivElement, {}>((_, ref) => {
   const form = useFormContext()
 
   return (
-    <Card className="flex flex-col" ref={ref}>
+    <Card className="flex flex-col animate-fade-left" ref={ref}>
       <CardHeader className="h-1 flex-grow overflow-y-auto border-b p-0">
         <Table className="overflow-clip rounded-sm">
           <TableHeader>

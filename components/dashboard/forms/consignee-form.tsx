@@ -1,22 +1,12 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { useCustomers } from "@/lib/hooks/customers"
 import { Card } from "@/components/ui/card"
 import { Combobox } from "@/components/form/combobox"
-
-const phoneNumberOptions = [
-  { label: "+1 (555) 123-4567", value: "+1 (555) 123-4567" },
-  { label: "+44 20 7123 4567", value: "+44 20 7123 4567" },
-  { label: "+81 3-1234-5678", value: "+81 3-1234-5678" },
-  { label: "+61 2 9876 5432", value: "+61 2 9876 5432" },
-  { label: "+49 30 1234567", value: "+49 30 1234567" },
-  { label: "+33 1 23 45 67 89", value: "+33 1 23 45 67 89" },
-  { label: "+86 10 1234 5678", value: "+86 10 1234 5678" },
-  { label: "+7 495 123-45-67", value: "+7 495 123-45-67" },
-  { label: "+55 11 1234-5678", value: "+55 11 1234-5678" },
-  { label: "+91 22 1234 5678", value: "+91 22 1234 5678" }
-];
+import { PhoneInput } from "@/components/ui/phone-input"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useFormContext } from "react-hook-form"
 
 const emailOptions = [
   { label: "john.doe@example.com", value: "john.doe@example.com" },
@@ -47,6 +37,7 @@ const addressOptions = [
 
 const ConsigneeForm = React.forwardRef<HTMLDivElement, any>(
   (_, ref) => {
+    const form = useFormContext()
     const { data: customers } = useCustomers()
 
     const customerOptions = customers?.data.map((customer: any) => ({
@@ -54,9 +45,8 @@ const ConsigneeForm = React.forwardRef<HTMLDivElement, any>(
       label: customer.name,
     }))
 
-
     return (
-      <Card className="grid grid-cols-1 gap-3 p-4 h-fit" ref={ref}>
+      <Card className="grid grid-cols-1 gap-3 p-4 h-fit animate-fade-left" ref={ref}>
         <div className="grid grid-cols-3 gap-x-3">
           <Combobox
             name="consignee_id"
@@ -65,10 +55,18 @@ const ConsigneeForm = React.forwardRef<HTMLDivElement, any>(
           />
         </div>
         <div className="grid grid-cols-3 gap-x-3">
-          <Combobox
+          <FormField
+            control={form.control}
             name="consignee_phone_number"
-            options={phoneNumberOptions}
-            label="Phone Number"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormLabel info="Total">Phone Number</FormLabel>
+                <FormControl>
+                  <PhoneInput {...field} className="rounded-lg border-2 border-foreground/30 h-[40px]" international />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
           <Combobox
             name="consignee_email"

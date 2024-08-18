@@ -148,7 +148,7 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
     }, [formValues.payment_table])
 
     return (
-      <>
+      <div className="animate-fade-left">
         <Card className="grid grid-cols-1 gap-x-3 gap-y-2 p-4" ref={ref}>
           <div className="grid grid-cols-3 gap-x-3 gap-y-2">
             <Combobox
@@ -272,7 +272,7 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
           </div>
           
         </div>
-      </>
+      </div>
     )
   }
 )

@@ -114,7 +114,7 @@ export default function UserDropdown({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex cursor-pointer items-center gap-x-2">
+          <div className="flex cursor-pointer items-center gap-x-2 animate-fade-right">
             <ClerkLoading>
               <Skeleton className="h-6 w-6 rounded-md" />
               <Skeleton className="h-2 w-12 rounded-md" />

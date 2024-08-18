@@ -124,7 +124,7 @@ export default function SideBar({
           )}
           {(sidebarType === SIDEBAR_TYPE.SETTING || sidebarType === SIDEBAR_TYPE.BELLI_SETTING) && (
             <div
-              className="flex cursor-pointer items-center gap-2"
+              className="flex cursor-pointer items-center gap-2 animate-fade-left"
               onClick={() => {
                 setNavigationType(SIDEBAR_TYPE.DEFAULT)
                 router.push("/")

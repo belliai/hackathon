@@ -20,7 +20,7 @@ const HAWBTable = React.forwardRef<HTMLDivElement, any>(
     const hawbData = ordersData.data.filter((item: any) => item.booking_type.name.toLowerCase() === 'hawb')
 
     return (
-      <div className="flex flex-col gap-3 mt-4">
+      <div className="flex flex-col gap-3 mt-4 animate-fade-left">
         <DataTable
           columns={TABLE_COLUMN}
           data={hawbData}

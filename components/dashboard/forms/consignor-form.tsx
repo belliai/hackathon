@@ -6,6 +6,8 @@ import { useFormContext } from "react-hook-form"
 import { useCustomers } from "@/lib/hooks/customers"
 import { Card } from "@/components/ui/card"
 import { Combobox } from "@/components/form/combobox"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { PhoneInput } from "@/components/ui/phone-input"
 
 const phoneNumberOptions = [
   { label: "+1 (555) 123-4567", value: "+1 (555) 123-4567" },
@@ -48,6 +50,7 @@ const addressOptions = [
 
 const ConsignorForm = React.forwardRef<HTMLDivElement, any>(
   (_, ref) => {
+    const form = useFormContext()
     const { data: customers } = useCustomers()
 
     const customerOptions = customers?.data.map((customer: any) => ({
@@ -56,7 +59,7 @@ const ConsignorForm = React.forwardRef<HTMLDivElement, any>(
     }))
 
     return (
-      <Card className="grid grid-cols-1 gap-3 p-4 h-fit" ref={ref}>
+      <Card className="grid grid-cols-1 gap-3 p-4 h-fit animate-fade-left" ref={ref}>
         <div className="grid grid-cols-3 gap-x-3">
           <Combobox
             name="shipper_id"
@@ -66,10 +69,18 @@ const ConsignorForm = React.forwardRef<HTMLDivElement, any>(
         </div>
         
         <div className="grid grid-cols-3 gap-x-3">
-          <Combobox
+          <FormField
+            control={form.control}
             name="consignor_phone_number"
-            options={phoneNumberOptions}
-            label="Phone Number"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormLabel info="Total">Phone Number</FormLabel>
+                <FormControl>
+                  <PhoneInput {...field} className="rounded-lg border-2 border-foreground/30 h-[40px]" international />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
           <Combobox
             name="consignor_email"

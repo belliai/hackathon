@@ -23,7 +23,7 @@ const UploadFile: React.FC = () => {
   };
 
   return (
-    <div className="upload-file-container">
+    <div className="upload-file-container animate-fade-left">
       <style jsx>{`
         .upload-file-container {
           display: flex;

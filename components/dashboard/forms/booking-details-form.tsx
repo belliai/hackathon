@@ -102,7 +102,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   useEffect(() => {}, [form.formState])
 
   return (
-    <Card className="flex flex-col gap-3 p-4" ref={ref}>
+    <Card className="flex flex-col gap-3 p-4 animate-fade-left" ref={ref}>
       <div className="grid grid-cols-3 gap-3">
         {!(bookingTypeOptions.length === 2 && (bookingTypeOptions.some(option => option.label.toLowerCase() === "hawb") || bookingTypeOptions.some(option => option.label.toLowerCase() === "mawb"))) && (
           <Combobox
