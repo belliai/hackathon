@@ -1,23 +1,11 @@
-import { ReactNode, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { SelectTrigger, SelectValue } from "@radix-ui/react-select"
 import { Table } from "@tanstack/react-table"
-import {
-  add,
-  addDays,
-  endOfMonth,
-  endOfWeek,
-  endOfYear,
-  format,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-  startOfYear,
-  sub,
-  subDays,
-} from "date-fns"
+import { format } from "date-fns"
 import {
   Calendar as CalendarIcon,
   ChevronDown,
+  Filter,
   PlusIcon,
   Text,
   UserIcon,
@@ -31,215 +19,38 @@ import { cn } from "@/lib/utils"
 import NumberInputStepper from "../form/number-input-stepper"
 import { Button } from "../ui/button"
 import { Calendar } from "../ui/calendar"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "../ui/command"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import MultipleSelector from "../ui/multi-selector"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import {
+  datefiltersOptions,
+  dateFiltersPresetOptions,
+  datePeriodOptions,
+  dummyUserOptions,
+  mapRelativeValueToDate,
+  mapValueToDate,
+  profileFilterOptions,
+  textFilterOptions,
+} from "./data"
+import { DataTableColumnOption } from "./data-table-column-option"
+import { DataTableFilterOptions } from "./data-table-filter-options"
 import DataTableSelect from "./data-table-select"
+import {
+  Direction,
+  FilterData,
+  FilterKey,
+  FilterType,
+  FilterValue,
+  OptionWithUrl,
+  Period,
+} from "./types"
 
-type FilterValue = string | number | Date | Date[] | DateRange | undefined
-type FilterType = "text" | "date" | "profile"
-type FilterCondition = string
-
-interface FilterData {
-  id: number
-  column: string
-  value: FilterValue
-  type: FilterType
-  condition?: FilterCondition
-  isLocked?: boolean
-}
 const DEFAULT_FILTER_DATA: FilterData = {
   id: 1,
   column: "",
   value: "",
   type: "text",
-}
-
-type FilterKey = keyof FilterData
-
-interface Option {
-  label: string
-  value: string
-}
-
-type OptionWithUrl = Option & { url?: string }
-type OptionWithType = Option & { type?: FilterType }
-
-const dummyUserOptions: OptionWithUrl[] = [
-  { label: "User1", value: "user1", url: "#" },
-  { label: "User2", value: "user2", url: "#" },
-  { label: "User3", value: "user3", url: "#" },
-  { label: "User4", value: "user4", url: "#" },
-  { label: "User5", value: "user5", url: "#" },
-  { label: "User6", value: "user6", url: "#" },
-  { label: "User7", value: "user7", url: "#" },
-  { label: "User8", value: "user8", url: "#" },
-]
-
-const datefiltersOptions: Option[] = [
-  { value: "is", label: "Is" },
-  { value: "is-before", label: "Is before" },
-  { value: "is-after", label: "Is after" },
-  { value: "is-on-or-before", label: "Is on or before" },
-  { value: "is-on-or-after", label: "Is on or after" },
-  { value: "is-between", label: "Is between" },
-  { value: "is-relative-to-today", label: "Is relative to today" },
-  { value: "is-empty", label: "Is empty" },
-  { value: "is-not-empty", label: "Is not empty" },
-]
-
-const textFilterOptions: Option[] = [
-  { value: "is", label: "Is" },
-  { value: "is-not", label: "Is not" },
-  { value: "contains", label: "Contains" },
-  { value: "does-not-contains", label: "Does not contains" },
-  { value: "starts-with", label: "Starts With" },
-  { value: "ends-with", label: "Ends With" },
-  { value: "is-empty", label: "Is empty" },
-  { value: "is-not-empty", label: "Is not empty" },
-]
-
-const dateFiltersPresetOptions: Option[] = [
-  { value: "today", label: "Today" },
-  { value: "tomorrow", label: "Tomorrow" },
-  { value: "yesterday", label: "Yesterday" },
-  { value: "one-week-ago", label: "One week ago" },
-  { value: "one-week-from-now", label: "One week from now" },
-  { value: "one-month-ago", label: "One month ago" },
-  { value: "one-month-from-now", label: "One month from now" },
-  { value: "custom-date", label: "Custom date" },
-]
-
-const datePeriodOptions = (additional?: string): Option[] => {
-  const s = additional || ""
-  return [
-    { value: "day", label: "Day" + s },
-    { value: "week", label: "Week" + s },
-    { value: "month", label: "Month" + s },
-    { value: "year", label: "Year" + s },
-  ]
-}
-
-const profileFilterOptions: Option[] = [
-  { value: "contains", label: "Contains" },
-  { value: "does-not-contains", label: "Does not contains" },
-  { value: "is-empty", label: "Is empty" },
-  { value: "is-not-empty", label: "Is not empty" },
-]
-
-function mapValueToDate(value: string, customDate?: Date): Date | undefined {
-  const today = new Date()
-
-  switch (value) {
-    case "today":
-      return today
-    case "tomorrow":
-      return addDays(today, 1)
-    case "yesterday":
-      return subDays(today, 1)
-    case "one-week-ago":
-      return subDays(today, 7)
-    case "one-week-from-now":
-      return addDays(today, 7)
-    case "one-month-ago":
-      return subDays(today, 30) // Adjust for accurate month handling
-    case "one-month-from-now":
-      return addDays(today, 30) // Adjust for accurate month handling
-    case "custom-date":
-      return customDate
-    default:
-      return undefined
-  }
-}
-
-type Direction = "this" | "past" | "next"
-type Period = "day" | "week" | "month" | "year"
-
-function mapRelativeValueToDate(
-  direction: Direction,
-  period: Period,
-  count: number = 1
-): Date | DateRange {
-  const today = new Date()
-
-  switch (direction) {
-    case "this":
-      switch (period) {
-        case "day":
-          return startOfDay(today)
-        case "week":
-          return {
-            from: startOfWeek(today),
-            to: endOfWeek(today),
-          }
-        case "month":
-          return {
-            from: startOfMonth(today),
-            to: endOfMonth(today),
-          }
-        case "year":
-          return {
-            from: startOfYear(today),
-            to: endOfYear(today),
-          }
-      }
-      break
-
-    case "past":
-      switch (period) {
-        case "day":
-          return sub(today, { days: count })
-        case "week":
-          return {
-            from: sub(startOfWeek(today), { weeks: count }),
-            to: sub(endOfWeek(today), { weeks: count }),
-          }
-        case "month":
-          return {
-            from: sub(startOfMonth(today), { months: count }),
-            to: sub(endOfMonth(today), { months: count }),
-          }
-        case "year":
-          return {
-            from: sub(startOfYear(today), { years: count }),
-            to: sub(endOfYear(today), { years: count }),
-          }
-      }
-      break
-
-    case "next":
-      switch (period) {
-        case "day":
-          return add(today, { days: count })
-        case "week":
-          return {
-            from: add(startOfWeek(today), { weeks: count }),
-            to: add(endOfWeek(today), { weeks: count }),
-          }
-        case "month":
-          return {
-            from: add(startOfMonth(today), { months: count }),
-            to: add(endOfMonth(today), { months: count }),
-          }
-        case "year":
-          return {
-            from: add(startOfYear(today), { years: count }),
-            to: add(endOfYear(today), { years: count }),
-          }
-      }
-      break
-  }
-
-  return today // Fallback to today if no case matches
 }
 
 interface DataTableFilterOptionsProps<TData> {
@@ -255,9 +66,11 @@ export function DataTableFilterInline<TData>({
   lockedPageFilters,
   ...props
 }: DataTableFilterOptionsProps<TData>) {
-  const [filterList, setFilterList] = useState<(typeof DEFAULT_FILTER_DATA)[]>(
-    []
-  )
+  const [filterList, setFilterList] = useState<FilterData[]>([])
+  const [rules, setRules] = useState<FilterData[]>([])
+  const filterRules = useCallback((filters: FilterData[]) => {
+    setRules(filters)
+  }, [])
 
   const filterableColumns = table
     .getAllColumns()
@@ -291,12 +104,12 @@ export function DataTableFilterInline<TData>({
     column,
     type,
   }: {
-    column: string
+    column?: string
     type: FilterType
   }) => {
     setFilterList([
       ...filterList,
-      { column, type, value: "", id: filterList.length + 1 },
+      { ...(column && { column }), type, value: "", id: filterList.length + 1 },
     ])
   }
 
@@ -307,7 +120,7 @@ export function DataTableFilterInline<TData>({
 
   const handleChangeFilter = (
     id: number,
-    values: string | string[] | Date | Date[] | DateRange | undefined,
+    values: FilterValue | FilterValue[],
     identifiers: string | string[],
     index: number
   ) => {
@@ -324,9 +137,9 @@ export function DataTableFilterInline<TData>({
             let updatedFilter = { ...filter }
             ;(identifiers as FilterKey[]).forEach(
               (identifier: FilterKey, idx: number) => {
-                updatedFilter[identifier] = (values as Array<string | number>)[
-                  idx
-                ] as never
+                updatedFilter[identifier] = (
+                  values as unknown as Array<string | number>
+                )[idx] as never
               }
             )
             return updatedFilter
@@ -339,6 +152,9 @@ export function DataTableFilterInline<TData>({
       })
     )
   }
+
+  const isFilterRuleExist = filterList.find((item) => item.type === "rule")
+
 
   return (
     <div className="my-1 flex items-center justify-between">
@@ -370,10 +186,46 @@ export function DataTableFilterInline<TData>({
                   onValueChange={console.log}
                 />
               )}
+
+              {(filter.type === "rule" || !filter.type) && (
+                <DataTableFilterOptions
+                  // onOpenChange={setFilterOpen}
+                  filterRules={filterRules}
+                  table={table}
+                  // isLocked={isLockedView}
+                  lockedPageFilters={lockedPageFilters}
+                >
+                  <Button
+                    className={cn(
+                      "gap-1 text-xs",
+                      rules.length > 0 &&
+                        "border-[#fb5727] text-button-primary hover:text-button-primary"
+                    )}
+                    variant={"outline"}
+                  >
+                    <Filter size={12} />
+                    Rules
+                  </Button>
+                </DataTableFilterOptions>
+              )}
             </div>
           )
         })}
-        <DataTableFilterOptions
+
+        {!isFilterRuleExist && (
+          <Button
+            onClick={() => {
+              handleAddFilter({ type: "rule" })
+            }}
+            className="gap-1 text-xs text-zinc-500"
+            variant={"ghost"}
+          >
+            <PlusIcon size={12} />
+            Add Rule
+          </Button>
+        )}
+
+        <DataTableColumnOption
           options={columnOptions}
           onValueChange={(value) => {
             const column = filterableColumns.find((col) => col.id === value)
@@ -386,7 +238,7 @@ export function DataTableFilterInline<TData>({
             <PlusIcon size={12} />
             Add Filter
           </Button>
-        </DataTableFilterOptions>
+        </DataTableColumnOption>
       </div>
       {filterList.length > 0 && (
         <Button
@@ -401,69 +253,12 @@ export function DataTableFilterInline<TData>({
   )
 }
 
-interface DataTableFilterOption<TData> {
-  children: ReactNode
-  options: OptionWithType[]
-  onValueChange: (val: string) => void
-}
-
-export function DataTableFilterOptions<TData>({
-  ...props
-}: DataTableFilterOption<TData>) {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{props.children}</PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search ..." />
-          <CommandList>
-            <CommandEmpty>No Column found.</CommandEmpty>
-            <CommandGroup>
-              {props.options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={(currentValue) => {
-                    props.onValueChange(currentValue)
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  {/* <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
-                    )}
-                  /> */}
-                  {option.type === "date" && (
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                  )}
-                  {option.type === "text" && <Text className="mr-2 h-4 w-4" />}
-
-                  {option.type === "profile" && (
-                    <UserIcon className="mr-2 h-4 w-4" />
-                  )}
-
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  )
-}
-
 type SingleDate = Date | undefined
 type MultipleDates = Date[] | undefined
 type RangeDate = DateRange | undefined
 
 interface DataTableFilterProps {
-  column: string
+  column?: string
   value?: SingleDate | MultipleDates | RangeDate | string
   onValueChange: (val: SingleDate | MultipleDates | RangeDate) => void
   options?: { label: string; value: string }[]
@@ -511,6 +306,8 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
     if (date && "from" in date && isValidDate(date.from)) setMonth(date?.from)
   }, [date])
 
+  const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -518,11 +315,21 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
           variant={"outline"}
           className={cn(
             "gap-2 rounded-md text-xs",
-            date &&
+            (date || isEmptyOrNotEmpty) &&
               "border-[#fb5727] text-button-primary hover:text-button-primary"
           )}
         >
           <CalendarIcon size={14} /> Date
+          {isEmptyOrNotEmpty && (
+            <span>
+              {" "}
+              :&nbsp;{" "}
+              {
+                datefiltersOptions.find((item) => item.value === condition)
+                  ?.label
+              }{" "}
+            </span>
+          )}
           {isValidDate(date) && (
             <span> :&nbsp; {format(date as Date, "LLL dd, yyyy")}</span>
           )}
@@ -689,7 +496,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
               </DataTableSelect>
             </div>
           )}
-          {!["is-empty", "is-not-empty"].includes(condition) && (
+          {!isEmptyOrNotEmpty && (
             <div className="mx-auto">
               <Calendar
                 initialFocus
@@ -713,8 +520,10 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
 
 export function DataTableFilterText({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("is")
+  const [condition, setCondition] = useState("is")
   const [text, setText] = useState("")
+
+  const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -723,12 +532,22 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
           variant={"outline"}
           className={cn(
             "gap-2 rounded-md text-xs",
-            text &&
+            (text || isEmptyOrNotEmpty) &&
               "border-[#fb5727] text-button-primary hover:text-button-primary"
           )}
         >
           <Text size={14} />
           {props.column}
+          {isEmptyOrNotEmpty && (
+            <p>
+              {" "}
+              :&nbsp;{" "}
+              {
+                datefiltersOptions.find((item) => item.value === condition)
+                  ?.label
+              }{" "}
+            </p>
+          )}
           {text && <p>:&nbsp;{text}</p>}
         </Button>
       </PopoverTrigger>
@@ -737,8 +556,8 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
           <div className="flex justify-start space-x-2">
             <Label className="text-xs text-zinc-400">{props.column}: </Label>
             <DataTableSelect
-              value={value}
-              onValueChange={setValue}
+              value={condition}
+              onValueChange={setCondition}
               options={textFilterOptions}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
@@ -750,7 +569,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
               </SelectTrigger>
             </DataTableSelect>
           </div>
-          {!["is-empty", "is-not-empty"].includes(value) && (
+          {!isEmptyOrNotEmpty && (
             <Input
               className="h-8 bg-zinc-900"
               onChange={(e) => setText(e.target.value)}
@@ -764,8 +583,10 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
 
 export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("contains")
+  const [condition, setCondition] = useState("contains")
   const [profiles, setProfiles] = useState<OptionWithUrl[]>([])
+
+  const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -774,17 +595,31 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
           variant={"outline"}
           className={cn(
             "gap-2 rounded-md text-xs",
-            profiles.length > 0 &&
+            (profiles.length > 0 || isEmptyOrNotEmpty) &&
               "border-[#fb5727] text-button-primary hover:text-button-primary"
           )}
         >
           <UserIcon size={14} />
           {props.column}
+          {isEmptyOrNotEmpty && (
+            <p>
+              {" "}
+              :&nbsp;{" "}
+              {
+                datefiltersOptions.find((item) => item.value === condition)
+                  ?.label
+              }{" "}
+            </p>
+          )}
           {profiles.length > 0 && (
             <p>
               :&nbsp;
-              {profiles.map((profile,id) => (
-                <span key={id}>{profile.label},&nbsp;</span>
+              {profiles.map((profile, id) => (
+                <span key={id}>
+                  {profile.label}
+                  {profiles.length - 1 < id && ","}
+                  &nbsp;
+                </span>
               ))}
             </p>
           )}
@@ -793,7 +628,7 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
       <PopoverContent
         className={cn(
           "max-w-[260px] gap-0 bg-zinc-900 p-0 px-2",
-          ["contains", "does-not-contains"].includes(value)
+          ["contains", "does-not-contains"].includes(condition)
             ? "h-[380px]"
             : "h-auto w-auto"
         )}
@@ -802,8 +637,8 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
           <div className="flex justify-start space-x-2">
             <Label className="text-xs text-zinc-400">{props.column}: </Label>
             <DataTableSelect
-              value={value}
-              onValueChange={setValue}
+              value={condition}
+              onValueChange={setCondition}
               options={profileFilterOptions}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
@@ -815,7 +650,7 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
               </SelectTrigger>
             </DataTableSelect>
           </div>
-          {["contains", "does-not-contains"].includes(value) && (
+          {["contains", "does-not-contains"].includes(condition) && (
             <MultipleSelector
               onChange={(profiles) => {
                 setProfiles(profiles)

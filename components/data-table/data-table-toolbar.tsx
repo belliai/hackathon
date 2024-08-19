@@ -22,7 +22,6 @@ import { cn } from "@/lib/utils"
 
 import { Separator } from "../ui/separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
-import { DataTableFilterOptions } from "./data-table-filter-options"
 import {
   ColumnsByVisibility,
   DataTableViewOptions,
