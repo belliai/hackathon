@@ -456,9 +456,9 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            "min-h-8 rounded-md border border-input text-sm ",
+            "min-h-8 rounded-sm border bg-zinc-950 border-zinc-900 border-input text-sm ",
             {
-              "px-3 py-2": selected.length !== 0,
+              "px-3": selected.length !== 0,
               "cursor-text": !disabled && selected.length !== 0,
             },
             className
@@ -541,8 +541,8 @@ const MultipleSelector = React.forwardRef<
               className={cn(
                 "flex-1 bg-transparent outline-none ",
                 {
-                  "w-full": hidePlaceholderWhenSelected,
-                  "px-3 py-2": selected.length === 0,
+                  // "w-full": hidePlaceholderWhenSelected,
+                  "px-3": selected.length === 0,
                   "ml-1": selected.length !== 0,
                 },
                 inputProps?.className
@@ -555,7 +555,7 @@ const MultipleSelector = React.forwardRef<
                 onChange?.(selected.filter((s) => s.fixed))
               }}
               className={cn(
-                "absolute right-0 h-4 w-4 p-0 text-zinc-500",
+                "absolute right-0 h-4 w-4 p-0 text-zinc-500 ",
                 (hideClearAllButton ||
                   disabled ||
                   selected.length < 1 ||
@@ -563,7 +563,7 @@ const MultipleSelector = React.forwardRef<
                   "hidden"
               )}
             >
-              <XCircle />
+              <XCircle size={16} />
             </button>
           </div>
         </div>
@@ -594,7 +594,7 @@ const MultipleSelector = React.forwardRef<
                     <CommandGroup
                       key={key}
                       heading={key}
-                      className="h-full overflow-auto"
+                      className="h-full overflow-auto bg-zinc-900"
                     >
                       <>
                         {dropdowns.map((option) => {
