@@ -12,6 +12,7 @@ import {
   FilterIcon,
   FilterXIcon,
   PlusIcon,
+  Save,
   SearchCheck,
   Text,
   Trash,
@@ -73,6 +74,7 @@ export function DataTableFilterOptions<TData>({
   const [filterList, setFilterList] = useState<(typeof DEFAULT_FILTER_DATA)[]>([
     DEFAULT_FILTER_DATA,
   ])
+  const [rulesOpen, setRulesOpen] = useState(true)
 
   const filterableColumns = table
     .getAllColumns()
@@ -174,7 +176,13 @@ export function DataTableFilterOptions<TData>({
   }, [filterList])
 
   return (
-    <Popover onOpenChange={props.onOpenChange}>
+    <Popover
+      open={rulesOpen}
+      onOpenChange={(val) => {
+        props.onOpenChange?.(val)
+        setRulesOpen(val)
+      }}
+    >
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
       <PopoverContent
         align="end"
@@ -419,7 +427,6 @@ export function DataTableFilterOptions<TData>({
                   )}
                 </div>
               )}
-
               <Button
                 className="w-fit bg-zinc-800 text-white hover:bg-zinc-700"
                 onClick={() => handleRemoveFilter(filter.id)}
@@ -429,13 +436,23 @@ export function DataTableFilterOptions<TData>({
             </div>
           )
         })}
+        <div className="flex justify-between">
+          <Button
+            className="w-fit gap-2 bg-zinc-800 text-white hover:bg-zinc-700"
+            onClick={() => handleAddFilter()}
+          >
+            <PlusIcon className="h-4 w-4" /> Add Filter
+          </Button>
 
-        <Button
-          className="w-fit bg-zinc-800 text-white hover:bg-zinc-700"
-          onClick={() => handleAddFilter()}
-        >
-          <PlusIcon className="h-4 w-4" /> Add Filter
-        </Button>
+          <Button
+            disabled={filterList.length==0}
+            className="w-fit gap-2 bg-zinc-800 text-white hover:bg-zinc-700"
+            onClick={() => {}}
+          >
+            <Save className="h-4 w-4" />
+            Save
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   )

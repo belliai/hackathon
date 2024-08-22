@@ -157,7 +157,7 @@ export function DataTableFilterInline<TData>({
 
 
   return (
-    <div className="my-1 flex items-center justify-between">
+    <div className="mt-4 flex items-center gap-2 justify-end">
       <div className="flex flex-wrap gap-2">
         {filterList.map((filter, index) => {
           return (
@@ -225,7 +225,7 @@ export function DataTableFilterInline<TData>({
           </Button>
         )}
 
-        <DataTableColumnOption
+        {/* <DataTableColumnOption
           options={columnOptions}
           onValueChange={(value) => {
             const column = filterableColumns.find((col) => col.id === value)
@@ -238,7 +238,7 @@ export function DataTableFilterInline<TData>({
             <PlusIcon size={12} />
             Add Filter
           </Button>
-        </DataTableColumnOption>
+        </DataTableColumnOption> */}
       </div>
       {filterList.length > 0 && (
         <Button
