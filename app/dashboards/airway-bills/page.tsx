@@ -8,9 +8,12 @@ import { PlusIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import {
   CogIcon,
+  EyeIcon,
   HomeIcon,
   KanbanSquare,
+  ListFilterIcon,
   Loader,
+  SearchIcon,
   SquareKanban,
   SquareKanbanIcon,
 } from "lucide-react"
@@ -173,6 +176,21 @@ export default function Home() {
     router.push(pathname + "?" + createQueryString(key, value))
   }
 
+  const ActionButtons = () => (
+    <div className="flex gap-2 items-center ml-auto" style={{ marginRight: '-7.5px' }}>
+      <Button size="icon" variant="outline" className="h-8 w-8 opacity-75 hover:opacity-100">
+        <ListFilterIcon className="h-4 w-4" />
+      </Button>
+      <Button size="icon" variant="outline" className="h-8 w-8 opacity-75 hover:opacity-100">
+        <SearchIcon className="h-4 w-4" />
+      </Button>
+      <Button size="icon" variant="outline" className="h-8 w-8 opacity-75 hover:opacity-100">
+        <EyeIcon className="h-4 w-4" />
+      </Button>
+      {generateButton}
+    </div>
+  )
+
   return (
     <div>
       <ClientSideSuspense fallback={<></>}>
@@ -203,16 +221,11 @@ export default function Home() {
         </TabsContent>
         <TabsContent value="kanban-view" asChild>
           <>
-            <div className="flex justify-between gap-2">
+            <div className="flex justify-between items-center gap-2">
               {memoizedTabsList}
-              {generateButton}
+              <ActionButtons />
             </div>
-
-            <CustomKanban
-              ordersData={ordersData}
-              cards={cards}
-              setCards={setCards}
-            />
+            <CustomKanban ordersData={ordersData} cards={cards} setCards={setCards} />
           </>
         </TabsContent>
       </Tabs>
