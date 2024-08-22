@@ -1,79 +1,51 @@
 import React, { useState } from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
-import {FilePondFile, FilePondInitialFile} from 'filepond'
+import { FilePondFile } from 'filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import { Select, SelectGroup, SelectLabel, SelectContent, SelectTrigger, SelectItem, SelectValue } from '@components/ui/select';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const UploadFile: React.FC = () => {
+const Filepond: React.FC = () => {
   const [files, setFiles] = useState<Blob[]>([]);
-  const [category, setCategory] = useState<string>('');
-
-  const handleCategoryChange = (value: string) => {
-    setCategory(value);
-  };
 
   const handleFileUpdate = (fileItems: FilePondFile[]) => {
-    // setFiles(fileItems.map(fileItem => fileItem.file));
     setFiles(fileItems.map(fileItem => fileItem.file));
   };
 
   return (
-    <div className="upload-file-container">
+    <div className="fles flex-col w-full h-full">
       <style jsx>{`
-        .upload-file-container {
+        .filepond--root {
+          border-radius: 0.5rem; /* rounded-lg */
+          border: 2px dashed #d1d5db; /* border-gray-300 */
+          color: #6b7280; /* text-gray-500 */
+          height: full; /* h-64 */
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
-          padding: 2rem;
-          background-color: #1f1f1f;
-          border-radius: 0.5rem;
-          color: #fff;
-        }
-
-        .upload-file-header {
-          font-size: 1.5rem;
-          font-weight: bold;
-          margin-bottom: 1rem;
-          color: #e2e8f0;
-        }
-
-        .upload-file-category {
-          display: flex;
           align-items: center;
-          gap: 1rem;
-        }
-
-        .upload-file-category label {
-          font-weight: 600;
-          font-size: 1rem;
-          color: #cbd5e0;
-        }
-
-        .filepond--root {
-          background-color: #2d3748;
-          border: 2px dashed #4a5568;
-          color: #e2e8f0;
-        }
-
-        .filepond--panel-root {
-          background-color: #a0aec0;
+          justify-content: center;
         }
 
         .filepond--drop-label {
-          color: #a0aec0;
+          color: #6b7280; /* text-gray-500 */
+          font-size: 0.875rem; /* text-sm */
+          text-align: center;
         }
 
         .filepond--label-action {
-          color: #63b3ed;
+          color: #374151; /* text-gray-700 */
+          font-weight: 600; /* font-semibold */
+        }
+
+        .filepond--panel-root {
+          background-color: transparent; /* Keep the panel transparent */
         }
 
         .filepond--item-panel {
-          background-color: #4a5568;
+          background-color: #374151; /* Darker panel background for file items */
         }
 
         .filepond--file-action-button {
@@ -86,34 +58,42 @@ const UploadFile: React.FC = () => {
           box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.9);
         }
       `}</style>
-      <h1 className="upload-file-header">Upload Files</h1>
-      <div className="upload-file-category">
-        <label htmlFor="category">Choose a category:</label>
-        <Select value={category} onValueChange={handleCategoryChange}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select a Category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Category</SelectLabel>
-              <SelectItem value="documents">Documents</SelectItem>
-              <SelectItem value="images">Images</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
 
       <FilePond
         files={files}
         onupdatefiles={handleFileUpdate}
         allowMultiple={true}
         maxFiles={3}
-        server="/api" // to add backend
+        server="/api" // Placeholder for backend integration
         name="files"
-        labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+        labelIdle={`
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg
+              class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5A5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+              />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400 w-500">
+              <span class="font-semibold">Click to upload</span> or drag and drop
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              SVG, PNG, JPG or GIF (MAX. 800x400px)
+            </p>
+          </div>
+        `}
       />
     </div>
   );
 };
 
-export default UploadFile;
+export default Filepond;
