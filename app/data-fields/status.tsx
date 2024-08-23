@@ -69,7 +69,7 @@ function groupData(data: any[], groupsDef: GroupsDefinition[]) {
     }
   })
 
-  return groupped.filter(g => g.data.length > 0)
+  return groupped.filter((g) => g.data.length > 0)
 }
 
 const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
@@ -102,14 +102,6 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
       type: "text",
       label: "Group Name",
     },
-  ]
-
-  if (error) return "An error has occurred: " + error.message
-
-  const form: InputSwitchProps<FieldValues>[] = [
-    { name: "id", type: "hidden" },
-    { name: "name", type: "text", label: "Status" },
-    { name: "description", type: "text", label: "Description" },
   ]
 
   useEffect(() => {
@@ -151,6 +143,14 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
       setGrouppedData(newGroupedData)
     }
   }, [apiStatusesData])
+
+  if (error) return "An error has occurred: " + error.message
+
+  const form: InputSwitchProps<FieldValues>[] = [
+    { name: "id", type: "hidden" },
+    { name: "name", type: "text", label: "Status" },
+    { name: "description", type: "text", label: "Description" },
+  ]
 
   console.log("grouppedData", grouppedData)
 
