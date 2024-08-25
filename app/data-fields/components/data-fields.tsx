@@ -18,7 +18,7 @@ interface DataFieldsItemContentProps<T extends FieldValues> {
   subtitle?: string
   data: T
   icon?: React.ReactNode
-  onSave: (data: T) => void
+  onSave?: (data: T) => void
   onDelete?: () => void
   form: InputSwitchProps<T>[]
   selectedEditing: string | null
@@ -58,7 +58,7 @@ function DataFieldsItemContent<T extends FieldValues>({
       formContext.reset({ ...data })
     }
 
-    setSelectedEditing(data.id || data.ID)
+    setSelectedEditing(data.id || data.ID || data.name)
   }
 
   function handleCancelEdit() {
@@ -66,11 +66,11 @@ function DataFieldsItemContent<T extends FieldValues>({
   }
 
   function handleSaveEdit() {
-    formContext.handleSubmit((data) => onSave(data as T))()
+    formContext.handleSubmit((data) => onSave?.(data as T))()
     setSelectedEditing(null)
   }
 
-  const isEditing = selectedEditing === (data.id || data.ID)
+  const isEditing = selectedEditing === (data.id || data.ID || data.name)
 
   const { id, ID, created_at, updated_at, ...cleanDataToMap } = data
 
@@ -78,7 +78,7 @@ function DataFieldsItemContent<T extends FieldValues>({
 
   return (
     <>
-      {shouldUseModal && (
+      {shouldUseModal && onSave && (
         <FormDialog
           form={form}
           open={shouldUseModal && isEditing}
@@ -184,7 +184,7 @@ function DataFieldsItemContent<T extends FieldValues>({
           >
           {!disableAction && (
             <>
-              <Button
+              {onSave && <Button
                 variant="ghost"
                 size="icon"
                 className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
@@ -194,8 +194,8 @@ function DataFieldsItemContent<T extends FieldValues>({
                 }}
               >
                 <PencilIcon type="button" size={14} />
-              </Button>
-              <Button
+              </Button>}
+              {onDelete && <Button
                 variant="ghost"
                 size="icon"
                 className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
@@ -205,7 +205,7 @@ function DataFieldsItemContent<T extends FieldValues>({
                 }}
               >
                 <Trash2 type="button" size={14} />
-              </Button>
+              </Button>}
             </>
           )}
           </div>
