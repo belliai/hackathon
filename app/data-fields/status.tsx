@@ -159,6 +159,52 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   return (
     <div className="flex flex-col gap-8 py-4">
       <Form {...statusForm}>
+        <div className="flex justify-between">
+          {tabComponent && tabComponent}
+          <div className={cn("", { "flex justify-end": shouldUseModal })}>
+            {shouldUseModal ? (
+              <>
+                <FormDialog
+                  form={form}
+                  open={shouldUseModal && open}
+                  setOpen={setOpen}
+                  title="Status"
+                  onSave={(data) => {
+                    const { id, name } = data
+
+                    console.log("Save", data)
+
+                    if (id) {
+                      update.mutate({ id, name })
+                    } else {
+                      add.mutate({ name })
+                    }
+                  }}
+                />
+                <Button
+                  variant="button-primary"
+                  size="sm"
+                  onClick={() => setOpen(true)}
+                >
+                  Add New
+                </Button>
+              </>
+            ) : (
+              <FormDropdown
+                form={form}
+                onSave={(data) => {
+                  const { id, name } = data
+                  if (id) {
+                    update.mutate({ id, name })
+                  } else {
+                    add.mutate({ name })
+                  }
+                }}
+              />
+            )}
+          </div>
+        </div>
+
         <Accordion
           type="multiple"
           className="flex flex-col gap-2"
@@ -288,82 +334,6 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
             )
           })}
         </Accordion>
-        <DataFields>
-          <div className="flex justify-between">
-            {tabComponent && tabComponent}
-            <div className={cn("mb-2", { "flex justify-end": shouldUseModal })}>
-              {shouldUseModal ? (
-                <>
-                  <FormDialog
-                    form={form}
-                    open={shouldUseModal && open}
-                    setOpen={setOpen}
-                    title="Status"
-                    onSave={(data) => {
-                      const { id, option } = data
-
-                      if (id) {
-                        update.mutate({ id, name: option })
-                      } else {
-                        add.mutate({ name: option })
-                      }
-                    }}
-                  />
-                  <Button
-                    variant="button-primary"
-                    size="sm"
-                    onClick={() => setOpen(true)}
-                  >
-                    Add New
-                  </Button>
-                </>
-              ) : (
-                <FormDropdown
-                  form={form}
-                  onSave={(data) => {
-                    const { id, name } = data
-                    if (id) {
-                      update.mutate({ id, name })
-                    } else {
-                      add.mutate({ name })
-                    }
-                  }}
-                />
-              )}
-            </div>
-          </div>
-          {statusesData?.map((item: any) => (
-            <DataFieldsItem key={item.id}>
-              <DataFieldsItemContent
-                selectedEditing={selectedEditing}
-                setSelectedEditing={setSelectedEditing}
-                columnSpans={[4, 8, 0]}
-                data={item}
-                form={form}
-                title={item.name}
-                onSave={(data) => {
-                  const { id, option } = data
-
-                  const actualId = id || data.ID
-                  const payload = option || data.name
-
-                  if (actualId) {
-                    update.mutate({ id: actualId, name: payload })
-                  } else {
-                    add.mutate({ name: option })
-                  }
-                }}
-                onDelete={() => {
-                  const actualId = item.id || item.ID
-
-                  if (actualId) {
-                    remove.mutate({ id: actualId })
-                  }
-                }}
-              />
-            </DataFieldsItem>
-          ))}
-        </DataFields>
       </Form>
     </div>
   )
