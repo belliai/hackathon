@@ -39,17 +39,17 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const formattedLocation =
     locations?.map((locationList: any) => {
       const timezone = locationList.timezone
-      const cityName = timezone ? timezone.name.split("/").pop() : ""
+      const cityName = timezone ? timezone.name.split(" - ").pop() : ""
 
       const label = timezone ? (
         <p>
-          {locationList.name}{" "}
+          {locationList.airport_code}{" "}
           <span className="text-xs text-zinc-500">
             (GMT {timezone.offset}, {cityName})
           </span>
         </p>
       ) : (
-        locationList.name
+        locationList.airport_code
       )
 
       return {
@@ -121,48 +121,47 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     return date
   }
 
+
   const calculateFlightDuration = (
     departureDate?: Date | null,
-    originTimezone?: string,
+    originOffset?: string, // e.g., "+02:00"
     arrivalDate?: Date | null,
-    destinationTimezone?: string
+    destinationOffset?: string // e.g., "+04:00"
   ) => {
     if (
       !departureDate ||
-      !originTimezone ||
+      !originOffset ||
       !arrivalDate ||
-      !destinationTimezone
+      !destinationOffset
     ) {
-      return null
+      return null;
     }
-
-    // Get offsets for each timezone
-    const originOffset = getTimezoneOffset(originTimezone, departureDate)
-    const destinationOffset = getTimezoneOffset(
-      destinationTimezone,
-      arrivalDate
-    )
-
-    // Create departure and arrival dates with times
-    const departure = new Date(departureDate)
-
-    const arrival = new Date(arrivalDate)
-
-    // Convert times to UTC
-    const departureUTC = new Date(departure.getTime() - originOffset)
-    const arrivalUTC = new Date(arrival.getTime() - destinationOffset)
-
+  
+    // Parse offset strings to get the offset in minutes
+    const parseOffset = (offset: string) => {
+      const sign = offset[0] === "+" ? 1 : -1;
+      const [hours, minutes] = offset.slice(1).split(":").map(Number);
+      return sign * (hours * 60 + minutes) * 60 * 1000;
+    };
+  
+    const originOffsetMs = parseOffset(originOffset);
+    const destinationOffsetMs = parseOffset(destinationOffset);
+  
+    // Convert times to UTC by subtracting the respective offsets
+    const departureUTC = new Date(departureDate.getTime() - originOffsetMs);
+    const arrivalUTC = new Date(arrivalDate.getTime() - destinationOffsetMs);
+  
     // Calculate duration in milliseconds
-    const durationMs = arrivalUTC.getTime() - departureUTC.getTime()
-
+    const durationMs = arrivalUTC.getTime() - departureUTC.getTime();
+  
     // Convert duration to hours and minutes
-    const durationHours = Math.floor(durationMs / (1000 * 60 * 60))
+    const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
     const durationMinutes = Math.floor(
       (durationMs % (1000 * 60 * 60)) / (1000 * 60)
-    )
-
-    return { hours: durationHours, minutes: durationMinutes }
-  }
+    );
+  
+    return { hours: durationHours, minutes: durationMinutes };
+  };
 
   const generateArrivalTime = (
     date: Date,
@@ -215,28 +214,28 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
 
   useEffect(() => {}, [form.formState])
 
-  const originTimezone =
+  const originTimezoneOffset =
     locations &&
     formData.origin_id &&
-    locations?.find((loc: any) => loc.ID === formData.origin_id).timezone?.name
-  const destinationTimezone =
+    locations?.find((loc: any) => loc.ID === formData.origin_id).timezone?.offset
+  const destinationTimezoneOffset =
     locations &&
     formData.destination_id &&
     locations?.find((loc: any) => loc.ID === formData.destination_id).timezone
-      ?.name
+      ?.offset
 
-  console.log("departure", form.watch("departure_date"))
-  console.log("arrival", form.watch("arrival_date"))
+  // console.log("departure", form.watch("departure_date"))
+  // console.log("arrival", form.watch("arrival_date"))
 
-  console.log(formData.origin_id)
+  // console.log(formData.origin_id)
 
   useEffect(() => {
     if (!formData.departure_date || !formData.arrival_date) return
     const flightDuration = calculateFlightDuration(
       new Date(formData.departure_date),
-      originTimezone,
+      originTimezoneOffset,
       new Date(formData.arrival_date),
-      destinationTimezone
+      destinationTimezoneOffset
     )
     if (flightDuration) {
       form.setValue("flight_duration_hour", flightDuration.hours)
@@ -245,11 +244,11 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   }, [
     formData.arrival_date,
     formData.departure_date,
-    originTimezone,
-    destinationTimezone,
+    originTimezoneOffset,
+    destinationTimezoneOffset,
   ])
 
-  console.log(form.formState.errors)
+ // console.log(form.formState.errors)
 
   useEffect(() => {
     if (!formData.departure_date) return

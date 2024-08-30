@@ -18,14 +18,18 @@ import {
   XCircle,
 } from "lucide-react"
 import { Path, useForm } from "react-hook-form"
+import { datetime, RRule } from "rrule"
 
 import {
   CreateFlightMasterPayload,
   Flight,
+  FlightMasterWithRecurring,
+  RecurringPayload,
 } from "@/types/flight-master/flight-master"
 import {
   useCreateFlight,
   useDeleteFlight,
+  useRecurringFlight,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
 import { get24HourTime, parseTime } from "@/lib/utils/time-picker-utils"
@@ -50,6 +54,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import ActivityLog from "@/components/dashboard/activity-log"
@@ -69,6 +75,28 @@ type NewFlightModalProps = PropsWithChildren & {
 
 const schemas = flightMasterFormSchema
 const initialValues = getDefaults(schemas)
+
+const days = [
+  { key: "week_sun", value: RRule.SU },
+  { key: "week_mon", value: RRule.MO },
+  { key: "week_tue", value: RRule.TU },
+  { key: "week_wed", value: RRule.WE },
+  { key: "week_thu", value: RRule.TH },
+  { key: "week_fri", value: RRule.FR },
+  { key: "week_sat", value: RRule.SA },
+]
+
+const getWeeks = (props: Flight) => {
+  return days
+    .filter((day) => props[day.key as keyof Flight])
+    .map((day) => day.value)
+}
+
+const getDays = (props: Flight) => {
+  return days
+    .filter((day) => props[day.key as keyof Flight] === true)
+    .map((day) => day.key.replace("week_", ""))
+}
 
 const mappedData = (props: Flight): FlightSchema => {
   const arrivalTime = parseTime(props.arrival_time)
@@ -93,25 +121,36 @@ const mappedData = (props: Flight): FlightSchema => {
     departure_period: props.departure_period,
     flight_duration_hour: props.flight_duration_hour,
     flight_duration_minute: props.flight_duration_minute,
+    recurring: props.recurring_flight_id || "no-repeat",
   }
 }
 
+const optionSelectionFlights = [
+  { label: "This flight", value: "one" },
+  { label: "This and following flights", value: "from" },
+  { label: "All flights", value: "all" },
+]
+
 export default function NewFlightModal(props: NewFlightModalProps) {
   const { children, onOpenChange, mode = "create", data, resetData } = props
-  const [open, setOpen] = useState(props.open ?? false)
   const [isFullScreen, setFullScreen] = useState(false)
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
   const [deleteWarningOpen, setDeleteWarningOpen] = useState(false)
   const [currentTab, setCurrentTab] = useState("flight-details")
+  const [recurringSelection, setRecurringSelection] = useState<boolean>(false)
 
   const update = useUpdateFlight()
   const create = useCreateFlight()
   const deleteFlight = useDeleteFlight()
+  const { data: recurringFlight } = useRecurringFlight(
+    data?.recurring_flight_id
+  )
 
   const form = useForm<FlightSchema>({
     resolver: zodResolver(flightSchema),
     defaultValues: {
       ...initialValues,
+      selectionFlight: "one",
     },
   })
 
@@ -119,16 +158,8 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     form.reset(initialValues)
     resetData && resetData(null)
     onOpenChange(false)
-    setOpen(false)
     setCurrentTab("flight-details")
   }
-
-  useEffect(() => {
-    setOpen(props.open ?? false)
-    if (!props.open) {
-      reset()
-    }
-  }, [props.open])
 
   const toggleFullScreen = () => {
     setFullScreen((prev) => !prev)
@@ -190,7 +221,48 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     // },
   ]
 
-  const onSubmit = async (data: CreateFlightMasterPayload) => {
+  const onSubmit = async (data: FlightMasterWithRecurring) => {
+    console.log(data)
+
+    let recurring_options: RecurringPayload = {}
+    if (data.recurring && data.recurring !== "no-repeat") {
+      if (data.recurring === "custom") {
+        recurring_options.recurring_type = "custom"
+        recurring_options.end_after_occurrences = data.end_after_occurrences
+        recurring_options.end_condition = data.end_condition
+        if (data.end_date)
+          recurring_options.end_date = format(data.end_date, "yyyy-MM-dd")
+        recurring_options.recurring_every = data.recurring_every
+
+        data.days?.forEach((day) => {
+          recurring_options.week_sun = day == "sun"
+          recurring_options.week_mon = day == "mon"
+          recurring_options.week_tue = day == "tue"
+          recurring_options.week_wed = day == "wed"
+          recurring_options.week_thu = day == "thu"
+          recurring_options.week_fri = day == "fri"
+          recurring_options.week_sat = day == "sat"
+        })
+      } else {
+        const rule = RRule.fromString(data.recurring)
+
+        const freqMap: { [key: number]: "daily" | "weekly" } = {
+          [RRule.DAILY]: "daily",
+          [RRule.WEEKLY]: "weekly",
+        }
+
+        const freq = rule.origOptions.freq
+
+        if (freq !== undefined) {
+          recurring_options = {
+            recurring_type: freqMap[freq],
+          }
+        }
+      }
+    }
+    //console.log(recurring_options)
+    // return
+
     const payload: CreateFlightMasterPayload = {
       flight_number: data.flight_number,
       origin_id: data.origin_id,
@@ -202,7 +274,9 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       departure_date: format(data.departure_date, "yyyy-MM-dd"),
       flight_duration_hour: data.flight_duration_hour,
       flight_duration_minute: data.flight_duration_minute,
+      ...recurring_options,
     }
+
     try {
       // check props data
       if (!props.data) {
@@ -212,9 +286,15 @@ export default function NewFlightModal(props: NewFlightModalProps) {
           description: "Your Flight has been created",
         })
       } else {
+        const update_mode =
+          form.watch("selection_flight") === "one"
+            ? "one"
+            : form.watch("selection_flight") || "one"
+
         await update.mutateAsync({
           ...(payload as CreateFlightMasterPayload),
           id: props.data.id,
+          update_mode,
         })
         toast({
           title: "Success!",
@@ -241,7 +321,16 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     const { errors } = form.formState
     const validationStatus = TAB_LIST.map((tab) => {
       const tabFields = tab.fieldList
-      const tabValid = tabFields.every((field) => !errors[field])
+      // const tabValid = tabFields.every((field) => !errors[field])
+      const tabValid = tabFields.every((field) => {
+        // Skip fields that start with 'days.'
+        if (typeof field === "string" && field.startsWith("days.")) {
+          return true // Skip this field by considering it valid
+        }
+
+        // Narrow down the type for TypeScript
+        return !(errors as Record<string, any>)[field]
+      })
       return { tabValue: tab.value, isValid: tabValid }
     })
     setValidationStatus(validationStatus)
@@ -257,8 +346,56 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       const dt = mappedData(data)
       form.reset(dt)
     }
+
+    if (recurringFlight) {
+      if (recurringFlight.recurring_type === "weekly") {
+        const rule = new RRule({
+          freq: RRule.WEEKLY,
+          byweekday: getWeeks(recurringFlight),
+        }).toString()
+        form.setValue("recurring", rule)
+      }
+
+      if (recurringFlight.recurring_type === "custom") {
+        form.setValue("recurring", "custom")
+        form.setValue(
+          "recurring_every",
+          Number(recurringFlight.recurring_every)
+        )
+        form.setValue("end_condition", recurringFlight.end_condition)
+        recurringFlight.end_after_occurrences &&
+          form.setValue(
+            "end_after_occurrences",
+            Number(recurringFlight.end_after_occurrences)
+          )
+        recurringFlight.end_date &&
+          form.setValue("end_date", new Date(recurringFlight.end_date))
+        //currently only weekly
+        form.setValue("recurring_period", "weekly")
+
+        form.setValue("days", getDays(recurringFlight))
+      }
+
+      // activate popup
+      setRecurringSelection(true)
+    }
+
     if (mode === "create") form.reset(initialValues)
-  }, [data, mode])
+    if (data?.recurring_flight_id) form.setValue("selection_flight", "one")
+  }, [data, mode, recurringFlight])
+
+  const renderSelectionsFlight = () => {
+    return (
+      mode !== "create" &&
+      data?.recurring_flight_id && (
+        <Combobox
+          className="h-9"
+          name="selection_flight"
+          options={optionSelectionFlights}
+        />
+      )
+    )
+  }
 
   const renderDeleteButtons = () => {
     return (
@@ -310,7 +447,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={props.open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         hideCloseButton
@@ -421,6 +558,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
               </div>
             </Tabs>
             <DialogFooter>
+              {renderSelectionsFlight()}
               {renderDeleteButtons()}
               <Button
                 type="button"
@@ -436,6 +574,47 @@ export default function NewFlightModal(props: NewFlightModalProps) {
           </form>
         </Form>
       </DialogContent>
+      <AlertDialog
+        open={recurringSelection}
+        onOpenChange={setRecurringSelection}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Edit Recurring Flight</AlertDialogTitle>
+          </AlertDialogHeader>
+          <RadioGroup
+            value={form.watch("selection_flight")}
+            onValueChange={(val) => {
+              form.setValue("selection_flight", val)
+            }}
+            className="space-y-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="one" id="one" />
+              <Label htmlFor="one">This Flight</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="from" id="from" />
+              <Label htmlFor="from">This and following Flights</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="all" id="all" />
+              <Label htmlFor="all">All Flight</Label>
+            </div>
+          </RadioGroup>
+          <AlertDialogFooter>
+            {/* <AlertDialogCancel>Cancel</AlertDialogCancel> */}
+            <AlertDialogAction
+              variant={"button-primary"}
+              onClick={() => {
+                setRecurringSelection(false)
+              }}
+            >
+              Ok
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <AlertDialog open={closeWarningOpen} onOpenChange={setCloseWarningOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -460,7 +639,9 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure want to delete Flight?
+              Are you sure want to delete{" "}
+              {`${form.watch("selection_flight") === "one" ? "Flight" : "Flights"}`}
+              ?
             </AlertDialogTitle>
             <AlertDialogDescription>
               This will delete flight number {data && `${data?.flight_number}`}
@@ -472,9 +653,17 @@ export default function NewFlightModal(props: NewFlightModalProps) {
               variant={"button-primary"}
               onClick={async () => {
                 try {
-                  if (data?.id) await deleteFlight.mutateAsync({ id: data?.id })
+                  const delete_mode =
+                    form.watch("selection_flight") === "one"
+                      ? "single"
+                      : form.watch("selection_flight") || "single"
+                  if (data?.id)
+                    await deleteFlight.mutateAsync({
+                      id: data?.id,
+                      delete_mode,
+                    })
                   setDeleteWarningOpen(false)
-                  setOpen(false)
+                  onOpenChange(false)
                 } catch (e) {
                   console.log(e)
                 }

@@ -4,17 +4,19 @@ import { AxiosInstance } from "axios"
 import {
   CreateFlightMasterPayload,
   Flight,
+  FlightMasterWithRecurring,
+  RecurringPayload,
 } from "@/types/flight-master/flight-master"
 import { useBelliApi } from "@/lib/utils/network"
 
 const route = "flights"
+const routeRecurrings = "flights/recurrings"
 
 interface FlightParamsProps extends PaginationParams {
   start_date?: string
   end_date?: string
-  sort_by? : string
+  sort_by?: string
   sort_dir?: string
-
 }
 
 export const fetchFlightList = async (
@@ -37,6 +39,26 @@ export const useFlightList = (params: FlightParamsProps) => {
   })
 }
 
+export const fetchRecurringFlightList = async (
+  belliApi: AxiosInstance,
+  params: FlightParamsProps
+) => {
+  return belliApi
+    .get(routeRecurrings, {
+      params,
+    })
+    .then((res) => res.data as APIPaginatedResponse<Flight>)
+}
+
+export const useRecurringFlightList = (params: FlightParamsProps) => {
+  const belliApi = useBelliApi()
+
+  return useQuery({
+    queryKey: [routeRecurrings, params],
+    queryFn: async () => await fetchRecurringFlightList(await belliApi, params),
+  })
+}
+
 export const createFlight = async (
   belliApi: AxiosInstance,
   data: CreateFlightMasterPayload
@@ -50,7 +72,7 @@ export const useCreateFlight = () => {
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (data: CreateFlightMasterPayload) =>
+    mutationFn: async (data: FlightMasterWithRecurring) =>
       await createFlight(await belliApi, data),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [route] })
@@ -61,7 +83,7 @@ export const useCreateFlight = () => {
 export const updateFlightTailNumber = async (
   belliApi: AxiosInstance,
   id: string,
-  data: { tail_id: string| null, id?: string}
+  data: { tail_id: string | null; id?: string }
 ) => {
   return belliApi.put(`${route}/${id}`, data).then((res) => res.data as Flight)
 }
@@ -69,9 +91,15 @@ export const updateFlightTailNumber = async (
 export const updateFlight = async (
   belliApi: AxiosInstance,
   id: string,
-  data: CreateFlightMasterPayload
+  data: CreateFlightMasterPayload,
+  update_mode?: string
 ) => {
-  return belliApi.put(`${route}/${id}`, data).then((res) => res.data as Flight)
+  return belliApi
+    .put(
+      `${route}/${id}?update_mode=${update_mode ? update_mode : "one" }`,
+      data
+    )
+    .then((res) => res.data as Flight)
 }
 
 export const useUpdateFlight = () => {
@@ -80,7 +108,7 @@ export const useUpdateFlight = () => {
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (data: CreateFlightMasterPayload & { id: string }) => {
+    mutationFn: async (data: CreateFlightMasterPayload & { id: string, update_mode?: string }) => {
       const { id, ...rest } = data
       return await updateFlight(await belliApi, data.id, rest)
     },
@@ -90,10 +118,14 @@ export const useUpdateFlight = () => {
   })
 }
 
-
-
-export const deleteFlight = async (belliApi: AxiosInstance, id: string) => {
-  return belliApi.delete(`${route}/${id}`).then((res) => res.data as Flight)
+export const deleteFlight = async (
+  belliApi: AxiosInstance,
+  id: string,
+  delete_mode?: string
+) => {
+  return belliApi
+    .delete(`${route}/${id}${delete_mode ? `?delete_mode=${delete_mode}` : ""}`)
+    .then((res) => res.data as Flight)
 }
 
 export const useDeleteFlight = () => {
@@ -102,10 +134,36 @@ export const useDeleteFlight = () => {
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (data: { id: string }) =>
-      await deleteFlight(await belliApi, data.id),
+    mutationFn: async (data: { id: string; delete_mode?: string }) =>
+      await deleteFlight(await belliApi, data.id, data.delete_mode),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [route] })
     },
+  })
+}
+
+export const fetchRecurringFlight = async (
+  belliApi: AxiosInstance,
+  id: string
+) => {
+  return belliApi
+    .get(`${route}/recurrings/${id}`)
+    .then((res) => res.data as Flight)
+}
+
+export const useRecurringFlight = (id?: string) => {
+  const belliApi = useBelliApi()
+
+  return useQuery({
+    queryKey: [route, id], // Use undefined if id is not provided
+    queryFn: async () => {
+      if (!id) {
+        return null // Fallback if id is undefined
+      }
+      return await fetchRecurringFlight(await belliApi, id)
+    },
+    enabled: !!id, // Disable query if id is undefined
+    // Optional: Provide an initial fallback value
+    initialData: null, // or undefined, based on your preference
   })
 }

@@ -15,49 +15,83 @@ interface UOMType extends IDNameType {
 }
 
 interface Timezone {
-  id: string,
+  id: string
   abbreviation: string
   name: string
   offset: string
 }
 
 interface Location {
-  id: string,
-  name: string,
+  id: string
+  name: string
   timezone: Timezone
 }
 
 export interface Flight {
   id: string
-  flight_number: string,
-  origin: Location,
-  destination: Location,
-  departure_date: string,
-  departure_hour: number,
-  departure_minute:number
-  departure_period: string,
-  arrival_date: string,
-  arrival_time: string,
-  arrival_hour: number,
-  arrival_minute:number
-  flight_duration_hour: number,
-  flight_duration_minute: number,
-  tail: Aircraft,
+  flight_number: string
+  origin: Location
+  destination: Location
+  departure_date: string
+  departure_hour: number
+  departure_minute: number
+  departure_period: string
+  arrival_date: string
+  arrival_time: string
+  arrival_hour: number
+  arrival_minute: number
+  flight_duration_hour: number
+  flight_duration_minute: number
+  tail: Aircraft
+  recurring_flight_id?: string
+  week_sat?: any
+  week_fri?: any
+  week_wed?: any
+  week_tue?: any
+  week_mon?: any
+  week_sun?: any
+  recurring_type?: string
+  end_condition?: string
+  recurring_every?: number
+  end_after_occurrences?: number
+  end_date?: string
 }
 
 export interface CreateFlightMasterPayload {
   ID?: string
-  flight_number: string,
-  origin_id: string,
-  destination_id: string,
-  departure_period: string,
-  departure_date: Date | string,
-  departure_hour: number,
-  departure_minute:number
-  flight_duration_hour: number,
-  flight_duration_minute: number,
-  tail_id?: string,
+  flight_number: string
+  origin_id: string
+  destination_id: string
+  departure_period: string
+  departure_date: Date | string
+  departure_hour: number
+  departure_minute: number
+  flight_duration_hour: number
+  flight_duration_minute: number
+  tail_id?: string
+  recurring?: string
+
 }
+
+export interface RecurringPayload {
+  end_date?: string | Date
+  recurring_type?: "daily" | "weekly" | "custom"
+  recurring_every?: number
+  end_condition?: string
+  end_after_occurrences?: number
+  week_sun?: boolean
+  week_mon?: boolean
+  week_tue?: boolean
+  week_wed?: boolean
+  week_thu?: boolean
+  week_fri?: boolean
+  week_sat?: boolean
+  days?: string[]
+}
+
+export type FlightMasterWithRecurring = CreateFlightMasterPayload & RecurringPayload;
+
+
 
 export interface CreateRecurringFlightMasterPayload {
   aircraft_id: string

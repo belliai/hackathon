@@ -37,7 +37,7 @@ const useKeyPressNavigation = (items: TSidebarItem[]) => {
     const handleKeyUp = (event: KeyboardEvent) => {
       setKeysPressed(prevKeys => {
         const newKeys = new Set(prevKeys);
-        newKeys.delete(event.key.toLowerCase());
+        event.key && newKeys.delete(event.key.toLowerCase());
         return newKeys;
       });
     };

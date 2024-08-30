@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { Frequency, Options, RRule, Weekday } from "rrule"
+import { ByWeekday, datetime, Frequency, Options, RRule, Weekday } from "rrule"
 
 export function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -99,29 +99,26 @@ export function getCurrentTimestamp(): string {
   return `${isoWithoutMillis}${timezone}`
 }
 
-
 export function getDefaultTimeZone() {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return Intl.DateTimeFormat().resolvedOptions().timeZone
 }
-
-
 
 // Define EndOption type
 type EndOption =
   | "never"
   | { type: "date"; endDate: Date }
-  | { type: "occurrences"; occurrences: number };
+  | { type: "occurrences"; occurrences: number }
 
 // Define DayOfWeek type
-type DayOfWeek = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";
+type DayOfWeek = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU"
 
 // Define the parameters for the function
 interface RecurringOptionsParams {
-  startAt: Date;
-  everyNumber?: number;
-  everyPeriod?: "day" | "week" | "month" | "year";
-  days?: DayOfWeek[];
-  end?: EndOption;
+  startAt: Date
+  everyNumber?: number
+  everyPeriod?: "day" | "week" | "month" | "year"
+  days?: DayOfWeek[]
+  end?: EndOption
 }
 
 // Map DayOfWeek to RRule Weekdays
@@ -133,19 +130,35 @@ const dayMapping: { [key in DayOfWeek]: Weekday } = {
   FR: RRule.FR,
   SA: RRule.SA,
   SU: RRule.SU,
-};
+}
 
-
+const dayNameMap: { [key: string]: Weekday } = {
+  Sunday: RRule.SU,
+  Monday: RRule.MO,
+  Tuesday: RRule.TU,
+  Wednesday: RRule.WE,
+  Thursday: RRule.TH,
+  Friday: RRule.FR,
+  Saturday: RRule.SA,
+}
 
 export function generateRecurringOptions({
   startAt,
   everyNumber,
   everyPeriod,
   days,
-  end
+  end,
 }: RecurringOptionsParams) {
-  const dayOfMonth = startAt.getDate();
+  const dayOfMonth = startAt.getDate()
+  const dtstart = datetime(
+    startAt.getFullYear(),
+    startAt.getMonth() + 1,
+    startAt.getDate()
+  )
 
+  // Get the full day name from startAt
+  const dayName = format(startAt, "EEEE")
+  const rruleDay = dayNameMap[dayName] || null
   // Define the recurring options
   const options = [
     {
@@ -154,66 +167,70 @@ export function generateRecurringOptions({
     },
     {
       label: `Daily`,
-      value: new RRule({ freq: RRule.DAILY, dtstart: startAt }).toString(),
+      value: new RRule({ freq: RRule.DAILY, dtstart }).toString(),
     },
     {
-      label: `Weekly on ${format(new Date(startAt),'EEEE')}`,
-      value: new RRule({ freq: RRule.WEEKLY, byweekday: [RRule.MO], dtstart: startAt }).toString(),
+      label: `Weekly on ${dayName}`,
+      value: new RRule({
+        freq: RRule.WEEKLY,
+        byweekday: rruleDay,
+        // dtstart: dtstart,
+      }).toString(),
     },
     {
       label: "Custom...",
       value: "custom",
     },
-  ];
+  ]
 
   // Initialize the variable for the generated option
-  let generatedOption: { label: string, value: string } | null = null;
+  let generatedOption: { label: string; value: string } | null = null
 
   // If everyNumber and everyPeriod are provided, generate a custom recurring option
   if (everyNumber && everyPeriod) {
     let rruleOptions: Partial<Options> = {
       interval: everyNumber,
-      dtstart: startAt,
+      dtstart: dtstart,
       until: undefined,
       count: undefined,
       freq: RRule[everyPeriod.toUpperCase() as keyof typeof RRule] as Frequency,
-    };
+    }
 
     // Define the RRule options
     if (everyPeriod === "week" && days && days.length > 0) {
-      const daysOfWeek = days.map(day => dayMapping[day]);
-      rruleOptions.byweekday = daysOfWeek;
+      const daysOfWeek = days.map((day) => dayMapping[day])
+      rruleOptions.byweekday = daysOfWeek
     }
 
     // Set the end option
     if (end) {
       if (end === "never") {
-        rruleOptions.until = undefined;
-        rruleOptions.count = undefined;
+        rruleOptions.until = undefined
+        rruleOptions.count = undefined
       } else if (end.type === "date") {
-        rruleOptions.until = end.endDate;
-        rruleOptions.count = undefined;
+        rruleOptions.until = end.endDate
+        rruleOptions.count = undefined
       } else if (end.type === "occurrences") {
-        rruleOptions.until = undefined;
-        rruleOptions.count = end.occurrences;
+        rruleOptions.until = undefined
+        rruleOptions.count = end.occurrences
       }
     }
 
     // Create the RRule instance
-    const rrule = new RRule(rruleOptions);
+    const rrule = new RRule(rruleOptions)
 
     // Generate the custom option with duration
     generatedOption = {
       label: `${rrule.toText()}`,
       value: rrule.toString(),
-    };
+    }
 
     // Add the generated option to the options list
-    options.push(generatedOption);
+    options.push(generatedOption)
   }
 
   return {
     options,
     generatedOption,
-  };
+  }
 }

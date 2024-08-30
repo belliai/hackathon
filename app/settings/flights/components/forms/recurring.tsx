@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState } from "react"
+import { FlightSchema } from "@/schemas/flight-master/flight"
 import { useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -57,9 +58,8 @@ const getPeriods = (val: number) => {
   }))
 }
 
-
-const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-const daysMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]
+const daysMap = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
 
 interface WeeklyCheckboxProps {
   day: string
@@ -96,7 +96,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const formData = form.watch()
   const [recurrings, setRecurrings] =
     useState<Array<{ label: string; value: string }>>(recurringOption)
-  const [repeatEnd, setRepeatEnd] = useState<string>("never")
+  const [repeatEnd, setRepeatEnd] = useState<string>(formData.end_condition || "never")
 
   const optionsPeriod = useMemo(
     () => getPeriods(formData.recurring_count),
@@ -112,13 +112,21 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     }
   }, [formData.departure_date])
 
-  useEffect(() => {}, [formData.period])
+  useEffect(() => {
+    if (repeatEnd === "never") {
+      form.setValue("end_date", undefined)
+      form.setValue("end_after_occurrences", undefined)
+    }
+    form.setValue("end_condition", repeatEnd)
+  }, [repeatEnd])
+
+
 
   return (
     <Card className="space-y-4 p-4" ref={ref}>
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-2">
-          <InputSwitch
+          <InputSwitch<FlightSchema>
             name="recurring"
             label="Recurring"
             type="select"
@@ -131,7 +139,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           <div className="grid grid-cols-3 items-end gap-4">
             <InputSwitch
               label="Repeat every"
-              name="recurring_count"
+              name="recurring_every"
               type="stepper-number"
               max={100}
               min={1}
@@ -142,44 +150,43 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
               name="recurring_period"
               type="select"
               selectOptions={optionsPeriod}
+              defaultValue="weekly"
             />
           </div>
           {formData.recurring_period === "weekly" && (
             <div className="grid grid-cols-1 gap-4">
               <Label>Repeat on</Label>
               <div className="flex">
-                {daysOfWeek.map(
-                  (day: string, index) => (
-                    <FormField
-                      key={day}
-                      control={form.control}
-                      name="days"
-                      render={({ field }) => {
-                        const value = field.value || [] // Ensure value is an array
-                        const mappedDay = daysMap[index];
-                        return (
-                          <FormItem
-                            key={mappedDay}
-                            className="mr-3 flex flex-row items-start gap-1 space-y-0"
-                          >
-                            <FormControl>
-                              <WeeklyCheckbox
-                                day={day}
-                                checked={value.includes(mappedDay)}
-                                onChange={() => {
-                                  const newValue = value.includes(mappedDay)
-                                    ? value.filter((d:string) => d !== mappedDay)
-                                    : [...value, mappedDay]
-                                  field.onChange(newValue)
-                                }}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )
-                      }}
-                    />
-                  )
-                )}
+                {daysOfWeek.map((day: string, index) => (
+                  <FormField
+                    key={index}
+                    control={form.control}
+                    name="days"
+                    render={({ field }) => {
+                      const value = field.value || [] // Ensure value is an array
+                      const mappedDay = daysMap[index]
+                      return (
+                        <FormItem
+                          key={mappedDay}
+                          className="mr-3 flex flex-row items-start gap-1 space-y-0"
+                        >
+                          <FormControl>
+                            <WeeklyCheckbox
+                              day={day}
+                              checked={value.includes(mappedDay)}
+                              onChange={() => {
+                                const newValue = value.includes(mappedDay)
+                                  ? value.filter((d: string) => d !== mappedDay)
+                                  : [...value, mappedDay]
+                                field.onChange(newValue)
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )
+                    }}
+                  />
+                ))}
               </div>
               <p className={cn("text-[0.8rem] font-medium text-destructive")}>
                 {/* {form.formState.errors.days?.message} */}
@@ -190,7 +197,8 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           <div className="grid grid-cols-1 gap-4">
             <Label>Ends</Label>
             <RadioGroup
-              defaultValue="never"
+              name="end_condition"
+              defaultValue={repeatEnd}
               onValueChange={(val) => {
                 setRepeatEnd(val)
               }}
@@ -202,38 +210,39 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
               </div>
               <div className="grid grid-cols-4 gap-4">
                 <div className="space-x-2">
-                  <RadioGroupItem value="ends_on" id="r2" />
+                  <RadioGroupItem value="on_date" id="r2" />
                   <Label htmlFor="r2">On</Label>
                 </div>
                 <div>
                   <InputSwitch
                     label=""
-                    name="recurring_ends_on"
+                    name="end_date"
                     type="date"
-                    disabled={repeatEnd !== "ends_on"}
-                    disabledMatcher={()=>false}
+                    required={repeatEnd == "on_date"}
+                    disabled={repeatEnd !== "on_date"}
+                    disabledMatcher={() => false}
                   />
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-4">
                 <div className="space-x-2">
-                  <RadioGroupItem value="after" id="r3" />
+                  <RadioGroupItem value="after_occurrences" id="r3" />
                   <Label htmlFor="r3">After</Label>
                 </div>
                 <div className="col-span-1 flex items-center space-x-2">
                   <InputSwitch
                     label=""
-                    name="recurring_occurence"
+                    name="end_after_occurrences"
                     type="stepper-number"
-                    disabled={repeatEnd !== "after"}
+                    disabled={repeatEnd !== "after_occurrences"}
                     max={100}
                     min={1}
                     step={1}
                   />
                   <Label
-                    className={cn(repeatEnd !== "after" ? "text-zinc-500" : "")}
+                    className={cn(repeatEnd !== "after_occurrences" ? "text-zinc-500" : "")}
                   >
-                    Occurence{formData.after_occurence > 1 && "s"}
+                    Occurence{formData.end_after_occurrences > 1 && "s"}
                   </Label>
                 </div>
               </div>
