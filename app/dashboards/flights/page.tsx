@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table"
 import { Loader } from "lucide-react"
 import moment from "moment"
+import { useTheme } from "next-themes"
 import { useFieldArray, useForm } from "react-hook-form"
 import { useReadLocalStorage } from "usehooks-ts"
 
@@ -20,6 +21,7 @@ import {
   useFlightList,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
+import { cn } from "@/lib/utils"
 import { onExport } from "@/lib/utils/export"
 import { Input } from "@/components/ui/input"
 import { TableHeaderWithTooltip } from "@/components/ui/table"
@@ -49,7 +51,7 @@ type FlightWithActualInformation = Flight & {
 }
 
 const SETTING_OPTIONS = {
-  width: 'w-[234px]',
+  width: "w-[234px]",
   data: [
     {
       label: "Aircraft Types",
@@ -91,7 +93,7 @@ const SETTING_OPTIONS = {
         },
       ],
     },
-  ]
+  ],
 }
 
 export default function FlightsDashboardPage() {
@@ -431,7 +433,7 @@ export default function FlightsDashboardPage() {
           setSelectedFlight(null)
         }}
       >
-        <div className="flex w-full flex-col gap-8 max-w-full">
+        <div className="flex w-full max-w-full flex-col gap-8">
           <DataTable
             columns={selectedFlightColumn}
             data={actualInformationForm.getValues().infos ?? []}
@@ -463,7 +465,7 @@ export default function FlightsDashboardPage() {
           manualPagination={true}
           onRowClick={handleRowClick}
           tableState={tableState}
-          className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
+          className="border-none [&_td]:px-3 [&_td]:py-1 dark:[&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 dark:[&_th]:text-foreground"
           menuId="flight-dashboard"
           showToolbarOnlyOnHover={true}
           isCanExport={true}
@@ -491,6 +493,8 @@ function ActualInformation({
   displayOption: DisplayOption
   unit?: string
 }) {
+  const { resolvedTheme } = useTheme()
+
   switch (displayOption) {
     case "numbers":
       return (
@@ -536,12 +540,23 @@ function ActualInformation({
           ? 0.1 // Set minimum alpha to 0.1
           : backgroundAlphaDecimal
 
+      const threshold = 0.5
+      const isMoreThanThreshold = backgroundAlphaDecimal > threshold
+      const lightModeTextColor = `rgba(251, 87, 39, ${backgroundAlpha + 0.8})`
+
       return (
         <div className="flex w-fit shrink-0 items-center gap-2">
           <span
-            className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 text-center text-sm text-white"
+            className={cn(
+              "w-14 whitespace-nowrap rounded-sm border bg-button-primary px-1 text-center text-sm text-zinc-500 dark:border-0 dark:text-white"
+            )}
             style={{
               backgroundColor: `rgba(251, 87, 39, ${backgroundAlpha})`,
+              borderColor: lightModeTextColor,
+              color:
+                isMoreThanThreshold || resolvedTheme === "dark"
+                  ? "#FFFF"
+                  : lightModeTextColor,
             }}
           >
             {percentage2}%

@@ -229,7 +229,7 @@ export function Combobox({
         <FormItem>
           {label && (
             <FormLabel
-              className="text-xs font-semibold text-muted-foreground"
+              className="text-xs font-semibold  dark:text-muted-foreground"
               info={info}
             >
               {label}
@@ -242,7 +242,7 @@ export function Combobox({
                   variant="outline"
                   role="combobox"
                   className={cn(
-                    "h-10 w-full justify-between border-2 border-foreground/30 px-3",
+                    "h-10 w-full justify-between dark:border-2 dark:border-foreground/30 px-3",
                     !field.value && "text-muted-foreground",
                     className
                   )}

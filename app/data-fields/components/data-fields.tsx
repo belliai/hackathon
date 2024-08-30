@@ -100,7 +100,7 @@ function DataFieldsItemContent<T extends FieldValues>({
           <InputSwitch
             {...formWithoutHidden[0]}
             label={undefined}
-            className="bg-zinc-900/50"
+            className="dark:bg-zinc-900/50"
           />
           <div className="flex gap-2">
             <Button
@@ -182,32 +182,36 @@ function DataFieldsItemContent<T extends FieldValues>({
               actionsClassName
             )}
           >
-          {!disableAction && (
-            <>
-              {onSave && <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleOpenEdit()
-                }}
-              >
-                <PencilIcon type="button" size={14} />
-              </Button>}
-              {onDelete && <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDelete?.()
-                }}
-              >
-                <Trash2 type="button" size={14} />
-              </Button>}
-            </>
-          )}
+            {!disableAction && (
+              <>
+                {onSave && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleOpenEdit()
+                    }}
+                  >
+                    <PencilIcon type="button" size={14} />
+                  </Button>
+                )}
+                {onDelete && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onDelete?.()
+                    }}
+                  >
+                    <Trash2 type="button" size={14} />
+                  </Button>
+                )}
+              </>
+            )}
           </div>
         </div>
       )}
@@ -222,7 +226,7 @@ function DataFieldsItem({
   return (
     <div
       className={cn(
-        "group flex justify-between rounded-sm border bg-zinc-900/50 px-3 py-1.5",
+        "group flex justify-between rounded-sm border px-3 py-1.5 dark:bg-zinc-900/50",
         className
       )}
     >

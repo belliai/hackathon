@@ -101,7 +101,7 @@ export default function AircraftDataTable({ isSetting = false }: { isSetting?: b
               className="cursor-pointer text-foreground"
               onClick={() => handleAircraftRowClick(aircraft)}
             >
-              <Card className="sm group grid grid-cols-3 border bg-zinc-900/50 px-3 py-1.5 text-sm">
+              <Card className="sm group grid grid-cols-3 border dark:bg-zinc-900/50 px-3 py-1.5 text-sm bg-white">
                 <span>
                   {aircraftName}{" "}
                   {isDuplicate && (

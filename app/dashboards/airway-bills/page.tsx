@@ -208,7 +208,7 @@ export default function Home() {
             pageCount={isLoading ? 1 : ordersData.total_pages}
             manualPagination={true}
             tableState={tableState}
-            className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
+            className="border-none [&_td]:px-3 [&_td]:py-1 [&_th]:px-3 [&_th]:py-2"
             menuId="airway-bill-dashboard"
             showToolbarOnlyOnHover={true}
             extraRightComponents={generateButton}

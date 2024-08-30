@@ -52,10 +52,10 @@ export default function SidebarItem({
 }: SidebarItemProps) {
   function getBaseItemClassName(currentActive: boolean) {
     const className = cn(
-      "group flex [&_svg]:text-[#949496] [&[data-state=open]>div]:dark:text-white dark:text-[#E2E3E5] justify-start text-[13px] dark:hover:text-white items-center gap-x-1 !h-7 rounded-sm py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-100 dark:hover:bg-zinc-800",
+      "group flex text-zinc-500 dark:[&_svg]:text-[#949496] [&[data-state=open]>div]:dark:text-white dark:text-[#E2E3E5] justify-start text-[13px] dark:hover:text-white items-center gap-x-1 !h-7 rounded-sm py-0 font-medium leading-normal hover:no-underline hover:bg-zinc-100 dark:hover:bg-zinc-800",
       !isExpanded ? "justify-center" : "",
       currentActive
-        ? "dark:text-white dark:bg-zinc-900 dark:[&_svg]:text-white"
+        ? "dark:text-white dark:bg-zinc-900 dark:[&_svg]:text-white text-black bg-zinc-100"
         : ""
     )
 
