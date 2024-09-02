@@ -55,6 +55,7 @@ export interface Flight {
   recurring_every?: number
   end_after_occurrences?: number
   end_date?: string
+  specification: Specification
 }
 
 export interface CreateFlightMasterPayload {
@@ -106,3 +107,30 @@ export interface CreateRecurringFlightMasterPayload {
   departure_h: number
   departure_m: number
 }
+
+
+export interface Specification {
+  gl_code: string;
+  mtow: number;
+  max_zero_fuel_weight: number;
+  passenger_capacity: number;
+  uld_position: number;
+  landing_weight: number;
+  cargo_capacity: number;
+  max_bulk_capacity_weight: number;
+  max_bulk_capacity_volume: number;
+  max_volume: number;
+  restricted_weight_piece: number;
+  max_dimension_length: number;
+  max_dimension_breadth: number;
+  max_dimension_height: number;
+  aft_h: number;
+  aft_w: number;
+  fwd_h: number;
+  fwd_w: number;
+  bulk_h: number;
+  bulk_w: number;
+  fwt: number;
+  fwd: number;
+  bulk: number;
+};

@@ -1,11 +1,16 @@
 import { useEffect, useRef } from "react"
-import { SaveIcon } from "lucide-react"
+import { Info, SaveIcon } from "lucide-react"
 import { DefaultValues, Path, PathValue, useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Form, FormLabel } from "@/components/ui/form"
 import { Switch } from "@/components/ui/switch"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import InputSwitch from "@/components/form/InputSwitch"
 
 type Field = { name: string; label: string }
@@ -15,6 +20,7 @@ type FieldSectionVisibilityTogglesProps<
   Fields extends Field[],
 > = {
   sectionKey: Key
+  apiSectionKey?: string
   fields: Fields
   defaultValues?: DefaultValues<Record<Fields[0]["name"], boolean>>
   isSaving?: boolean
@@ -93,14 +99,49 @@ export default function FieldSectionVisibilityToggles<
           </Button>
         </div>
         <div className="space-y-2">
+          <div className="grid w-full grid-cols-3 px-3 py-1.5 text-sm">
+            <div />
+            <div className="ml-auto flex items-center gap-2">
+              <span>Actual Value</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size={14} className="opacity-50" />
+                </TooltipTrigger>
+                <TooltipContent className="dark:bg-zinc-900 dark:text-white">
+                  User will be able to view and update the value of this field
+                  on for every flight
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <span>Field</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info size={14} className="opacity-50" />
+                </TooltipTrigger>
+                <TooltipContent className="dark:bg-zinc-900 dark:text-white">
+                  Visibility of this field in the section
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </div>
           {props.fields.map((field) => {
             return (
               <Card
                 key={field.name}
-                className="group flex w-full justify-between border bg-zinc-900/50 px-3 py-1.5 text-sm"
+                className="group grid w-full grid-cols-3 border bg-zinc-900/50 px-3 py-1.5 text-sm"
               >
                 <span>{field.label}</span>
-                <InputSwitch name={field.name} type="switch" />
+                <InputSwitch
+                  name={field.name + "_actual"}
+                  type="switch"
+                  className="ml-auto"
+                />
+                <InputSwitch
+                  name={field.name}
+                  type="switch"
+                  className="ml-auto"
+                />
               </Card>
             )
           })}

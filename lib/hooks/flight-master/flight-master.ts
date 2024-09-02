@@ -96,11 +96,25 @@ export const updateFlight = async (
 ) => {
   return belliApi
     .put(
-      `${route}/${id}?update_mode=${update_mode ? update_mode : "one" }`,
+      `${route}/${id}?update_mode=${update_mode ? update_mode : "one"}`,
       data
     )
     .then((res) => res.data as Flight)
 }
+
+export const partialUpdate = async (
+  belliApi: AxiosInstance,
+  id: string,
+  data: Partial<Flight>,
+) => {
+  return belliApi
+    .patch(
+      `${route}/${id}`,
+      data
+    )
+    .then((res) => res.data as Flight)
+}
+
 
 export const useUpdateFlight = () => {
   const queryClient = useQueryClient()
@@ -111,6 +125,22 @@ export const useUpdateFlight = () => {
     mutationFn: async (data: CreateFlightMasterPayload & { id: string, update_mode?: string }) => {
       const { id, ...rest } = data
       return await updateFlight(await belliApi, data.id, rest)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [route] })
+    },
+  })
+}
+
+export const usePartialUpdateFlight = () => {
+  const queryClient = useQueryClient()
+  const belliApi = useBelliApi()
+
+  return useMutation({
+    mutationKey: [route],
+    mutationFn: async (data: Partial<Flight> & { id: string, update_mode?: string }) => {
+      const { id, ...rest } = data
+      return await partialUpdate(await belliApi, data.id, rest)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [route] })
