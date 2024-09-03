@@ -7,20 +7,15 @@ import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import {
-  CogIcon,
   EyeIcon,
   HomeIcon,
-  KanbanSquare,
   ListFilterIcon,
-  Loader,
   SearchIcon,
-  SquareKanban,
   SquareKanbanIcon,
 } from "lucide-react"
 
-import { getData } from "@/lib/data"
+import { Order as OrderRes } from "@/types/orders"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
-import { useStatuses } from "@/lib/hooks/statuses"
 import { onExport } from "@/lib/utils/export"
 import {
   AlertDialog,
@@ -35,7 +30,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
-import { columns, Order } from "@/components/dashboard/columns"
+import { columns } from "@/components/dashboard/columns"
 import NewOrderSideModal from "@/components/dashboard/new-order-side-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 
@@ -90,7 +85,7 @@ export default function Home() {
     setCards(ordersData?.data || [])
   }, [ordersData])
 
-  const openModal = (data: Order, columnId: string) => {
+  const openModal = (data: OrderRes, columnId: string) => {
     console.error("opening modal from airwaybill", data)
     setSelectedBooking(data)
     setSelectedColumnId(columnId)
@@ -177,14 +172,29 @@ export default function Home() {
   }
 
   const ActionButtons = () => (
-    <div className="flex gap-2 items-center ml-auto" style={{ marginRight: '-7.5px' }}>
-      <Button size="icon" variant="outline" className="h-8 w-8 opacity-75 hover:opacity-100">
+    <div
+      className="ml-auto flex items-center gap-2"
+      style={{ marginRight: "-7.5px" }}
+    >
+      <Button
+        size="icon"
+        variant="outline"
+        className="h-8 w-8 opacity-75 hover:opacity-100"
+      >
         <ListFilterIcon className="h-4 w-4" />
       </Button>
-      <Button size="icon" variant="outline" className="h-8 w-8 opacity-75 hover:opacity-100">
+      <Button
+        size="icon"
+        variant="outline"
+        className="h-8 w-8 opacity-75 hover:opacity-100"
+      >
         <SearchIcon className="h-4 w-4" />
       </Button>
-      <Button size="icon" variant="outline" className="h-8 w-8 opacity-75 hover:opacity-100">
+      <Button
+        size="icon"
+        variant="outline"
+        className="h-8 w-8 opacity-75 hover:opacity-100"
+      >
         <EyeIcon className="h-4 w-4" />
       </Button>
       {generateButton}
@@ -221,11 +231,15 @@ export default function Home() {
         </TabsContent>
         <TabsContent value="kanban-view" asChild>
           <>
-            <div className="flex justify-between items-center gap-2">
+            <div className="flex items-center justify-between gap-2">
               {memoizedTabsList}
               <ActionButtons />
             </div>
-            <CustomKanban ordersData={ordersData} cards={cards} setCards={setCards} />
+            <CustomKanban
+              ordersData={ordersData}
+              cards={cards}
+              setCards={setCards}
+            />
           </>
         </TabsContent>
       </Tabs>

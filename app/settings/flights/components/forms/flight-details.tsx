@@ -1,62 +1,75 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { FlightSchema } from "@/schemas/flight-master/flight"
-import { format } from "date-fns"
-import { fromZonedTime, getTimezoneOffset, toZonedTime } from "date-fns-tz"
-import { PlaneTakeoffIcon } from "lucide-react"
+import { getTimezoneOffset } from "date-fns-tz"
 import { useFormContext } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
+import { Location } from "@/types/flight-master/flight-master"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
-import { useLocations } from "@/lib/hooks/locations"
+import { useLocationSearch } from "@/lib/hooks/locations"
+import { ObjectSet } from "@/lib/utils/array-utils"
 import { getDateByType, getPeriod } from "@/lib/utils/time-picker-utils"
 import { Card } from "@/components/ui/card"
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import TimeInput from "@/components/ui/time-input"
-import { Combobox } from "@/components/form/combobox"
-import FormTextField from "@/components/form/FormTextField"
+import { ComboboxOption } from "@/components/form/combobox"
 import InputSwitch from "@/components/form/InputSwitch"
 
-const isValidDate = (date: unknown): date is Date => {
-  return date instanceof Date && !isNaN(date.getTime())
+interface FlightDetailsFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  initialLocations?: Location[]
 }
 
-const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
+const FlightDetailsForm = React.forwardRef<
+  HTMLDivElement,
+  FlightDetailsFormProps
+>(({ initialLocations }, ref) => {
   const form = useFormContext<FlightSchema>()
   const formData = form.watch()
 
-  const { data: locations } = useLocations()
+  const [searchTerm, setSearchTerm] = useState("")
 
-  const formattedLocation =
-    locations?.map((locationList: any) => {
-      const timezone = locationList.timezone
-      const cityName = timezone ? timezone.name.split(" - ").pop() : ""
+  const [allLocations, setAllLocations] = useState<Location[]>(
+    initialLocations ?? []
+  )
 
-      const label = timezone ? (
-        <p>
-          {locationList.airport_code}{" "}
-          <span className="text-xs text-zinc-500">
-            (GMT {timezone.offset}, {cityName})
-          </span>
-        </p>
-      ) : (
-        locationList.airport_code
-      )
+  const { data: locationsSearch } = useLocationSearch({ searchTerm })
 
-      return {
-        label: label,
-        value: locationList.ID,
-      }
-    }) || []
+  useEffect(() => {
+    if (!locationsSearch?.data) return
+
+    const objectSet = new ObjectSet<Location>("id")
+    setAllLocations((prev) => {
+      objectSet.addAll([...prev, ...locationsSearch.data])
+      return objectSet.getItems()
+    })
+  }, [locationsSearch])
+
+  const formattedLocation: ComboboxOption[] = useMemo(() => {
+    return (
+      allLocations.map((location) => {
+        const timezone = location.timezone
+        const cityName = timezone ? timezone.name.split(" - ").pop() : ""
+
+        const label = timezone ? (
+          <p>
+            {location.airport_code}{" "}
+            <span className="text-xs text-zinc-500">
+              (GMT {timezone.offset}, {cityName})
+            </span>
+          </p>
+        ) : (
+          location.airport_code
+        )
+
+        return {
+          component: label,
+          label: location.name,
+          value: location.id,
+        }
+      }) || []
+    )
+  }, [allLocations])
 
   const generateTailName = (selectedAircraftType: Aircraft, tail: string) => {
     return (
@@ -96,108 +109,40 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     )
   }
 
-  const generateDepartureTime = (
-    fromDate: Date,
-    hour: number,
-    min: number,
-    amPm: string
-  ) => {
-    if (!fromDate || isNaN(hour) || isNaN(min)) return null
-
-    // Convert hour to 24-hour format
-    if (amPm === "PM" && hour !== 12) {
-      hour += 12
-    } else if (amPm === "AM" && hour === 12) {
-      hour = 0
-    }
-    const date = new Date(
-      fromDate.getFullYear(),
-      fromDate.getMonth(),
-      fromDate.getDate(),
-      hour,
-      min
-    )
-
-    return date
-  }
-
-
   const calculateFlightDuration = (
     departureDate?: Date | null,
     originOffset?: string, // e.g., "+02:00"
     arrivalDate?: Date | null,
     destinationOffset?: string // e.g., "+04:00"
   ) => {
-    if (
-      !departureDate ||
-      !originOffset ||
-      !arrivalDate ||
-      !destinationOffset
-    ) {
-      return null;
-    }
-  
-    // Parse offset strings to get the offset in minutes
-    const parseOffset = (offset: string) => {
-      const sign = offset[0] === "+" ? 1 : -1;
-      const [hours, minutes] = offset.slice(1).split(":").map(Number);
-      return sign * (hours * 60 + minutes) * 60 * 1000;
-    };
-  
-    const originOffsetMs = parseOffset(originOffset);
-    const destinationOffsetMs = parseOffset(destinationOffset);
-  
-    // Convert times to UTC by subtracting the respective offsets
-    const departureUTC = new Date(departureDate.getTime() - originOffsetMs);
-    const arrivalUTC = new Date(arrivalDate.getTime() - destinationOffsetMs);
-  
-    // Calculate duration in milliseconds
-    const durationMs = arrivalUTC.getTime() - departureUTC.getTime();
-  
-    // Convert duration to hours and minutes
-    const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
-    const durationMinutes = Math.floor(
-      (durationMs % (1000 * 60 * 60)) / (1000 * 60)
-    );
-  
-    return { hours: durationHours, minutes: durationMinutes };
-  };
-
-  const generateArrivalTime = (
-    date: Date,
-    hour: number,
-    min: number,
-    originTimezone: string,
-    destinationTimezone: string
-  ) => {
-    if (
-      !date ||
-      hour === undefined ||
-      min === undefined ||
-      !originTimezone ||
-      !destinationTimezone
-    ) {
+    if (!departureDate || !originOffset || !arrivalDate || !destinationOffset) {
       return null
     }
 
-    // get offset for every timezone
-    const originOffset = getTimezoneOffset(originTimezone, date)
-    // get offset for every timezone
-    const destinationOffset = getTimezoneOffset(destinationTimezone, date)
+    // Parse offset strings to get the offset in minutes
+    const parseOffset = (offset: string) => {
+      const sign = offset[0] === "+" ? 1 : -1
+      const [hours, minutes] = offset.slice(1).split(":").map(Number)
+      return sign * (hours * 60 + minutes) * 60 * 1000
+    }
 
-    // const originDate = toZonedTime(date, originTimezone)
-    const originDate = new Date(date)
-    originDate.setHours(date.getHours())
-    originDate.setMinutes(date.getMinutes())
+    const originOffsetMs = parseOffset(originOffset)
+    const destinationOffsetMs = parseOffset(destinationOffset)
 
-    // Calculate the time to add in milliseconds
-    const minutesToAdd = hour * 60 + min
-    const arrivalDate = new Date(originDate.getTime() + minutesToAdd * 60000)
+    // Convert times to UTC by subtracting the respective offsets
+    const departureUTC = new Date(departureDate.getTime() - originOffsetMs)
+    const arrivalUTC = new Date(arrivalDate.getTime() - destinationOffsetMs)
 
-    const convertedArrivalDate = new Date(
-      arrivalDate.getTime() - (originOffset - destinationOffset)
+    // Calculate duration in milliseconds
+    const durationMs = arrivalUTC.getTime() - departureUTC.getTime()
+
+    // Convert duration to hours and minutes
+    const durationHours = Math.floor(durationMs / (1000 * 60 * 60))
+    const durationMinutes = Math.floor(
+      (durationMs % (1000 * 60 * 60)) / (1000 * 60)
     )
-    return convertedArrivalDate
+
+    return { hours: durationHours, minutes: durationMinutes }
   }
 
   const { data: aircraftsList } = useAircrafts({ page: 1, page_size: 999 })
@@ -215,14 +160,16 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   useEffect(() => {}, [form.formState])
 
   const originTimezoneOffset =
-    locations &&
+    allLocations &&
     formData.origin_id &&
-    locations?.find((loc: any) => loc.ID === formData.origin_id).timezone?.offset
+    allLocations.find((loc) => loc.id === formData.origin_id)?.timezone?.offset
   const destinationTimezoneOffset =
-    locations &&
+    allLocations &&
     formData.destination_id &&
-    locations?.find((loc: any) => loc.ID === formData.destination_id).timezone
+    allLocations.find((loc) => loc.id === formData.destination_id)?.timezone
       ?.offset
+
+  console.log({ originTimezoneOffset, destinationTimezoneOffset })
 
   // console.log("departure", form.watch("departure_date"))
   // console.log("arrival", form.watch("arrival_date"))
@@ -248,7 +195,7 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     destinationTimezoneOffset,
   ])
 
- // console.log(form.formState.errors)
+  // console.log(form.formState.errors)
 
   useEffect(() => {
     if (!formData.departure_date) return
@@ -284,11 +231,13 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         <div className="grid flex-1 grid-cols-1 gap-2">
           <InputSwitch<FlightSchema>
             name="origin_id"
-            selectOptions={formattedLocation}
-            type="combobox"
+            options={formattedLocation}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            searchPlaceholder="Search origin by airport code"
+            type="combobox-async"
             label="Origin"
             info="Select the origin location"
-            editLink="/data-fields/airway-bills?tab=location"
           />
           <InputSwitch<FlightSchema>
             type="date"
@@ -308,11 +257,13 @@ const FlightDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
         <div className="grid flex-1 grid-cols-1 gap-2">
           <InputSwitch<FlightSchema>
             name="destination_id"
-            selectOptions={formattedLocation}
-            type="combobox"
+            options={formattedLocation}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            searchPlaceholder="Search destination by airport code"
+            type="combobox-async"
             label="Destination"
             info="Select the destination location"
-            editLink="/data-fields/airway-bills?tab=location"
           />
           <InputSwitch<FlightSchema>
             type="date"

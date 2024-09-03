@@ -46,7 +46,7 @@ const Location = () => {
           htmlFor="timezone_option"
           className="text-sm text-muted-foreground"
         >
-          Set default Timezone:
+          Set default Location:
         </label>
         <Form {...form}>
           <form

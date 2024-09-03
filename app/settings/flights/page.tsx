@@ -11,27 +11,11 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns"
-import {
-  ListIcon,
-  PackageIcon,
-  PlaneIcon,
-  Plus,
-  PlusIcon,
-  ScrollTextIcon,
-  SquarePenIcon,
-  UserIcon,
-} from "lucide-react"
-import moment from "moment"
+import { ListIcon, PlusIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
-import { RRule } from "rrule"
 import { z } from "zod"
 
-import { Aircraft } from "@/types/aircraft/aircraft"
-import {
-  CreateFlightMasterPayload,
-  CreateRecurringFlightMasterPayload,
-  Flight,
-} from "@/types/flight-master/flight-master"
+import { Flight } from "@/types/flight-master/flight-master"
 import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import {
@@ -41,7 +25,6 @@ import {
   useRecurringFlightList,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
-import { generateRecurringDates } from "@/lib/utils/date-utils"
 import { onExport } from "@/lib/utils/export"
 import {
   AlertDialog,
@@ -54,20 +37,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
-import CreateEditModal from "@/components/dashboard/modal/create-edit-modal/create-edit-modal"
 import { DataTable } from "@/components/data-table/data-table"
-import DataTableFilterForm from "@/components/data-table/data-table-filter-form"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
 import { useListViewColumns, useRecurringColumns } from "./components/column"
-import { formFilters, listViewFilters } from "./components/filter"
-import FlightMasterForm from "./components/flight-master-form"
-import FlightMasterFormRecurring from "./components/flight-master-form-recurring"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
 import NewFlightModal from "./components/new-flight-form"
 import WeeklyDateStepper from "./components/weekly-date-stepper"
@@ -192,8 +169,6 @@ export default function Page() {
 
   useEffect(() => {}, [filterData])
 
-  
-
   const { data: flightData, isLoading } = useFlightList({
     ...paginationDetails,
     ...sortingDetails,
@@ -221,34 +196,35 @@ export default function Page() {
           : format(filterMonthly.to, "yyyy-MM-dd"),
   })
 
-  const { data: flightRecurringData, isLoading : isLoadingRecurring } = useRecurringFlightList({
-    ...paginationDetails,
-    ...sortingDetails,
-    start_date:
-      currentTab === "list-view"
-        ? filterData.list_period === "all"
-          ? undefined // format(new Date(), "yyyy-MM-dd") // filter by today
-          : filterData.list_period === "daily"
-            ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
-            : filterData.range_date.from &&
-              format(filterData.range_date.from, "yyyy-MM-dd")
-        : filterData.recurring_period === "weekly"
-          ? format(filterWeekly.from, "yyyy-MM-dd")
-          : format(filterMonthly.from, "yyyy-MM-dd"),
-    end_date:
-      currentTab === "list-view"
-        ? filterData.list_period === "all"
-          ? undefined
-          : filterData.list_period === "daily"
-            ? filterData.from_date && format(filterData.from_date, "yyyy-MM-dd")
-            : filterData.range_date.to &&
-              format(filterData.range_date.to, "yyyy-MM-dd")
-        : filterData.recurring_period === "weekly"
-          ? format(filterWeekly.to, "yyyy-MM-dd")
-          : format(filterMonthly.to, "yyyy-MM-dd"),
-  })
-
-
+  const { data: flightRecurringData, isLoading: isLoadingRecurring } =
+    useRecurringFlightList({
+      ...paginationDetails,
+      ...sortingDetails,
+      start_date:
+        currentTab === "list-view"
+          ? filterData.list_period === "all"
+            ? undefined // format(new Date(), "yyyy-MM-dd") // filter by today
+            : filterData.list_period === "daily"
+              ? filterData.from_date &&
+                format(filterData.from_date, "yyyy-MM-dd")
+              : filterData.range_date.from &&
+                format(filterData.range_date.from, "yyyy-MM-dd")
+          : filterData.recurring_period === "weekly"
+            ? format(filterWeekly.from, "yyyy-MM-dd")
+            : format(filterMonthly.from, "yyyy-MM-dd"),
+      end_date:
+        currentTab === "list-view"
+          ? filterData.list_period === "all"
+            ? undefined
+            : filterData.list_period === "daily"
+              ? filterData.from_date &&
+                format(filterData.from_date, "yyyy-MM-dd")
+              : filterData.range_date.to &&
+                format(filterData.range_date.to, "yyyy-MM-dd")
+          : filterData.recurring_period === "weekly"
+            ? format(filterWeekly.to, "yyyy-MM-dd")
+            : format(filterMonthly.to, "yyyy-MM-dd"),
+    })
 
   const { mutateAsync: createFlight, isPending } = useCreateFlight()
   const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
@@ -285,11 +261,7 @@ export default function Page() {
     return days.filter((day) => data[day as keyof Flight])
   }
 
-
- 
-
   const openDetailFlight = (data: Flight) => {
-
     setSelectedData(data)
     setOpenModal(true)
     if (data) setModalType("edit")
@@ -413,6 +385,8 @@ export default function Page() {
         return a.departureDatetime.getTime() - b.departureDatetime.getTime()
       })
 
+  console.log({ flights })
+
   return (
     <>
       <PageContainer>
@@ -509,7 +483,11 @@ export default function Page() {
             <DataTable
               showToolbarOnlyOnHover={true}
               columns={recurringColumns}
-              data={isLoadingRecurring ? [] : (flightRecurringData && flightRecurringData.data) || []}
+              data={
+                isLoadingRecurring
+                  ? []
+                  : (flightRecurringData && flightRecurringData.data) || []
+              }
               onRowClick={openDetailFlight}
               extraRightComponents={createButtonRecurringFlight}
               extraLeftComponents={
@@ -562,7 +540,10 @@ export default function Page() {
                 </TabsList>
               }
               pageCount={
-                isLoading ? 1 : (flightRecurringData && flightRecurringData.total_pages) || 1
+                isLoading
+                  ? 1
+                  : (flightRecurringData && flightRecurringData.total_pages) ||
+                    1
               }
               manualPagination={true}
               tableState={tableState}

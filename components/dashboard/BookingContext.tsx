@@ -1,7 +1,8 @@
 "use client"
 
 import React, { createContext, ReactNode, useContext, useState } from "react"
-import { Order } from "@/schemas/order/order"
+
+import { Order } from "@/types/orders"
 
 type BookingContextType = {
   selectedBooking: Order | undefined

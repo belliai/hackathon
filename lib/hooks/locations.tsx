@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
+import { Location } from "@/types/flight-master/flight-master"
 import { useBelliApi } from "@/lib/utils/network"
 
 const route = "locations"
@@ -92,23 +93,6 @@ export const useRemoveLocation = () => {
       console.log(e)
     },
   })
-}
-
-type Timezone = {
-  id: string
-  name: string
-  offset: string
-  abbreviation: string
-}
-
-type Location = {
-  id: string
-  ID: string
-  name: string
-  airport_code: string
-  city: string
-  country: string
-  timezone: Timezone
 }
 
 export const fetchLocationList = async (

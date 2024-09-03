@@ -1,16 +1,13 @@
-import React, { PropsWithChildren, useEffect, useMemo, useState } from "react"
+import React, { PropsWithChildren, useEffect, useState } from "react"
 import { FlightSchema, flightSchema } from "@/schemas/flight-master/flight"
 import { flightMasterFormSchema } from "@/schemas/flight-master/flight-master"
 import { getDefaults } from "@/schemas/utils"
 import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { format, isValid, toDate } from "date-fns"
+import { format } from "date-fns"
 import {
   ChevronRight,
-  Plane,
-  PlaneIcon,
   PlaneTakeoff,
-  PlaneTakeoffIcon,
   Repeat,
   SaveIcon,
   TimerIcon,
@@ -18,7 +15,7 @@ import {
   XCircle,
 } from "lucide-react"
 import { Path, useForm } from "react-hook-form"
-import { datetime, RRule } from "rrule"
+import { RRule } from "rrule"
 
 import {
   CreateFlightMasterPayload,
@@ -61,7 +58,6 @@ import { toast } from "@/components/ui/use-toast"
 import ActivityLog from "@/components/dashboard/activity-log"
 import { Combobox } from "@/components/form/combobox"
 
-import AircraftForm from "./forms/aircraft"
 import FlightDetailsForm from "./forms/flight-details"
 import RecurringForm from "./forms/recurring"
 
@@ -190,7 +186,15 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       label: "Flight Details",
       value: "flight-details",
       icon: PlaneTakeoff,
-      content: <FlightDetailsForm />,
+      content: (
+        <FlightDetailsForm
+          initialLocations={
+            data?.origin && data.destination
+              ? [data.origin, data.destination]
+              : undefined
+          }
+        />
+      ),
       fieldList: [
         "flight_number",
         "origin_id",

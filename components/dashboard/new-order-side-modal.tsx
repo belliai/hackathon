@@ -1,18 +1,11 @@
 "use client"
 
-import {
-  ComponentType,
-  PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
+import { PropsWithChildren, useEffect, useMemo, useState } from "react"
 import { Order, orderSchema } from "@/schemas/order/order"
 import { getDefaults } from "@/schemas/utils"
 import {
-  ArrowsPointingOutIcon,
   ArrowsPointingInIcon,
+  ArrowsPointingOutIcon,
   DeviceTabletIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline"
@@ -29,7 +22,7 @@ import {
   SquarePenIcon,
   Upload,
   UserCheck,
-  XCircle
+  XCircle,
 } from "lucide-react"
 import { useForm } from "react-hook-form"
 
@@ -53,7 +46,6 @@ import { Form } from "@/components/ui/form"
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -68,13 +60,13 @@ import ActivityLog from "./activity-log"
 import BookingDetailsForm from "./forms/booking-details-form"
 import ConsigneeForm from "./forms/consignee-form"
 import ConsignorForm from "./forms/consignor-form"
+import UploadFile from "./forms/file-upload"
 import HAWBTable from "./forms/hawb-table"
 import PayerForm from "./forms/payer-form"
 import PaymentFormV2 from "./forms/payment-form-v2"
+import WeightAndVolumeFormV2 from "./forms/weight-and-volume-form-v2"
 import HeaderSection from "./header-section"
 import SummaryTotal from "./summary-total"
-import WeightAndVolumeFormV2 from "./forms/weight-and-volume-form-v2"
-import UploadFile from "./forms/file-upload"
 
 type NewOrderSideModalProps = PropsWithChildren & {
   onOpenChange: (open: boolean) => void
@@ -152,70 +144,126 @@ export default function NewOrderSideModal({
     // })
   }
 
-const TAB_LIST: {
-    label: string;
-    value: string;
-    icon: any;
-    content: JSX.Element;
-    fieldList: string[];
-    columnList: string[];
+  console.log({ selectedBooking })
+
+  const TAB_LIST: {
+    label: string
+    value: string
+    icon: any
+    content: JSX.Element
+    fieldList: string[]
+    columnList: string[]
   }[] = [
     {
-      label: 'Booking Details',
-      value: 'booking-details',
+      label: "Booking Details",
+      value: "booking-details",
       icon: SquarePenIcon,
-      content: <BookingDetailsForm />,
-      fieldList: ['booking_type_id', 'partner_prefix_id', 'awb', 'partner_code_id', 'is_physical', 'commodity_code_id', 'commodity_name', 'pieces', 'gs_weight_kg', 'volume_kg'],
-      columnList: ['awb', 'partner_code_name', 'partner_prefix_name', 'commodity_code_name', 'gs_weight_kg', 'volume_kg'],
+      content: (
+        <BookingDetailsForm
+          initialLocations={
+            selectedBooking?.origin &&
+            selectedBooking.destination && [
+              selectedBooking.origin,
+              selectedBooking.destination,
+            ]
+          }
+        />
+      ),
+      fieldList: [
+        "booking_type_id",
+        "partner_prefix_id",
+        "awb",
+        "partner_code_id",
+        "is_physical",
+        "commodity_code_id",
+        "commodity_name",
+        "pieces",
+        "gs_weight_kg",
+        "volume_kg",
+      ],
+      columnList: [
+        "awb",
+        "partner_code_name",
+        "partner_prefix_name",
+        "commodity_code_name",
+        "gs_weight_kg",
+        "volume_kg",
+      ],
     },
     {
-      label: 'Consignor (Sender)',
-      value: 'consignor',
+      label: "Consignor (Sender)",
+      value: "consignor",
       icon: PlaneTakeoffIcon,
       content: <ConsignorForm />,
-      fieldList: ['origin_id', 'shipper_id'],
-      columnList: ['origin_name', 'shipper_name'],
+      fieldList: ["origin_id", "shipper_id"],
+      columnList: ["origin_name", "shipper_name"],
     },
     {
-      label: 'Consignee (Receiver)',
-      value: 'consignee',
+      label: "Consignee (Receiver)",
+      value: "consignee",
       icon: PlaneLandingIcon,
       content: <ConsigneeForm />,
-      fieldList: ['destination_id', 'consignee_id'],
-      columnList: ['destination_name'],
+      fieldList: ["destination_id", "consignee_id"],
+      columnList: ["destination_name"],
     },
     {
-      label: 'Payer',
-      value: 'payer',
+      label: "Payer",
+      value: "payer",
       icon: UserCheck,
       content: <PayerForm />,
-      fieldList: ['bill_to_id', 'total', 'currency'],
-      columnList: ['bill_to_name', 'total', 'currency'],
+      fieldList: ["bill_to_id", "total", "currency"],
+      columnList: ["bill_to_name", "total", "currency"],
     },
     {
-      label: 'Weight & Volume',
-      value: 'weight-and-volume',
+      label: "Weight & Volume",
+      value: "weight-and-volume",
       icon: Package2Icon,
       content: <WeightAndVolumeFormV2 />,
-      fieldList: ['origin_id', 'shipper_id'],
-      columnList: ['origin_name', 'shipper_name'],
+      fieldList: ["origin_id", "shipper_id"],
+      columnList: ["origin_name", "shipper_name"],
     },
     {
-      label: 'Payment History',
-      value: 'payment-history',
+      label: "Payment History",
+      value: "payment-history",
       icon: Banknote,
       content: <PaymentFormV2 />,
-      fieldList: ['use_freight_forwarder', 'freight_forwarder_id', 'organization_id', 'bill_to_id', 'bill_to_name', 'customer_id', 'customer_name', 'partner_prefix_id', 'rate', 's_rate', 's_freight', 'spot_id', 'gs_weight_kg', 'ch_weight_kg'],
-      columnList: ['bill_to_name', 'rate', 'currency_name', 'freight_forwarder_name', 's_freight', 's_rate', 'total', 'mode', 'ch_weight_kg', 'payment_mode_name'],
+      fieldList: [
+        "use_freight_forwarder",
+        "freight_forwarder_id",
+        "organization_id",
+        "bill_to_id",
+        "bill_to_name",
+        "customer_id",
+        "customer_name",
+        "partner_prefix_id",
+        "rate",
+        "s_rate",
+        "s_freight",
+        "spot_id",
+        "gs_weight_kg",
+        "ch_weight_kg",
+      ],
+      columnList: [
+        "bill_to_name",
+        "rate",
+        "currency_name",
+        "freight_forwarder_name",
+        "s_freight",
+        "s_rate",
+        "total",
+        "mode",
+        "ch_weight_kg",
+        "payment_mode_name",
+      ],
     },
     {
-      label: 'Upload File',
-      value: 'upload-file',
+      label: "Upload File",
+      value: "upload-file",
       icon: Upload,
       content: <UploadFile />,
       fieldList: [],
       columnList: [],
-    }
+    },
   ]
 
   useEffect(() => {
@@ -335,7 +383,9 @@ const TAB_LIST: {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        className={cn("py-4 w-full sm:max-w-6xl", { "h-screen w-screen max-w-none sm:max-w-none": isFullScreen })}
+        className={cn("w-full py-4 sm:max-w-6xl", {
+          "h-screen w-screen max-w-none sm:max-w-none": isFullScreen,
+        })}
         onInteractOutside={(e) => e.preventDefault()}
         hideCloseButton
       >
@@ -344,7 +394,7 @@ const TAB_LIST: {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex h-full w-full flex-col justify-start gap-4"
           >
-            <SheetHeader className="flex flex-row items-center justify-between space-y-0 h-7">
+            <SheetHeader className="flex h-7 flex-row items-center justify-between space-y-0">
               <SheetTitle>
                 <HeaderSection
                   bookingTypeId={formValues.booking_type_id || ""}
@@ -370,10 +420,11 @@ const TAB_LIST: {
                   className="h-6 w-6"
                   type="button"
                 >
-                  {!isFullScreen ? 
-                  <ArrowsPointingOutIcon className="h-4 w-4" /> : 
-                  <ArrowsPointingInIcon className="h-4 w-4" />  
-                }
+                  {!isFullScreen ? (
+                    <ArrowsPointingOutIcon className="h-4 w-4" />
+                  ) : (
+                    <ArrowsPointingInIcon className="h-4 w-4" />
+                  )}
                 </Button>
                 <Button
                   onClick={() => setCloseWarningOpen(true)}
@@ -393,7 +444,7 @@ const TAB_LIST: {
               }}
               className="grow"
             >
-              <div className="flex w-full h-full flex-row items-stretch gap-4">
+              <div className="flex h-full w-full flex-row items-stretch gap-4">
                 <div className="flex min-w-[220px] grow-0 flex-col gap-4">
                   <TabsList className="h-fit w-full flex-col bg-black-background">
                     {TAB_LIST.map((list, index) => (
@@ -439,7 +490,7 @@ const TAB_LIST: {
                     type="sidebar"
                   />
                 </div>
-                <div className="flex flex-col h-full w-full min-w-0 flex-shrink">
+                <div className="flex h-full w-full min-w-0 flex-shrink flex-col">
                   {TAB_LIST.map((item) => (
                     <TabsContent
                       key={`tab-${item.value}`}
@@ -467,19 +518,19 @@ const TAB_LIST: {
                 <XCircle className="mr-2 size-4" />
                 Cancel
               </Button>
-              {(getCurrentIndex(currentTab) > 0 && currentTab !== 'hawb') && (
-                  <Button
-                    type="button"
-                    variant={"secondary"}
-                    onClick={() => {
-                      const currentIndex = getCurrentIndex(currentTab)
-                      setCurrentTab(TAB_LIST[currentIndex - 1].value)
-                    }}
-                  >
-                    <ChevronLeft className="mr-2 size-4" />
-                    Previous
-                  </Button>
-                )}
+              {getCurrentIndex(currentTab) > 0 && currentTab !== "hawb" && (
+                <Button
+                  type="button"
+                  variant={"secondary"}
+                  onClick={() => {
+                    const currentIndex = getCurrentIndex(currentTab)
+                    setCurrentTab(TAB_LIST[currentIndex - 1].value)
+                  }}
+                >
+                  <ChevronLeft className="mr-2 size-4" />
+                  Previous
+                </Button>
+              )}
               {renderSaveButtons()}
             </SheetFooter>
           </form>

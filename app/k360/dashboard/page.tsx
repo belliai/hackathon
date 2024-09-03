@@ -6,6 +6,7 @@ import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PaginationState } from "@tanstack/react-table"
 import { Loader } from "lucide-react"
 
+import { Order } from "@/types/orders"
 import { getData } from "@/lib/data"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
 import {
@@ -19,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
-import { columns, Order } from "@/components/dashboard/columns"
+import { columns } from "@/components/dashboard/columns"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
