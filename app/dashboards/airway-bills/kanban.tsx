@@ -217,7 +217,7 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
     setActive(false)
   }
 
-  const filteredCards = cards.filter((c) => c.status.name === status.name)
+  const filteredCards = cards.filter((c) => c.status?.name === status.name)
 
   const { selectedBooking, setSelectedBooking } = useBookingContext()
   const handleCardClick = (id: string) => {
