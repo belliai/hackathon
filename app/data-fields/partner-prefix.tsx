@@ -1,80 +1,40 @@
-import {
-  useAddPartnerPrefix,
-  usePartnerPrefixes,
-  useRemovePartnerPrefix,
-  useUpdatePartnerPrefix,
-} from "@/lib/hooks/partner-prefix"
+import { useState } from "react"
 
-import CrudTable from "./components/crud-table"
+import { usePartnerPrefixList } from "@/lib/hooks/partner-prefix"
+import { DataTable } from "@/components/data-table/data-table"
 
-const PartnerPrefix = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const { isLoading, isPending, error, data } = usePartnerPrefixes()
-  const update = useUpdatePartnerPrefix()
-  const add = useAddPartnerPrefix()
-  const remove = useRemovePartnerPrefix()
+const PartnerPrefix = () => {
+  const [paginationState, setPaginationState] = useState({
+    page: 1,
+    page_size: 20,
+  })
 
-  if (error) return "An error has occurred: " + error.message
-
-  const partnerPrefixesOptions = data?.map((prefix: any) => ({
-    value: prefix.ID,
-    label: prefix.name,
-  }))
+  const { data: partnerPrefixes } = usePartnerPrefixList(paginationState)
 
   return (
-    <CrudTable
-      isLoading={isPending}
-      title="Airline AWB Prefix"
+    <DataTable
       columns={[
-        { accessorKey: "option", header: 'Name' },
-        { accessorKey: "visibility", header: 'Visibility' },
-        { accessorKey: "is_default", header: 'Default' }
-      ]}
-      form={[
-        { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "Airline AWB Prefix" },
+        { accessorKey: "name", header: "Name" },
         {
-          name: "visibility",
-          type: "select",
-          label: "Visibility",
-          selectOptions: [
-            { label: "Visible", value: "Visible" },
-            { label: "Hidden", value: "Hidden" },
-          ],
+          accessorKey: "visibility",
+          header: "Visibility",
+          accessorFn: () => "Visible",
         },
         {
-          name: "is_default",
-          type: "select",
-          label: "Default",
-          selectOptions: [
-            { label: "Yes", value: "Yes" },
-            { label: "No", value: "No" },
-          ],
+          accessorKey: "is_default",
+          header: "Default",
+          accessorFn: () => "No",
         },
       ]}
-      data={data?.map((item: any) => ({
-        option: item.name,
-        id: item.ID,
-        visibility: 'Visible',
-        is_default: 'No',
-      }))}
-      onSave={(data) => {
-        // configure logic for add or edit, for edit the id will be zero
-        const { id, option } = data
-        if (id) {
-          update.mutate({ id, name: option })
-        } else {
-          add.mutate({ name: option })
-        }
+      tableState={({ pagination }) => {
+        setPaginationState({
+          page: pagination ? pagination.pageIndex + 1 : 1,
+          page_size: pagination?.pageSize ?? 20,
+        })
       }}
-      onDelete={(data) => {
-        // configure logic for delete
-        if (data.id) {
-          remove.mutate({ id: data.id })
-        }
-      }}
-      searchOptions={partnerPrefixesOptions}
-      canSearch
-      tabComponent={tabComponent}
+      data={partnerPrefixes?.data ?? []}
+      manualPagination
+      pageCount={partnerPrefixes?.total_pages}
     />
   )
 }

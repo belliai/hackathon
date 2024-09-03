@@ -61,6 +61,8 @@ export type ComboboxProps = {
   onSaveEditOption?: (newOption: string, targetValue: string) => void
   additionalColumn?: string[]
   tooltipId?: string
+  showSearchInput?: boolean
+  onSearchChange?: (search: string) => void
   onChangeValue?: (changedValue: string | null) => void
 }
 
@@ -110,9 +112,11 @@ export function Combobox({
   popoverClassName,
   editLink,
   searchPlaceholder = "Search",
+  showSearchInput,
   onAddOption, // Show the add option button if this is provided
   onSaveEditOption,
   additionalColumn,
+  onSearchChange,
   onChangeValue,
   tooltipId = "",
 }: ComboboxFormProps) {
@@ -140,7 +144,7 @@ export function Combobox({
   )
 
   // Determine if the search input should be shown
-  const showSearchInput = options.length > 10
+  const isSearchable = showSearchInput || options.length > 10
 
   function handleOpenAddOption() {
     setIsAdding(true)
@@ -182,7 +186,7 @@ export function Combobox({
   const renderOptionItem = (data: ComboboxOption) => {
     return (
       <div className="flex max-w-full items-center gap-3">
-        <div className="flex text-left gap-3 [&>svg]:h-4 [&>svg]:w-4">
+        <div className="flex gap-3 text-left [&>svg]:h-4 [&>svg]:w-4">
           {data?.icon}
           {data?.component ? data.component : data?.label}
         </div>
@@ -225,233 +229,239 @@ export function Combobox({
       control={form.control}
       name={name}
       disabled={disabled}
-      render={({ field }) => (
-        <FormItem>
-          {label && (
-            <FormLabel
-              className="text-xs font-semibold text-muted-foreground"
-              info={info}
-            >
-              {label}
-            </FormLabel>
-          )}
-          <Popover>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className={cn(
-                    "h-10 w-full justify-between border-2 border-foreground/30 px-3",
-                    !field.value && "text-muted-foreground",
-                    className
-                  )}
-                >
-                  <span>
-                    {field.value
-                      ? options?.find((opt) => opt?.value === field.value)
-                          ?.label
-                      : placeholder ?? " "}
-                  </span>
-                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent
-              className={cn(
-                "popover-content-width-same-as-its-trigger w-full min-w-36 rounded-lg p-0 !text-xs",
-                popoverClassName
-              )}
-              sideOffset={-4}
-              align="start"
-            >
-              <Command>
-                {showSearchInput && (
-                  <CommandInput
-                    hideIcon
-                    placeholder={searchPlaceholder}
-                    className="h-9 py-2 text-inherit placeholder:text-xs"
-                  />
-                )}
-                <CommandEmpty>No results</CommandEmpty>
-                <CommandGroup className="py-0 pr-0">
-                  <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
-                    {options?.map((opt) => {
-                      const isEditing = editingOptionValue === opt?.value
+      render={({ field }) => {
+        const currentOption = options?.find((opt) => opt?.value === field.value)
 
-                      return (
-                        <CommandItem
-                          value={opt?.label as string}
-                          key={opt?.value}
-                          onSelect={() => {
-                            onChangeValue && onChangeValue(opt.value)
-                            form.setValue(name, opt.value)
-                          }}
-                          className={cn(
-                            "flex min-h-8 items-center justify-between px-2.5 text-xs",
-                            {
-                              "bg-zinc-900 pl-0 hover:bg-zinc-900": isEditing,
-                            }
-                          )}
-                          asChild
-                        >
-                          {!isEditing ? (
-                            <PopoverClose className="w-full">
-                              {renderContentItem(opt)}
-                              <div className="flex items-center gap-2">
-                                <Check
-                                  className={cn(
-                                    "h-4 w-4",
-                                    opt?.value === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
+        return (
+          <FormItem>
+            {label && (
+              <FormLabel
+                className="text-xs font-semibold text-muted-foreground"
+                info={info}
+              >
+                {label}
+              </FormLabel>
+            )}
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "h-10 w-full justify-between border-2 border-foreground/30 px-3",
+                      !field.value && "text-muted-foreground",
+                      className
+                    )}
+                  >
+                    <span>
+                      {currentOption
+                        ? currentOption.component || currentOption.label
+                        : placeholder ?? " "}
+                    </span>
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent
+                className={cn(
+                  "popover-content-width-same-as-its-trigger w-full min-w-36 rounded-lg p-0 !text-xs",
+                  popoverClassName
+                )}
+                sideOffset={-4}
+                align="start"
+              >
+                <Command>
+                  {isSearchable && (
+                    <CommandInput
+                      hideIcon
+                      onValueChange={onSearchChange}
+                      placeholder={searchPlaceholder}
+                      className="h-9 py-2 text-inherit placeholder:text-xs"
+                    />
+                  )}
+                  <CommandEmpty>No results</CommandEmpty>
+                  <CommandGroup className="py-0 pr-0">
+                    <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
+                      {options?.map((opt) => {
+                        const isEditing = editingOptionValue === opt?.value
+
+                        return (
+                          <CommandItem
+                            value={opt?.label as string}
+                            key={opt?.value}
+                            onSelect={() => {
+                              onChangeValue && onChangeValue(opt.value)
+                              form.setValue(name, opt.value)
+                            }}
+                            className={cn(
+                              "flex min-h-8 items-center justify-between px-2.5 text-xs",
+                              {
+                                "bg-zinc-900 pl-0 hover:bg-zinc-900": isEditing,
+                              }
+                            )}
+                            asChild
+                          >
+                            {!isEditing ? (
+                              <PopoverClose className="w-full">
+                                {renderContentItem(opt)}
+                                <div className="flex items-center gap-2">
+                                  <Check
+                                    className={cn(
+                                      "h-4 w-4",
+                                      opt?.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {!!onSaveEditOption && (
+                                    <button
+                                      type="button"
+                                      onClick={
+                                        (e) => e.stopPropagation() //Prevent the popover from closing when the button is clicked
+                                      }
+                                    >
+                                      <Pencil
+                                        onClick={() =>
+                                          handleOpenEditOption(opt.value)
+                                        }
+                                        size={14}
+                                        className="text-muted-foreground/80 transition-all duration-200 ease-in-out hover:text-white"
+                                      />
+                                    </button>
                                   )}
-                                />
-                                {!!onSaveEditOption && (
+                                </div>
+                              </PopoverClose>
+                            ) : (
+                              <form
+                                onSubmit={editForm.handleSubmit(
+                                  handleOnSaveEditOption
+                                )}
+                                className="flex items-center justify-between"
+                              >
+                                <Form {...editForm}>
+                                  <InputSwitch
+                                    type="text"
+                                    name="editedOption"
+                                    autoFocus={true}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="h-8 w-full border-none bg-transparent pl-2.5 text-xs focus-visible:ring-0"
+                                  />
+                                </Form>
+                                <div className="flex items-center gap-2">
                                   <button
                                     type="button"
-                                    onClick={
-                                      (e) => e.stopPropagation() //Prevent the popover from closing when the button is clicked
-                                    }
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleCloseOpenEditOption()
+                                    }}
                                   >
-                                    <Pencil
-                                      onClick={() =>
-                                        handleOpenEditOption(opt.value)
-                                      }
-                                      size={14}
-                                      className="text-muted-foreground/80 transition-all duration-200 ease-in-out hover:text-white"
-                                    />
+                                    <X size={14} />
                                   </button>
-                                )}
-                              </div>
-                            </PopoverClose>
-                          ) : (
-                            <form
-                              onSubmit={editForm.handleSubmit(
-                                handleOnSaveEditOption
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      editForm.handleSubmit(
+                                        handleOnSaveEditOption
+                                      )()
+                                    }}
+                                  >
+                                    <Check size={14} />
+                                  </button>
+                                </div>
+                              </form>
+                            )}
+                          </CommandItem>
+                        )
+                      })}
+                    </CommandList>
+                  </CommandGroup>
+                </Command>
+                {(editLink || onAddOption) && (
+                  <>
+                    <Separator />
+                    <div className="px-2 py-1">
+                      {!isAdding ? (
+                        <div className="flex justify-between">
+                          {onAddOption && (
+                            <Button
+                              variant="link"
+                              size="sm"
+                              type="button" // This is required to prevent form submission
+                              onClick={handleOpenAddOption}
+                              className={cn(
+                                comboboxButtonFooterClassName,
+                                "text-xs"
                               )}
-                              className="flex items-center justify-between"
                             >
-                              <Form {...editForm}>
-                                <InputSwitch
-                                  type="text"
-                                  name="editedOption"
-                                  autoFocus={true}
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="h-8 w-full border-none bg-transparent pl-2.5 text-xs focus-visible:ring-0"
-                                />
-                              </Form>
-                              <div className="flex items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleCloseOpenEditOption()
-                                  }}
-                                >
-                                  <X size={14} />
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    editForm.handleSubmit(
-                                      handleOnSaveEditOption
-                                    )()
-                                  }}
-                                >
-                                  <Check size={14} />
-                                </button>
-                              </div>
-                            </form>
+                              <PlusCircle className="mr-2 h-4 w-4" />
+                              {addOptionLabel}
+                            </Button>
                           )}
-                        </CommandItem>
-                      )
-                    })}
-                  </CommandList>
-                </CommandGroup>
-              </Command>
-              {(editLink || onAddOption) && (
-                <>
-                  <Separator />
-                  <div className="px-2 py-1">
-                    {!isAdding ? (
-                      <div className="flex justify-between">
-                        {onAddOption && (
-                          <Button
-                            variant="link"
-                            size="sm"
-                            type="button" // This is required to prevent form submission
-                            onClick={handleOpenAddOption}
-                            className={cn(
-                              comboboxButtonFooterClassName,
-                              "text-xs"
+                          {editLink && (
+                            <Button
+                              variant="link"
+                              size="sm"
+                              type="button"
+                              asChild
+                              className={comboboxButtonFooterClassName}
+                            >
+                              <Link href={editLink} target="_blank">
+                                {onAddOption ? "Edit" : "Edit dropdown"}
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
+                      ) : (
+                        <Form {...addForm}>
+                          <form
+                            className="flex flex-col gap-2 py-1"
+                            onSubmit={addForm.handleSubmit(
+                              handleSubmitAddOption
                             )}
                           >
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            {addOptionLabel}
-                          </Button>
-                        )}
-                        {editLink && (
-                          <Button
-                            variant="link"
-                            size="sm"
-                            type="button"
-                            asChild
-                            className={comboboxButtonFooterClassName}
-                          >
-                            <Link href={editLink} target="_blank">
-                              {onAddOption ? "Edit" : "Edit dropdown"}
-                            </Link>
-                          </Button>
-                        )}
-                      </div>
-                    ) : (
-                      <Form {...addForm}>
-                        <form
-                          className="flex flex-col gap-2 py-1"
-                          onSubmit={addForm.handleSubmit(handleSubmitAddOption)}
-                        >
-                          <InputSwitch
-                            type="text"
-                            placeholder={addOptionLabel}
-                            className="h-8 w-full text-xs"
-                            name="newOption"
-                          />
-                          <div className="flex justify-end gap-1">
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              onClick={handleCloseAddOptionAndReset}
-                              size="sm"
-                              className="h-6 px-2 py-1 text-xs"
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="button-primary"
-                              size="sm"
-                              onClick={addForm.handleSubmit(
-                                handleSubmitAddOption
-                              )}
-                              className="h-6 px-2 py-1 text-xs"
-                            >
-                              Save
-                            </Button>
-                          </div>
-                        </form>
-                      </Form>
-                    )}
-                  </div>
-                </>
-              )}
-            </PopoverContent>
-          </Popover>
-          {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
-        </FormItem>
-      )}
+                            <InputSwitch
+                              type="text"
+                              placeholder={addOptionLabel}
+                              className="h-8 w-full text-xs"
+                              name="newOption"
+                            />
+                            <div className="flex justify-end gap-1">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={handleCloseAddOptionAndReset}
+                                size="sm"
+                                className="h-6 px-2 py-1 text-xs"
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="button-primary"
+                                size="sm"
+                                onClick={addForm.handleSubmit(
+                                  handleSubmitAddOption
+                                )}
+                                className="h-6 px-2 py-1 text-xs"
+                              >
+                                Save
+                              </Button>
+                            </div>
+                          </form>
+                        </Form>
+                      )}
+                    </div>
+                  </>
+                )}
+              </PopoverContent>
+            </Popover>
+            {description && <FormDescription>{description}</FormDescription>}
+            <FormMessage />
+          </FormItem>
+        )
+      }}
     />
   )
 }

@@ -28,6 +28,7 @@ import {
 import { Switch } from "../ui/switch"
 import TimeInput from "../ui/time-input"
 import { Combobox, ComboboxProps } from "./combobox"
+import AsyncSearchComboBox, { AsyncSearchComboBoxProps } from "./combobox-async"
 import NumberInputStepper from "./number-input-stepper"
 
 type BaseInputProps<DataType> = InputProps & {
@@ -75,10 +76,15 @@ export type InputSwitchProps<DataType extends FieldValues> =
       type: "combobox"
       selectOptions?: SelectOptions
     } & ComboboxProps)
+  | (BaseInputProps<DataType> & {
+      type: "combobox-async"
+      selectOptions?: SelectOptions
+    } & AsyncSearchComboBoxProps)
 
-export default function InputSwitch<DataType extends FieldValues>(
-  props: InputSwitchProps<DataType>
-) {
+export default function InputSwitch<
+  DataType extends FieldValues,
+  T extends Record<string, any> = {},
+>(props: InputSwitchProps<DataType>) {
   const form = useFormContext<DataType>()
   const input = () => {
     switch (props.type) {
@@ -92,6 +98,17 @@ export default function InputSwitch<DataType extends FieldValues>(
             name={props.name}
             label={props.label}
             options={props.selectOptions}
+            className={cn(
+              "h-9 rounded-sm border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+              props.className
+            )}
+          />
+        )
+      case "combobox-async":
+        return (
+          <AsyncSearchComboBox
+            {...props}
+            name={props.name}
             className={cn(
               "h-9 rounded-sm border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
               props.className

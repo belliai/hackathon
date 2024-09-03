@@ -1,97 +1,125 @@
-import { useMemo, useState } from "react"
-import { PaginationState } from "@tanstack/react-table"
-import { z } from "zod"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
 
+import { useLocationSearch } from "@/lib/hooks/locations"
 import {
-  useAddLocation,
-  useLocations,
-  useRemoveLocation,
-  useUpdateLocation,
-} from "@/lib/hooks/locations"
-import { useTimeZonesAll } from "@/lib/hooks/time-zones"
+  useGetOrganizationSettings,
+  useUpdateOrganizationSettings,
+} from "@/lib/hooks/settings/organization"
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
+import { toast } from "@/components/ui/use-toast"
+import InputSwitch from "@/components/form/InputSwitch"
 
-import CrudTable from "./components/crud-table"
+const Location = () => {
+  const [searchTerm, setSearchTerm] = useState("")
 
-const schema = z.object({
-  id: z.string().optional(),
-  option: z.string().min(1, "Required"),
-  timezone: z.object({
-    ID: z.string().min(1, "Required"),
-  }),
-})
+  const form = useForm({
+    defaultValues: {
+      default_currency_id: "",
+      default_location_id: "",
+    },
+  })
 
-const Location = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const { isLoading, isPending, error, data } = useLocations()
-  const update = useUpdateLocation()
-  const add = useAddLocation()
-  const remove = useRemoveLocation()
+  const { data: orgSettings } = useGetOrganizationSettings<{
+    default_currency_id: string
+    default_location_id: string
+  }>({ sectionKey: "" })
 
-  const { data: timeZones, isLoading: isLoadingTimeZones } = useTimeZonesAll()
+  const { mutateAsync: updateOrgSettings } = useUpdateOrganizationSettings({
+    sectionKey: "",
+  })
 
-  const timeZoneOptions =
-    timeZones &&
-    timeZones?.map((tz: any) => ({
-      value: String(tz.ID),
-      label: tz.name,
-    }))
+  const { data: locationsSearchList } = useLocationSearch({ searchTerm })
 
-  if (error) return "An error has occurred: " + error.message
-
-  const tableProps = {
-    pageSize: 50,
-  }
+  useEffect(() => {
+    if (orgSettings) {
+      setSearchTerm(orgSettings.default_location_id)
+      form.reset(orgSettings)
+    }
+  }, [orgSettings])
 
   return (
-    <CrudTable
-      isLoading={isPending}
-      id="location"
-      title="Location"
-      columns={[
-        { accessorKey: "option", header: "Name" },
-        { accessorKey: "timezone.name", header: "Timezone" },
-      ]}
-      validationSchema={schema}
-      form={[
-        { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "Location" },
-        {
-          name: "timezone.ID",
-          type: "combobox",
-          label: "Default Time Zone",
-          selectOptions: timeZoneOptions,
-          placeholder: "Time Zone",
-        },
-      ]}
-      data={
-        data &&
-        data?.map((item: any) => ({
-          option: item.name,
-          id: item.ID,
-          timezone: item.timezone,
-        }))
-      }
-      onSave={async (data) => {
-        // configure logic for add or edit, for edit the id will be zero
-        const { id, option, timezone } = data
-        if (id) {
-          await update.mutateAsync({
-            id,
-            name: option,
-            timezone_id: timezone.ID,
+    <>
+      <div className="flex max-w-screen-md flex-col gap-2 pt-2">
+        <label
+          htmlFor="timezone_option"
+          className="text-sm text-muted-foreground"
+        >
+          Set default Timezone:
+        </label>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((data) =>
+              updateOrgSettings(data, {
+                onSuccess: () =>
+                  toast({
+                    title: "Success!",
+                    description: "Default location has been changed",
+                  }),
+                onError: () => {
+                  toast({
+                    title: "Oops!",
+                    description: "Failed to update default location",
+                    variant: "destructive",
+                  })
+                },
+              })
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <div className="flex-grow">
+                <InputSwitch
+                  type="combobox-async"
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  searchPlaceholder="Search locations by airport code"
+                  placeholder="Location"
+                  name="default_location_id"
+                  options={locationsSearchList?.data.map((item) => ({
+                    value: item.id,
+                    label: item.name,
+                    component: (
+                      <p>
+                        <span>{item.airport_code}</span>
+
+                        <span className="text-muted-foreground">
+                          {" "}
+                          {item.city}, {item.country}
+                        </span>
+                      </p>
+                    ),
+                  }))}
+                />
+              </div>
+              <Button
+                type="submit"
+                className="rounded-sm"
+                variant="button-primary"
+              >
+                Save
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
+      {/* <DataTable
+        columns={[
+          { accessorKey: "airport_code", header: "Code", size: 35 },
+          { accessorKey: "country", header: "Country", size: 80 },
+          { accessorKey: "timezone.name", header: "Timezone" },
+        ]}
+        manualPagination={true}
+        tableState={({ pagination }) => {
+          setPaginationState({
+            page: pagination ? pagination.pageIndex + 1 : 1,
+            page_size: pagination?.pageSize,
           })
-        } else {
-          await add.mutateAsync({ name: option, timezone_id: timezone.ID })
-        }
-      }}
-      onDelete={(data) => {
-        // configure logic for delete
-        if (data.id) {
-          remove.mutate({ id: data.id })
-        }
-      }}
-      tabComponent={tabComponent}
-      {...tableProps}
-    />
+        }}
+        data={data?.data ?? []}
+        pageCount={data?.total_pages}
+      /> */}
+    </>
   )
 }
 export default Location

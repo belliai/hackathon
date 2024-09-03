@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
 import { useBelliApi } from "@/lib/utils/network"
@@ -87,4 +92,52 @@ export const useRemoveCurrency = () => {
     },
   })
   return mutation
+}
+
+export type CurrencyInfo = {
+  id: string
+  currency_code: string
+  currency_name: string
+  country: string
+  symbol: string
+  decimal: boolean
+  is_default: boolean
+}
+
+export const fetchCurrencyList = async (
+  belliApi: AxiosInstance,
+  params: PaginationParams
+) => {
+  const _route = route + "/list"
+  const { data } = await belliApi.get<APIPaginatedResponse<CurrencyInfo>>(
+    `/${_route}`,
+    {
+      params: {
+        ...params,
+      },
+    }
+  )
+  return data
+}
+
+export const useCurrencyList = (params: PaginationParams) => {
+  const _route = route + "/list"
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, params],
+    queryFn: async () => await fetchCurrencyList(await belliApi, params),
+    placeholderData: keepPreviousData,
+  })
+}
+
+export const useCurrencySearch = ({ searchTerm }: { searchTerm: string }) => {
+  const _route = route + "/search"
+
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, searchTerm],
+    queryFn: async () =>
+      (await belliApi).get<CurrencyInfo[]>(`${_route}/${searchTerm}`),
+    placeholderData: keepPreviousData,
+  })
 }

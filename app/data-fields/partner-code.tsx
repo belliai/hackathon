@@ -1,82 +1,40 @@
-import {
-  useAddPartnerCode,
-  usePartnerCodes,
-  useRemovePartnerCode,
-  useUpdatePartnerCode,
-} from "@/lib/hooks/partner-codes"
+import { useState } from "react"
 
-import CrudTable from "./components/crud-table"
+import { usePartnerCodeList } from "@/lib/hooks/partner-codes"
+import { DataTable } from "@/components/data-table/data-table"
 
-const PartnerCode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const { isLoading, isPending, error, data } = usePartnerCodes()
-  const update = useUpdatePartnerCode()
-  const add = useAddPartnerCode()
-  const remove = useRemovePartnerCode()
+const PartnerCode = () => {
+  const [paginationState, setPaginationState] = useState({
+    page: 1,
+    page_size: 20,
+  })
 
-  if (error) return "An error has occurred: " + error.message
-
-  const partnerCodeOptions = data?.map((prefix: any) => ({
-    value: prefix.ID,
-    label: prefix.name,
-  }))
-
+  const { data: partnerCodes } = usePartnerCodeList(paginationState)
   return (
-    <CrudTable
-      isLoading={isPending}
-      title="IATA Airline Code"
+    <DataTable
       columns={[
-        { accessorKey: "option", header: 'Name' },
-        { accessorKey: 'description', header: 'Description'},
-        { accessorKey: "visibility", header: 'Visibility' },
-        { accessorKey: "is_default", header: 'Default' }
-      ]}
-      form={[
-        { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "IATA Airline Code" },
+        { accessorKey: "name", header: "Code", size: 40 },
+        { accessorKey: "description", header: "Name" },
         {
-          name: "visibility",
-          type: "select",
-          label: "Visibility",
-          selectOptions: [
-            { label: "Visible", value: "Visible" },
-            { label: "Hidden", value: "Hidden" },
-          ],
+          header: "Visibility",
+          accessorFn: () => "Visible",
+          size: 60,
         },
         {
-          name: "is_default",
-          type: "select",
-          label: "Default",
-          selectOptions: [
-            { label: "Yes", value: "Yes" },
-            { label: "No", value: "No" },
-          ],
+          header: "Default",
+          accessorFn: () => "No",
+          size: 60,
         },
       ]}
-      data={data?.map((item: any) => ({
-        ...item,
-        option: item.name,
-        id: item.ID,
-        visibility: 'Visible',
-        is_default: 'No',
-      }))}
-      onSave={(data) => {
-        // configure logic for add or edit, for edit the id will be zero
-        const { id, option } = data
-        if (id) {
-          update.mutate({ id, name: option })
-        } else {
-          add.mutate({ name: option })
-        }
+      tableState={({ pagination }) => {
+        setPaginationState({
+          page: pagination ? pagination.pageIndex + 1 : 1,
+          page_size: pagination?.pageSize ?? 20,
+        })
       }}
-      onDelete={(data) => {
-        // configure logic for delete
-        if (data.id) {
-          remove.mutate({ id: data.id })
-        }
-      }}
-      canSearch
-      searchOptions={partnerCodeOptions}
-      tabComponent={tabComponent}
+      data={partnerCodes?.data ?? []}
+      manualPagination
+      pageCount={partnerCodes?.total_pages}
     />
   )
 }

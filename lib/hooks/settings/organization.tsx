@@ -8,7 +8,7 @@ interface OrganizationSettingsParams {
   sectionKey: string
 }
 
-function useGetOrganizationSettings({
+function useGetOrganizationSettings<T>({
   sectionKey,
 }: OrganizationSettingsParams) {
   const belli = useBelliApi()
@@ -16,7 +16,9 @@ function useGetOrganizationSettings({
   const query = useQuery({
     queryKey: [route, sectionKey],
     queryFn: async () => {
-      const res = await (await belli).get(route + `/${sectionKey}`)
+      const res = await (
+        await belli
+      ).get<T>(route + (!!sectionKey ? `/${sectionKey}` : ""))
 
       return res.data
     },
@@ -34,7 +36,9 @@ function useUpdateOrganizationSettings({
   const updateMutation = useMutation({
     mutationKey: [route],
     mutationFn: async (data: any) => {
-      const res = await (await belii).patch(route + `/${sectionKey}`, data)
+      const res = await (
+        await belii
+      ).patch(route + (!!sectionKey ? `/${sectionKey}` : ""), data)
 
       return res.data
     },

@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
 import { useBelliApi } from "@/lib/utils/network"
@@ -86,5 +91,56 @@ export const useRemoveLocation = () => {
     onError: (e) => {
       console.log(e)
     },
+  })
+}
+
+type Timezone = {
+  id: string
+  name: string
+  offset: string
+  abbreviation: string
+}
+
+type Location = {
+  id: string
+  ID: string
+  name: string
+  airport_code: string
+  city: string
+  country: string
+  timezone: Timezone
+}
+
+export const fetchLocationList = async (
+  belliApi: AxiosInstance,
+  params: PaginationParams
+) => {
+  const _route = route + "/list"
+  const { data } = await belliApi.get<APIPaginatedResponse<Location>>(
+    `/${_route}`,
+    { params }
+  )
+  return data
+}
+
+export const useLocationList = (params: PaginationParams) => {
+  const _route = route + "/list"
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, params],
+    queryFn: async () => await fetchLocationList(await belliApi, params),
+    placeholderData: keepPreviousData,
+  })
+}
+
+export const useLocationSearch = ({ searchTerm }: { searchTerm: string }) => {
+  const _route = route + "/search"
+
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, searchTerm],
+    queryFn: async () =>
+      (await belliApi).get<Location[]>(`${_route}/${searchTerm}`),
+    placeholderData: keepPreviousData,
   })
 }

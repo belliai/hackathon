@@ -44,9 +44,8 @@ export default function CargoCapacityFields() {
   const { data, update, isPending } = useFormFieldToggle()
   const { mutateAsync } = useUpdateOrganizationSettings({ sectionKey: "cargo" })
 
-  const { data: cargoCapacitySettings, isLoading } = useGetOrganizationSettings(
-    { sectionKey: "cargo" }
-  )
+  const { data: cargoCapacitySettings, isLoading } =
+    useGetOrganizationSettings<{ visible: boolean }>({ sectionKey: "cargo" })
 
   console.log("cargoCapacitySettings: ", cargoCapacitySettings)
 
@@ -65,7 +64,7 @@ export default function CargoCapacityFields() {
       AircraftFormSections,
       AircraftFormSectionedFields[typeof sectionKey]
     >
-      defaultVisible={cargoCapacitySettings?.visible}
+      defaultVisible={!!cargoCapacitySettings?.visible}
       defaultValues={newValues}
       onSave={async ({ fields, sectionKey }) => {
         await update(
