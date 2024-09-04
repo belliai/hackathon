@@ -7,9 +7,10 @@ import {
   CompanyFormValues,
 } from "@/schemas/partners/company"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Building2Icon, CogIcon, Contact2Icon, PlusIcon } from "lucide-react"
+import { Building2Icon, Contact2Icon, PlusIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
+import { onExport } from "@/lib/utils/export"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/data-table/data-table"
@@ -20,126 +21,6 @@ import { peopleColumns } from "./components/columns/people-columns"
 import CompanyForm from "./components/forms/company-form"
 import { companyFormDefaultValues } from "./constants/company-form-default-values"
 import { DUMMY_COMPANIES_DATA, PEOPLE_DUMMY_DATA } from "./constants/dummy-data"
-import { onExport } from "@/lib/utils/export"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import PaymentMode from "@/app/data-fields/payment-mode"
-import Currency from "@/app/data-fields/currency"
-import PartnerPrefix from "@/app/data-fields/partner-prefix"
-import PartnerCode from "@/app/data-fields/partner-code"
-import PartnerType from "@/app/data-fields/partner-type"
-import CustomersOrganizationsCrud from "@/app/data-fields/customers/customers-organizations.crud"
-import CustomersPeopleCrud from "@/app/data-fields/customers/customers-people-crud"
-
-const SETTING_OPTIONS = [
-  {
-    label: "Payments",
-    value: "",
-    child: [
-      {
-        label: "Payment Mode",
-        value: "payment-mode",
-      },
-      {
-        label: "Currency",
-        value: "currency",
-      },
-    ],
-  },
-  {
-    label: "Organizations",
-    value: "organizations",
-    child: [
-      {
-        label: "Airline AWB Prefix",
-        value: "Airline-AWB-Prefix",
-      },
-      {
-        label: "IATA Airline Code",
-        value: "IATA-airline-code",
-      },
-      {
-        label: "Partner Type",
-        value: "partner-type",
-      },
-    ],
-  },
-  {
-    label: "Customers",
-    value: "customers",
-    child: [
-      {
-        label: "Organizations",
-        value: "organizations",
-      },
-      {
-        label: "People",
-        value: "setting-people",
-      },
-    ],
-  },
-]
-
-const SETTING_LIST = {
-  width: 'w-[133px]',
-  data: [
-    {
-      label: "Payments",
-      value: "",
-      child: [
-        {
-          label: "Payment Mode",
-          value: "/data-fields/payments?tab=payment-mode",
-        },
-        {
-          label: "Currency",
-          value: "/data-fields/payments?tab=currency",
-        },
-      ],
-    },
-    {
-      label: "Organizations",
-      value: "organizations",
-      child: [
-        {
-          label: "Airline AWB Prefix",
-          value: "/data-fields/organizations?tab=airline-awb-prefix",
-        },
-        {
-          label: "IATA Airline Code",
-          value: "/data-fields/organizations?tab=iata-airline-code",
-        },
-        {
-          label: "Partner Type",
-          value: "/data-fields/organizations?tab=partner-type",
-        },
-      ],
-    },
-    {
-      label: "Customers",
-      value: "customers",
-      child: [
-        {
-          label: "Organizations",
-          value: "/data-fields/customers?tab=organizations",
-        },
-        {
-          label: "People",
-          value: "/data-fields/customers?tab=people",
-        },
-      ],
-    },
-  ],
-}
 
 const PartnersTabsList = ({ tabValue }: { tabValue: string }) => (
   <TabsList className="gap-2 bg-transparent p-0">
@@ -200,7 +81,10 @@ export default function MasterAircraftPage() {
   }, [tabValue])
 
   // Memoize to prevent re-rendering
-  const memoizedTabsList = useMemo(() => <PartnersTabsList tabValue={tabValue} />, [tabValue])
+  const memoizedTabsList = useMemo(
+    () => <PartnersTabsList tabValue={tabValue} />,
+    [tabValue]
+  )
 
   return (
     <PageContainer>
@@ -235,7 +119,10 @@ export default function MasterAircraftPage() {
               extraLeftComponents={memoizedTabsList}
               isCanExport={true}
               onExport={() =>
-                onExport({ data: PEOPLE_DUMMY_DATA, filename: "PartnersPeopleData" })
+                onExport({
+                  data: PEOPLE_DUMMY_DATA,
+                  filename: "PartnersPeopleData",
+                })
               }
               // settingOptions={SETTING_LIST}
             />
@@ -279,9 +166,12 @@ function CompanyDataTable({
         }
         extraLeftComponents={leftComponents}
         isCanExport={true}
-              onExport={() =>
-                onExport({ data: DUMMY_COMPANIES_DATA, filename: "PartnersCompanyData" })
-              }
+        onExport={() =>
+          onExport({
+            data: DUMMY_COMPANIES_DATA,
+            filename: "PartnersCompanyData",
+          })
+        }
         // settingOptions={SETTING_LIST}
       />
       <CompanyForm

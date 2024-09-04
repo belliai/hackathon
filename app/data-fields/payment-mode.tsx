@@ -8,15 +8,10 @@ import {
 import CrudTiledView from "./components/crud-tiled-view"
 
 const PaymentMode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const { isPending, error, data } = usePaymentModes()
+  const { isPending, data } = usePaymentModes()
   const update = useUpdatePaymentMode()
   const add = useAddPaymentMode()
   const remove = useRemovePaymentMode()
-
-  if (error) {
-    console.error("error ==> ", error)
-    return "An error has occurred: " + error.message
-  }
 
   return (
     <CrudTiledView<{ id: string; option: string }>
