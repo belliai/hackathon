@@ -57,6 +57,7 @@ export type ComboboxProps = {
   editLink?: string
   info?: string
   searchPlaceholder?: string
+  emptyPlaceholder?: string
   onAddOption?: (newOption: string, close: () => void) => void
   onSaveEditOption?: (newOption: string, targetValue: string) => void
   additionalColumn?: string[]
@@ -112,6 +113,7 @@ export function Combobox({
   popoverClassName,
   editLink,
   searchPlaceholder = "Search",
+  emptyPlaceholder = "No Result",
   showSearchInput,
   onAddOption, // Show the add option button if this is provided
   onSaveEditOption,
@@ -280,7 +282,11 @@ export function Combobox({
                       className="h-9 py-2 text-inherit placeholder:text-xs"
                     />
                   )}
-                  <CommandEmpty>No results</CommandEmpty>
+                  <CommandEmpty>
+                    <span className="text-xs text-muted-foreground">
+                      {emptyPlaceholder}
+                    </span>
+                  </CommandEmpty>
                   <CommandGroup className="py-0 pr-0">
                     <CommandList className="custom-scrollbar max-h-48 py-1 pr-1">
                       {options?.map((opt) => {

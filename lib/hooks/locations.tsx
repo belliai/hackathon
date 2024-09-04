@@ -123,8 +123,10 @@ export const useLocationSearch = ({ searchTerm }: { searchTerm: string }) => {
   const belliApi = useBelliApi()
   return useQuery({
     queryKey: [_route, searchTerm],
-    queryFn: async () =>
-      (await belliApi).get<Location[]>(`${_route}/${searchTerm}`),
+    queryFn: async () => {
+      if (!searchTerm) return
+      return (await belliApi).get<Location[]>(`${_route}/${searchTerm}`)
+    },
     placeholderData: keepPreviousData,
   })
 }

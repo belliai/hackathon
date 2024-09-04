@@ -44,6 +44,7 @@ const AsyncSearchComboBox = ({
       onSearchChange={setSearchTerm}
       name={name}
       options={localOptions}
+      emptyPlaceholder={!searchTerm ? "Type to start searching" : undefined}
     />
   )
 }
