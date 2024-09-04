@@ -17,7 +17,6 @@ interface DataTableColumnOption<TData> {
   }: DataTableColumnOption<TData>) {
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
-  
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{props.children}</PopoverTrigger>
@@ -47,6 +46,7 @@ interface DataTableColumnOption<TData> {
                     )}
   
                     {option.label}
+              
                   </CommandItem>
                 ))}
               </CommandGroup>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { SelectTrigger, SelectValue } from "@radix-ui/react-select"
 import { Table } from "@tanstack/react-table"
+import { filter } from "d3-array"
 import { format } from "date-fns"
 import {
   Calendar as CalendarIcon,
@@ -58,6 +59,8 @@ interface DataTableFilterOptionsProps<TData> {
   isLocked: boolean
   lockedPageFilters: any
   onOpenChange: (open: boolean) => void
+  rules?: FilterData[]
+  onRulesChange?: (rules: FilterData[]) => void
 }
 
 export function DataTableFilterInline<TData>({
@@ -66,11 +69,10 @@ export function DataTableFilterInline<TData>({
   lockedPageFilters,
   ...props
 }: DataTableFilterOptionsProps<TData>) {
-  const [filterList, setFilterList] = useState<FilterData[]>([])
   const [rules, setRules] = useState<FilterData[]>([])
-  const filterRules = useCallback((filters: FilterData[]) => {
-    setRules(filters)
-  }, [])
+  // const filterRules = useCallback((filters: FilterData[]) => {
+  //   setRules(filters)
+  // }, [])
 
   const filterableColumns = table
     .getAllColumns()
@@ -81,7 +83,7 @@ export function DataTableFilterInline<TData>({
     .sort((a, b) => b.getFilterIndex() - a.getFilterIndex())
 
   const isFiltered = (column: string) =>
-    filterList.map((item) => item.column).includes(column)
+    rules.map((item) => item.column).includes(column)
 
   const columnOptions = filterableColumns
     .filter((col) => !isFiltered(col.id))
@@ -107,14 +109,14 @@ export function DataTableFilterInline<TData>({
     column?: string
     type: FilterType
   }) => {
-    setFilterList([
-      ...filterList,
-      { ...(column && { column }), type, value: "", id: filterList.length + 1 },
+    setRules([
+      ...rules,
+      { ...(column && { column }), type, value: "", id: rules.length + 1 },
     ])
   }
 
   const handleRemoveFilter = (id: number) => {
-    setFilterList(filterList.filter((filter) => filter.id !== id))
+    setRules(rules.filter((filter) => filter.id !== id))
     table.resetColumnFilters()
   }
 
@@ -129,8 +131,8 @@ export function DataTableFilterInline<TData>({
     if (isArray && identifiers.includes("column")) table.resetColumnFilters()
     else if (!isArray && identifiers === "column") table.resetColumnFilters()
 
-    setFilterList(
-      filterList.map((filter) => {
+    setRules(
+      rules.map((filter) => {
         if (filter.id === id) {
           if (isArray) {
             // Handle multiple updates
@@ -153,27 +155,33 @@ export function DataTableFilterInline<TData>({
     )
   }
 
-  const isFilterRuleExist = filterList.find((item) => item.type === "rule")
+  const isFilterRuleExist = rules.find((item) => item.type === "rule")
+
+  useEffect(() => {
+    console.log(props.rules)
+    if (props.rules && props.rules?.length > 0) {
+      setRules([])
+      setRules(props.rules.filter((item) => item.column))
+    }
+  }, [props.rules])
 
 
   return (
-    <div className="mt-4 flex items-center gap-2 justify-end">
+    <div className="mt-4 flex items-center justify-end gap-2">
       <div className="flex flex-wrap gap-2">
-        {filterList.map((filter, index) => {
+        {rules.map((filter, index) => {
           return (
             <div key={index}>
               {filter.type === "date" && (
                 <DataTableFilterDate
-                  column={filter.column}
-                  value={mapValueToDate(filter.value as any)}
+                  filter={filter}
                   onValueChange={console.log}
                 />
               )}
 
               {filter.type === "profile" && (
                 <DataTableFilterProfile
-                  column={filter.column}
-                  value={filter.value as string}
+                  filter={filter}
                   onValueChange={console.log}
                   options={dummyUserOptions}
                 />
@@ -181,13 +189,12 @@ export function DataTableFilterInline<TData>({
 
               {(filter.type === "text" || !filter.type) && (
                 <DataTableFilterText
-                  column={filter.column}
-                  value={mapValueToDate(filter.value as any)}
+                  filter={filter}
                   onValueChange={console.log}
                 />
               )}
 
-              {(filter.type === "rule" || !filter.type) && (
+              {/* {(filter.type === "rule" || !filter.type) && (
                 <DataTableFilterOptions
                   // onOpenChange={setFilterOpen}
                   filterRules={filterRules}
@@ -207,12 +214,12 @@ export function DataTableFilterInline<TData>({
                     Rules
                   </Button>
                 </DataTableFilterOptions>
-              )}
+              )} */}
             </div>
           )
         })}
 
-        {!isFilterRuleExist && (
+        {/* {!isFilterRuleExist && (
           <Button
             onClick={() => {
               handleAddFilter({ type: "rule" })
@@ -223,7 +230,7 @@ export function DataTableFilterInline<TData>({
             <PlusIcon size={12} />
             Add Rule
           </Button>
-        )}
+        )} */}
 
         {/* <DataTableColumnOption
           options={columnOptions}
@@ -240,10 +247,13 @@ export function DataTableFilterInline<TData>({
           </Button>
         </DataTableColumnOption> */}
       </div>
-      {filterList.length > 0 && (
+      {rules.length > 0 && (
         <Button
           variant={"ghost"}
-          onClick={() => setFilterList([])}
+          onClick={() => {
+            setRules([])
+            props.onRulesChange && props.onRulesChange([])
+          }}
           className="gap-1 text-xs text-zinc-500"
         >
           Reset
@@ -258,10 +268,9 @@ type MultipleDates = Date[] | undefined
 type RangeDate = DateRange | undefined
 
 interface DataTableFilterProps {
-  column?: string
-  value?: SingleDate | MultipleDates | RangeDate | string
   onValueChange: (val: SingleDate | MultipleDates | RangeDate) => void
   options?: { label: string; value: string }[]
+  filter: FilterData
 }
 
 export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
@@ -270,7 +279,9 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
   const [direction, setDirection] = useState<Direction>("this")
   const [period, setPeriod] = useState<Period>("day")
   const [count, setCount] = useState(1)
-  const [calendarMode, setCalendarMode] = useState<any>("single")
+  const [calendarMode, setCalendarMode] = useState<any>(
+    props.filter.calendarMode ?? "single"
+  )
   const [value, setValue] = useState("")
   const [month, setMonth] = useState<Date>(new Date())
   const [date, setDate] = useState<DateRange | Date | undefined>(
@@ -279,15 +290,14 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
           from: undefined,
           to: undefined,
         }
-      : undefined
+      : (props.filter.value as Date) ?? undefined
   )
-
+  console.log(condition)
   useEffect(() => {
     if (condition === "is-between") {
       setCalendarMode("range")
+      setDate(undefined)
     } else setCalendarMode("single")
-    //reset date
-    setDate(undefined)
     if (condition === "is-relative-to-today") {
       const relativeDate = mapRelativeValueToDate(direction, period, 1)
       setDate(relativeDate)
@@ -305,6 +315,11 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
     if (isValidDate(date)) setMonth(date)
     if (date && "from" in date && isValidDate(date.from)) setMonth(date?.from)
   }, [date])
+
+  useEffect(() => {
+    props.filter.value && setDate(props.filter.value as Date | DateRange)
+    props.filter.condition && setCondition(props.filter.condition)
+  }, [props.filter])
 
   const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
 
@@ -330,24 +345,29 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
               }{" "}
             </span>
           )}
-          {isValidDate(date) && (
+          {isValidDate(date) && !isEmptyOrNotEmpty && (
             <span> :&nbsp; {format(date as Date, "LLL dd, yyyy")}</span>
           )}
-          {date && "from" in date && isValidDate(date?.from) && (
-            <span>
-              {" "}
-              : {format(date.from, "LLL dd, yyyy")} -{" "}
-              {"to" in date &&
-                isValidDate(date?.to) &&
-                format(date.to, "LLL dd, yyyy")}{" "}
-            </span>
-          )}
+          {date &&
+            "from" in date &&
+            isValidDate(date?.from) &&
+            !isEmptyOrNotEmpty && (
+              <span>
+                {" "}
+                : {format(date.from, "LLL dd, yyyy")} -{" "}
+                {"to" in date &&
+                  isValidDate(date?.to) &&
+                  format(date.to, "LLL dd, yyyy")}{" "}
+              </span>
+            )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto max-w-[260px] gap-0 bg-zinc-900 p-0">
         <div className="flex w-full flex-col space-y-2 py-2">
           <div className="flex justify-start space-x-2 px-4">
-            <Label className="text-xs text-zinc-400">{props.column}: </Label>
+            <Label className="text-xs text-zinc-400">
+              {props.filter.column}:{" "}
+            </Label>
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
@@ -371,7 +391,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
           ].includes(condition as string) && (
             <div className="flex items-center space-x-2 px-2">
               <DataTableSelect
-                value={value}
+                value={String(value)}
                 onValueChange={(val) => {
                   setValue(val)
                   const date = mapValueToDate(val)
@@ -384,12 +404,12 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
                   {/* Input for display */}
                   <Input
                     value={
-                      value ||
+                      String(value) ||
                       (isValidDate(date)
                         ? format(date as Date, "LLL dd, y")
                         : "")
                     }
-                    className="h-8 w-full bg-zinc-900 pr-10"
+                    className="h-8 w-full bg-zinc-900 pr-10 text-xs"
                   />
                   {value && (
                     <XCircle
@@ -433,7 +453,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
                   if (isValid) setDate((prev) => ({ ...prev, from: date }))
                 }}
                 placeholder="Start"
-                className="h-8 flex-1 bg-zinc-900"
+                className="h-8 flex-1 bg-zinc-900 text-xs"
               />
               <Input
                 value={
@@ -442,7 +462,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
                     : ""
                 }
                 placeholder="End"
-                className="h-8 flex-1 bg-zinc-900"
+                className="h-8 flex-1 bg-zinc-900 text-xs"
               />
             </div>
           )}
@@ -521,9 +541,13 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
 export function DataTableFilterText({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
   const [condition, setCondition] = useState("is")
-  const [text, setText] = useState("")
+  const [text, setText] = useState(props.filter.value)
 
   const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
+
+  useEffect(() => {
+    if (props.filter.value) setText(String(props.filter.value))
+  }, [props.filter.value])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -537,7 +561,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
           )}
         >
           <Text size={14} />
-          {props.column}
+          {props.filter.label || props.filter.column}
           {isEmptyOrNotEmpty && (
             <p>
               {" "}
@@ -548,13 +572,15 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
               }{" "}
             </p>
           )}
-          {text && <p>:&nbsp;{text}</p>}
+          {text && <p>:&nbsp;{String(text)}</p>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto max-w-[260px] gap-0 bg-zinc-900 p-0 px-4 py-2">
         <div className="space-y-1 p-0">
           <div className="flex justify-start space-x-2">
-            <Label className="text-xs text-zinc-400">{props.column}: </Label>
+            <Label className="text-xs text-zinc-400">
+              {props.filter.label || props.filter.column}:{" "}
+            </Label>
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
@@ -572,6 +598,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
           {!isEmptyOrNotEmpty && (
             <Input
               className="h-8 bg-zinc-900"
+              value={String(text)}
               onChange={(e) => setText(e.target.value)}
             />
           )}
@@ -588,6 +615,11 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
 
   const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
 
+  useEffect(() => {
+    props.filter.condition && setCondition(props.filter.condition)
+    props.filter.value && setProfiles(props.filter.value as OptionWithUrl[])
+  }, [props.filter])
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -600,7 +632,7 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
           )}
         >
           <UserIcon size={14} />
-          {props.column}
+          {props.filter.column}
           {isEmptyOrNotEmpty && (
             <p>
               {" "}
@@ -611,16 +643,10 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
               }{" "}
             </p>
           )}
-          {profiles.length > 0 && (
+          {profiles.length > 0 && !isEmptyOrNotEmpty &&  (
             <p>
               :&nbsp;
-              {profiles.map((profile, id) => (
-                <span key={id}>
-                  {profile.label}
-                  {profiles.length - 1 < id && ","}
-                  &nbsp;
-                </span>
-              ))}
+              {profiles.map((profile, id) => profile.label).join(", ")}
             </p>
           )}
         </Button>
@@ -635,7 +661,9 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
       >
         <div className="space-y-1 p-1">
           <div className="flex justify-start space-x-2">
-            <Label className="text-xs text-zinc-400">{props.column}: </Label>
+            <Label className="text-xs text-zinc-400">
+              {props.filter.column}:{" "}
+            </Label>
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
