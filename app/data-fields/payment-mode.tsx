@@ -5,21 +5,26 @@ import {
   useUpdatePaymentMode,
 } from "@/lib/hooks/payment-modes"
 
-import CrudTable from "./components/crud-table"
+import CrudTiledView from "./components/crud-tiled-view"
 
 const PaymentMode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const { isLoading, isPending, error, data } = usePaymentModes()
+  const { isPending, error, data } = usePaymentModes()
   const update = useUpdatePaymentMode()
   const add = useAddPaymentMode()
   const remove = useRemovePaymentMode()
 
-  if (error) return "An error has occurred: " + error.message
+  if (error) {
+    console.error("error ==> ", error)
+    return "An error has occurred: " + error.message
+  }
 
   return (
-    <CrudTable
+    <CrudTiledView<{ id: string; option: string }>
+      identifier="id"
+      className="grid h-8 grid-cols-3 gap-4"
+      rowRenderer={(item) => <span>{item.option}</span>}
       isLoading={isPending}
       title="Payment Mode"
-      columns={[{ accessorKey: "option", header: 'Name' }]}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Payment Mode" },

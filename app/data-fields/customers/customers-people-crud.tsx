@@ -1,6 +1,8 @@
-import { Checkbox } from "@/components/ui/checkbox"
+import { Building2Icon, UserIcon } from "lucide-react"
 
-import CrudTable from "../components/crud-table"
+import { Badge } from "@/components/ui/badge"
+
+import CrudTiledView from "../components/crud-tiled-view"
 
 type People = {
   id: string
@@ -66,21 +68,36 @@ export const MOCK_PEOPLE_DATA: People[] = [
   },
 ]
 
-const CustomersPeopleCrud = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
+const CustomersPeopleCrud = ({
+  tabComponent,
+}: {
+  tabComponent?: React.ReactNode
+}) => {
   return (
-    <CrudTable
+    <CrudTiledView
       title="People"
-      columns={[
-        { accessorKey: "name", header: "Name of Contact" },
-        { accessorKey: "phone", header: "Phone Number" },
-        { accessorKey: "email", header: "Email" },
-        { accessorKey: "organization.name", header: "Organizations" },
-        {
-          accessorKey: "isPrimary",
-          header: "Is Primary",
-          cell: ({ row }) => <Checkbox checked={row.original.isPrimary} />,
-        },
-      ]}
+      identifier="id"
+      className="inline-flex w-full items-center justify-between gap-4"
+      rowRenderer={(item) => (
+        <>
+          <div className="col-span-4 inline-flex items-center justify-start gap-2">
+            <UserIcon className="size-4 text-muted-foreground" />
+            <span>{item.name}</span>
+            <span className="text-muted-foreground">{item.email}</span>
+            {item.isPrimary && (
+              <div className="inline-flex justify-end">
+                <Badge className="w-fit text-xs" variant={"secondary"}>
+                  Primary
+                </Badge>
+              </div>
+            )}
+          </div>
+          <div className="col-span-2 inline-flex w-[25%] items-center justify-start gap-2">
+            <Building2Icon className="size-4 text-muted-foreground" />
+            <span>{item.organization.name}</span>
+          </div>
+        </>
+      )}
       form={[
         { name: "id", type: "hidden" },
         {
