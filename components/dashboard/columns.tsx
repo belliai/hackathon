@@ -2,107 +2,228 @@
 
 import { Order } from "@/schemas/order/order"
 import { ColumnDef } from "@tanstack/react-table"
+import { TableHeaderWithTooltip } from "../ui/table"
 
 export type { Order }
 
 export const columns: ColumnDef<Order>[] = [
   {
-    header: "AWB",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="AWB"
+        tooltipId="airwaybill-awb"
+      />
+    ),
     accessorKey: "awb",
   },
   {
-    header: "Booking Type",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Booking Type"
+        tooltipId="airwaybill-booking-type"
+      />
+    ),
     accessorKey: "booking_type.name",
   },
   {
-    header: "MAWB",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="MAWB"
+        tooltipId="airwaybill-mawb"
+      />
+    ),
     accessorKey: "mawb",
   },
   {
-    header: "HAWB",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="HAWB"
+        tooltipId="airwaybill-hawb"
+      />
+    ),
     accessorKey: "hawb",
   },
   {
-    header: "Destination",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Destination"
+        tooltipId="airwaybill-destination"
+      />
+    ),
     accessorKey: "destination.name",
   },
   {
-    header: "Origin",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Origin"
+        tooltipId="airwaybill-origin"
+      />
+    ),
     accessorKey: "origin.name",
   },
   {
-    header: "Customer",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Customer"
+        tooltipId="airwaybill-customer"
+      />
+    ),
     accessorKey: "bill_to.name",
   },
   {
-    header: "Partner Code",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Partner Code"
+        tooltipId="airwaybill-partner-code"
+      />
+    ),
     accessorKey: "partner_code.name",
   },
   {
-    header: "Partner Prefix",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Partner Prefix"
+        tooltipId="airwaybill-partner-prefix"
+      />
+    ),
     accessorKey: "partner_prefix.name",
   },
   {
-    header: "Payment Mode",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Payment Mode"
+        tooltipId="airwaybill-payment-mode"
+      />
+    ),
     accessorKey: "payment_mode.name",
   },
   {
-    header: "Charged Weight (kg)",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Charged Weight"
+        tooltipId="airwaybill-charged-weight"
+      />
+    ),
     accessorKey: "ch_weight_kg",
   },
   {
-    header: "Commodity Code",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Commodity Code"
+        tooltipId="airwaybill-commodity-code"
+      />
+    ),
     accessorKey: "commodity_code.name",
   },
 
   {
-    header: "Currency",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Currency "
+        tooltipId="airwaybill-currency"
+      />
+    ),
     accessorKey: "currency.name",
   },
 
   {
-    header: "Freight Forwarder",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Freight Forwarder "
+        tooltipId="airwaybill-freight-forwarder"
+      />
+    ),
     accessorKey: "freight_forwarder.name",
   },
   {
-    header: "Gross Weight (kg)",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Gross Weight "
+        tooltipId="airwaybill-gross-weight"
+      />
+    ),
     accessorKey: "gs_weight_kg",
   },
   {
-    header: "Mode",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Mode"
+        tooltipId="airwaybill-mode"
+      />
+    ),
     accessorKey: "mode",
   },
 
   {
-    header: "Rate",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Rate"
+        tooltipId="airwaybill-rate"
+      />
+    ),
     accessorKey: "rate",
   },
   {
-    header: "S Freight",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="S Freight"
+        tooltipId="airwaybill-s-freight"
+      />
+    ),
     accessorKey: "s_freight",
   },
   {
-    header: "S Rate",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="S Rate"
+        tooltipId="airwaybill-s-rate"
+      />
+    ),
     accessorKey: "s_rate",
   },
   {
-    header: "Shipper",
+    header:() => (
+      <TableHeaderWithTooltip
+        header="Shipper"
+        tooltipId="airwaybill-shipper"
+      />
+    ),
     accessorKey: "shipper.name",
   },
   {
-    header: "Spot ID",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Spot ID"
+        tooltipId="airwaybill-spot-id"
+      />
+    ),
     accessorKey: "spot_id",
   },
   {
-    header: "Status",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Status"
+        tooltipId="airwaybill-status"
+      />
+    ),
     accessorKey: "status.name",
   },
   {
-    header: "Total",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Total"
+        tooltipId="airwaybill-total"
+      />
+    ),
     accessorKey: "total",
   },
   {
-    header: "Volume (kg)",
+    header: () => (
+      <TableHeaderWithTooltip
+        header="Volume"
+        tooltipId="airwaybill-volume"
+      />
+    ),
     accessorKey: "volume_kg",
   },
 ]
