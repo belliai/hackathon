@@ -11,6 +11,11 @@ import AircraftTypePage from "@/app/settings/aircrafts/components/tabs/aircraft-
 
 const SETTING_LIST = [
   {
+    name: 'Flight Scheduler',
+    value: 'flight-scheduler',
+    pageComponent: <FlightSettingPage />
+  },
+  {
     name: 'Tail Numbers',
     value: 'tail-numbers',
     pageComponent: <TailNumbersForm isSetting />
@@ -19,11 +24,6 @@ const SETTING_LIST = [
     name: 'Aircraft Type',
     value: 'aircraft-types',
     pageComponent: <AircraftTypePage isSetting />
-  },
-  {
-    name: 'Flight Scheduler',
-    value: 'flight-scheduler',
-    pageComponent: <FlightSettingPage />
   },
   {
     name: 'Custom Data Fields: Aircrafts',
