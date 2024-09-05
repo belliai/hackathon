@@ -78,7 +78,10 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
           size={"sm"}
           variant={"button-primary"}
           className="p-2 text-sm"
-          onClick={() => setCurrentOpenAircraftModal(true)}
+          onClick={() => {
+            setCurrentOpenAircraftModal(true)
+            aircraftForm.reset(aircraftFormDefaultValues)
+          }}
         >
           <PlusIcon className="mr-2 size-4" />
           Create Aircraft
