@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useSearchParams } from "next/navigation"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
 import { InfoIcon } from "lucide-react"
@@ -102,6 +103,8 @@ const FormLabel = React.forwardRef<
 >(({ className, info, tooltipId, ...props }, ref) => {
   const { error, formItemId } = useFormField()
 
+  const searchParams = useSearchParams()
+
   const label = (
     <Label
       ref={ref}
@@ -117,11 +120,18 @@ const FormLabel = React.forwardRef<
 
   if (info || tooltipId) {
     const tooltips = getTooltipContents()
+    const showId = searchParams.get("contentful-debug")
+    console.log({ showId })
+
     const content = tooltips.find(
       (list: ContentfulListType) => list.id === tooltipId
     )
 
-    const tooltipContent = info ? info : content?.content || ""
+    const tooltipContent = info
+      ? info
+      : !!showId
+        ? tooltipId
+        : content?.content || ""
 
     return (
       <div className="inline-flex items-center gap-2">

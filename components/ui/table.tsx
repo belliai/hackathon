@@ -1,4 +1,7 @@
+"use client"
+
 import * as React from "react"
+import { useSearchParams } from "next/navigation"
 
 import { getTooltipContents } from "@/lib/contentful"
 import { cn } from "@/lib/utils"
@@ -124,8 +127,11 @@ const TableHeaderWithTooltip = ({
 }: TableHeaderWithTooltipProps) => {
   const tooltips = getTooltipContents()
   const content = tooltips.find((list) => list.id === tooltipId)
+  const searchParams = useSearchParams()
 
-  const tooltipContent = content?.content
+  const showId = searchParams.get("contentful-debug")
+
+  const tooltipContent = !!showId ? tooltipId : content?.content
 
   return (
     <div className="inline-flex items-center gap-2">

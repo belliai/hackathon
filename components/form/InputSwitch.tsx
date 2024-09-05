@@ -36,6 +36,7 @@ type BaseInputProps<DataType> = InputProps & {
   label?: string
   withDialog?: boolean
   info?: string
+  tooltipId?: string
 }
 
 export type SelectOptions = {
@@ -98,6 +99,8 @@ export default function InputSwitch<
             name={props.name}
             label={props.label}
             options={props.selectOptions}
+            info={props.info}
+            tooltipId={props.tooltipId}
             className={cn(
               "h-9 rounded-sm border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
               props.className
@@ -127,6 +130,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -153,6 +157,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -211,6 +216,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -239,6 +245,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -265,6 +272,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -302,6 +310,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -329,6 +338,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -390,6 +400,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
@@ -433,6 +444,7 @@ export default function InputSwitch<
                 {!!props.label && (
                   <FormLabel
                     info={props.info}
+                    tooltipId={props.tooltipId}
                     className="text-xs font-semibold text-muted-foreground"
                   >
                     {props.label}
