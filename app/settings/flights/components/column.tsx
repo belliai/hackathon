@@ -41,7 +41,7 @@ export const useListViewColumns = (
 ): ColumnDef<Flight>[] => {
   return [
     {
-      id: "Date", // Used to match the column_name from the columns configuration endpoint in the API
+      id: "Date", // id is used to match the column_name from the columns configuration endpoint in the API
       accessorKey: "departure_date",
       header: () => (
         <TableHeaderWithTooltip header="Date" tooltipId="next-at" />

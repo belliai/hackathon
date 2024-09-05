@@ -52,7 +52,7 @@ export default function CargoCapacityFields() {
   if (isLoading) {
     return (
       <div className="flex w-full justify-center py-12">
-        <Loader2 />
+        <Loader2 className="animate-spin" />
       </div>
     )
   }
