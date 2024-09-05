@@ -36,7 +36,7 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
   const [currentOpenAircraftModal, setCurrentOpenAircraftModal] = useState<
     string | boolean
   >(false) // When the state is a string, it means the modal is in edit mode
-  const [ULDTotal, setULDTotal] = useState(2)
+  const [ULDTotal, setULDTotal] = useState(0)
   const { fieldSections, triggers } = useGeneralFieldSections()
   const aircraftForm = useForm<AircraftFormValues>({
     resolver: zodResolver(aircraftFormSchema),
