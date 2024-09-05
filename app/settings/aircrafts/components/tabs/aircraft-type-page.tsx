@@ -8,23 +8,18 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   BoxIcon,
-  CircleAlertIcon,
   PlaneIcon,
   PlusIcon,
-  Users,
   WeightIcon,
 } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
-import { findDuplicates } from "@/lib/utils/string-utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
-import AircraftTypeForm from "../forms/aircraft-form"
 import { aircraftFormDefaultValues } from "../../constants"
-import AircraftTabsList from "./tab-list"
 import { Separator } from "@/components/ui/separator"
 import useGeneralFieldSections from "../../hooks/use-field-sections"
 import AircraftDiagram from "../aircrafts/aircraft-diagram"
@@ -41,6 +36,7 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
   const [currentOpenAircraftModal, setCurrentOpenAircraftModal] = useState<
     string | boolean
   >(false) // When the state is a string, it means the modal is in edit mode
+  const [ULDTotal, setULDTotal] = useState(2)
   const { fieldSections, triggers } = useGeneralFieldSections()
   const aircraftForm = useForm<AircraftFormValues>({
     resolver: zodResolver(aircraftFormSchema),
@@ -53,15 +49,9 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
   })
   const aircraftsData = aircrafts?.data
 
-  const duplicateAircrafts = useMemo(() => {
-    const aircraftsList =
-      aircrafts?.data.map((aircraft) => getAircraftTypeString(aircraft)) ?? []
-    return findDuplicates(aircraftsList)
-  }, [aircraftsData])
-
   function handleAircraftRowClick(data: Aircraft) {
     setCurrentOpenAircraftModal(data.id)
-
+    setULDTotal(parseInt(data?.uld_position) || 0)
     aircraftForm.reset({
       ...data,
       manufacturer_id: data.manufacturer.is_deleted ? "" : data.manufacturer.id,
@@ -104,7 +94,7 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
                 asChild
                 key={aircraft.id}
                 variant={"secondary"}
-                className="cursor-pointer text-foreground h-fit"
+                className={`cursor-pointer text-foreground h-fit ${currentOpenAircraftModal === aircraft.id ? 'border border-button-primary bg-white' : ' bg-green'}`}
                 onClick={() => handleAircraftRowClick(aircraft)}
               >
                 <Card className="flex flex-col gap-3 border bg-zinc-900/50 px-3 py-4 text-sm items-start">
@@ -150,7 +140,7 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
 
         {/* Aircraft Layout */}
         <div className="border bg-zinc-900/50 h-[75vh] pr-1 rounded-md overflow-hidden">
-          <AircraftDiagram />
+          <AircraftDiagram ULDTotal={ULDTotal} />
         </div>
 
         {/* Aircraft Form */}

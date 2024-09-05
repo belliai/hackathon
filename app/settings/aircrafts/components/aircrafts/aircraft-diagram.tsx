@@ -8,28 +8,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-const cargoData = [
-  { id: 'AR', percentage: 98 },
-  { id: 'BR', percentage: 88 },
-  { id: 'CR', percentage: 75 },
-  { id: 'DR', percentage: 56 },
-  { id: 'ER', percentage: 79 },
-  { id: 'FR', percentage: 26 },
-  { id: 'GR', percentage: 42 },
-  { id: 'HR', percentage: 36 },
-  { id: 'JR', percentage: 67 },
-  { id: 'KR', percentage: 73 },
-  { id: 'AL', percentage: 87 },
-  { id: 'BL', percentage: 92 },
-  { id: 'CL', percentage: 65 },
-  { id: 'DL', percentage: 64 },
-];
-
-const AircraftDiagram: React.FC = () => {
+const AircraftDiagram = ({ ULDTotal }: { ULDTotal: number }) => {
   const [zoom, setZoom] = useState(1);
 
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.1, 2));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.1, 0.5));
+  const cargoData = Array.from({ length: ULDTotal }, (_, index) => ({
+    id: `ULD${index + 1}`,
+    percentage: Math.floor(Math.random() * 101),
+  }));
 
   return (
     <div className="relative w-full h-full bg-zinc-900/50 overflow-y-auto custom-scrollbar overflow-x-hidden">
@@ -109,12 +96,12 @@ const AircraftDiagram: React.FC = () => {
           </svg>
         </div>
 
-        <div className="p-4 w-[250px] border-y-0 bg-[#4D4D4D] z-[1] -mt-[280px] -mb-2">
+        <div className="p-4 w-[250px] min-h-[495px] border-y-0 bg-[#4D4D4D] z-[1] -mt-[280px] -mb-2">
           <div className="grid grid-cols-2 gap-2">
             {cargoData.map((block, index) => (
               <div key={index} className={`flex flex-col items-center rounded-md justify-center aspect-video bg-button-primary`}>
-                <div className="font-bold text-base">{block.id}</div>
-                <div className="font-bold text-sm">{block.percentage}%</div>
+                <div className="font-bold text-sm">{block.id}</div>
+                <div className="font-bold text-xs">{block.percentage}%</div>
               </div>
             ))}
           </div>
