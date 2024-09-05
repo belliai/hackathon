@@ -1,12 +1,28 @@
 ## Getting Started
 
-First, run the development server (we use pnpm):
+1. First, install the dependencies (we use pnpm):
 
 ```bash
 pnpm install
 ```
 
 Notes : if you happen to install a new package, make sure to also commit the new `pnpm-lock.yaml` file
+
+2. Pull environment variables from vercel
+
+```bash
+npm i -g vercel
+```
+
+```bash
+vercel link
+```
+
+```bash
+vercel env pull .env.local
+```
+
+3. Run development server
 
 ```bash
 pnpm dev
