@@ -8,6 +8,7 @@ import {
   Trash2Icon,
 } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
+import { string } from "zod"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -24,7 +25,7 @@ type GoogleApi = {
   sheets: {
     name: string
     autoSync: boolean
-    dateRange: string
+    dateRange?: { from: string; to: string }
     rangeStart: string
     rangeEnd: string
     spreadsheetKey: string
@@ -32,8 +33,33 @@ type GoogleApi = {
   }[]
 }
 
+const initialSheetData: GoogleApi["sheets"][0] = {
+  name: "Flight Data Sheet",
+  dateRange: {
+    from: "2024-09-05T16:00:00.000Z",
+    to: "2024-09-08T16:00:00.000Z",
+  },
+  autoSync: false,
+  rangeStart: "A",
+  rangeEnd: "G",
+  spreadsheetKey: "YjsuWUhejq90123jdsaASswfasad",
+  sheetId: "558823232",
+}
+
+const blankSheetData: GoogleApi["sheets"][0] = {
+  name: "",
+  dateRange: undefined,
+  autoSync: false,
+  rangeStart: "",
+  rangeEnd: "",
+  spreadsheetKey: "",
+  sheetId: "",
+}
+
 export default function GoogleAPI() {
-  const form = useForm<GoogleApi>()
+  const form = useForm<GoogleApi>({
+    defaultValues: { sheets: [initialSheetData] },
+  })
   const fieldArray = useFieldArray({ control: form.control, name: "sheets" })
 
   const columnOptions = generateAlphabetOptions()
@@ -46,17 +72,7 @@ export default function GoogleAPI() {
           <Button
             type="button"
             size={"sm"}
-            onClick={() =>
-              fieldArray.append({
-                name: "",
-                dateRange: "",
-                autoSync: false,
-                rangeStart: "",
-                rangeEnd: "",
-                spreadsheetKey: "",
-                sheetId: "",
-              })
-            }
+            onClick={() => fieldArray.append(blankSheetData)}
           >
             <FileSpreadsheetIcon className="mr-2 size-4" />
             Add new Sheet
