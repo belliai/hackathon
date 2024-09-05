@@ -121,17 +121,23 @@ const FormLabel = React.forwardRef<
   if (info || tooltipId) {
     const tooltips = getTooltipContents()
     const showId = searchParams.get("contentful-debug")
-    console.log({ showId })
 
     const content = tooltips.find(
       (list: ContentfulListType) => list.id === tooltipId
     )
 
-    const tooltipContent = info
-      ? info
-      : !!showId
-        ? tooltipId
-        : content?.content || ""
+    let tooltipContent = ""
+
+    if (info) {
+      tooltipContent = info
+      if (showId) {
+        tooltipContent += "(not on contentful)"
+      }
+    } else if (showId) {
+      tooltipContent = tooltipId || ""
+    } else {
+      tooltipContent = content?.content || ""
+    }
 
     return (
       <div className="inline-flex items-center gap-2">
