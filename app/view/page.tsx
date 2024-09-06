@@ -34,7 +34,7 @@ import { DataTable } from "@/components/data-table/data-table"
 import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
-import { useListViewColumns } from "@/app/settings/flights/components/column"
+import { listViewColumns } from "@/app/settings/flights/components/column"
 import DataViews from "@/components/data-table/data-views"
 
 interface FlightsActualInformation {
@@ -172,7 +172,7 @@ export default function FlightsDashboardPage() {
       }))
   )
 
-  const columns = useListViewColumns({
+  const columns = listViewColumns({
     aircraftOptions: aircraftTailNumbers || [],
     onChangeTailNumber: async (data) => {
       if (!data) return

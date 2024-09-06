@@ -105,7 +105,7 @@ export const updateFlight = async (
 export const partialUpdate = async (
   belliApi: AxiosInstance,
   id: string,
-  data: Partial<Flight>,
+  data: Partial<CreateFlightMasterPayload>,
 ) => {
   return belliApi
     .patch(
@@ -138,7 +138,7 @@ export const usePartialUpdateFlight = () => {
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (data: Partial<Flight> & { id: string, update_mode?: string }) => {
+    mutationFn: async (data: Partial<CreateFlightMasterPayload> & { id: string, update_mode?: string }) => {
       const { id, ...rest } = data
       return await partialUpdate(await belliApi, data.id, rest)
     },
@@ -195,5 +195,18 @@ export const useRecurringFlight = (id?: string) => {
     enabled: !!id, // Disable query if id is undefined
     // Optional: Provide an initial fallback value
     initialData: null, // or undefined, based on your preference
+  })
+}
+
+export const fetchFlightStatuses = async (belliApi: AxiosInstance) => {
+  return belliApi.get(`${route}/statuses`).then((res) => res.data as { id: string, status: string }[])
+}
+
+export const useFlightStatuses = () => {
+  const belliApi = useBelliApi()
+
+  return useQuery({
+    queryKey: [route, "statuses"],
+    queryFn: async () => await fetchFlightStatuses(await belliApi),
   })
 }

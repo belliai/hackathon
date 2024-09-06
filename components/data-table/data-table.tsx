@@ -69,6 +69,7 @@ export interface DataTableProps<TData, TValue> {
   onResetColumns?: () => void
   onVisibilityChange?: (visibility: ColumnsByVisibility<TData>) => void
   settingOptions?: any
+  pageSizeOptions?: number[]
 }
 
 export function DataTable<TData, TValue>({
@@ -98,6 +99,7 @@ export function DataTable<TData, TValue>({
   onResetColumns,
   onVisibilityChange,
   settingOptions,
+  pageSizeOptions,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -274,6 +276,7 @@ export function DataTable<TData, TValue>({
           isHover={isHover}
           onExport={onExport}
           settingOptions={settingOptions}
+          pageSizeOptions={pageSizeOptions}
         />
       )}
     </div>
