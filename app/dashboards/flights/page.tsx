@@ -19,6 +19,7 @@ import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useColumns } from "@/lib/hooks/columns"
 import {
   useFlightList,
+  useFlightStatuses,
   usePartialUpdateFlight,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
@@ -37,7 +38,7 @@ import { DataTable } from "@/components/data-table/data-table"
 import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
-import { useListViewColumns } from "@/app/settings/flights/components/column"
+import { listViewColumns } from "@/app/settings/flights/components/column"
 
 interface FlightsActualInformation {
   detail: string
@@ -134,6 +135,15 @@ export default function FlightsDashboardPage() {
     [pagination]
   )
 
+  const { data: flightStatusesData } = useFlightStatuses()
+
+  const flightStatusOptions = flightStatusesData?.map((status) => ({
+    label: status.status,
+    value: status.id,
+  }))
+
+  flightStatusOptions?.unshift({ label: "No Status", value: "" })
+
   const { data: flights, isLoading } = useFlightList({
     ...paginationDetails,
     start_date: moment().format("YYYY-MM-DD"),
@@ -195,14 +205,37 @@ export default function FlightsDashboardPage() {
     return visibleFields
   }
 
-  const columns = useListViewColumns({
-    aircraftOptions: aircraftTailNumbers || [],
-    onChangeTailNumber: async (data) => {
-      if (!data) return
-      const { ID, ...rest } = data
-      if (ID) await updateFlight({ ...rest, id: ID })
-    },
-  }).filter((c) => c.id !== "Tail Number") // Remove Tail Number column
+  async function handleChangeStatus(data: { statusId: string; id: string }) {
+    await partialUpdateFlight(
+      {
+        id: data.id,
+        status_id: data.statusId,
+      },
+      {
+        onError: () => {
+          toast({
+            title: "Error",
+            description: "Failed to update flight status",
+            variant: "destructive",
+          })
+        },
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Flight status updated successfully",
+          })
+        },
+      }
+    )
+  }
+
+  const columns = useMemo(() => {
+    return listViewColumns({
+      aircraftOptions: aircraftTailNumbers || [],
+      statusOptions: flightStatusOptions || [],
+      onChangeStatus: handleChangeStatus,
+    }).filter((c) => c.id !== "Tail Number") // Remove Tail Number column
+  }, [aircraftTailNumbers, flightStatusOptions])
 
   const displayedFlightsColumns: ColumnDef<Flight>[] = [
     ...(columns.slice(0, 2) as ColumnDef<Flight>[]),

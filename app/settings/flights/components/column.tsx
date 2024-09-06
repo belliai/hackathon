@@ -34,9 +34,34 @@ type ListViewProps = {
   onDelete?: (data: Flight) => void
   aircraftOptions?: SelectOptions
   onChangeTailNumber?: (data: CreateFlightMasterPayload | null) => void
+  statusOptions?: SelectOptions
+  onChangeStatus?: ({
+    statusId,
+    id,
+  }: {
+    statusId: string
+    id: string
+  }) => Promise<void>
 }
 
-export const useListViewColumns = (
+function convertToTime({
+  hour,
+  minute,
+  period,
+}: {
+  hour: number
+  minute: number
+  period: string
+}) {
+  const time = moment(
+    `${hour}:${String(minute).length < 2 ? `0${minute}` : minute} ${period}`,
+    "HH:mm A"
+  )
+
+  return time
+}
+
+export const listViewColumns = (
   props: ListViewProps
 ): ColumnDef<Flight>[] => {
   return [
@@ -80,7 +105,21 @@ export const useListViewColumns = (
     },
     {
       id: "Departure",
-      accessorKey: "departure_d",
+      accessorKey: "departure_hour",
+      sortingFn: (rowA, rowB, columnId) => {
+        const timeA = convertToTime({
+          hour: rowA.original.departure_hour,
+          minute: rowA.original.departure_minute,
+          period: rowA.original.departure_period,
+        })
+        const timeB = convertToTime({
+          hour: rowB.original.departure_hour,
+          minute: rowB.original.departure_minute,
+          period: rowB.original.departure_period,
+        })
+
+        return timeA.toDate().getTime() - timeB.toDate().getTime()
+      },
       header: () => (
         <TableHeaderWithTooltip header="Departure" tooltipId="departure-time" />
       ),
@@ -104,22 +143,17 @@ export const useListViewColumns = (
         <TableHeaderWithTooltip header="Status" tooltipId="flight-status" />
       ),
       cell: ({ row }) => {
-        const status = "active"
+        const status = row.original.status
         return (
           <TableCellDropdown
-            defaultValue={status}
+            defaultValue={status.id}
             name="status"
-            options={[
-              { label: "Active", value: "active" },
-              { label: "Scheduled", value: "scheduled" },
-              { label: "Landed", value: "landed" },
-              { label: "Cancelled", value: "cancelled" },
-              { label: "Incident", value: "incident" },
-              { label: "Diverted", value: "diverted" },
-              { label: "Redirected", value: "redirected" },
-            ]}
-            onChangeSelect={(data) => {
-              console.log("data", data)
+            options={props.statusOptions || []}
+            onChangeSelect={async (data: any) => {
+              await props.onChangeStatus?.({
+                statusId: data.status,
+                id: row.original.id,
+              })
             }}
           />
         )
@@ -143,6 +177,16 @@ export const useListViewColumns = (
     {
       id: "Arrival",
       accessorKey: "arrival_time",
+      sortingFn: (rowA, rowB, columnId) => {
+        const timeA = moment(rowA.original.arrival_time, "HH:mmA")
+          .toDate()
+          .getTime()
+        const timeB = moment(rowB.original.arrival_time, "HH:mmA")
+          .toDate()
+          .getTime()
+
+        return timeA - timeB
+      },
       header: () => (
         <TableHeaderWithTooltip header="Arrival" tooltipId="arrival-time" />
       ),
