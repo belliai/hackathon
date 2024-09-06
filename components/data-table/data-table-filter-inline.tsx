@@ -158,13 +158,11 @@ export function DataTableFilterInline<TData>({
   const isFilterRuleExist = rules.find((item) => item.type === "rule")
 
   useEffect(() => {
-    console.log(props.rules)
     if (props.rules && props.rules?.length > 0) {
       setRules([])
       setRules(props.rules.filter((item) => item.column))
     }
   }, [props.rules])
-
 
   return (
     <div className="mt-4 flex items-center justify-end gap-2">
@@ -254,7 +252,7 @@ export function DataTableFilterInline<TData>({
             setRules([])
             props.onRulesChange && props.onRulesChange([])
           }}
-          className="gap-1 text-xs text-zinc-500"
+          className="gap-1 rounded-full text-xs text-zinc-500"
         >
           Reset
         </Button>
@@ -279,24 +277,21 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
   const [direction, setDirection] = useState<Direction>("this")
   const [period, setPeriod] = useState<Period>("day")
   const [count, setCount] = useState(1)
-  const [calendarMode, setCalendarMode] = useState<any>(
-    props.filter.calendarMode ?? "single"
-  )
+  const [calendarMode, setCalendarMode] = useState<any>("single")
   const [value, setValue] = useState("")
   const [month, setMonth] = useState<Date>(new Date())
   const [date, setDate] = useState<DateRange | Date | undefined>(
     calendarMode === "range"
       ? {
-          from: undefined,
-          to: undefined,
+          from: (props.filter?.value as DateRange).from || undefined,
+          to: (props.filter?.value as DateRange).to || undefined,
         }
       : (props.filter.value as Date) ?? undefined
   )
-  console.log(condition)
+
   useEffect(() => {
     if (condition === "is-between") {
       setCalendarMode("range")
-      setDate(undefined)
     } else setCalendarMode("single")
     if (condition === "is-relative-to-today") {
       const relativeDate = mapRelativeValueToDate(direction, period, 1)
@@ -319,6 +314,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
   useEffect(() => {
     props.filter.value && setDate(props.filter.value as Date | DateRange)
     props.filter.condition && setCondition(props.filter.condition)
+    props.filter.calendarMode && setCalendarMode(props.filter.calendarMode)
   }, [props.filter])
 
   const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
@@ -329,12 +325,13 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "gap-1 rounded-md text-xs",
+            "h-8 rounded-full px-3 text-xs",
             (date || isEmptyOrNotEmpty) &&
-              "border-[#fb5727] text-button-primary hover:text-button-primary bg-[#fb5727] hover:bg-[#fb5727] hover:bg-opacity-20 bg-opacity-10 border-opacity-20"
+              "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
           )}
         >
-          <CalendarIcon size={14} /> Date
+          <CalendarIcon size={14} />
+          &nbsp;Date
           {isEmptyOrNotEmpty && (
             <span>
               {" "}
@@ -555,16 +552,17 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "gap-1 rounded-lg text-xs",
+            "h-8 gap-0 rounded-full px-3 text-xs",
             (text || isEmptyOrNotEmpty) &&
-              "border-[#fb5727] text-button-primary hover:text-button-primary bg-[#fb5727] hover:bg-[#fb5727] hover:bg-opacity-20 bg-opacity-10 border-opacity-20"
+              "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
           )}
         >
           <Text size={14} />
-          
+          &nbsp;
           {props.filter.label || props.filter.column}
           {isEmptyOrNotEmpty && (
-            <p>:&nbsp;{" "}
+            <p>
+              :&nbsp;{" "}
               {
                 datefiltersOptions.find((item) => item.value === condition)
                   ?.label
@@ -625,12 +623,13 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "gap-2 rounded-md text-xs",
+            "h-8 rounded-full px-3 text-xs",
             (profiles.length > 0 || isEmptyOrNotEmpty) &&
-              "border-[#fb5727] text-button-primary hover:text-button-primary bg-[#fb5727] hover:bg-[#fb5727] hover:bg-opacity-20 bg-opacity-10 border-opacity-20"
+              "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
           )}
         >
           <UserIcon size={14} />
+          &nbsp;
           {props.filter.column}
           {isEmptyOrNotEmpty && (
             <p>
@@ -642,7 +641,7 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
               }{" "}
             </p>
           )}
-          {profiles.length > 0 && !isEmptyOrNotEmpty &&  (
+          {profiles.length > 0 && !isEmptyOrNotEmpty && (
             <p>
               :&nbsp;
               {profiles.map((profile, id) => profile.label).join(", ")}

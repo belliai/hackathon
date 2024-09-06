@@ -286,9 +286,15 @@ export function DataTableFilterOptions<TData>({
                   <div className="flex min-w-64 gap-1">
                     <DataTableSelect
                       value={filter.condition as string}
-                      onValueChange={(cond) =>
-                        handleChangeFilter(filter.id, [cond], ["condition"])
-                      }
+                      onValueChange={(cond) => {
+                        let value;
+                        if (cond === "is-between") {
+                          value = { from: new Date(), to: new Date() };
+                          handleChangeFilter(filter.id, [cond, value,"range"], ["condition", "value","calendarMode"]);
+                        } else {
+                          handleChangeFilter(filter.id, [cond], ["condition"]);
+                        }
+                      }}
                       options={datefiltersOptions}
                     >
                       <SelectTrigger className="flex items-center text-xs">
