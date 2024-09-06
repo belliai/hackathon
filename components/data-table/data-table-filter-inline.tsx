@@ -329,9 +329,9 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "gap-2 rounded-md text-xs",
+            "gap-1 rounded-md text-xs",
             (date || isEmptyOrNotEmpty) &&
-              "border-[#fb5727] text-button-primary hover:text-button-primary"
+              "border-[#fb5727] text-button-primary hover:text-button-primary bg-[#fb5727] hover:bg-[#fb5727] hover:bg-opacity-20 bg-opacity-10 border-opacity-20"
           )}
         >
           <CalendarIcon size={14} /> Date
@@ -346,7 +346,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
             </span>
           )}
           {isValidDate(date) && !isEmptyOrNotEmpty && (
-            <span> :&nbsp; {format(date as Date, "LLL dd, yyyy")}</span>
+            <span> :&nbsp;{format(date as Date, "LLL dd, yyyy")}</span>
           )}
           {date &&
             "from" in date &&
@@ -555,17 +555,16 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "gap-2 rounded-md text-xs",
+            "gap-1 rounded-lg text-xs",
             (text || isEmptyOrNotEmpty) &&
-              "border-[#fb5727] text-button-primary hover:text-button-primary"
+              "border-[#fb5727] text-button-primary hover:text-button-primary bg-[#fb5727] hover:bg-[#fb5727] hover:bg-opacity-20 bg-opacity-10 border-opacity-20"
           )}
         >
           <Text size={14} />
+          
           {props.filter.label || props.filter.column}
           {isEmptyOrNotEmpty && (
-            <p>
-              {" "}
-              :&nbsp;{" "}
+            <p>:&nbsp;{" "}
               {
                 datefiltersOptions.find((item) => item.value === condition)
                   ?.label
@@ -628,7 +627,7 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
           className={cn(
             "gap-2 rounded-md text-xs",
             (profiles.length > 0 || isEmptyOrNotEmpty) &&
-              "border-[#fb5727] text-button-primary hover:text-button-primary"
+              "border-[#fb5727] text-button-primary hover:text-button-primary bg-[#fb5727] hover:bg-[#fb5727] hover:bg-opacity-20 bg-opacity-10 border-opacity-20"
           )}
         >
           <UserIcon size={14} />
