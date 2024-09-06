@@ -254,8 +254,8 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
         mode={modalType}
       />
 
-      <div className="w-80 shrink-0">
-        <div className="mb-3 flex items-center justify-between">
+      <div className="min w-64 shrink-0">
+        <div className="mb-3 flex items-center justify-between w-full">
           <h3 className={`font-medium text-white`}>{title}</h3>
           <span className="rounded text-sm text-neutral-400">
             {filteredCards.length}
@@ -297,6 +297,8 @@ const Card = ({
   destination,
   ID,
   status,
+  updated_at,
+  shipper,
   handleDragStart,
   handleCardClick,
 }: CardProps) => {
@@ -309,16 +311,38 @@ const Card = ({
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
-        className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+        className="w-64 h-25 cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
         onClick={() => handleCardClick(ID)}
       >
-        <p className="text-sm text-neutral-100">AWB: {awb}</p>
-        <p className="text-sm text-neutral-100">
-          Dest: {destination?.name} Org: {origin?.name}
+        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}> {awb}</p>
+        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}>
+          Dest: {destination?.name} → Origin: {origin?.name}
         </p>
+        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}> {formatDate(updated_at)}</p>
+        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}> {shipper?.name}</p>
       </motion.div>
     </>
   )
+}
+
+function formatDate(isoString: string | number | Date | undefined) {
+  const date = new Date(isoString || "");
+
+  // Extract date components
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const year = date.getFullYear();
+
+  // Extract time components
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+  // Convert 24-hour time to 12-hour time
+  hours = hours % 12;
+  hours = hours ? hours : 12; // If hour is 0, make it 12
+
+  return `${day}/${month}/${year}, ${hours}:${minutes}${ampm}`;
 }
 
 type DropIndicatorProps = {
@@ -343,7 +367,9 @@ type CardType = {
   origin: IDNamePair
   destination: IDNamePair
   ID: string
-  status: IDNamePair
+  status: IDNamePair,
+  updated_at?: string,
+  shipper: Organization
 }
 
 interface IDNamePair {
