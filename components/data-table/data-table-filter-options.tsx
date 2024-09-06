@@ -244,8 +244,8 @@ export function DataTableFilterOptions<TData>({
                       if (column)
                         handleChangeFilter(
                           filter.id,
-                          [columnType, value, label],
-                          ["type", "column", "label"]
+                          [columnType, value, label,""],
+                          ["type", "column", "label","value"]
                         )
                     }}
                   >
