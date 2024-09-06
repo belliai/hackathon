@@ -60,6 +60,14 @@ export interface Flight {
   end_after_occurrences?: number
   end_date?: string
   specification: Specification
+  status: FlightStatus
+}
+
+export type UpdateFlightPayload = Partial<CreateFlightMasterPayload>
+
+export interface FlightStatus {
+  id: string
+  status: string
 }
 
 export interface CreateFlightMasterPayload {
@@ -75,6 +83,7 @@ export interface CreateFlightMasterPayload {
   flight_duration_minute: number
   tail_id?: string
   recurring?: string
+  status_id?: string
 }
 
 export interface RecurringPayload {

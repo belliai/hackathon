@@ -21,8 +21,8 @@ import { Table } from "@tanstack/react-table"
 
 import { cn } from "@/lib/utils"
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import SettingMenuToggle from "../setting-menu-toggle/setting-menu-toggle"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
@@ -31,6 +31,7 @@ interface DataTablePaginationProps<TData> {
   isHover?: boolean
   onExport?: (prop: any) => void
   settingOptions?: any
+  pageSizeOptions?: number[]
 }
 
 export function DataTablePagination<TData>({
@@ -40,6 +41,7 @@ export function DataTablePagination<TData>({
   isHover,
   onExport,
   settingOptions,
+  pageSizeOptions = [10, 20, 30, 40, 50],
 }: DataTablePaginationProps<TData>) {
   const searchParams = useSearchParams()
 
@@ -59,9 +61,14 @@ export function DataTablePagination<TData>({
   return (
     <div className="!mt-1 flex flex-col items-center justify-between gap-4 px-2 md:flex-row">
       {settingOptions && (
-        <SettingMenuToggle settingOptions={settingOptions} className={`${isHover === undefined || openSetting || openRowPerPage ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} onOpen={setOpenSetting} isOpen={openSetting} />
+        <SettingMenuToggle
+          settingOptions={settingOptions}
+          className={`${isHover === undefined || openSetting || openRowPerPage ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+          onOpen={setOpenSetting}
+          isOpen={openSetting}
+        />
       )}
-      
+
       {showSelectedCount ? (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -92,7 +99,7 @@ export function DataTablePagination<TData>({
               <SelectValue placeholder={currentPageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {pageSizeOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>

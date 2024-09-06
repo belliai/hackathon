@@ -44,7 +44,7 @@ import { DataTable } from "@/components/data-table/data-table"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
-import { useListViewColumns, useRecurringColumns } from "./components/column"
+import { listViewColumns, useRecurringColumns } from "./components/column"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
 import NewFlightModal from "./components/new-flight-form"
 import WeeklyDateStepper from "./components/weekly-date-stepper"
@@ -342,7 +342,7 @@ export default function Page() {
     setPagination(pagination)
   }, [])
 
-  const listViewColumns = useListViewColumns({
+  const columns = listViewColumns({
     onRowClick: openDetailFlight,
     onDelete: onShowDelete,
     aircraftOptions: aircraftTailNumbers || [],
@@ -399,7 +399,7 @@ export default function Page() {
           <TabsContent value="list-view" className="mt-0">
             <DataTable
               showToolbarOnlyOnHover={true}
-              columns={listViewColumns}
+              columns={columns}
               data={isLoading || !flights ? [] : flights}
               onRowClick={openDetailFlight}
               extraRightComponents={createButtonFlight}
