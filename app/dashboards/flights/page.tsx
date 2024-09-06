@@ -120,7 +120,7 @@ export default function FlightsDashboardPage() {
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 20,
   })
 
   const tableState = useCallback(async ({ pagination }: any) => {
@@ -574,7 +574,7 @@ export default function FlightsDashboardPage() {
               filename: "DashboardFlightData",
             })
           }
-          // settingOptions={SETTING_OPTIONS}
+          pageSizeOptions={[20, 50, 100]}
         />
       )}
     </div>

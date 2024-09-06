@@ -55,32 +55,16 @@ function convertToTime({
 }) {
   const time = moment(
     `${hour}:${String(minute).length < 2 ? `0${minute}` : minute} ${period}`,
-    "HH:mm A"
+    "hh:mm A"
   )
 
   return time
 }
 
-export const listViewColumns = (
-  props: ListViewProps
-): ColumnDef<Flight>[] => {
+export const listViewColumns = (props: ListViewProps): ColumnDef<Flight>[] => {
   return [
     {
-      id: "Date", // id is used to match the column_name from the columns configuration endpoint in the API
-      accessorKey: "departure_date",
-      header: () => (
-        <TableHeaderWithTooltip header="Date" tooltipId="next-at" />
-      ),
-      cell: ({ row }) => {
-        const date = row.original.departure_date || ""
-        return moment(date).format("YYYY-MM-DD")
-      },
-      meta: {
-        columnType: "date",
-      },
-    },
-    {
-      id: "Day",
+      id: "Day", // id is used to match the column_name from the columns configuration endpoint in the API
       accessorKey: "day",
       header: () => (
         <TableHeaderWithTooltip header="Day" tooltipId="day-of-week" />
@@ -123,20 +107,18 @@ export const listViewColumns = (
       header: () => (
         <TableHeaderWithTooltip header="Departure" tooltipId="departure-time" />
       ),
+      size: 200,
       cell: ({ row }) => {
-        const departure_h = row.original.departure_hour
-        const departure_m = row.original.departure_minute
-        const period = row.original.departure_period
-        const today = new Date()
-        today.setHours(departure_h)
-        today.setMinutes(departure_m)
-        const periodFormat = period.toLowerCase()
-        const hoursFormat = moment(today).format("HH:mm")
-        return `${hoursFormat}${periodFormat}`
+        const departurTime = convertToTime({
+          hour: row.original.departure_hour,
+          minute: row.original.departure_minute,
+          period: row.original.departure_period,
+        })
+
+        return departurTime.format("DD/MM/YYYY HH:mm")
       },
     },
     {
-      // TODO: Integrate with API
       id: "Landing Wt", // We set the id to Landing Wt because currently the "Status" column doesn't exist in the API (should be replaced later)
       accessorKey: "status",
       header: () => (
@@ -178,10 +160,16 @@ export const listViewColumns = (
       id: "Arrival",
       accessorKey: "arrival_time",
       sortingFn: (rowA, rowB, columnId) => {
-        const timeA = moment(rowA.original.arrival_time, "HH:mmA")
+        const timeA = moment(
+          `${rowA.original.arrival_date} ${rowA.original.arrival_time}`,
+          "YYYY-MM-DD hh:mma"
+        )
           .toDate()
           .getTime()
-        const timeB = moment(rowB.original.arrival_time, "HH:mmA")
+        const timeB = moment(
+          `${rowB.original.arrival_date} ${rowB.original.arrival_time}`,
+          "YYYY-MM-DD hh:mma"
+        )
           .toDate()
           .getTime()
 
@@ -191,7 +179,10 @@ export const listViewColumns = (
         <TableHeaderWithTooltip header="Arrival" tooltipId="arrival-time" />
       ),
       cell: ({ row }) => {
-        const time = row.original.arrival_time
+        const time = moment(
+          `${row.original.arrival_date} ${row.original.arrival_time}`,
+          "YYYY-MM-DD hh:mma"
+        ).format("DD/MM/YYYY HH:mm")
         return time ? time : ""
       },
     },
