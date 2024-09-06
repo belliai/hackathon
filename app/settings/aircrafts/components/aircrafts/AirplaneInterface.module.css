@@ -6,8 +6,22 @@
   position: relative;
 }
 
+.airplaneContainerHorizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
 .airplaneHead {
   border-radius: 100% 100% 0 0;
+  margin-bottom: -20px;
+  position: relative;
+}
+
+.airplaneHeadHorizontal {
+  border-radius: 100% 0 0 100%;
   margin-bottom: -20px;
   position: relative;
 }
@@ -49,3 +63,10 @@
 	border-top-width: 0;
 	margin: -.414em -50%;
 }
+
+.droppableArea {
+  border-radius: 50% 0 0 50%; /* Simulating the front of the airplane */
+  border: 1px solid #444;
+  position: relative;
+}
+
