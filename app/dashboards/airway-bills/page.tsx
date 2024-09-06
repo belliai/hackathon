@@ -7,6 +7,7 @@ import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
 import {
+  BoxesIcon,
   CogIcon,
   EyeIcon,
   HomeIcon,
@@ -40,6 +41,7 @@ import NewOrderSideModal from "@/components/dashboard/new-order-side-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 
 import CustomKanban, { Shipment } from "./kanban"
+import LoadPlanning from "./load-planning"
 
 const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
   <TabsList className="gap-2 bg-transparent p-0">
@@ -56,6 +58,13 @@ const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
     >
       <SquareKanbanIcon className="mr-2 size-4" />
       Kanban View
+    </TabsTrigger>
+    <TabsTrigger
+      className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
+      value="load-planning"
+    >
+      <BoxesIcon className="mr-2 size-4" />
+      Load Planning
     </TabsTrigger>
   </TabsList>
 )
@@ -226,6 +235,15 @@ export default function Home() {
               <ActionButtons />
             </div>
             <CustomKanban ordersData={ordersData} cards={cards} setCards={setCards} />
+          </>
+        </TabsContent>
+        <TabsContent value="load-planning" asChild>
+          <>
+            <div className="flex justify-between items-center gap-2">
+              {memoizedTabsList}
+              <ActionButtons />
+            </div>
+            <LoadPlanning />
           </>
         </TabsContent>
       </Tabs>
