@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
+import { toast } from "@/components/ui/use-toast"
 import { InputSwitchProps } from "@/components/form/InputSwitch"
 
 import CrudTable, { FormDialog, FormDropdown } from "./components/crud-table"
@@ -89,6 +90,11 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
     []
   )
 
+  const [savedGroups, setSavedGroups] = useLocalStorage<any[]>(
+    "status_groups",
+    []
+  )
+
   const [open, setOpen] = useState(false)
   const [selectedEditing, setSelectedEditing] = useState<string | null>(null)
   const [selectedGroup, setSelectedGroup] = useState<string[]>([])
@@ -126,6 +132,14 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
       label: "Group Name",
     },
   ]
+
+  useEffect(() => {
+    if (savedGroups.length === 0) {
+      setSavedGroups(statusGroups)
+    } else {
+      setStatusGroups(savedGroups)
+    }
+  }, [savedGroups, statusGroups])
 
   useEffect(() => {
     if (apiStatusesData) {
@@ -323,10 +337,48 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                       data={{ name: group.name }}
                       title={group.name}
                       form={secondForm}
-                      // onSave={(data) => {
-                      //   console.log("Save group", data)
-                      // }}
-                      // onDelete={() => deleteFieldGroup(fieldGroup.id)}
+                      onSave={(data) => {
+                        setSavedGroups((prev) =>
+                          prev.map((g) => {
+                            if (g.id === group.id) {
+                              return { ...g, name: data.name }
+                            }
+
+                            return g
+                          })
+                        )
+
+                        toast({
+                          title: "Success",
+                          description: "Group updated successfully",
+                        })
+                      }}
+                      onDelete={() => {
+                        // Move all statuses to unassigned group
+                        setSavedStatuses((prev) =>
+                          prev.map((status) => {
+                            if (status.groupId === group.id) {
+                              return {
+                                ...status,
+                                groupId: "unassigned",
+                              }
+                            }
+
+                            return status
+                          })
+                        )
+
+                        // Remove the group
+                        setStatusGroups((prev) =>
+                          prev.filter((g) => g.id !== group.id)
+                        )
+
+                        toast({
+                          title: "Success",
+                          description:
+                            "Group deleted successfully, statuses moved to Unassigned",
+                        })
+                      }}
                       actionsClassName="group/trigger:opacity-0 group-hover/trigger:opacity-100 group-hover:opacity-0"
                     />
                   </AccordionTrigger>
@@ -353,7 +405,42 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                               const payload = option || data.name
 
                               if (actualId) {
-                                update.mutate({ id: actualId, name: payload })
+                                update.mutate(
+                                  { id: actualId, name: payload },
+                                  {
+                                    onSuccess: () => {
+                                      setSavedStatuses((prev) =>
+                                        prev.map((status) => {
+                                          if (status.ID === actualId) {
+                                            return {
+                                              ...status,
+                                              name: payload,
+                                              groupId: data?.groupId,
+                                            }
+                                          }
+
+                                          return status
+                                        })
+                                      )
+
+                                      toast({
+                                        title: "Success",
+                                        description:
+                                          "Status updated successfully",
+                                      })
+                                    },
+                                    onError: (error) => {
+                                      console.error("Error: ", error)
+
+                                      toast({
+                                        title: "Error",
+                                        description:
+                                          "An error occurred when updating the status",
+                                        variant: "destructive",
+                                      })
+                                    },
+                                  }
+                                )
                               } else {
                                 add.mutate({ name: option })
                               }
@@ -362,7 +449,34 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                               const actualId = rest.id || rest.ID
 
                               if (actualId) {
-                                remove.mutate({ id: actualId })
+                                remove.mutate(
+                                  { id: actualId },
+                                  {
+                                    onSuccess: () => {
+                                      setStatusesData((prev) =>
+                                        prev.filter(
+                                          (status) => status.ID !== actualId
+                                        )
+                                      )
+
+                                      toast({
+                                        title: "Success",
+                                        description:
+                                          "Status deleted successfully",
+                                      })
+                                    },
+                                    onError: (error) => {
+                                      console.error("Error: ", error)
+
+                                      toast({
+                                        title: "Error",
+                                        description:
+                                          "An error occurred when deleting the status",
+                                        variant: "destructive",
+                                      })
+                                    },
+                                  }
+                                )
                               }
                             }}
                           />
