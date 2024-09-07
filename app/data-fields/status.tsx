@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Plus } from "lucide-react"
 import { FieldValues, useForm } from "react-hook-form"
+import { useLocalStorage } from "usehooks-ts"
 
 import {
   useAddStatus,
@@ -27,52 +28,67 @@ import {
   DataFieldsItemContent,
 } from "./components/data-fields"
 
-interface GroupsDefinition {
+interface GroupDefinition {
+  id: string
   name: string
   startIndex: number
   endIndex: number
 }
 
-const statusGroupDef: GroupsDefinition[] = [
+const statusGroupDef: GroupDefinition[] = [
   {
+    id: "sales",
     name: "Sales",
     startIndex: 0,
     endIndex: 3,
   },
   {
+    id: "operations",
     name: "Before Airport",
     startIndex: 3,
     endIndex: 7,
   },
   {
+    id: "during-airport",
     name: "During Airport",
     startIndex: 7,
     endIndex: 14,
   },
   {
+    id: "after-airport",
     name: "After Airport",
     startIndex: 14,
     endIndex: 22,
   },
   {
+    id: "unassigned",
     name: "Unassigned",
     startIndex: 22,
     endIndex: 9999,
   },
 ]
 
-function groupData(data: any[], groupsDef: GroupsDefinition[]) {
-  const groupped = groupsDef.map((group) => {
+function groupData(data: any[], groupsDef: GroupDefinition[]) {
+  const statusWithGroup = data.map((status, index) => {
+    const group = groupsDef.find(
+      (g) => index >= g.startIndex && index < g.endIndex
+    )
+
     return {
-      name: group.name,
-      data: data.slice(group.startIndex, group.endIndex),
+      ...status,
+      groupId: group?.id || "unassigned",
     }
   })
 
-  return groupped.filter((g) => g.data.length > 0)
+  return statusWithGroup
 }
 
 const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
+  const [savedStatuses, setSavedStatuses] = useLocalStorage<any[]>(
+    "statuses_with_group",
+    []
+  )
+
   const [open, setOpen] = useState(false)
   const [selectedEditing, setSelectedEditing] = useState<string | null>(null)
   const [selectedGroup, setSelectedGroup] = useState<string[]>([])
@@ -82,6 +98,13 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   >(null)
   const [grouppedData, setGrouppedData] = useState<any[]>([])
   const [statusesData, setStatusesData] = useState<any[]>([])
+  const [statusGroups, setStatusGroups] =
+    useState<GroupDefinition[]>(statusGroupDef)
+
+  const groupStatusOptions = statusGroups?.map((status) => ({
+    value: status.id,
+    label: status.name,
+  }))
 
   const { isLoading, isPending, error, data: apiStatusesData } = useStatuses()
   const update = useUpdateStatus()
@@ -137,22 +160,51 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
         }
       })
 
-      const newGroupedData = groupData(data, statusGroupDef)
+      if (!savedStatuses.length) {
+        // Set initial saved statuses
+        const statusWithGroup = groupData(data, statusGroupDef)
 
-      setStatusesData(data)
-      setGrouppedData(newGroupedData)
+        setSavedStatuses(statusWithGroup)
+      } else {
+        const updatedStatuses = statusesDataWithDescription.map(
+          (status: any) => {
+            const savedStatus = savedStatuses.find(
+              (saved) => saved.ID === status.ID
+            )
+
+            if (savedStatus) {
+              return {
+                ...status,
+                groupId: savedStatus.groupId,
+              }
+            } else {
+              // Set unassigned group for new statuses
+              return {
+                ...status,
+                groupId: "unassigned",
+              }
+            }
+          }
+        )
+
+        setStatusesData(updatedStatuses)
+      }
     }
-  }, [apiStatusesData])
+  }, [apiStatusesData, savedStatuses])
 
   if (error) return "An error has occurred: " + error.message
 
   const form: InputSwitchProps<FieldValues>[] = [
     { name: "id", type: "hidden" },
     { name: "name", type: "text", label: "Status" },
+    {
+      name: "groupId",
+      type: "combobox",
+      label: "Group",
+      selectOptions: groupStatusOptions,
+    },
     { name: "description", type: "text", label: "Description" },
   ]
-
-  console.log("grouppedData", grouppedData)
 
   const shouldUseModal = form.filter((f) => f.name !== "id").length > 1
 
@@ -177,7 +229,28 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                     if (id) {
                       update.mutate({ id, name })
                     } else {
-                      add.mutate({ name })
+                      add.mutate(
+                        { name },
+                        {
+                          onSuccess: (resData) => {
+                            console.log("resData: ", resData)
+
+                            if (resData?.id) {
+                              // Save the new status to local storage
+                              setSavedStatuses((prev) => [
+                                ...prev,
+                                {
+                                  ...resData,
+                                  ID: resData?.id,
+                                  groupId: data?.groupId,
+                                },
+                              ])
+                            }
+
+                            setOpen(false)
+                          },
+                        }
+                      )
                     }
                   }}
                 />
@@ -211,7 +284,17 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
           value={selectedGroup}
           onValueChange={setSelectedGroup}
         >
-          {grouppedData.map((group) => {
+          {statusGroups.map((group) => {
+            const statuses: any[] =
+              group.id === "unassigned"
+                ? statusesData.filter(
+                    (status) =>
+                      !status.groupId || status.groupId === "unassigned"
+                  )
+                : statusesData.filter((status) => status.groupId === group.id)
+
+            if (statuses.length === 0) return null
+
             return (
               <AccordionItem
                 key={group.name}
@@ -248,19 +331,21 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                     />
                   </AccordionTrigger>
                   <AccordionContent className="py-2">
-                    {group.data.map((item: any) => {
+                    {statuses?.map((item: any) => {
+                      const { groupId, ...rest } = item
+
                       return (
                         <DataFieldsItem
-                          key={item.id}
+                          key={rest.id}
                           className="rounded-none border-0 bg-transparent pl-9 hover:bg-white/5"
                         >
                           <DataFieldsItemContent
                             selectedEditing={selectedEditing}
                             setSelectedEditing={setSelectedEditing}
                             columnSpans={[4, 8, 0]}
-                            data={item}
+                            data={rest}
                             form={form}
-                            title={item.name}
+                            title={rest.name}
                             onSave={(data) => {
                               const { id, option } = data
 
@@ -274,7 +359,7 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                               }
                             }}
                             onDelete={() => {
-                              const actualId = item.id || item.ID
+                              const actualId = rest.id || rest.ID
 
                               if (actualId) {
                                 remove.mutate({ id: actualId })
