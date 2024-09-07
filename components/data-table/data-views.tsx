@@ -1,10 +1,22 @@
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useEffect, useRef, useState } from "react"
 import { TabsTrigger } from "@radix-ui/react-tabs"
 import { ColumnDef } from "@tanstack/react-table"
 import { Delete, DeleteIcon, Edit, PlusIcon, Trash } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  AlertDialogPortal,
+  AlertDialogTitle,
+} from "../ui/alert-dialog"
 import { Button } from "../ui/button"
 import {
   ContextMenu,
@@ -34,39 +46,93 @@ interface RenameInputProps {
 const RenameInput = ({ value: initialValue, onSave }: RenameInputProps) => {
   const [edit, setEdit] = useState(false)
   const [value, setValue] = useState(initialValue)
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
 
   const handleSave = () => {
-    onSave(value)
-    setEdit(false)
+    if (value.trim()) {
+      onSave(value);
+    }
+    setEdit(false);
   }
+
+  const handleCancel = () => {
+    setValue(initialValue); // Revert to the original value
+    setEdit(false);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSave()
+      handleSave();
+    } else if (e.key === "Escape") {
+      handleCancel();
     }
-  }
 
-  if (edit)
-    return (
-      <Input
-        className="h-7 text-xs"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        //onBlur={handleSave} // Save when input loses focus
-        autoFocus
-      />
-    )
+    // Stop the keydown event from propagating to the parent
+    e.stopPropagation();
+  };
+
+  
+  useEffect(() => {
+    if (edit && inputRef.current) {
+      inputRef.current.focus();
+    }
+
+    // Handle mouse movement
+    const handleMouseMove = (e: MouseEvent) => {
+      if (wrapperRef.current?.contains(e.target as Node)) {
+        // Mouse is inside the wrapper
+        return;
+      }
+
+      // Mouse is outside the wrapper; input should stay focused
+      if (edit) {
+        // Prevent focus loss due to mouse movement
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }
+    };
+
+    if (edit) {
+      document.addEventListener('mousemove', handleMouseMove);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [edit]);
+
+  const handleMouseOver = () => {
+    if (edit && inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   return (
-    <Button
-      className="gap-2 text-xs"
-      variant={"ghost"}
-      onClick={() => setEdit(true)}
+    <div ref={wrapperRef}
+    onMouseOver={handleMouseOver}
     >
-      <Edit size={14} />
-      Rename
-    </Button>
+      {edit ? (
+        <Input
+          ref={inputRef}
+          className="h-7 text-xs"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+      ) : (
+        <Button
+          className="gap-2 text-xs"
+          variant={"ghost"}
+          onClick={() => setEdit(true)}
+        >
+          <Edit size={14} />
+          Rename
+        </Button>
+      )}
+    </div>
   )
 }
 
@@ -84,17 +150,22 @@ const ContextMenuWrapper = <TData, TValue>({
   onDeleteView,
 }: ContextMenuWrapperProps<TData, TValue>) => {
   const [value, setValue] = useState(view.name)
+  const [deleteWarningOpen, setDeleteWarningOpen] = useState(false)
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+
 
   const handleSave = (newValue: any) => {
     setValue(newValue)
-
     onChangeView?.(view.id, newValue, "name")
   }
 
   return (
-    <ContextMenu modal>
-      <ContextMenuTrigger>{children}</ContextMenuTrigger>
-      <ContextMenuContent className="bg-zinc-900">
+    <ContextMenu  modal={deleteWarningOpen ? false : true}>
+      <ContextMenuTrigger >{children}</ContextMenuTrigger>
+      <ContextMenuContent
+        className="bg-zinc-900"
+        onKeyDown={(e)=>e.preventDefault()}
+      >
         <ContextMenuItem
           onSelect={(e) => e.preventDefault()}
           className="gap-2 p-0 text-xs"
@@ -107,14 +178,48 @@ const ContextMenuWrapper = <TData, TValue>({
         >
           <Button
             disabled={view.id === 1}
-            className="gap-2 text-xs hover:text-red-800"
+            className=" items-start gap-2 text-xs hover:text-red-800 hover:bg-transparent"
             variant={"ghost"}
-            onClick={() => onDeleteView?.(view.id)}
+            onClick={() => setDeleteWarningOpen(true)}
           >
             <Trash size={14} /> Delete
           </Button>
         </ContextMenuItem>
       </ContextMenuContent>
+      <AlertDialog
+        open={deleteWarningOpen}
+        onOpenChange={(isOpen) => {
+          setDeleteWarningOpen(isOpen)
+          if (!isOpen) {
+            // Ensure pointer-events are reset when the dialog closes
+            document.body.style.pointerEvents = "auto"
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure want to delete this view?
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant={"button-primary"}
+              onClick={async () => {
+                try {
+                  onDeleteView?.(view.id)
+                  setDeleteWarningOpen(false)
+                } catch (e) {
+                  console.log(e)
+                }
+              }}
+            >
+              Confirm Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ContextMenu>
   )
 }
@@ -127,6 +232,7 @@ const DataViews = <TData, TValue>({
 }: DataViewsProps<TData, TValue>) => {
   const [views, setViews] = useState<View[]>(initialViews)
   const [currentView, setCurrentView] = useState<View>(initialViews[0])
+  
 
   const handleAddView = () => {
     const newView: View = {
@@ -187,10 +293,11 @@ const DataViews = <TData, TValue>({
                       >
                         <Button
                           className={cn(
-                            "p-2 text-xs",
-                            currentView?.id === view.id && "bg-zinc-800"
+                            "h-8 gap-0 rounded-md p-2 text-xs",
+                            currentView?.id === view.id &&
+                              "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
                           )}
-                          variant={"ghost"}
+                          variant={"outline"}
                           onClick={() => setCurrentView(view)}
                         >
                           {view.name}
@@ -200,10 +307,11 @@ const DataViews = <TData, TValue>({
                   ))}
                   <Button
                     onClick={handleAddView}
-                    className="px-2"
-                    variant="secondary"
+                    size={"icon"}
+                    className="h-8 w-8 px-2"
+                    variant="outline"
                   >
-                    <PlusIcon size={14} />
+                    <PlusIcon className="h-4 w-4" />
                   </Button>
                 </TabsList>
               }
