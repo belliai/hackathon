@@ -1,6 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
+import { TableItem } from "@/types/api/dashboard-items"
 import {
   CreateFlightMasterPayload,
   Flight,
@@ -28,6 +34,29 @@ export const fetchFlightList = async (
       params,
     })
     .then((res) => res.data as APIPaginatedResponse<Flight>)
+}
+
+export const fetchFlightDashboard = async (
+  belliApi: AxiosInstance,
+  params: FlightParamsProps
+) => {
+  const _route = route + "/dashboard"
+  return belliApi
+    .get(_route, {
+      params,
+    })
+    .then((res) => res.data as APIPaginatedResponse<TableItem<Flight>>)
+}
+
+export const useFlightsDashboard = (params: FlightParamsProps) => {
+  const _route = route + "/dashboard"
+  const belliApi = useBelliApi()
+
+  return useQuery({
+    queryKey: [_route, params],
+    queryFn: async () => await fetchFlightDashboard(await belliApi, params),
+    placeholderData: keepPreviousData,
+  })
 }
 
 export const useFlightList = (params: FlightParamsProps) => {
@@ -105,16 +134,12 @@ export const updateFlight = async (
 export const partialUpdate = async (
   belliApi: AxiosInstance,
   id: string,
-  data: Partial<CreateFlightMasterPayload>,
+  data: Partial<CreateFlightMasterPayload>
 ) => {
   return belliApi
-    .patch(
-      `${route}/${id}`,
-      data
-    )
+    .patch(`${route}/${id}`, data)
     .then((res) => res.data as Flight)
 }
-
 
 export const useUpdateFlight = () => {
   const queryClient = useQueryClient()
@@ -122,7 +147,9 @@ export const useUpdateFlight = () => {
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (data: CreateFlightMasterPayload & { id: string, update_mode?: string }) => {
+    mutationFn: async (
+      data: CreateFlightMasterPayload & { id: string; update_mode?: string }
+    ) => {
       const { id, ...rest } = data
       return await updateFlight(await belliApi, data.id, rest)
     },
@@ -138,7 +165,12 @@ export const usePartialUpdateFlight = () => {
 
   return useMutation({
     mutationKey: [route],
-    mutationFn: async (data: Partial<CreateFlightMasterPayload> & { id: string, update_mode?: string }) => {
+    mutationFn: async (
+      data: Partial<CreateFlightMasterPayload> & {
+        id: string
+        update_mode?: string
+      }
+    ) => {
       const { id, ...rest } = data
       return await partialUpdate(await belliApi, data.id, rest)
     },
@@ -199,7 +231,9 @@ export const useRecurringFlight = (id?: string) => {
 }
 
 export const fetchFlightStatuses = async (belliApi: AxiosInstance) => {
-  return belliApi.get(`${route}/statuses`).then((res) => res.data as { id: string, status: string }[])
+  return belliApi
+    .get(`${route}/statuses`)
+    .then((res) => res.data as { id: string; status: string }[])
 }
 
 export const useFlightStatuses = () => {

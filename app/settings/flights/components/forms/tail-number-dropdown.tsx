@@ -46,7 +46,9 @@ const TailNumberForm = ({
       name="tail_id"
       defaultValue={tail?.id}
       options={aircraftOptions}
-      onChangeSelect={onChangeSelect}
+      onChangeSelect={(data) => {
+        onChangeSelect({ tail_id: data.tail_id ?? null })
+      }}
     />
   )
 }

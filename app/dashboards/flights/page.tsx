@@ -1,32 +1,30 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
-import {
-  ColumnDef,
-  PaginationState,
-  Table,
-  VisibilityState,
-} from "@tanstack/react-table"
+import { useState } from "react"
 import * as changeCase from "change-case"
 import { Loader } from "lucide-react"
 import moment from "moment"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { useReadLocalStorage } from "usehooks-ts"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
 import { Flight, Specification } from "@/types/flight-master/flight-master"
-import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
-import { useColumns } from "@/lib/hooks/columns"
 import {
-  useFlightList,
+  useFlightsDashboard,
   useFlightStatuses,
   usePartialUpdateFlight,
-  useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
 import { useGetOrganizationSettings } from "@/lib/hooks/settings/organization"
-import { onExport } from "@/lib/utils/export"
+import { useTableState } from "@/lib/hooks/tables/table-state"
 import { Input } from "@/components/ui/input"
-import { TableHeaderWithTooltip } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import {
   Tooltip,
   TooltipContent,
@@ -34,11 +32,10 @@ import {
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/use-toast"
 import CargoCapacityAreaChart from "@/components/charts/cargo-capacity-area-chart"
-import { DataTable } from "@/components/data-table/data-table"
-import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
+import { DataTable } from "@/components/data-table-v2/data-table"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
-import { listViewColumns } from "@/app/settings/flights/components/column"
+import { TableCellDropdown } from "@/app/settings/flights/components/forms/table-cell-dropdown"
 
 interface FlightsActualInformation {
   detail: string
@@ -46,94 +43,18 @@ interface FlightsActualInformation {
   maximum: string
 }
 
-const SETTING_OPTIONS = {
-  width: "w-[234px]",
-  data: [
-    {
-      label: "Aircraft Types",
-      value: "/settings/aircrafts?tab=aircraft-types",
-    },
-    {
-      label: "Tail Numbers",
-      value: "/settings/aircrafts?tab=tail-numbers",
-    },
-    {
-      label: "Flight Scheduler",
-      value: "/settings/flights",
-    },
-    {
-      label: "Custom Data Fields: Aircrafts",
-      value: "",
-      child: [
-        {
-          label: "Aircrafts",
-          value: "/data-fields/aircrafts?tab=aircrafts",
-        },
-        {
-          label: "Measurement Units",
-          value: "/data-fields/aircrafts?tab=measurement-units",
-        },
-      ],
-    },
-    {
-      label: "Custom Data Fields: Flights",
-      value: "",
-      child: [
-        {
-          label: "Display",
-          value: "/data-fields/flights?tab=display",
-        },
-        {
-          label: "Default Timezone",
-          value: "/data-fields/flights?tab=default-timezone",
-        },
-      ],
-    },
-  ],
-}
-
 export default function FlightsDashboardPage() {
-  const {
-    data: cargoDisplaySettings,
-    isLoading: isLoadingCargoDisplaySettings,
-  } = useGetOrganizationSettings({ sectionKey: "cargo" })
+  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null)
+
+  const { data: cargoDisplaySettings } = useGetOrganizationSettings({
+    sectionKey: "cargo",
+  })
   const displayOption: DisplayOption =
     useReadLocalStorage("display_option", {
       initializeWithValue: false, // For SSR compatibility
     }) || "numbers-percentages"
 
-  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null)
-
-  // Temporary solution to display the actual information, will be replaced with API call
-  const [displayedFlightsData, setDisplayedFlightsData] = useState<Flight[]>([])
-
-  const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
-    useUpdateFlight()
-
   const { mutateAsync: partialUpdateFlight } = usePartialUpdateFlight()
-
-  const { useGetColumns, useUpdateColumn, useResetColumns } = useColumns()
-  const columnsQuery = useGetColumns("dashboard_flights")
-
-  const { mutateAsync } = useUpdateColumn()
-  const { mutateAsync: resetColumns } = useResetColumns("dashboard_flights")
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 20,
-  })
-
-  const tableState = useCallback(async ({ pagination }: any) => {
-    setPagination(pagination)
-  }, [])
-
-  const paginationDetails = useMemo(
-    () => ({
-      page: pagination.pageIndex === 0 ? 1 : pagination.pageIndex + 1,
-      page_size: pagination.pageSize,
-    }),
-    [pagination]
-  )
 
   const { data: flightStatusesData } = useFlightStatuses()
 
@@ -144,58 +65,25 @@ export default function FlightsDashboardPage() {
 
   flightStatusOptions?.unshift({ label: "No Status", value: "" })
 
-  const { data: flights, isLoading } = useFlightList({
-    ...paginationDetails,
-    start_date: moment().format("YYYY-MM-DD"),
-    sort_by: "departure_date",
-    sort_dir: "asc",
+  const tableStateProps = useTableState({
+    initialSort: { sort_by: "departure_date", sort_dir: "asc" },
   })
 
-  const flightsData = flights?.data || []
-
-  useEffect(() => {
-    if (flightsData.length) {
-      // Sort the flights data by departure date and time
-      const adjustedFlightsData = flightsData.sort((a, b) => {
-        const departureDateTimeA = moment(
-          `${a.departure_date} ${a.departure_hour}:${String(a.departure_minute).length < 2 ? "0" + String(a.departure_minute) : a.departure_minute}${a.departure_period}`,
-          "YYYY-MM-DD hh:mmA"
-        )
-          .toDate()
-          .getTime()
-        const departureDateTimeB = moment(
-          `${b.departure_date} ${b.departure_hour}:${String(b.departure_minute).length < 2 ? "0" + String(b.departure_minute) : b.departure_minute}${b.departure_period}`,
-          "YYYY-MM-DD hh:mmA"
-        )
-          .toDate()
-          .getTime()
-
-        return departureDateTimeA - departureDateTimeB
-      })
-
-      setDisplayedFlightsData(adjustedFlightsData)
-    }
-  }, [flightsData])
+  const {
+    data: flights,
+    isLoading,
+    refetch,
+  } = useFlightsDashboard({
+    ...tableStateProps.pagination,
+    ...tableStateProps.sort,
+    start_date: moment().format("YYYY-MM-DD"),
+  })
 
   const actualInformationForm = useForm<{ infos: FlightsActualInformation[] }>({
     defaultValues: {
       infos: [{ detail: "", actual: "", maximum: "" }],
     },
   })
-
-  const { data: aircraftsList, generateTailName } = useAircrafts({
-    page: 1,
-    page_size: 999,
-  })
-
-  const aircraftTailNumbers = aircraftsList?.data.flatMap((list) =>
-    list.aircraft_tail_numbers
-      .filter((tail) => !tail.is_deleted)
-      .map((tail) => ({
-        value: String(tail.id),
-        label: generateTailName(list, tail.tail_number),
-      }))
-  )
 
   function getVisibleCargoFields(visibilityConfig: any) {
     const visibleFields = Object.keys(visibilityConfig).filter(
@@ -218,6 +106,7 @@ export default function FlightsDashboardPage() {
             description: "Failed to update flight status",
             variant: "destructive",
           })
+          refetch()
         },
         onSuccess: () => {
           toast({
@@ -228,54 +117,6 @@ export default function FlightsDashboardPage() {
       }
     )
   }
-
-  const columns = useMemo(() => {
-    return listViewColumns({
-      aircraftOptions: aircraftTailNumbers || [],
-      statusOptions: flightStatusOptions || [],
-      onChangeStatus: handleChangeStatus,
-    }).filter((c) => c.id !== "Tail Number") // Remove Tail Number column
-  }, [aircraftTailNumbers, flightStatusOptions])
-
-  const displayedFlightsColumns: ColumnDef<Flight>[] = [
-    ...(columns.slice(0, 2) as ColumnDef<Flight>[]),
-    {
-      id: "MTOW",
-      accessorKey: "aircraft.cargo_capacity",
-      header: () => (
-        <TableHeaderWithTooltip
-          header="Cargo Capacity"
-          tooltipId="flights-cargo-capacity"
-        />
-      ),
-      size: displayOption === "numbers-percentages" ? 240 : undefined,
-      cell: ({ row }) => {
-        return (
-          <ActualInformation
-            actual={Number(row.original.specification?.cargo_capacity)}
-            maximum={Number(row.original?.tail?.cargo_capacity)}
-            displayOption={displayOption}
-            unit={String(row.original.tail.volume_unit.symbol || "")}
-          />
-        )
-      },
-    },
-    ...(columns.slice(2, 9) as ColumnDef<Flight>[]),
-  ]
-
-  const allColumnsFromApi = columnsQuery.data?.visible_columns.concat(
-    columnsQuery.data?.non_visible_columns
-  )
-
-  const reorderedDisplayedFlightsColumns = allColumnsFromApi
-    ?.map((column) => {
-      const foundColumn = displayedFlightsColumns.find(
-        (displayedColumn) => displayedColumn.id === column.column_name
-      )
-
-      return foundColumn
-    })
-    .filter(Boolean) as ColumnDef<Flight>[]
 
   function generateActualValues(visibleFields: string[], flight: Flight) {
     const visible = visibleFields
@@ -308,33 +149,6 @@ export default function FlightsDashboardPage() {
 
     setSelectedFlight(flight)
   }
-
-  const selectedFlightColumn = useMemo<ColumnDef<FlightsActualInformation>[]>(
-    () => [
-      {
-        header: "Details",
-        accessorKey: "detail",
-      },
-      {
-        header: "Actual",
-        accessorKey: "actual",
-        cell: ({ row }) => {
-          return (
-            <Input
-              {...actualInformationForm.register(`infos.${row.index}.actual`)}
-              type="number"
-              className="h-9 py-0.5"
-            />
-          )
-        },
-      },
-      {
-        header: "Maximum",
-        accessorKey: "maximum",
-      },
-    ],
-    [actualInformationForm.getValues().infos]
-  )
 
   async function handleSaveActualInformation(data: FlightsActualInformation[]) {
     if (!selectedFlight) {
@@ -377,139 +191,6 @@ export default function FlightsDashboardPage() {
     )
   }
 
-  const initialColumnOrder = useMemo<string[]>(() => {
-    const initialOrder = allColumnsFromApi?.map((column) => column.column_name)
-
-    return initialOrder || []
-  }, [columnsQuery.data])
-
-  const initialColumnVisibility = useMemo<VisibilityState>(() => {
-    const initialNonVisibleColumns =
-      columnsQuery.data?.non_visible_columns.reduce(
-        (initialVisibility, column) => {
-          return {
-            ...initialVisibility,
-            [column.column_name]: false,
-          }
-        },
-        {}
-      )
-
-    return initialNonVisibleColumns as VisibilityState
-  }, [columnsQuery.data?.non_visible_columns])
-
-  async function handleOnOrderChange(newOrder: string[]) {
-    const newVisibleColumns = newOrder
-      .map((column, index) => {
-        const columnData = columnsQuery.data?.visible_columns.find(
-          (visibleColumn) => visibleColumn.column_name === column
-        )
-
-        if (!columnData) return
-
-        return {
-          id: columnData.id,
-          visible: true,
-          sort_order: index + 1,
-        }
-      })
-      .filter(Boolean) as {
-      id: string
-      visible: boolean
-      sort_order: number
-    }[]
-
-    await mutateAsync(
-      {
-        columns: newVisibleColumns,
-      },
-      {
-        onError: () => {
-          toast({
-            title: "Error",
-            description: "Failed to update columns",
-          })
-        },
-        onSuccess: () => {
-          toast({
-            title: "Success",
-            description: "Columns updated successfully",
-          })
-        },
-      }
-    )
-  }
-
-  async function handleResetColumns() {
-    await resetColumns(
-      {
-        tableName: "dashboard_flights",
-      },
-      {
-        onError: () => {
-          toast({
-            title: "Error",
-            description: "Failed to reset columns",
-          })
-        },
-        onSuccess: () => {
-          toast({
-            title: "Success",
-            description: "Columns reset successfully",
-          })
-        },
-      }
-    )
-  }
-
-  async function handleOnVisibilityChange(
-    columnsByvisibility: ColumnsByVisibility<Flight>
-  ) {
-    const allColumnsFromApi = columnsQuery.data?.visible_columns.concat(
-      columnsQuery.data?.non_visible_columns
-    )
-
-    const newColumnsPayload = allColumnsFromApi?.map((column, index) => {
-      const hiddenColumn = columnsByvisibility.hidden.find(
-        (hiddenColumn) => hiddenColumn.id === column.column_name
-      )
-
-      const visibleColumn = columnsByvisibility.active.find(
-        (visibleColumn) => visibleColumn.id === column.column_name
-      )
-
-      return {
-        id: column.id,
-        sort_order: index + 1,
-        visible: !!visibleColumn && !hiddenColumn,
-      }
-    }) as {
-      id: string
-      sort_order: number
-      visible: boolean
-    }[]
-
-    await mutateAsync(
-      {
-        columns: newColumnsPayload,
-      },
-      {
-        onError: () => {
-          toast({
-            title: "Error",
-            description: "Failed to update columns visibility",
-          })
-        },
-        onSuccess: () => {
-          toast({
-            title: "Success",
-            description: "Columns visibility updated successfully",
-          })
-        },
-      }
-    )
-  }
-
   const selectedFlightModalTitle = `${selectedFlight?.flight_number}, ${selectedFlight?.origin.name} - ${selectedFlight?.destination.name}`
   const selectedFlightModalDescription = `${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} to ${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} (${selectedFlight?.tail?.tail_number || ""}, ${selectedFlight?.tail?.aircraft_type?.name || ""})`
 
@@ -532,49 +213,77 @@ export default function FlightsDashboardPage() {
         }}
       >
         <div className="flex w-full max-w-full flex-col gap-8">
-          <DataTable
-            columns={selectedFlightColumn}
-            data={actualInformationForm.getValues().infos ?? []}
-            hidePagination
-            hideToolbar
-            className="mt-2"
-          />
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Details</TableHead>
+                <TableHead>Actual</TableHead>
+                <TableHead>Maximum</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {actualInformationForm.getValues().infos.map((info, index) => (
+                <TableRow key={index}>
+                  <TableCell>{info.detail}</TableCell>
+                  <TableCell className="w-28">
+                    <Input
+                      {...actualInformationForm.register(
+                        `infos.${index}.actual`
+                      )}
+                      type="number"
+                      className="h-9 w-full py-0.5"
+                    />
+                  </TableCell>
+                  <TableCell className="w-28">{info.maximum}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
           <h2 className="font-semibold">Historical Load Capacity</h2>
           <CargoCapacityAreaChart />
         </div>
       </Modal>
-      {isLoading || columnsQuery.isLoading ? (
+      {isLoading ? (
         <div className="flex w-full justify-center py-20">
           <Loader className="h-6 w-6 animate-spin text-zinc-600" />
         </div>
       ) : (
         <DataTable
-          onResetColumns={handleResetColumns}
-          onOrderChange={handleOnOrderChange}
-          onVisibilityChange={handleOnVisibilityChange}
-          initialColumnOrder={initialColumnOrder}
-          initialPinning={{
-            left: [],
-            right: ["actions"],
-          }}
-          columns={reorderedDisplayedFlightsColumns}
-          initialVisibility={initialColumnVisibility}
-          data={displayedFlightsData || []}
-          pageCount={isLoading ? 1 : flights?.total_pages}
-          manualPagination={true}
+          tableKey="dashboard_flights"
+          data={flights}
           onRowClick={handleRowClick}
-          tableState={tableState}
-          className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
-          menuId="flight-dashboard"
-          showToolbarOnlyOnHover={true}
-          isCanExport={true}
-          onExport={() =>
-            onExport({
-              data: displayedFlightsData,
-              filename: "DashboardFlightData",
-            })
-          }
-          pageSizeOptions={[20, 50, 100]}
+          onRefetchData={refetch}
+          customCellRenderers={[
+            {
+              key: "cargo_capacity",
+              renderer: (data) => (
+                <ActualInformation
+                  actual={Number(data.specification?.cargo_capacity)}
+                  maximum={Number(data?.tail?.cargo_capacity)}
+                  displayOption={displayOption}
+                  unit={String(data.tail.volume_unit.symbol || "")}
+                />
+              ),
+            },
+            {
+              key: "status.id",
+              renderer: (data) => (
+                <TableCellDropdown
+                  defaultValue={data.status.id}
+                  name="status"
+                  options={flightStatusOptions ?? []}
+                  onChangeSelect={async (option) => {
+                    await handleChangeStatus({
+                      statusId: option.status ?? "",
+                      id: data.id,
+                    })
+                  }}
+                />
+              ),
+            },
+          ]}
+          {...tableStateProps}
         />
       )}
     </div>

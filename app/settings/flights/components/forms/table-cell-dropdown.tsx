@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 import { Form } from "@/components/ui/form"
@@ -8,7 +9,7 @@ type CellProps<TData> = {
   defaultValue: TData
   name: string
   options: SelectOptions
-  onChangeSelect: (data: TData) => void
+  onChangeSelect: (data: { [key: string]: string | null }) => void
 }
 
 export function TableCellDropdown<TData>({
@@ -23,15 +24,20 @@ export function TableCellDropdown<TData>({
     },
   })
 
+  useEffect(() => {
+    form.reset({
+      [name]: defaultValue,
+    })
+  }, [defaultValue])
+
   return (
     <Form {...form}>
       <div onClick={(e) => e.stopPropagation()}>
         <Combobox
           name={name}
-          label=""
           options={options}
           onChangeValue={(changedValue) =>
-            onChangeSelect({ [name]: changedValue } as TData)
+            onChangeSelect({ [name]: changedValue })
           }
           className="h-[20px] border-0 border-zinc-900 bg-transparent hover:bg-transparent"
         />
