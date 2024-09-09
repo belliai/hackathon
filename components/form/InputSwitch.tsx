@@ -37,6 +37,7 @@ type BaseInputProps<DataType> = InputProps & {
   withDialog?: boolean
   info?: string
   tooltipId?: string
+  onFieldChange?: (value: any) => void
 }
 
 export type SelectOptions = {
@@ -331,7 +332,10 @@ export default function InputSwitch<
                 <FormControl>
                   <Switch
                     checked={field.value}
-                    onCheckedChange={field.onChange}
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked)
+                      props.onFieldChange?.(checked)
+                    }}
                     className={cn(props.className)}
                   />
                 </FormControl>

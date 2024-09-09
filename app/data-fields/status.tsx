@@ -178,7 +178,13 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
         // Set initial saved statuses
         const statusWithGroup = groupData(data, statusGroupDef)
 
-        setSavedStatuses(statusWithGroup)
+        // Set default to active
+        const activeStatuses = statusWithGroup.map((status: any) => ({
+          ...status,
+          is_active: true,
+        }))
+
+        setSavedStatuses(activeStatuses)
       } else {
         const updatedStatuses = statusesDataWithDescription.map(
           (status: any) => {
@@ -190,12 +196,14 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
               return {
                 ...status,
                 groupId: savedStatus.groupId,
+                is_active: savedStatus.is_active,
               }
             } else {
               // Set unassigned group for new statuses
               return {
                 ...status,
                 groupId: "unassigned",
+                is_active: true,
               }
             }
           }
@@ -256,6 +264,7 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                                 {
                                   ...resData,
                                   ID: resData?.id,
+                                  is_active: true,
                                   groupId: data?.groupId,
                                 },
                               ])
@@ -392,6 +401,25 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                           className="rounded-none border-0 bg-transparent pl-9 hover:bg-white/5"
                         >
                           <DataFieldsItemContent
+                            onToggleChange={(value) => {
+                              setSavedStatuses((prev) =>
+                                prev.map((status) => {
+                                  if (status.ID === rest.ID) {
+                                    return {
+                                      ...status,
+                                      is_active: value,
+                                    }
+                                  }
+
+                                  return status
+                                })
+                              )
+
+                              toast({
+                                title: "Success",
+                                description: "Status updated successfully",
+                              })
+                            }}
                             selectedEditing={selectedEditing}
                             setSelectedEditing={setSelectedEditing}
                             columnSpans={[4, 8, 0]}
