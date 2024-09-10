@@ -102,7 +102,7 @@ const initialMonthlyToDate = endOfMonth(initialMonthlyFromDate) // End of the cu
 
 const initialPagination = {
   pageIndex: 0,
-  pageSize: 20,
+  pageSize: 10,
 }
 
 export default function Page() {
@@ -401,6 +401,7 @@ export default function Page() {
               showToolbarOnlyOnHover={true}
               columns={columns}
               data={isLoading || !flights ? [] : flights}
+              pageSize={10}
               onRowClick={openDetailFlight}
               extraRightComponents={createButtonFlight}
               extraLeftComponents={
@@ -489,6 +490,7 @@ export default function Page() {
                   : (flightRecurringData && flightRecurringData.data) || []
               }
               onRowClick={openDetailFlight}
+              pageSize={10}
               extraRightComponents={createButtonRecurringFlight}
               extraLeftComponents={
                 <TabsList className="gap-2 bg-transparent p-0">
