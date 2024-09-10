@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, useEffect } from "react"
 import { LucideIcon, PencilIcon, Trash2 } from "lucide-react"
 import { DefaultValues, FieldValues, useFormContext } from "react-hook-form"
 
@@ -28,6 +28,7 @@ interface DataFieldsItemContentProps<T extends FieldValues> {
   actionsClassName?: string
   isNew?: boolean
   disableAction?: boolean
+  onToggleChange?: (value: boolean) => void
 }
 
 function DataFieldsItemContent<T extends FieldValues>({
@@ -45,6 +46,7 @@ function DataFieldsItemContent<T extends FieldValues>({
   actionsClassName,
   isNew,
   disableAction,
+  onToggleChange,
 }: DataFieldsItemContentProps<T>) {
   const formContext = useFormContext()
 
@@ -52,6 +54,16 @@ function DataFieldsItemContent<T extends FieldValues>({
 
   // If there is only one form then we can use the inline form
   const shouldUseModal = formWithoutHidden.length > 1
+
+  const { id, ID, is_active, created_at, updated_at, ...cleanDataToMap } = data
+
+  const isActiveIdName = "is_active_" + (id || ID)
+
+  useEffect(() => {
+    if (Boolean(onToggleChange)) {
+      formContext.setValue(isActiveIdName, is_active)
+    }
+  }, [data])
 
   function handleOpenEdit() {
     if (!shouldUseModal) {
@@ -71,8 +83,6 @@ function DataFieldsItemContent<T extends FieldValues>({
   }
 
   const isEditing = selectedEditing === (data.id || data.ID || data.name)
-
-  const { id, ID, created_at, updated_at, ...cleanDataToMap } = data
 
   const cleanDataToMapArray = Object.values(cleanDataToMap)
 
@@ -134,6 +144,16 @@ function DataFieldsItemContent<T extends FieldValues>({
             className
           )}
         >
+          {onToggleChange && (
+            <InputSwitch
+              name={isActiveIdName}
+              type="switch"
+              className="mr-2"
+              onFieldChange={(value) => {
+                onToggleChange(value)
+              }}
+            />
+          )}
           <div className="flex w-full gap-2">
             {icon && <span className="[&>svg]:h-4 [&>svg]:w-4">{icon}</span>}
             <div className="grid w-full grid-cols-12 gap-4">
@@ -182,32 +202,36 @@ function DataFieldsItemContent<T extends FieldValues>({
               actionsClassName
             )}
           >
-          {!disableAction && (
-            <>
-              {onSave && <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleOpenEdit()
-                }}
-              >
-                <PencilIcon type="button" size={14} />
-              </Button>}
-              {onDelete && <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDelete?.()
-                }}
-              >
-                <Trash2 type="button" size={14} />
-              </Button>}
-            </>
-          )}
+            {!disableAction && (
+              <>
+                {onSave && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5 p-0 opacity-50 hover:bg-transparent hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleOpenEdit()
+                    }}
+                  >
+                    <PencilIcon type="button" size={14} />
+                  </Button>
+                )}
+                {onDelete && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5 p-0 opacity-50 transition-opacity duration-200 hover:bg-transparent hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onDelete?.()
+                    }}
+                  >
+                    <Trash2 type="button" size={14} />
+                  </Button>
+                )}
+              </>
+            )}
           </div>
         </div>
       )}
