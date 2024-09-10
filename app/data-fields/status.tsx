@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useOrganization } from "@clerk/nextjs"
 import { Plus } from "lucide-react"
 import { FieldValues, useForm } from "react-hook-form"
 import { useLocalStorage } from "usehooks-ts"
@@ -95,6 +96,10 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
     []
   )
 
+  const { organization } = useOrganization()
+
+  const orgId = organization?.id
+
   const [open, setOpen] = useState(false)
   const [selectedEditing, setSelectedEditing] = useState<string | null>(null)
   const [selectedGroup, setSelectedGroup] = useState<string[]>([])
@@ -134,10 +139,18 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   ]
 
   useEffect(() => {
-    if (savedGroups.length === 0) {
-      setSavedGroups(statusGroups)
+    const orgSavedGroups = savedGroups.filter((group) => group.orgId === orgId)
+
+    if (orgSavedGroups.length === 0) {
+      setSavedGroups((prev) => [
+        ...prev,
+        {
+          orgId,
+          groups: statusGroups,
+        },
+      ])
     } else {
-      setStatusGroups(savedGroups)
+      setStatusGroups(orgSavedGroups[0].groups)
     }
   }, [savedGroups, statusGroups])
 
@@ -174,7 +187,11 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
         }
       })
 
-      if (!savedStatuses.length) {
+      const orgSavedStatuses = savedStatuses.find(
+        (status) => status.orgId === orgId
+      )
+
+      if (!orgSavedStatuses) {
         // Set initial saved statuses
         const statusWithGroup = groupData(data, statusGroupDef)
 
@@ -184,12 +201,20 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
           is_active: true,
         }))
 
-        setSavedStatuses(activeStatuses)
+        setSavedStatuses((prev) => [
+          ...prev,
+          {
+            orgId,
+            statuses: activeStatuses.map((status) => ({
+              ...status,
+            })),
+          },
+        ])
       } else {
         const updatedStatuses = statusesDataWithDescription.map(
           (status: any) => {
-            const savedStatus = savedStatuses.find(
-              (saved) => saved.ID === status.ID
+            const savedStatus = orgSavedStatuses.statuses.find(
+              (saved: any) => saved.ID === status.ID
             )
 
             if (savedStatus) {
@@ -259,15 +284,29 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
 
                             if (resData?.id) {
                               // Save the new status to local storage
-                              setSavedStatuses((prev) => [
-                                ...prev,
-                                {
-                                  ...resData,
-                                  ID: resData?.id,
-                                  is_active: true,
-                                  groupId: data?.groupId,
-                                },
-                              ])
+                              setSavedStatuses((prev) => {
+                                const orgStatuses = prev.find(
+                                  (status) => status.orgId === orgId
+                                )
+
+                                return [
+                                  ...prev.filter(
+                                    (status) => status.orgId !== orgId
+                                  ),
+                                  {
+                                    orgId,
+                                    statuses: [
+                                      ...orgStatuses.statuses,
+                                      {
+                                        ID: resData.id,
+                                        name,
+                                        groupId: data?.groupId,
+                                        is_active: true,
+                                      },
+                                    ],
+                                  },
+                                ]
+                              })
                             }
 
                             setOpen(false)
@@ -347,15 +386,22 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                       title={group.name}
                       form={secondForm}
                       onSave={(data) => {
-                        setSavedGroups((prev) =>
-                          prev.map((g) => {
-                            if (g.id === group.id) {
-                              return { ...g, name: data.name }
-                            }
+                        setSavedGroups((prev) => {
+                          const orgGroups = prev.find((g) => g.orgId === orgId)
 
-                            return g
-                          })
-                        )
+                          return [
+                            ...prev.filter((g) => g.orgId !== orgId),
+                            {
+                              orgId,
+                              groups: orgGroups.groups.map((g: any) => {
+                                if (g.id === group.id) {
+                                  return { ...g, name: data.name }
+                                }
+                                return g
+                              }),
+                            },
+                          ]
+                        })
 
                         toast({
                           title: "Success",
@@ -364,18 +410,29 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                       }}
                       onDelete={() => {
                         // Move all statuses to unassigned group
-                        setSavedStatuses((prev) =>
-                          prev.map((status) => {
-                            if (status.groupId === group.id) {
-                              return {
-                                ...status,
-                                groupId: "unassigned",
-                              }
-                            }
+                        setSavedStatuses((prev) => {
+                          const orgStatuses = prev.find(
+                            (status) => status.orgId === orgId
+                          )
 
-                            return status
-                          })
-                        )
+                          return [
+                            ...prev.filter((status) => status.orgId !== orgId),
+                            {
+                              orgId,
+                              statuses: orgStatuses.statuses.map(
+                                (status: any) => {
+                                  if (status.groupId === group.id) {
+                                    return {
+                                      ...status,
+                                      groupId: "unassigned",
+                                    }
+                                  }
+                                  return status
+                                }
+                              ),
+                            },
+                          ]
+                        })
 
                         // Remove the group
                         setStatusGroups((prev) =>
@@ -397,23 +454,36 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
 
                       return (
                         <DataFieldsItem
-                          key={rest.id}
+                          key={rest.ID}
                           className="rounded-none border-0 bg-transparent pl-9 hover:bg-white/5"
                         >
                           <DataFieldsItemContent
                             onToggleChange={(value) => {
-                              setSavedStatuses((prev) =>
-                                prev.map((status) => {
-                                  if (status.ID === rest.ID) {
-                                    return {
-                                      ...status,
-                                      is_active: value,
-                                    }
-                                  }
+                              setSavedStatuses((prev) => {
+                                const orgStatuses = prev.find(
+                                  (status) => status.orgId === orgId
+                                )
 
-                                  return status
-                                })
-                              )
+                                return [
+                                  ...prev.filter(
+                                    (status) => status.orgId !== orgId
+                                  ),
+                                  {
+                                    orgId,
+                                    statuses: orgStatuses.statuses.map(
+                                      (status: any) => {
+                                        if (status.ID === rest.ID) {
+                                          return {
+                                            ...status,
+                                            is_active: value,
+                                          }
+                                        }
+                                        return status
+                                      }
+                                    ),
+                                  },
+                                ]
+                              })
 
                               toast({
                                 title: "Success",
@@ -437,19 +507,31 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
                                   { id: actualId, name: payload },
                                   {
                                     onSuccess: () => {
-                                      setSavedStatuses((prev) =>
-                                        prev.map((status) => {
-                                          if (status.ID === actualId) {
-                                            return {
-                                              ...status,
-                                              name: payload,
-                                              groupId: data?.groupId,
-                                            }
-                                          }
-
-                                          return status
-                                        })
-                                      )
+                                      setSavedStatuses((prev) => {
+                                        const orgStatuses = prev.find(
+                                          (status) => status.orgId === orgId
+                                        )
+                                        return [
+                                          ...prev.filter(
+                                            (status) => status.orgId !== orgId
+                                          ),
+                                          {
+                                            orgId,
+                                            statuses: orgStatuses.statuses.map(
+                                              (status: any) => {
+                                                if (status.ID === actualId) {
+                                                  return {
+                                                    ...status,
+                                                    groupId: data?.groupId,
+                                                    name: payload,
+                                                  }
+                                                }
+                                                return status
+                                              }
+                                            ),
+                                          },
+                                        ]
+                                      })
 
                                       toast({
                                         title: "Success",
