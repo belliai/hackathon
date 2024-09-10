@@ -38,6 +38,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import { DataTable } from "@/components/data-table/data-table"
@@ -105,6 +107,8 @@ const initialPagination = {
   pageSize: 10,
 }
 
+type selectionFlight = "from" | "one" | "all" | undefined
+
 export default function Page() {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [modalType, setModalType] = useState<"edit" | "create">("create")
@@ -132,7 +136,8 @@ export default function Page() {
     to: initialMonthlyToDate,
   })
 
-  const [flightDataRecurring, setFlightDataRecurring] = useState<Flight[]>([])
+  const [selectionFlight, setSelectionFlight] = useState<selectionFlight>("one")
+  const [recurringSelection, setRecurringSelection] = useState<boolean>(false)
 
   const paginationDetails = useMemo(
     () => ({
@@ -166,6 +171,11 @@ export default function Page() {
   })
 
   const filterData = filtersHookForm.watch()
+
+  useEffect(() => {
+    // reset selectionFlight
+    if (!openModal) setSelectionFlight("one")
+  }, [openModal])
 
   useEffect(() => {}, [filterData])
 
@@ -263,8 +273,17 @@ export default function Page() {
 
   const openDetailFlight = (data: Flight) => {
     setSelectedData(data)
-    setOpenModal(true)
-    if (data) setModalType("edit")
+    if (data) {
+      setModalType("edit")
+      // if this recurring show a popup
+      if (data.recurring_flight_id) {
+        setRecurringSelection(true)
+      } else {
+        setOpenModal(true)
+      }
+    } else {
+      setOpenModal(true)
+    }
   }
 
   const handleDeleteFlight = async (data: Flight) => {
@@ -560,7 +579,49 @@ export default function Page() {
         mode={modalType}
         onOpenChange={onOpenChange}
         resetData={setSelectedData}
+        selectedFlights={selectionFlight}
       />
+
+      <AlertDialog
+        open={recurringSelection}
+        onOpenChange={setRecurringSelection}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Edit Recurring Flight</AlertDialogTitle>
+          </AlertDialogHeader>
+          <RadioGroup
+            value={selectionFlight}
+            onValueChange={(val) => setSelectionFlight(val as selectionFlight)}
+            className="space-y-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="one" id="one" />
+              <Label htmlFor="one">This Flight</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="from" id="from" />
+              <Label htmlFor="from">This and following Flights</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="all" id="all" />
+              <Label htmlFor="all">All Flight</Label>
+            </div>
+          </RadioGroup>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant={"button-primary"}
+              onClick={() => {
+                setRecurringSelection(false)
+                setOpenModal(true)
+              }}
+            >
+              Ok
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog
         open={deleteConfirm !== null}

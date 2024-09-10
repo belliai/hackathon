@@ -114,8 +114,8 @@ export const listViewColumns = (props: ListViewProps): ColumnDef<Flight>[] => {
           minute: row.original.departure_minute,
           period: row.original.departure_period,
         })
-
-        return departurTime.format("DD/MM/YYYY HH:mm")
+        const departure_date = moment(new Date(row.original.departure_date),"YYYY-MM-DD").format("DD/MM/YYYY")
+        return `${departure_date} ${departurTime.format("HH:mm")}`
       },
     },
     {
