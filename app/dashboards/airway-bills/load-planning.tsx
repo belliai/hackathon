@@ -62,7 +62,7 @@ const DroppableArea: React.FC<{ id: string; children: React.ReactNode }> = ({ id
         </svg>
       </div>
       
-      <div className={`flex gap-2 h-[176px] -mt-[0.5px] p-4 bg-[#4D4D4D] min-w-[400px] w-fit`}>
+      <div className={`flex gap-2 h-[176px] -mt-[0.5px] p-4 bg-[#4D4D4D] min-w-[650px] w-fit`}>
         {children}
       </div>
 
@@ -124,6 +124,7 @@ const LoadPlanning = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 w-5/6">
+          <h3 className="text-white font-bold">Flight List</h3>
           {flights?.data?.map(flight => (
             <Card className="overflow-clip rounded-md" key={flight.id}>
               <CardHeader className="flex bg-card px-4 py-2">
