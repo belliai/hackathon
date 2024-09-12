@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
   DndContext,
   DragOverlay,
@@ -23,6 +23,7 @@ import {
   WeightIcon,
 } from "lucide-react"
 
+import { Order } from "@/types/orders"
 import { useFlightList } from "@/lib/hooks/flight-master/flight-master"
 import { useOrders } from "@/lib/hooks/orders"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -44,7 +45,7 @@ interface OrderType {
 
 const SortableCard: React.FC<{
   id: string
-  order: OrderType
+  order: Order
   isSelected: boolean
   onSelectChange: (id: string) => void
 }> = ({ id, order, isSelected, onSelectChange }) => {
@@ -101,8 +102,8 @@ const SortableCard: React.FC<{
 
 const DroppableArea: React.FC<{
   id: string
-  items: OrderType[]
-  onSort: (id: string, items: OrderType[]) => void
+  items: Order[]
+  onSort: (id: string, items: Order[]) => void
 }> = ({ id, items, onSort }) => {
   const { setNodeRef } = useDroppable({ id })
 
@@ -244,23 +245,35 @@ const DroppableArea: React.FC<{
 }
 
 const LoadPlanning = () => {
-  const { data: flights } = useFlightList({ page: 1, page_size: 10 })
+  const { data: flightsData } = useFlightList({ page: 1, page_size: 10 })
   const [droppedItems, setDroppedItems] = useState<{
-    [key: string]: OrderType[]
+    [key: string]: Order[]
   }>({})
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set())
   const [activeIds, setActiveIds] = useState<string[]>([])
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
+  const [pagination, setPagination] = useState<PaginationParams>({
+    page: 1,
+    page_size: 10,
   })
 
-  const { data: ordersData } = useOrders({ pagination })
+  const { data: ordersData } = useOrders(pagination)
 
-  const [availableOrders, setAvailableOrders] = useState<OrderType[]>(
-    ordersData?.data || []
+  const orders = useMemo(
+    () => ordersData?.data.flatMap((item) => item.object),
+    [ordersData]
   )
+
+  const flights = useMemo(
+    () => flightsData?.data.flatMap((item) => item.object),
+    [ordersData]
+  )
+
+  const [availableOrders, setAvailableOrders] = useState<Order[]>([])
+
+  useEffect(() => {
+    orders && setAvailableOrders(orders)
+  }, [orders])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -303,10 +316,10 @@ const LoadPlanning = () => {
         const draggedOrders = activeIds
           .map((id) =>
             availableOrders.find(
-              (order: OrderType) => `draggable-card-${order.awb}` === id
+              (order: Order) => `draggable-card-${order.awb}` === id
             )
           )
-          .filter((order): order is OrderType => order !== undefined)
+          .filter((order): order is Order => order !== undefined)
 
         Object.keys(newItems).forEach((container) => {
           newItems[container] = newItems[container].filter(
@@ -343,12 +356,12 @@ const LoadPlanning = () => {
     setActiveIds([])
   }
 
-  const handleSort = (id: string, items: OrderType[]) => {
+  const handleSort = (id: string, items: Order[]) => {
     setDroppedItems((prev) => ({ ...prev, [id]: items }))
   }
 
   useEffect(() => {
-    setAvailableOrders(ordersData?.data || [])
+    setAvailableOrders(orders || [])
   }, [ordersData])
 
   return (
@@ -363,12 +376,12 @@ const LoadPlanning = () => {
           <h3 className="mb-2 font-bold text-white">AWB List</h3>
           <SortableContext
             items={availableOrders.map(
-              (order: OrderType) => `draggable-card-${order.awb}`
+              (order) => `draggable-card-${order.awb}`
             )}
             strategy={verticalListSortingStrategy}
           >
             <div className="flex flex-col gap-2">
-              {availableOrders.map((order: OrderType) => (
+              {availableOrders.map((order) => (
                 <SortableCard
                   id={`draggable-card-${order.awb}`}
                   key={order.ID}
@@ -382,7 +395,7 @@ const LoadPlanning = () => {
         </div>
         <div className="grid w-5/6 grid-cols-1 gap-4">
           <h3 className="font-bold text-white">Flight List</h3>
-          {flights?.data?.map((flight) => (
+          {flights?.map((flight) => (
             <Card className="overflow-clip rounded-md" key={flight.id}>
               <CardHeader className="flex bg-card px-4 py-2">
                 <CardTitle className="inline-flex items-center gap-2 text-base font-bold">

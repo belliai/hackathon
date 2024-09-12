@@ -1,8 +1,9 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoopIcon } from "@radix-ui/react-icons"
+import { PaginationState, SortingState } from "@tanstack/react-table"
 import {
   endOfMonth,
   endOfWeek,
@@ -43,43 +44,12 @@ import { DataTable } from "@/components/data-table-v2/data-table"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
+import { listViewColumns, useRecurringColumns } from "./components/column"
 import { TableCellDropdown } from "./components/forms/table-cell-dropdown"
-import TailNumberForm from "./components/forms/tail-number-dropdown"
+import TailNumberDropdown from "./components/forms/tail-number-dropdown"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
 import NewFlightModal from "./components/new-flight-form"
 import WeeklyDateStepper from "./components/weekly-date-stepper"
-
-type FlightDetailFormValues = {
-  flightNo: string
-  source: string
-  destination: string
-  from_date: Date
-  toDate: Date
-  frequencyItems: any
-  aircraftType: string | undefined
-  tailNo: string
-  capacity: string
-  uom: string
-  sector: string
-  status: string
-  flightType: string
-  rangeDate: {
-    from: Date
-    to: Date
-    fromTime: string
-    toTime: string
-  }
-  deptTime: {
-    deptDay: string
-    deptHour: string
-    deptMinute: string
-  }
-  arrivalTime: {
-    arrivalDay: string
-    arrivalHour: string
-    arrivalMinute: string
-  }
-}
 
 const filtersSchema = z.object({
   period: z.string(),
@@ -112,7 +82,16 @@ export default function Page() {
   const [modalType, setModalType] = useState<"edit" | "create">("create")
   const [currentTab, setCurrentTab] = useState<string>("list-view")
 
+  const [openModalRecurring, setOpenModalRecurring] = useState<
+    string | boolean
+  >(false)
   const [deleteConfirm, setDeleteConfirm] = useState<Flight | null>(null)
+  const [pagination, setPagination] =
+    useState<PaginationState>(initialPagination)
+
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "departure_date", desc: false },
+  ])
 
   const [selectedData, setSelectedData] = useState<Flight | null>(null)
 
@@ -167,6 +146,8 @@ export default function Page() {
   }, [openModal])
 
   useEffect(() => {}, [filterData])
+
+  const tableStateList = useTableState({ initialPagination: { page_size: 10 } })
 
   const { data: flightData, refetch: refetchList } = useFlightList({
     ...tableStateList.pagination,
@@ -229,8 +210,7 @@ export default function Page() {
             : format(filterMonthly.to, "yyyy-MM-dd"),
     })
 
-  const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
-    useUpdateFlight()
+  const { mutateAsync: updateFlight } = useUpdateFlight()
 
   const { mutateAsync: deleteFlight } = useDeleteFlight()
 
@@ -345,10 +325,8 @@ export default function Page() {
         >
           <TabsContent value="list-view" className="mt-0">
             <DataTable
-              showToolbarOnlyOnHover={true}
-              columns={columns}
-              data={isLoading || !flights ? [] : flights}
-              pageSize={10}
+              data={flightData}
+              onRefetchData={refetchList}
               onRowClick={openDetailFlight}
               extraRightComponents={createButtonFlight}
               extraLeftComponents={
@@ -455,7 +433,7 @@ export default function Page() {
                 {
                   key: "tail.id",
                   renderer: (data) => (
-                    <TailNumberForm
+                    <TailNumberDropdown
                       data={data}
                       aircraftOptions={aircraftTailNumbers ?? []}
                       onChangeTailNumber={async (data) => {
@@ -464,16 +442,6 @@ export default function Page() {
                         if (ID) await updateFlight({ ...rest, id: ID })
                       }}
                     />
-                    // <TableCellDropdown
-                    //   defaultValue={data.tail.id}
-                    //   name="status"
-                    //   options={aircraftTailNumbers}
-                    //   onChangeSelect={async (data: any) => {
-                    //     if (!data) return
-                    //     const { ID, ...rest } = data
-                    //     if (ID) await updateFlight({ ...rest, id: ID })
-                    //   }}
-                    // />
                   ),
                 },
               ]}
@@ -489,15 +457,13 @@ export default function Page() {
 
           <TabsContent value="create-recurring-flight" className="mt-0">
             <DataTable
-              showToolbarOnlyOnHover={true}
-              columns={recurringColumns}
-              data={
-                isLoadingRecurring
-                  ? []
-                  : (flightRecurringData && flightRecurringData.data) || []
-              }
-              onRowClick={openDetailFlight}
-              pageSize={10}
+              data={flightRecurringData}
+              onRefetchData={refetchRecurring}
+              onRowClick={(data) => {
+                setModalType("edit")
+                setSelectedData(data)
+                setRecurringSelection(true)
+              }}
               extraRightComponents={createButtonRecurringFlight}
               extraLeftComponents={
                 <TabsList className="gap-2 bg-transparent p-0">
