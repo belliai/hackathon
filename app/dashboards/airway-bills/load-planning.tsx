@@ -1,39 +1,86 @@
-import React, { useState } from 'react';
-import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import React, { useState, useCallback, useEffect } from 'react';
+import { DndContext, useDraggable, useDroppable, DragOverlay, PointerSensor, useSensor, useSensors, DragStartEvent } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFlightList } from "@/lib/hooks/flight-master/flight-master";
-import { ArrowRight, PlaneIcon } from "lucide-react";
+import { ArrowRight, PlaneIcon, RouteIcon, WeightIcon, CheckIcon } from "lucide-react";
 import { useOrders } from '@/lib/hooks/orders';
-
-const DraggableCard: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
-  const style = {
-    transform: CSS.Translate.toString(transform),
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {children}
-    </div>
-  );
-};
 
 interface OrderType {
   ID: string;
   awb: string;
-  booking_type: {
+  booking_type?: {
     name: string;
   };
-  origin: {
+  origin?: {
     airport_code: string;
   };
-  destination: {
+  destination?: {
     airport_code: string;
   };
-}
+  gs_weight_kg?: number;
+};
 
-const DroppableArea: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+const SortableCard: React.FC<{ 
+  id: string; 
+  order: OrderType; 
+  isSelected: boolean; 
+  onSelectChange: (id: string) => void 
+}> = ({ id, order, isSelected, onSelectChange }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onSelectChange(id);
+  };
+
+  return (
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners} 
+      onClick={handleClick}
+      className={`overflow-clip rounded-md w-full ${isSelected ? 'bg-secondary' : 'bg-card'} hover:bg-secondary z-[2] cursor-pointer`}
+    >
+      <Card className="border bg-transparent">
+        <CardHeader className="flex px-4 py-2">
+          <div className="flex items-center space-x-2">
+            <CardTitle className="inline-flex gap-2 text-sm items-center">
+              <text className='font-bold'>{order.awb}</text>
+              <text className='text-muted-foreground'>{order.booking_type?.name}</text>
+            </CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-3">
+          <div className="flex flex-col gap-1 text-sm">
+            <text className="text-white text-xs inline-flex gap-1"><RouteIcon className='size-4 text-muted-foreground' /> {`${order.origin?.airport_code}- ${order.destination?.airport_code}`}</text>
+            <text className="text-white text-xs inline-flex gap-1"><WeightIcon className='size-4 text-muted-foreground' /> {`${order.gs_weight_kg || '0'}Kg`}</text>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const DroppableArea: React.FC<{ 
+  id: string; 
+  items: OrderType[];
+  onSort: (id: string, items: OrderType[]) => void 
+}> = ({ id, items, onSort }) => {
   const { setNodeRef } = useDroppable({ id });
 
   return (
@@ -61,9 +108,44 @@ const DroppableArea: React.FC<{ id: string; children: React.ReactNode }> = ({ id
           </defs>
         </svg>
       </div>
-      
-      <div className={`flex gap-2 h-[176px] -mt-[0.5px] p-4 bg-[#4D4D4D] min-w-[400px] w-fit`}>
-        {children}
+
+      <div className="relative h-[176px] w-fit min-w-[650px] items-center bg-[#4D4D4D] -ml-1">
+        <div className="absolute left-[200px] -top-[156px] -translate-y-1/2">
+          <svg
+            width="315"
+            height="224"
+            viewBox="0 0 315 224"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="-rotate-90 -translate-x-[145px]"
+          >
+            <path d="M314.5 172L1 1V204L314.5 223V172Z" fill="#303030" />
+          </svg>
+        </div>
+        <div className="absolute -left-[92px] top-[333px] -translate-y-1/2">
+          <svg
+            width="315"
+            height="224"
+            viewBox="0 0 315 224"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="-rotate-90 translate-x-[145px]"
+          >
+            <path d="M1 172L314.5 1V204L1 223V172Z" fill="#303030" />
+          </svg>
+        </div>
+        <SortableContext items={items.map(item => item.ID)} strategy={verticalListSortingStrategy}>
+          <div className="relative p-4 grid grid-rows-2 grid-flow-col gap-2 h-full w-fit">
+            {items.map((item) => (
+              <div key={item.ID} className="p-2 h-full w-32 bg-button-primary rounded-sm aspect-video flex justify-center items-center flex-col overflow-hidden">
+                <div className="text-sm font-bold truncate w-full text-center" title={item.awb}>
+                  {item.awb}
+                </div>
+                <div className="text-xs">{Math.floor(Math.random() * 101)}%</div>
+              </div>
+            ))}
+          </div>
+        </SortableContext>
       </div>
 
       <div className="h-[190px] w-fit shrink-0 z-0">
@@ -77,7 +159,9 @@ const DroppableArea: React.FC<{ id: string; children: React.ReactNode }> = ({ id
 
 const LoadPlanning = () => {
   const { data: flights } = useFlightList({ page: 1, page_size: 10 });
-  const [droppedItems, setDroppedItems] = useState<{ [key: string]: string[] }>({});
+  const [droppedItems, setDroppedItems] = useState<{ [key: string]: OrderType[] }>({});
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [activeIds, setActiveIds] = useState<string[]>([]);
   
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -88,42 +172,115 @@ const LoadPlanning = () => {
     data: ordersData,
   } = useOrders({ pagination });
 
-  const handleDragEnd = (event: { over: any; active: any }) => {
-    const { over, active } = event;
-    if (over) {
-      setDroppedItems((prev) => ({
-        ...prev,
-        [over.id]: [...(prev[over.id] || []), active.id],
-      }));
+  const [availableOrders, setAvailableOrders] = useState<OrderType[]>(ordersData?.data || []);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // 5px tolerance before drag starts
+      },
+    })
+  );
+
+  const handleSelectChange = useCallback((id: string) => {
+    setSelectedItems((prev) => {
+      const newSelectedItems = new Set(prev);
+      if (newSelectedItems.has(id)) {
+        newSelectedItems.delete(id);
+      } else {
+        newSelectedItems.add(id);
+      }
+      return newSelectedItems;
+    });
+  }, []);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const draggedId = event.active.id as string;
+    if (selectedItems.has(draggedId)) {
+      setActiveIds(Array.from(selectedItems));
+    } else {
+      setActiveIds([draggedId]);
+      setSelectedItems((prev) => new Set(prev).add(draggedId));
     }
   };
 
+  const handleDragEnd = (event: { over: any; active: any }) => {
+    const { over, active } = event;
+
+    if (over) {
+      const overContainer = over.id;
+
+      setDroppedItems((prev) => {
+        const newItems = { ...prev };
+        const draggedOrders = activeIds.map(id => 
+          availableOrders.find((order: OrderType) => `draggable-card-${order.awb}` === id)
+        ).filter((order): order is OrderType => order !== undefined);
+
+        Object.keys(newItems).forEach((container) => {
+          newItems[container] = newItems[container].filter(item => !activeIds.includes(`draggable-card-${item.awb}`));
+        });
+
+        if (!newItems[overContainer]) {
+          newItems[overContainer] = [];
+        }
+        newItems[overContainer] = [...newItems[overContainer], ...draggedOrders];
+
+        return newItems;
+      });
+
+      // Remove dropped items from availableOrders
+      setAvailableOrders((prev) => 
+        prev.filter((order) => !activeIds.includes(`draggable-card-${order.awb}`))
+      );
+
+      setSelectedItems((prev) => {
+        const newSelectedItems = new Set(prev);
+        activeIds.forEach((id) => newSelectedItems.delete(id));
+        return newSelectedItems;
+      });
+    }
+
+    setActiveIds([]);
+  };
+
+  const handleDragCancel = () => {
+    setActiveIds([]);
+  };
+
+  const handleSort = (id: string, items: OrderType[]) => {
+    setDroppedItems((prev) => ({ ...prev, [id]: items }));
+  };
+
+  useEffect(() => {
+    setAvailableOrders(ordersData?.data || []);
+  }, [ordersData]);
+
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext 
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd} 
+      onDragCancel={handleDragCancel}
+    >
       <div className="flex gap-4">
         <div className="w-1/6 flex flex-col gap-2">
-          <h3 className="text-white font-bold">AWB List</h3>
-          <div className="flex flex-col gap-2">
-            {ordersData?.data?.map((order: OrderType) => (
-              <DraggableCard id={`draggable-card-${order?.awb}`} key={order?.ID}>
-                <Card className="overflow-clip rounded-md w-full bg-button-primary z-[1]">
-                  <CardHeader className="flex px-4 py-2 bg-button-primary">
-                    <CardTitle className="inline-flex gap-2 text-sm items-center font-bold">
-                      {order?.awb}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-1 gap-3">
-                    <div className="flex flex-col gap-1 text-sm">
-                      <text className="font-bold text-xs">{order?.booking_type?.name}</text>
-                      <text className="text-white text-xs">{`${order?.origin?.airport_code}- ${order?.destination?.airport_code}`}</text>
-                    </div>
-                  </CardContent>
-                </Card>
-              </DraggableCard>
-            ))}
-          </div>
+          <h3 className="text-white font-bold mb-2">AWB List</h3>
+          <SortableContext items={availableOrders.map((order: OrderType) => `draggable-card-${order.awb}`)} strategy={verticalListSortingStrategy}>
+            <div className="flex flex-col gap-2">
+              {availableOrders.map((order: OrderType) => (
+                <SortableCard
+                  id={`draggable-card-${order.awb}`}
+                  key={order.ID}
+                  order={order}
+                  isSelected={selectedItems.has(`draggable-card-${order.awb}`)}
+                  onSelectChange={handleSelectChange}
+                />
+              ))}
+            </div>
+          </SortableContext>
         </div>
         <div className="grid grid-cols-1 gap-4 w-5/6">
+          <h3 className="text-white font-bold">Flight List</h3>
           {flights?.data?.map(flight => (
             <Card className="overflow-clip rounded-md" key={flight.id}>
               <CardHeader className="flex bg-card px-4 py-2">
@@ -170,20 +327,24 @@ const LoadPlanning = () => {
                   </div>
                 </div>
                 <div className="w-2/3 max-w-2/3 overflow-x-auto custom-scrollbar overflow-y-hidden p-4">
-                  <DroppableArea id={`droppable-${flight.id}`}>
-                    {droppedItems[`droppable-${flight.id}`]?.map((itemId, index) => (
-                      <div key={itemId} className="p-2 h-full bg-button-primary rounded-sm aspect-square flex justify-center items-center flex-col">
-                        <div className="text-sm font-bold">{`AWB${index+1}`}</div>
-                        <div className="text-sm">{Math.floor(Math.random() * 101)}%</div>
-                      </div>
-                    ))}
-                  </DroppableArea>
+                  <DroppableArea
+                    id={`droppable-${flight.id}`}
+                    items={droppedItems[`droppable-${flight.id}`] || []}
+                    onSort={(id, items) => handleSort(id, items)}
+                  />
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
+      <DragOverlay>
+        {activeIds.length > 0 && (
+          <div className="bg-secondary p-2 rounded-md">
+            <span className="font-bold text-white">{activeIds.length} items selected</span>
+          </div>
+        )}
+      </DragOverlay>
     </DndContext>
   );
 };

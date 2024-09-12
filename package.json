@@ -101,6 +101,7 @@
     "react-filepond": "^7.1.2",
     "react-hook-form": "^7.51.5",
     "react-hotkeys-hook": "^4.5.0",
+    "react-phone-input-2": "^2.15.1",
     "react-phone-number-input": "^3.4.5",
     "react-resizable-panels": "^2.0.9",
     "react-spreadsheet": "^0.9.5",
