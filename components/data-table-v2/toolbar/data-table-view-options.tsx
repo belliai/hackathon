@@ -46,7 +46,8 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
   const { mutateAsync: resetColumns } = useResetColumns(tableKey)
 
   const onResetColumns = () => {
-    !isFetching && resetColumns({ tableName: tableKey })
+    !isFetching &&
+      resetColumns({ tableName: tableKey }, { onSuccess: () => onRefetch() })
   }
 
   const onRefetch = () => {
