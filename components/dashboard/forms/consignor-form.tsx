@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card"
 import { Combobox } from "@/components/form/combobox"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { PhoneInput } from "@/components/ui/phone-input"
+import PhoneInputV2 from "@/components/ui/phone-input-v2"
 
 const phoneNumberOptions = [
   { label: "+1 (555) 123-4567", value: "+1 (555) 123-4567" },
@@ -76,7 +77,7 @@ const ConsignorForm = React.forwardRef<HTMLDivElement, any>(
               <FormItem className="">
                 <FormLabel info="Total">Phone Number</FormLabel>
                 <FormControl>
-                  <PhoneInput {...field} className="rounded-lg border-2 border-foreground/30 h-[40px]" international />
+                  <PhoneInputV2 {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
