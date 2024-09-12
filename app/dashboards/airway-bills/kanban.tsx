@@ -311,15 +311,16 @@ const Card = ({
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
-        className="w-64 h-25 cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+         className="w-64 h-25 cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
         onClick={() => handleCardClick(ID)}
       >
-        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}> {awb}</p>
-        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}>
+        <p className="text-sm font-medium text-muted-foreground">AWB: {awb}</p>
+        <p className="text-sm font-medium text-muted-foreground">
           Dest: {destination?.name} → Origin: {origin?.name}
         </p>
-        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}> {formatDate(updated_at)}</p>
-        <p className="text-sm" style={{ color: 'hsl(240, 5%, 64.9%)' }}> {shipper?.name}</p>
+        <p className="text-sm font-normal text-muted-foreground/50">{formatDate(updated_at)}</p>
+        <p className="text-sm font-medium text-muted-foreground/50">{shipper?.name}</p>
+
       </motion.div>
     </>
   )
