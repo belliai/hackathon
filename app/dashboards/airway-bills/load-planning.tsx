@@ -13,7 +13,7 @@ const DraggableCard: React.FC<{ id: string; children: React.ReactNode }> = ({ id
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className='z-[10]'>
       {children}
     </div>
   );
@@ -61,9 +61,33 @@ const DroppableArea: React.FC<{ id: string; children: React.ReactNode }> = ({ id
           </defs>
         </svg>
       </div>
-      
-      <div className={`flex gap-2 h-[176px] -mt-[0.5px] p-4 bg-[#4D4D4D] min-w-[650px] w-fit`}>
-        {children}
+
+      <div className="relative h-[176px] w-fit min-w-[650px] items-center bg-[#4D4D4D] -ml-1">
+        <div className="absolute left-[200px] -top-[156px] -translate-y-1/2">
+          <svg
+            width="315"
+            height="224"
+            viewBox="0 0 315 224"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="-rotate-90 -translate-x-[145px]"
+          >
+            <path d="M314.5 172L1 1V204L314.5 223V172Z" fill="#303030" />
+          </svg>
+        </div>
+        <div className="absolute -left-[92px] top-[333px] -translate-y-1/2">
+          <svg
+            width="315"
+            height="224"
+            viewBox="0 0 315 224"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="-rotate-90 translate-x-[145px]"
+          >
+            <path d="M1 172L314.5 1V204L1 223V172Z" fill="#303030" />
+          </svg>
+        </div>
+        <div className="relative p-4 grid grid-rows-2 grid-flow-col gap-2 h-full w-fit">{children}</div>
       </div>
 
       <div className="h-[190px] w-fit shrink-0 z-0">
@@ -106,7 +130,7 @@ const LoadPlanning = () => {
           <div className="flex flex-col gap-2">
             {ordersData?.data?.map((order: OrderType) => (
               <DraggableCard id={`draggable-card-${order?.awb}`} key={order?.ID}>
-                <Card className="overflow-clip rounded-md w-full bg-button-primary z-[1]">
+                <Card className="overflow-clip rounded-md w-full bg-button-primary z-[2]">
                   <CardHeader className="flex px-4 py-2 bg-button-primary">
                     <CardTitle className="inline-flex gap-2 text-sm items-center font-bold">
                       {order?.awb}
@@ -173,7 +197,7 @@ const LoadPlanning = () => {
                 <div className="w-2/3 max-w-2/3 overflow-x-auto custom-scrollbar overflow-y-hidden p-4">
                   <DroppableArea id={`droppable-${flight.id}`}>
                     {droppedItems[`droppable-${flight.id}`]?.map((itemId, index) => (
-                      <div key={itemId} className="p-2 h-full bg-button-primary rounded-sm aspect-square flex justify-center items-center flex-col">
+                      <div key={itemId} className="p-2 h-full bg-button-primary rounded-sm aspect-video flex justify-center items-center flex-col">
                         <div className="text-sm font-bold">{`AWB${index+1}`}</div>
                         <div className="text-sm">{Math.floor(Math.random() * 101)}%</div>
                       </div>
