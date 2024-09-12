@@ -2,7 +2,7 @@ import { useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
-const PhoneInputV2 = (props) => {
+const PhoneInputV2 = (props: any) => {
   const [phone, setPhone] = useState('');
   return (
     <PhoneInput
