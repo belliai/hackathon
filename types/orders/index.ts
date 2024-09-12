@@ -1,98 +1,171 @@
 import { Location } from "../flight-master/flight-master"
 
 export type Order = {
-  ID: string
-  created_at: string
-  updated_at: string
-  awb: string
-  is_physical: boolean | null
-  booking_type: {
-    ID: string
-    created_at: string
-    updated_at: string
-    name: string
-  }
-  status: {
-    ID: string
-    created_at: string
-    updated_at: string
-    name: string
-  }
-  origin: Location
-  destination: Location
-  commodity_code: {
-    ID: string
-    created_at: string
-    updated_at: string
-    name: string
-    description: string
-  }
-  payment_mode: {
-    ID: string
-    created_at: string
-    updated_at: string
-    name: string
-  }
-  volume_kg: string
-  currency: {
-    id: string
-    created_at: string
-    updated_at: string
-    currency_code: string
-    currency_name: string
-    country: string
-    symbol: string
-    decimal: boolean
-  }
-  rate: number | null
-  s_rate: number | null
-  s_freight: number | null
-  spot_id: string | null
-  gs_weight_kg: string
-  ch_weight_kg: string
-  amount_due: string
-  mode: string
-  total: number | null
   activity_logs: {
-    ID: string
+    action: string
     created_at: string
+    details: string[]
+    ID: string
     updated_at: string
     user: {
-      ID: string
       created_at: string
-      updated_at: string
-      name: string
       email: string
+      ID: string
+      name: string
+      updated_at: string
     }
-    action: string
-    details?: string[]
   }[]
+  amount_due: string
+  awb: string
   bill_to: {
     id: string
     name: string
   }
-  shipper: {
+  booking_type: {
+    created_at: string
+    ID: string
+    name: string
+    updated_at: string
+  }
+  ch_weight_kg: string
+  commodity_code: {
+    created_at: string
+    description: string
+    ID: string
+    name: string
+    updated_at: string
+  }
+  consignee: {
     id: string
     name: string
   }
-  consignee: null
-  customer: null
+  created_at: string
+  currency: {
+    country: string
+    created_at: string
+    currency_code: string
+    currency_name: string
+    decimal: boolean
+    ID: string
+    symbol: string
+    updated_at: string
+  }
+  customer: {
+    code: string
+    id: string
+    name: string
+  }
+  destination: Location
   freight_forwarder: {
     id: string
     name: string
   }
-  organization: null
+  gs_weight_kg: string
+  ID: string
+  is_physical: boolean
+  mode: string
+  organization: {
+    id: string
+    name: string
+  }
+  origin: Location
+  partner_code: {
+    description: string
+    ID: string
+    name: string
+  }
   partner_prefix: {
     ID: string
-    created_at: string
-    updated_at: string
     name: string
   }
-  partner_code: {
+  payment_mode: {
+    created_at: string
     ID: string
-    created_at: string
-    updated_at: string
     name: string
-    description: string
+    updated_at: string
   }
+  rate: string
+  s_freight: string
+  s_rate: string
+  shipper: {
+    id: string
+    name: string
+  }
+  shipper_details: {
+    allotment_code: string
+    created_at: string
+    date: string
+    destination: {
+      airport_code: string
+      city: string
+      country: string
+      created_at: string
+      ID: string
+      timezone: {
+        abbreviation: string
+        created_at: string
+        ID: string
+        name: string
+        offset: string
+        updated_at: string
+      }
+      updated_at: string
+    }
+    flight_code: string
+    ID: string
+    origin: {
+      airport_code: string
+      city: string
+      country: string
+      created_at: string
+      ID: string
+      timezone: {
+        abbreviation: string
+        created_at: string
+        ID: string
+        name: string
+        offset: string
+        updated_at: string
+      }
+      updated_at: string
+    }
+    partner_code: {
+      airline_name: string
+      awb_prefix: string
+      created_at: string
+      iata: string
+      icao: string
+      ID: string
+      updated_at: string
+    }
+    partner_type: {
+      created_at: string
+      ID: string
+      name: string
+      updated_at: string
+    }
+    status: {
+      created_at: string
+      ID: string
+      name: string
+      updated_at: string
+    }
+    transport_method: {
+      created_at: string
+      ID: string
+      name: string
+      updated_at: string
+    }
+    updated_at: string
+  }[]
+  spot_id: string
+  status: {
+    created_at: string
+    ID: string
+    name: string
+    updated_at: string
+  }
+  total: string
+  updated_at: string
+  volume_kg: string
 }

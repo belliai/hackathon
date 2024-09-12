@@ -4,7 +4,13 @@ import { useEffect, useState } from "react"
 import { Button, ButtonProps } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Separator } from "@radix-ui/react-select"
-import { EyeIcon, ListFilterIcon, LucideIcon, SearchIcon } from "lucide-react"
+import {
+  EyeIcon,
+  ListFilterIcon,
+  LoaderIcon,
+  LucideIcon,
+  SearchIcon,
+} from "lucide-react"
 import { useDebounceValue } from "usehooks-ts"
 
 import { cn } from "@/lib/utils"
@@ -27,6 +33,7 @@ export interface DataTableToolbarProps {
   buttonVariant?: ButtonProps["variant"]
   className?: HTMLDivElement["className"]
   isHover?: boolean
+  isLoading?: boolean
   extraButtons?: {
     label: string
     icon?: LucideIcon
@@ -112,6 +119,11 @@ export function DataTableToolbar({ ...props }: DataTableToolbarProps) {
                   : "opacity-0"
             )}
           >
+            {props.isLoading && (
+              <div className="flex h-8 items-center justify-center">
+                <LoaderIcon className="size-4 animate-spin text-muted-foreground opacity-100" />
+              </div>
+            )}
             <Tooltip delayDuration={100}>
               <DataTableFilterOptions
                 onOpenChange={setFilterOpen}

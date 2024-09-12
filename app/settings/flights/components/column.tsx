@@ -225,7 +225,7 @@ export const listViewColumns = (props: ListViewProps): ColumnDef<Flight>[] => {
       cell: ({ row }) => {
         return (
           <TailNumberForm
-            row={row}
+            data={row.original}
             aircraftOptions={props.aircraftOptions || []}
             onChangeTailNumber={props.onChangeTailNumber}
           />

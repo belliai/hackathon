@@ -1,9 +1,8 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoopIcon } from "@radix-ui/react-icons"
-import { PaginationState, SortingState } from "@tanstack/react-table"
 import {
   endOfMonth,
   endOfWeek,
@@ -16,16 +15,14 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { Flight } from "@/types/flight-master/flight-master"
-import { useAircraftTypes } from "@/lib/hooks/aircrafts/aircraft-types"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import {
-  useCreateFlight,
   useDeleteFlight,
   useFlightList,
   useRecurringFlightList,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
-import { onExport } from "@/lib/utils/export"
+import { useTableState } from "@/lib/hooks/tables/table-state"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,11 +39,12 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
-import { DataTable } from "@/components/data-table/data-table"
+import { DataTable } from "@/components/data-table-v2/data-table"
 import InputSwitch from "@/components/form/InputSwitch"
 import PageContainer from "@/components/layout/PageContainer"
 
-import { listViewColumns, useRecurringColumns } from "./components/column"
+import { TableCellDropdown } from "./components/forms/table-cell-dropdown"
+import TailNumberForm from "./components/forms/tail-number-dropdown"
 import MonthlyDateStepper from "./components/monthly-date-stepper"
 import NewFlightModal from "./components/new-flight-form"
 import WeeklyDateStepper from "./components/weekly-date-stepper"
@@ -114,16 +112,7 @@ export default function Page() {
   const [modalType, setModalType] = useState<"edit" | "create">("create")
   const [currentTab, setCurrentTab] = useState<string>("list-view")
 
-  const [openModalRecurring, setOpenModalRecurring] = useState<
-    string | boolean
-  >(false)
   const [deleteConfirm, setDeleteConfirm] = useState<Flight | null>(null)
-  const [pagination, setPagination] =
-    useState<PaginationState>(initialPagination)
-
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "departure_date", desc: false },
-  ])
 
   const [selectedData, setSelectedData] = useState<Flight | null>(null)
 
@@ -179,9 +168,9 @@ export default function Page() {
 
   useEffect(() => {}, [filterData])
 
-  const { data: flightData, isLoading } = useFlightList({
-    ...paginationDetails,
-    ...sortingDetails,
+  const { data: flightData, refetch: refetchList } = useFlightList({
+    ...tableStateList.pagination,
+    ...tableStateList.sort,
     start_date:
       currentTab === "list-view"
         ? filterData.list_period === "all"
@@ -206,10 +195,14 @@ export default function Page() {
           : format(filterMonthly.to, "yyyy-MM-dd"),
   })
 
-  const { data: flightRecurringData, isLoading: isLoadingRecurring } =
+  const tableStateRecurring = useTableState({
+    initialPagination: { page_size: 10 },
+  })
+
+  const { data: flightRecurringData, refetch: refetchRecurring } =
     useRecurringFlightList({
-      ...paginationDetails,
-      ...sortingDetails,
+      ...tableStateRecurring.pagination,
+      ...tableStateRecurring.sort,
       start_date:
         currentTab === "list-view"
           ? filterData.list_period === "all"
@@ -236,11 +229,9 @@ export default function Page() {
             : format(filterMonthly.to, "yyyy-MM-dd"),
     })
 
-  const { mutateAsync: createFlight, isPending } = useCreateFlight()
   const { mutateAsync: updateFlight, isPending: isPendingUpdate } =
     useUpdateFlight()
 
-  const { data: aircraftTypeList } = useAircraftTypes()
   const { mutateAsync: deleteFlight } = useDeleteFlight()
 
   const { data: aircraftsList, generateTailName } = useAircrafts({
@@ -256,20 +247,6 @@ export default function Page() {
         label: generateTailName(list, tail.tail_number),
       }))
   )
-
-  const findDays = (data: string[], key: string): boolean => {
-    return (data && data.includes(key)) || false
-  }
-
-  const leadingZero = (val: number, count: number) => {
-    return String(val).padStart(count, "0")
-  }
-
-  const reformatDays = (data: Flight) => {
-    const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-
-    return days.filter((day) => data[day as keyof Flight])
-  }
 
   const openDetailFlight = (data: Flight) => {
     setSelectedData(data)
@@ -357,55 +334,6 @@ export default function Page() {
     </Button>
   )
 
-  const tableState = useCallback(async ({ pagination }: any) => {
-    setPagination(pagination)
-  }, [])
-
-  const columns = listViewColumns({
-    onRowClick: openDetailFlight,
-    onDelete: onShowDelete,
-    aircraftOptions: aircraftTailNumbers || [],
-    onChangeTailNumber: async (data) => {
-      if (!data) return
-      const { ID, ...rest } = data
-      if (ID) await updateFlight({ ...rest, id: ID })
-    },
-  })
-
-  const recurringColumns = useRecurringColumns({
-    aircraftOptions: aircraftTailNumbers || [],
-  })
-
-  // this temporary sorting in client side, if  nested sorting in BE ready it can be removed.
-  const flights =
-    flightData &&
-    flightData.data
-      .map((flight) => {
-        const departureDatetime = new Date(flight.departure_date)
-        let hour = flight.departure_hour
-
-        if (flight.departure_period === "PM" && hour < 12) {
-          hour += 12
-        } else if (flight.departure_period === "AM" && hour === 12) {
-          hour = 0
-        }
-
-        departureDatetime.setHours(hour)
-        departureDatetime.setMinutes(flight.departure_minute)
-
-        return {
-          ...flight,
-          departureDatetime,
-        }
-      })
-      .sort((a, b) => {
-        if (sorting[0].desc)
-          b.departureDatetime.getTime() - a.departureDatetime.getTime()
-        return a.departureDatetime.getTime() - b.departureDatetime.getTime()
-      })
-
-  console.log({ flights })
-
   return (
     <>
       <PageContainer>
@@ -483,19 +411,79 @@ export default function Page() {
                   </Form>
                 </TabsList>
               }
-              pageCount={
-                isLoading ? 1 : (flightData && flightData.total_pages) || 1
-              }
-              manualPagination={true}
-              tableState={tableState}
-              menuId="flight-master-list-view"
-              isCanExport={true}
-              onExport={() =>
-                onExport({
-                  data: flightData && flightData.data,
-                  filename: "Flightdata",
-                })
-              }
+              tableKey="settings_flights"
+              {...tableStateList}
+              customCellRenderers={[
+                {
+                  key: "departure_time",
+                  renderer: (data, value) => (
+                    <span className="tabular-nums">
+                      {format(new Date(data.departure_date), "dd/MM/yyyy")}{" "}
+                      {value}
+                    </span>
+                  ),
+                },
+                {
+                  key: "arrival_time",
+                  renderer: (data, value) => (
+                    <span className="tabular-nums">
+                      {format(new Date(data.arrival_date), "dd/MM/yyyy")}{" "}
+                      {value}
+                    </span>
+                  ),
+                },
+                {
+                  key: "status.id",
+                  renderer: (data) => (
+                    <TableCellDropdown
+                      defaultValue={data.status.id}
+                      name="status"
+                      options={[]}
+                      onChangeSelect={async (data: any) => {}}
+                    />
+                  ),
+                },
+                {
+                  key: "duration",
+                  renderer: (data) => (
+                    <span className="tabular-nums">
+                      {data.flight_duration_hour}h {data.flight_duration_minute}
+                      m
+                    </span>
+                  ),
+                },
+                {
+                  key: "tail.id",
+                  renderer: (data) => (
+                    <TailNumberForm
+                      data={data}
+                      aircraftOptions={aircraftTailNumbers ?? []}
+                      onChangeTailNumber={async (data) => {
+                        if (!data) return
+                        const { ID, ...rest } = data
+                        if (ID) await updateFlight({ ...rest, id: ID })
+                      }}
+                    />
+                    // <TableCellDropdown
+                    //   defaultValue={data.tail.id}
+                    //   name="status"
+                    //   options={aircraftTailNumbers}
+                    //   onChangeSelect={async (data: any) => {
+                    //     if (!data) return
+                    //     const { ID, ...rest } = data
+                    //     if (ID) await updateFlight({ ...rest, id: ID })
+                    //   }}
+                    // />
+                  ),
+                },
+              ]}
+              // isCanExport={true}
+              // onExport={() =>
+              //   onExport({
+              //     data: flightData && flightData.data,
+              //     filename: "Flightdata",
+              //   })
+              // }
             />
           </TabsContent>
 
@@ -560,15 +548,8 @@ export default function Page() {
                   </Form>
                 </TabsList>
               }
-              pageCount={
-                isLoading
-                  ? 1
-                  : (flightRecurringData && flightRecurringData.total_pages) ||
-                    1
-              }
-              manualPagination={true}
-              tableState={tableState}
-              menuId="flight-master-recurring-view"
+              tableKey="settings_recurrings"
+              {...tableStateRecurring}
             />
           </TabsContent>
         </Tabs>

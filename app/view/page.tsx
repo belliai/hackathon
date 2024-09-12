@@ -141,9 +141,9 @@ export default function FlightsDashboardPage() {
 
   useEffect(() => {
     if (flightsData.length) {
-      const adjustedFlightsData = flightsData.map((flight) => {
+      const adjustedFlightsData = flightsData.map(({ object }) => {
         return {
-          ...flight,
+          ...object,
           actual_cargo_capacity: "",
         }
       })

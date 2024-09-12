@@ -6,37 +6,43 @@ import {
   TailNumberFormValues,
 } from "@/schemas/aircraft/tail-numbers"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  PlusIcon,
-} from "lucide-react"
+import { PlusIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { TailNumber } from "@/types/aircraft/tail-number"
 import { useAircraftDefaults } from "@/lib/hooks/aircrafts/aircraft-defaults"
 import { useTailNumbers } from "@/lib/hooks/aircrafts/tail-numbers"
+import { useTableState } from "@/lib/hooks/tables/table-state"
 import { onExport } from "@/lib/utils/export"
 import { isVallidUuid } from "@/lib/utils/string-utils"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DataTable } from "@/components/data-table/data-table"
+import { DataTable } from "@/components/data-table-v2/data-table"
 
+import { tailNumberFormDefaultValues } from "../../constants"
 import { aircraftTailNumbersColumns } from "../columns/aircraft-tail-number-columns"
 import TailNumberForm from "../forms/aircraft-tail-number-form"
-import { tailNumberFormDefaultValues } from "../../constants"
 import AircraftTabsList from "./tab-list"
 
-export default function TailNumbersForm({ isSetting = false }: { isSetting?: boolean }) {
+export default function TailNumbersForm({
+  isSetting = false,
+}: {
+  isSetting?: boolean
+}) {
   const [currentOpenTailNumberModal, setCurrentOpenTailNumberModal] = useState<
     string | boolean
   >(false) // When the state is a string, it means the modal is in edit mode
 
-  const { data: tailNumbers } = useTailNumbers({
-    page: 1,
-    page_size: 1000,
+  const tableState = useTableState({})
+
+  const {
+    data: tailNumbers,
+    refetch,
+    isLoading,
+  } = useTailNumbers({
+    ...tableState.pagination,
+    ...tableState.sort,
   })
-
-  const { aircraftDefaults } = useAircraftDefaults()
-
-  const tailNumbersData = tailNumbers?.data
 
   const tailnumberForm = useForm<TailNumberFormValues>({
     resolver: zodResolver(tailNumberFormSchema),
@@ -57,10 +63,11 @@ export default function TailNumbersForm({ isSetting = false }: { isSetting?: boo
   return (
     <>
       <DataTable
-        showToolbarOnlyOnHover={true}
-        columns={aircraftTailNumbersColumns}
-        data={tailNumbersData ?? []}
+        tableKey="tail_numbers"
+        data={tailNumbers}
+        isLoading={isLoading}
         onRowClick={handleTailNumberRowClick}
+        onRefetchData={refetch}
         extraRightComponents={
           <Button
             size={"sm"}
@@ -72,11 +79,57 @@ export default function TailNumbersForm({ isSetting = false }: { isSetting?: boo
             Create Tail Number
           </Button>
         }
-        {...!isSetting && { extraLeftComponents: AircraftTabsList }}
-        isCanExport={true}
-        onExport={() =>
-          onExport({ data: tailNumbersData, filename: "TailsNumberData" })
-        }
+        {...(!isSetting && { extraLeftComponents: AircraftTabsList })}
+        {...tableState}
+        customCellRenderers={[
+          {
+            key: "status.name",
+            renderer: (data) => (
+              <Badge
+                variant={
+                  data.status.name === "Active" ? "secondary" : "destructive"
+                }
+              >
+                {data.status.name}
+              </Badge>
+            ),
+          },
+          {
+            key: "aircraft_manufacturer.name",
+            renderer: (data, value) => (
+              <p>
+                {value}{" "}
+                {(data.manufacturer.is_deleted || !value) && (
+                  <span className="text-destructive">(deleted)</span>
+                )}
+              </p>
+            ),
+          },
+          {
+            key: "aircraft_type.name",
+            renderer: (data, value) => (
+              <p>
+                {value}{" "}
+                {(data.aircraft_type.is_deleted || !value) && (
+                  <span className="text-destructive">(deleted)</span>
+                )}
+              </p>
+            ),
+          },
+          {
+            key: "aircraft_version.version",
+            renderer: (data, value) => (
+              <p>
+                {value}{" "}
+                {(data.version.is_deleted || !value) && (
+                  <span className="text-destructive">(deleted)</span>
+                )}
+              </p>
+            ),
+          },
+        ]}
+        // isCanExport={true}
+        onExport={() => onExport({ data: [], filename: "TailsNumberData" })}
       />
       <TailNumberForm
         form={tailnumberForm}

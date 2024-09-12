@@ -3,16 +3,15 @@
 import React, {
   Dispatch,
   DragEvent,
-  FormEvent,
   SetStateAction,
   useCallback,
   useEffect,
   useState,
 } from "react"
 import { Order } from "@/schemas/order/order"
-import { PaginationState } from "@tanstack/react-table"
 import { motion } from "framer-motion"
 
+import { Order as OrderRes } from "@/types/orders"
 import { useOrders, useUpdateOrder } from "@/lib/hooks/orders"
 import { useStatuses } from "@/lib/hooks/statuses"
 import { mapSchemaToJson } from "@/lib/mapper/order"
@@ -29,72 +28,58 @@ const columnOrder = [
   "Active",
 ]
 
-interface CustomKanbanProps {
-  ordersData: {
-    data: Shipment[]
-  }
-  cards: Shipment[]
-  setCards: Dispatch<SetStateAction<Shipment[]>>
-}
-const CustomKanban: React.FC<CustomKanbanProps> = ({
-  ordersData,
-  cards,
-  setCards,
-}) => {
+const CustomKanban = () => {
   const { isLoading: isLoadingStatus, data: allStatus } = useStatuses()
 
-  // const { data, isLoading } = useOrders({ pagination })
+  const { data: ordersData, refetch } = useOrders({ page: 1, page_size: 999 })
 
-  // if (isLoading || isLoadingStatus) {
-  //   return <></>
-  // }
+  const cards = ordersData?.data.flatMap((item) => item.object) ?? []
 
   const sortedStatuses = allStatus
-    .filter((status: IDNamePair) => columnOrder.includes(status.name))
+    .filter((status: OrderRes["status"]) => columnOrder.includes(status.name))
     .sort(
-      (a: IDNamePair, b: IDNamePair) =>
+      (a: OrderRes["status"], b: OrderRes["status"]) =>
         columnOrder.indexOf(a.name) - columnOrder.indexOf(b.name)
     )
 
   // Add the remaining statuses that are not in the predefined order at the end
   const remainingStatuses = allStatus.filter(
-    (status: IDNamePair) => !columnOrder.includes(status.name)
+    (status: OrderRes["status"]) => !columnOrder.includes(status.name)
   )
 
   const uniqueStatuses = [...sortedStatuses, ...remainingStatuses]
 
   return (
     <div className="h-screen w-full text-neutral-50">
-      <Board allCards={cards} allStatus={uniqueStatuses} setCards={setCards} />
+      <Board allCards={cards} allStatus={uniqueStatuses} onRefetch={refetch} />
     </div>
   )
 }
 
 const Board = ({
   allCards,
-  setCards,
   allStatus,
+  onRefetch,
 }: {
-  allCards: Shipment[]
-  setCards: Dispatch<SetStateAction<Shipment[]>>
-  allStatus: IDNamePair[]
+  allCards: OrderRes[]
+  allStatus: OrderRes["status"][]
+  onRefetch: VoidFunction
 }) => {
-  // const [cards, setCards] = useState<Shipment[]>(allCards)
+  const [cards, setCards] = useState<OrderRes[]>(allCards)
 
-  // useEffect(() => {
-  //   setCards(allCards)
-  // }, [allCards])
-
-  // console.error("data is...", allCards, Array.isArray(allCards))
+  useEffect(() => {
+    setCards(allCards)
+  }, [allCards])
 
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-2">
-      {allStatus.map((status: IDNamePair) => (
+      {allStatus.map((status: OrderRes["status"]) => (
         <Column
+          onRefetch={onRefetch}
           key={status.ID}
           title={status.name}
           status={status}
-          cards={allCards}
+          cards={cards}
           setCards={setCards}
         />
       ))}
@@ -104,17 +89,18 @@ const Board = ({
 
 type ColumnProps = {
   title: string
-  cards: Shipment[]
-  status: IDNamePair
-  setCards: Dispatch<SetStateAction<Shipment[]>>
+  cards: OrderRes[]
+  setCards: Dispatch<SetStateAction<OrderRes[]>>
+  status: OrderRes["status"]
+  onRefetch: VoidFunction
 }
 
-const Column = ({ title, cards, status, setCards }: ColumnProps) => {
+const Column = ({ title, cards, status, setCards, onRefetch }: ColumnProps) => {
   const [active, setActive] = useState(false)
   // Filter cards for the specific column internally
   const update = useUpdateOrder()
 
-  const handleDragStart = (e: DragEvent, card: CardType) => {
+  const handleDragStart = (e: DragEvent, card: OrderRes) => {
     e.dataTransfer.setData("cardId", card.ID)
   }
 
@@ -149,7 +135,10 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
       }
       const dataMapped = mapSchemaToJson(mapShipmentToOrder(cardToTransfer))
 
-      await update.mutateAsync({ ...(dataMapped as Order), id: cardId })
+      await update.mutateAsync(
+        { ...(dataMapped as Order), id: cardId },
+        { onError: onRefetch }
+      )
 
       setCards(copy)
     }
@@ -220,11 +209,11 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
   const filteredCards = cards.filter((c) => c.status?.name === status.name)
 
   const { selectedBooking, setSelectedBooking } = useBookingContext()
-  const handleCardClick = (id: string) => {
-    const cardFound = cards.find((c) => c.ID === id)
+  const handleCardClick = (ID: string) => {
+    const cardFound = cards.find((c) => c.ID === ID)
     if (cardFound) {
-      // openModal(mapShipmentToOrder(cardFound), id)
-      openModal(cardFound, id)
+      // openModal(mapShipmentToOrder(cardFound), ID)
+      openModal(cardFound, ID)
     }
   }
 
@@ -255,7 +244,7 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
       />
 
       <div className="min w-64 shrink-0">
-        <div className="mb-3 flex items-center justify-between w-full">
+        <div className="mb-3 flex w-full items-center justify-between">
           <h3 className={`font-medium text-white`}>{title}</h3>
           <span className="rounded text-sm text-neutral-400">
             {filteredCards.length}
@@ -286,9 +275,9 @@ const Column = ({ title, cards, status, setCards }: ColumnProps) => {
   )
 }
 
-type CardProps = CardType & {
+type CardProps = OrderRes & {
   handleDragStart: Function
-  handleCardClick: (id: string) => void
+  handleCardClick: (ID: string) => void
 }
 
 const Card = ({
@@ -311,44 +300,47 @@ const Card = ({
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
-         className="w-64 h-25 cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+        className="h-25 w-64 cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
         onClick={() => handleCardClick(ID)}
       >
         <p className="text-sm font-medium text-muted-foreground">AWB: {awb}</p>
         <p className="text-sm font-medium text-muted-foreground">
           Dest: {destination?.name} → Origin: {origin?.name}
         </p>
-        <p className="text-sm font-normal text-muted-foreground/50">{formatDate(updated_at)}</p>
-        <p className="text-sm font-medium text-muted-foreground/50">{shipper?.name}</p>
-
+        <p className="text-sm font-normal text-muted-foreground/50">
+          {formatDate(updated_at)}
+        </p>
+        <p className="text-sm font-medium text-muted-foreground/50">
+          {shipper?.name}
+        </p>
       </motion.div>
     </>
   )
 }
 
 function formatDate(isoString: string | number | Date | undefined) {
-  const date = new Date(isoString || "");
+  const date = new Date(isoString || "")
 
   // Extract date components
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-  const year = date.getFullYear();
+  const day = String(date.getDate()).padStart(2, "0")
+  const month = String(date.getMonth() + 1).padStart(2, "0") // Months are zero-indexed
+  const year = date.getFullYear()
 
   // Extract time components
-  let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  
-  // Convert 24-hour time to 12-hour time
-  hours = hours % 12;
-  hours = hours ? hours : 12; // If hour is 0, make it 12
+  let hours = date.getHours()
+  const minutes = String(date.getMinutes()).padStart(2, "0")
+  const ampm = hours >= 12 ? "PM" : "AM"
 
-  return `${day}/${month}/${year}, ${hours}:${minutes}${ampm}`;
+  // Convert 24-hour time to 12-hour time
+  hours = hours % 12
+  hours = hours ? hours : 12 // If hour is 0, make it 12
+
+  return `${day}/${month}/${year}, ${hours}:${minutes}${ampm}`
 }
 
 type DropIndicatorProps = {
   beforeId: string | null
-  status: IDNamePair
+  status: OrderRes["status"]
 }
 
 const DropIndicator = ({ beforeId, status }: DropIndicatorProps) => {
@@ -361,95 +353,10 @@ const DropIndicator = ({ beforeId, status }: DropIndicatorProps) => {
   )
 }
 
-// type ColumnType = "backlog" | "todo" | "doing" | "done"
-
-type CardType = {
-  awb: string
-  origin: IDNamePair
-  destination: IDNamePair
-  ID: string
-  status: IDNamePair,
-  updated_at?: string,
-  shipper: Organization
-}
-
-interface IDNamePair {
-  ID: string
-  name: string
-  created_at?: string
-  updated_at?: string
-  description?: string
-  timezone?: string | null
-}
-
-interface User {
-  ID: string
-  created_at: string
-  updated_at: string
-  name: string
-  email: string
-}
-
-interface ActivityLog {
-  ID: string
-  created_at: string
-  updated_at: string
-  user: User
-  action: string
-  details: string[]
-}
-
-interface PaymentCurrency {
-  ID: string
-  created_at: string
-  updated_at: string
-  name: string
-}
-
-interface Organization {
-  id: string
-  name: string
-  code?: string
-}
-
-export interface Shipment {
-  ID: string
-  created_at: string
-  updated_at: string
-  awb: string
-  is_physical: boolean
-  booking_type: IDNamePair
-  partner_prefix: IDNamePair | null
-  partner_code: IDNamePair
-  status: IDNamePair
-  origin: IDNamePair
-  destination: IDNamePair
-  commodity_code: IDNamePair | null
-  payment_mode: IDNamePair | null
-  volume_kg: number | null
-  currency: PaymentCurrency
-  rate: number | null
-  s_rate: number | null
-  s_freight: number | null
-  spot_id: number | null
-  gs_weight_kg: number | null
-  ch_weight_kg: number | null
-  amount_due: number | "NaN"
-  mode: string
-  total: number | null
-  activity_logs: ActivityLog[]
-  bill_to: Organization
-  shipper: Organization
-  consignee: Organization | null
-  customer: Organization | null
-  freight_forwarder: Organization | null
-  organization: Organization | null
-}
-
 export default CustomKanban
 
-// Function to map Shipment to Order
-const mapShipmentToOrder = (shipment: Shipment): Order => {
+// Function to map OrderRes to Order
+const mapShipmentToOrder = (shipment: OrderRes): Order => {
   return {
     ID: shipment.ID,
     amount_due: shipment.amount_due ? String(shipment.amount_due) : undefined,

@@ -40,7 +40,10 @@ export default function Dashboard() {
     isPending,
     error,
     data: ordersData,
-  } = useOrders({ pagination })
+  } = useOrders({
+    page: pagination.pageIndex + 1,
+    page_size: pagination.pageSize,
+  })
   const remove = useRemoveOrder()
 
   const openModal = (data: Order) => {
@@ -101,8 +104,10 @@ export default function Dashboard() {
         }}
         columns={columnWithActions}
         onRowClick={openModal}
-        data={isLoading ? [] : ordersData.data}
-        pageCount={isLoading ? 1 : ordersData.total_pages}
+        data={
+          isLoading ? [] : ordersData?.data.flatMap((item) => item.object) ?? []
+        }
+        pageCount={isLoading ? 1 : ordersData?.total_pages}
         manualPagination={true}
         tableState={tableState}
         className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
