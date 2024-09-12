@@ -6,7 +6,7 @@ import { getTimezoneOffset } from "date-fns-tz"
 import { useFormContext } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
-import { Location } from "@/types/flight-master/flight-master"
+import { Flight, Location } from "@/types/flight-master/flight-master"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { useLocationSearch } from "@/lib/hooks/locations"
 import { ObjectSet } from "@/lib/utils/array-utils"
@@ -15,15 +15,18 @@ import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ComboboxOption } from "@/components/form/combobox"
 import InputSwitch from "@/components/form/InputSwitch"
+import { Label } from "@/components/ui/label"
 
 interface FlightDetailsFormProps extends React.HTMLAttributes<HTMLDivElement> {
-  initialLocations?: Location[]
+  initialLocations?: Location[],
+  recurringDetails?: Flight | null,
+  tab?: string | undefined
 }
 
 const FlightDetailsForm = React.forwardRef<
   HTMLDivElement,
   FlightDetailsFormProps
->(({ initialLocations }, ref) => {
+>(({ initialLocations, tab }, ref) => {
   const form = useFormContext<FlightSchema>()
   const formData = form.watch()
 
@@ -179,7 +182,6 @@ const FlightDetailsForm = React.forwardRef<
 
   // console.log({ originTimezoneOffset, destinationTimezoneOffset })
 
-
   useEffect(() => {
     if (!formData.departure_date || !formData.arrival_date) return
     const flightDuration = calculateFlightDuration(
@@ -231,8 +233,8 @@ const FlightDetailsForm = React.forwardRef<
         </div>
       </div>
       <Separator className="mb-2 mt-4 opacity-30" />
-      <div className="grid grid-cols-2 gap-3">
-        <div className="grid flex-1 grid-cols-1 gap-2">
+      <div className="space-y-4 mb-5">
+        <div className="grid grid-cols-2 gap-2">
           <InputSwitch<FlightSchema>
             name="origin_id"
             options={formattedLocation}
@@ -243,6 +245,23 @@ const FlightDetailsForm = React.forwardRef<
             label="Origin"
             info="Select the origin location"
           />
+
+          <InputSwitch<FlightSchema>
+            name="destination_id"
+            options={formattedLocation}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            searchPlaceholder="Search destination by airport code..."
+            type="combobox-async"
+            label="Destination"
+            info="Select the destination location"
+          />
+        </div>
+      </div>
+      {tab === "create-recurring-flight" && <Label className="mt-4">First flight details</Label>}
+      <Separator className="mb-2 mt-2 opacity-30" />
+      <div className="grid grid-cols-2 gap-3">
+        <div className="grid flex-1 grid-cols-1 gap-2">
           <InputSwitch<FlightSchema>
             type="date"
             name="departure_date"
@@ -259,16 +278,6 @@ const FlightDetailsForm = React.forwardRef<
         </div>
 
         <div className="grid flex-1 grid-cols-1 gap-2">
-          <InputSwitch<FlightSchema>
-            name="destination_id"
-            options={formattedLocation}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            searchPlaceholder="Search destination by airport code..."
-            type="combobox-async"
-            label="Destination"
-            info="Select the destination location"
-          />
           <InputSwitch<FlightSchema>
             type="date"
             name="arrival_date"

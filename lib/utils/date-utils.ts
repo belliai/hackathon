@@ -167,7 +167,8 @@ export function generateRecurringOptions({
     },
     {
       label: `Daily`,
-      value: new RRule({ freq: RRule.DAILY, dtstart }).toString(),
+      value: "daily",
+      // value: new RRule({ freq: RRule.DAILY, dtstart }).toString(),
     },
     {
       label: `Weekly on ${dayName}`,

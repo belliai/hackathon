@@ -327,7 +327,12 @@ export default function Page() {
             <DataTable
               data={flightData}
               onRefetchData={refetchList}
-              onRowClick={openDetailFlight}
+              onRowClick={(data) => {
+                setModalType("edit")
+                setSelectedData(data)
+                if (data.recurring_flight_id) setRecurringSelection(true)
+                else setOpenModal(true)
+              }}
               extraRightComponents={createButtonFlight}
               extraLeftComponents={
                 <TabsList className="gap-2 bg-transparent p-0">
@@ -527,6 +532,7 @@ export default function Page() {
         onOpenChange={onOpenChange}
         resetData={setSelectedData}
         selectedFlights={selectionFlight}
+        tab={currentTab || undefined}
       />
 
       <AlertDialog
@@ -537,24 +543,33 @@ export default function Page() {
           <AlertDialogHeader>
             <AlertDialogTitle>Edit Recurring Flight</AlertDialogTitle>
           </AlertDialogHeader>
-          <RadioGroup
-            value={selectionFlight}
-            onValueChange={(val) => setSelectionFlight(val as selectionFlight)}
-            className="space-y-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="one" id="one" />
-              <Label htmlFor="one">This Flight</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="from" id="from" />
-              <Label htmlFor="from">This and following Flights</Label>
-            </div>
-            <div className="flex items-center space-x-2">
+          {currentTab === "create-recurring-flight" && (
+            <AlertDialogDescription>
+              you are attempting to edit all recurring flights in this group, are you sure?
+            </AlertDialogDescription>
+          )}
+          {currentTab === "list-view" && (
+            <RadioGroup
+              value={selectionFlight}
+              onValueChange={(val) =>
+                setSelectionFlight(val as selectionFlight)
+              }
+              className="space-y-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="one" id="one" />
+                <Label htmlFor="one">This Flight</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="from" id="from" />
+                <Label htmlFor="from">This and following Flights</Label>
+              </div>
+              {/* <div className="flex items-center space-x-2">
               <RadioGroupItem value="all" id="all" />
               <Label htmlFor="all">All Flight</Label>
-            </div>
-          </RadioGroup>
+            </div> */}
+            </RadioGroup>
+          )}
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
@@ -564,7 +579,7 @@ export default function Page() {
                 setOpenModal(true)
               }}
             >
-              Ok
+              Continue
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -69,6 +69,7 @@ type NewFlightModalProps = PropsWithChildren & {
   mode?: "edit" | "create"
   data?: Flight | null
   selectedFlights?: "one" | "from" | "all" | undefined
+  tab?: string | undefined
 }
 
 const schemas = flightMasterFormSchema
@@ -126,7 +127,7 @@ const mappedData = (props: Flight): FlightSchema => {
 const optionSelectionFlights = [
   { label: "This flight", value: "one" },
   { label: "This and following flights", value: "from" },
-  { label: "All flights", value: "all" },
+  // { label: "All flights", value: "all" },
 ]
 
 const recurringOption = [
@@ -148,6 +149,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     data,
     resetData,
     selectedFlights,
+    tab: mainTab,
   } = props
   const [isFullScreen, setFullScreen] = useState(false)
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
@@ -216,6 +218,8 @@ export default function NewFlightModal(props: NewFlightModalProps) {
               ? [data.origin, data.destination]
               : undefined
           }
+          recurringDetails={recurringFlight}
+          tab={mainTab}
         />
       ),
       fieldList: [
@@ -268,11 +272,14 @@ export default function NewFlightModal(props: NewFlightModalProps) {
           recurring_options.week_fri = day == "fri"
           recurring_options.week_sat = day == "sat"
         })
-      } else {
+      }else if (data.recurring === "daily"){
+        recurring_options = {
+          recurring_type: "daily",
+        }
+      }else {
         const rule = RRule.fromString(data.recurring)
 
-        const freqMap: { [key: number]: "daily" | "weekly" } = {
-          [RRule.DAILY]: "daily",
+        const freqMap: { [key: number]: "weekly" } = {
           [RRule.WEEKLY]: "weekly",
         }
 
@@ -367,44 +374,50 @@ export default function NewFlightModal(props: NewFlightModalProps) {
   }, [form.formState.errors])
 
   useEffect(() => {
+    console.log(data)
     if (data) {
       const dt = mappedData(data)
       form.reset(dt)
     }
+    let recurring = recurringFlight
+    if (mainTab === "create-recurring-flight") {
+      recurring = data || null
+    }
 
-    if (recurringFlight) {
-
+    if (recurring) {
       const { options } = generateRecurringOptions({
-        startAt: new Date(recurringFlight?.departure_date),
+        startAt: new Date(recurring?.departure_date),
       })
       setRecurrings(options)
+      console.log(options)
 
-      if (recurringFlight.recurring_type === "weekly") {
+      if (recurring.recurring_type === "weekly") {
         const rule = new RRule({
           freq: RRule.WEEKLY,
-          byweekday: getWeeks(recurringFlight),
+          byweekday: getWeeks(recurring),
         }).toString()
         form.setValue("recurring", rule)
       }
 
-      if (recurringFlight.recurring_type === "custom") {
+      if (recurring.recurring_type === "custom") {
         form.setValue("recurring", "custom")
-        form.setValue(
-          "recurring_every",
-          Number(recurringFlight.recurring_every)
-        )
-        form.setValue("end_condition", recurringFlight.end_condition)
-        recurringFlight.end_after_occurrences &&
+        form.setValue("recurring_every", Number(recurring.recurring_every))
+        form.setValue("end_condition", recurring.end_condition)
+        recurring.end_after_occurrences &&
           form.setValue(
             "end_after_occurrences",
-            Number(recurringFlight.end_after_occurrences)
+            Number(recurring.end_after_occurrences)
           )
-        recurringFlight.end_date &&
-          form.setValue("end_date", new Date(recurringFlight.end_date))
+        recurring.end_date &&
+          form.setValue("end_date", new Date(recurring.end_date))
         //currently only weekly
         form.setValue("recurring_period", "weekly")
 
-        form.setValue("days", getDays(recurringFlight))
+        form.setValue("days", getDays(recurring))
+      }
+
+      if (recurring.recurring_type === "daily") {
+        form.setValue("recurring", "daily")
       }
     }
 
