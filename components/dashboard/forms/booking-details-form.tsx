@@ -51,7 +51,8 @@ const BookingDetailsForm = React.forwardRef<
   const { data: commodityCodes } = useCommodityCodes()
   const { data: locations } = useLocations()
   const { data: ordersData } = useOrders({
-    pagination: { pageIndex: 0, pageSize: 20 },
+    page: 1,
+    page_size: 99,
   })
 
   const [searchTerm, setSearchTerm] = useState("")
@@ -133,6 +134,7 @@ const BookingDetailsForm = React.forwardRef<
   const awbList =
     selectedBookingType?.label.toLowerCase() === "hawb"
       ? ordersData?.data
+          .flatMap((item) => item.object)
           .filter(
             (order: any) => order.booking_type?.name.toLowerCase() === "mawb"
           )

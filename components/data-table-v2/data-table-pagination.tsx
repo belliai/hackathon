@@ -24,7 +24,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 interface DataTablePaginationProps {
   showSelectedCount?: boolean
-  enableExport?: boolean
   isHover?: boolean
   onExport?: (prop: any) => void
   settingOptions?: any
@@ -41,7 +40,6 @@ export function DataTablePagination(props: DataTablePaginationProps) {
     pageSize,
     totalPage,
     isHover,
-    enableExport,
     onPageSizeChange,
     onPageChange,
     onExport,
@@ -157,7 +155,7 @@ export function DataTablePagination(props: DataTablePaginationProps) {
             </Button>
           </div>
         </div>
-        {enableExport && (
+        {onExport && (
           <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
               <Button

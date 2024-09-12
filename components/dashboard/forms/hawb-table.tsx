@@ -2,6 +2,7 @@
 
 import React from "react"
 import { DataTable } from "@components/data-table/data-table"
+
 import { useOrders } from "@/lib/hooks/orders"
 
 const TABLE_COLUMN = [
@@ -13,26 +14,26 @@ const TABLE_COLUMN = [
   { header: "Total", accessorKey: "total" },
 ]
 
-const HAWBTable = React.forwardRef<HTMLDivElement, any>(
-  (_, ref) => {
-    const { data: ordersData } = useOrders({ pagination: { pageIndex: 0, pageSize: 20 }})
-    
-    const hawbData = ordersData.data.filter((item: any) => item.booking_type.name.toLowerCase() === 'hawb')
+const HAWBTable = React.forwardRef<HTMLDivElement, any>((_, ref) => {
+  const { data: ordersData } = useOrders({ page: 1, page_size: 99 })
 
-    return (
-      <div className="flex flex-col gap-3 mt-4 animate-fade-left">
-        <DataTable
-          columns={TABLE_COLUMN}
-          data={hawbData}
-          className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground max-h-44 xl:max-h-80 overflow-y-auto custom-scrollbar max-w-[814px]"
-          hidePagination
-          hideToolbar
-          manualPagination
-        />
-      </div>
-    )
-  }
-)
+  const hawbData = ordersData?.data
+    .flatMap((item) => item.object)
+    .filter((item: any) => item.booking_type.name.toLowerCase() === "hawb")
+
+  return (
+    <div className="mt-4 flex animate-fade-left flex-col gap-3">
+      <DataTable
+        columns={TABLE_COLUMN}
+        data={hawbData ?? []}
+        className="custom-scrollbar max-h-44 max-w-[814px] overflow-y-auto border-none xl:max-h-80 [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
+        hidePagination
+        hideToolbar
+        manualPagination
+      />
+    </div>
+  )
+})
 
 HAWBTable.displayName = "HAWBTable"
 

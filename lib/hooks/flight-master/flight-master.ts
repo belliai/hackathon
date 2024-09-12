@@ -21,8 +21,6 @@ const routeRecurrings = "flights/recurrings"
 interface FlightParamsProps extends PaginationParams {
   start_date?: string
   end_date?: string
-  sort_by?: string
-  sort_dir?: string
 }
 
 export const fetchFlightList = async (
@@ -33,7 +31,7 @@ export const fetchFlightList = async (
     .get(route, {
       params,
     })
-    .then((res) => res.data as APIPaginatedResponse<Flight>)
+    .then((res) => res.data as APIPaginatedResponse<TableItem<Flight>>)
 }
 
 export const fetchFlightDashboard = async (
@@ -65,6 +63,7 @@ export const useFlightList = (params: FlightParamsProps) => {
   return useQuery({
     queryKey: [route, params],
     queryFn: async () => await fetchFlightList(await belliApi, params),
+    placeholderData: keepPreviousData,
   })
 }
 
@@ -76,7 +75,7 @@ export const fetchRecurringFlightList = async (
     .get(routeRecurrings, {
       params,
     })
-    .then((res) => res.data as APIPaginatedResponse<Flight>)
+    .then((res) => res.data as APIPaginatedResponse<TableItem<Flight>>)
 }
 
 export const useRecurringFlightList = (params: FlightParamsProps) => {
@@ -85,6 +84,7 @@ export const useRecurringFlightList = (params: FlightParamsProps) => {
   return useQuery({
     queryKey: [routeRecurrings, params],
     queryFn: async () => await fetchRecurringFlightList(await belliApi, params),
+    placeholderData: keepPreviousData,
   })
 }
 
@@ -124,10 +124,7 @@ export const updateFlight = async (
   update_mode?: string
 ) => {
   return belliApi
-    .put(
-      `${route}/${id}?update_mode=${update_mode ? update_mode : "one"}`,
-      data
-    )
+    .put(`${route}/${id}`, { ...data, update_mode: update_mode ?? "one" })
     .then((res) => res.data as Flight)
 }
 

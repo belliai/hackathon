@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { DataTable } from "@components/data-table/data-table"
+import { DataTable } from "@components/data-table-v2/data-table"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { PaginationState } from "@tanstack/react-table"
@@ -18,6 +18,7 @@ import {
 
 import { Order as OrderRes } from "@/types/orders"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
+import { useTableState } from "@/lib/hooks/tables/table-state"
 import { onExport } from "@/lib/utils/export"
 import {
   AlertDialog,
@@ -36,10 +37,10 @@ import { columns } from "@/components/dashboard/columns"
 import NewOrderSideModal from "@/components/dashboard/new-order-side-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 
-import CustomKanban, { Shipment } from "./kanban"
+import CustomKanban from "./kanban"
 import LoadPlanning from "./load-planning"
 
-const AWBTabsList = ({ tabValue }: { tabValue: string }) => (
+const AWBTabsList = () => (
   <TabsList className="gap-2 bg-transparent p-0">
     <TabsTrigger
       className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
@@ -69,31 +70,20 @@ export default function Home() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const tabParam = searchParams.get("tab")
   const { selectedBooking, setSelectedBooking } = useBookingContext()
   const [modalOpen, setModalOpen] = useState(false)
   const [modalType, setModalType] = useState<"edit" | "create">("create")
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [selectedColumnId, setSelectedColumnId] = useState("")
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
+
   const [tabValue, setTabValue] = useState("list-view") // If no tabParam, default to list-view
 
-  const {
-    isLoading,
-    isPending,
-    error,
-    data: ordersData,
-  } = useOrders({ pagination })
   const remove = useRemoveOrder()
 
-  const [cards, setCards] = useState<Shipment[]>(ordersData?.data || [])
+  const tableStateProps = useTableState({})
+  const { pagination, sort } = tableStateProps
 
-  useEffect(() => {
-    setCards(ordersData?.data || [])
-  }, [ordersData])
+  const { data: ordersData, refetch } = useOrders({ ...pagination, ...sort })
 
   const openModal = (data: OrderRes, columnId: string) => {
     console.error("opening modal from airwaybill", data)
@@ -101,11 +91,6 @@ export default function Home() {
     setSelectedColumnId(columnId)
     setModalOpen(true)
     if (data) setModalType("edit")
-  }
-
-  const onShowDelete = (data: any) => {
-    setSelectedBooking(data)
-    setDeleteConfirm(true)
   }
 
   const onOpenChange = useCallback((open: boolean) => {
@@ -117,10 +102,6 @@ export default function Home() {
     if (data.ID) remove.mutate({ id: data.ID })
     setSelectedBooking(undefined)
   }
-
-  const tableState = useCallback(async ({ pagination }: any) => {
-    setPagination(pagination)
-  }, [])
 
   const generateButton = (
     <Button
@@ -136,36 +117,6 @@ export default function Home() {
       <PlusIcon className="mr-2 size-4" />
       New Order
     </Button>
-  )
-
-  const columnWithActions = columns.map((column) => ({
-    ...column,
-    cell: ({
-      row: { original, getValue },
-      column: { id },
-    }: {
-      row: { original: any; getValue: (id: string) => any }
-      column: { id: string }
-    }) => {
-      const columnValue =
-        original.booking_type?.name?.toLowerCase() === "mawb" && id === "hawb"
-          ? "567-56789012"
-          : original.booking_type?.name?.toLowerCase() === "hawb" &&
-              id === "mawb"
-            ? "345-34567890"
-            : getValue(id)
-
-      return (
-        <div onClick={() => openModal(original, id)} className="cursor-pointer">
-          {columnValue}
-        </div>
-      )
-    },
-  }))
-
-  const memoizedTabsList = useMemo(
-    () => <AWBTabsList tabValue={tabValue} />,
-    [tabValue]
   )
 
   const createQueryString = useCallback(
@@ -219,43 +170,28 @@ export default function Home() {
       <Tabs value={tabValue} onValueChange={setTabValue} className="space-y-4">
         <TabsContent value="list-view" asChild>
           <DataTable
-            initialPinning={{
-              left: [],
-              right: ["actions"],
-            }}
-            columns={columnWithActions}
-            data={isLoading ? [] : ordersData?.data}
-            pageCount={isLoading ? 1 : ordersData.total_pages}
-            manualPagination={true}
-            tableState={tableState}
-            className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"
-            menuId="airway-bill-dashboard"
-            showToolbarOnlyOnHover={true}
+            data={ordersData}
+            onCellClick={(row, col) => openModal(row, col.real_column_name)}
+            extraLeftComponents={<AWBTabsList />}
             extraRightComponents={generateButton}
-            isCanExport={true}
-            onExport={() =>
-              onExport({ data: ordersData.data, filename: "AirwaybillsData" })
-            }
-            extraLeftComponents={memoizedTabsList}
+            onRefetchData={refetch}
+            tableKey="dashboard_airway_bills"
+            {...tableStateProps}
           />
         </TabsContent>
         <TabsContent value="kanban-view" asChild>
           <>
             <div className="flex items-center justify-between gap-2">
-              {memoizedTabsList}
+              {<AWBTabsList />}
               <ActionButtons />
             </div>
-            <CustomKanban
-              ordersData={ordersData}
-              cards={cards}
-              setCards={setCards}
-            />
+            <CustomKanban />
           </>
         </TabsContent>
         <TabsContent value="load-planning" asChild>
           <>
-            <div className="flex justify-between items-center gap-2">
-              {memoizedTabsList}
+            <div className="flex items-center justify-between gap-2">
+              {<AWBTabsList />}
               <ActionButtons />
             </div>
             <LoadPlanning />

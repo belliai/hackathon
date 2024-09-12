@@ -1,9 +1,15 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query"
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { placeholderData: keepPreviousData } },
+})
 
 export default function QueryProvider({
   children,

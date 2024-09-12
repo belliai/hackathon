@@ -5,7 +5,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { useHover } from "usehooks-ts"
 
 import { TableItem } from "@/types/api/dashboard-items"
-import { Table as TableKeys } from "@/types/table/columns"
+import { Column, Table as TableKeys } from "@/types/table/columns"
 import { useColumns } from "@/lib/hooks/columns"
 import { TableStateHandlers } from "@/lib/hooks/tables/table-state"
 import { cn } from "@/lib/utils"
@@ -29,9 +29,16 @@ import {
 export type DataTableProps<T> = {
   tableKey: TableKeys
   data?: APIPaginatedResponse<TableItem<T>>
+  isLoading?: boolean
   onRefetchData: () => void
   onRowClick?: (row: T) => void
-  customCellRenderers?: { key: string; renderer: (data: T) => ReactNode }[]
+  onCellClick?: (row: T, column: Column) => void
+  customCellRenderers?: {
+    key: string
+    renderer: (data: T, value: string) => ReactNode
+  }[]
+  //props for pagination
+  onExport?: () => void
   // props for toolbar
   hideToolbar?: boolean
   extraLeftComponents?: React.ReactNode
@@ -47,6 +54,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
     sort,
     customCellRenderers,
     onRowClick,
+    onCellClick,
     onRefetchData,
   } = props
   const { useGetColumns } = useColumns()
@@ -66,9 +74,19 @@ export function DataTable<T>(props: DataTableProps<T>) {
         acc[key] = renderer
         return acc
       },
-      {} as Record<string, (data: T) => ReactNode>
+      {} as Record<string, (data: T, value: string) => ReactNode>
     )
   }, [customCellRenderers])
+
+  const columnsMap = useMemo(() => {
+    return visibleColumns?.reduce(
+      (acc, col) => {
+        acc[col.real_column_name] = col
+        return acc
+      },
+      {} as Record<string, Column>
+    )
+  }, [visibleColumns])
 
   return (
     <DataTableContextProvider
@@ -87,6 +105,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
         {!props.hideToolbar && (
           <DataTableToolbar
             isHover={isHover}
+            isLoading={props.isLoading}
             extraLeftComponents={props.extraLeftComponents}
             extraRightComponents={props.extraRightComponents}
             extraButtons={props.extraToolbarButtons}
@@ -133,12 +152,18 @@ export function DataTable<T>(props: DataTableProps<T>) {
                       const customRenderer = customRendererMap?.[col.key]
                       return (
                         <TableCell
+                          onClick={
+                            onCellClick
+                              ? () =>
+                                  onCellClick(row.object, columnsMap[col.key])
+                              : undefined
+                          }
                           className="whitespace-nowrap"
                           key={col.key}
                           style={{ minWidth: 120 }}
                         >
                           {customRenderer
-                            ? customRenderer(row.object)
+                            ? customRenderer(row.object, col.value)
                             : col.value}
                         </TableCell>
                       )
@@ -156,6 +181,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
           totalPage={data?.total_pages ?? 1}
           onPageChange={props.onPageChange}
           onPageSizeChange={props.onPageSizeChange}
+          onExport={props.onExport}
         />
       </div>
     </DataTableContextProvider>

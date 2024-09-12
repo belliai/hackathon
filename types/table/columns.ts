@@ -5,6 +5,7 @@ export type Table =
   | "dashboard_flights"
   | "dashboard_airway_bills"
   | "partners"
+  | "settings_recurrings"
 
 export type Column = {
   id: string

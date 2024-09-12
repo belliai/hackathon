@@ -1,8 +1,14 @@
 import { TailNumberFormValues } from "@/schemas/aircraft/tail-numbers"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
 import { TailNumber } from "@/types/aircraft/tail-number"
+import { TableItem } from "@/types/api/dashboard-items"
 import { useBelliApi } from "@/lib/utils/network"
 
 const route = "aircrafts/tails"
@@ -15,15 +21,16 @@ export const fetchTailNumbers = async (
     .get(route, {
       params,
     })
-    .then((res) => res.data as APIPaginatedResponse<TailNumber>)
+    .then((res) => res.data as APIPaginatedResponse<TableItem<TailNumber>>)
 }
 
 export const useTailNumbers = (params: PaginationParams) => {
   const belliApi = useBelliApi()
 
   return useQuery({
-    queryKey: [route],
+    queryKey: [route, params],
     queryFn: async () => await fetchTailNumbers(await belliApi, params),
+    placeholderData: keepPreviousData,
   })
 }
 

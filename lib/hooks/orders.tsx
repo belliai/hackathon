@@ -1,22 +1,25 @@
 import { Order } from "@/schemas/order/order"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
+import { TableItem } from "@/types/api/dashboard-items"
+import { Order as OrderRes } from "@/types/orders"
 import { objectToParams, useBelliApi } from "@/lib/utils/network"
 
 const route = "orders"
 
 export const fetchOrders = async (
   belliApi: AxiosInstance,
-  filter: FetchOrdersProps
+  params: FetchOrdersProps
 ) => {
-  const pagination = {
-    page: filter.pagination.pageIndex + 1,
-    page_size: filter.pagination.pageSize,
-  }
-  const queryParams = objectToParams(pagination)
-
-  const { data } = await belliApi.get(`/${route}?${queryParams}`)
+  const { data } = await belliApi.get<
+    APIPaginatedResponse<TableItem<OrderRes>>
+  >(route, { params: params })
   return data
 }
 
@@ -54,12 +57,7 @@ export const removeOrder = async (
   return resp
 }
 
-type FetchOrdersProps = {
-  pagination: {
-    pageSize: number
-    pageIndex: number
-  }
-}
+type FetchOrdersProps = PaginationParams
 
 export const useOrders = (props: FetchOrdersProps) => {
   const belliApi = useBelliApi()
@@ -67,6 +65,7 @@ export const useOrders = (props: FetchOrdersProps) => {
   return useQuery({
     queryKey: [route, props],
     queryFn: async () => await fetchOrders(await belliApi, props),
+    placeholderData: keepPreviousData,
   })
 }
 
