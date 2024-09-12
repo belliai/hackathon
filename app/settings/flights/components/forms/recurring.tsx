@@ -5,9 +5,7 @@ import { FlightSchema } from "@/schemas/flight-master/flight"
 import { useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
-import { generateRecurringOptions } from "@/lib/utils/date-utils"
 import { Card } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   FormControl,
   FormField,
@@ -19,16 +17,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import InputSwitch from "@/components/form/InputSwitch"
 
-const recurringOption = [
-  {
-    label: "Does not repeat",
-    value: "no-repeat",
-  },
-  {
-    label: "Daily",
-    value: "daily",
-  },
-]
+
 
 const getPeriods = (val: number) => {
   const addition = val > 1 ? "s" : ""
@@ -91,26 +80,15 @@ const WeeklyCheckbox: React.FC<WeeklyCheckboxProps> = ({
   )
 }
 
-const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
+const RecurringForm = React.forwardRef<HTMLDivElement, any>((props, ref) => {
   const form = useFormContext()
   const formData = form.watch()
-  const [recurrings, setRecurrings] =
-    useState<Array<{ label: string; value: string }>>(recurringOption)
   const [repeatEnd, setRepeatEnd] = useState<string>(formData.end_condition || "never")
 
   const optionsPeriod = useMemo(
     () => getPeriods(formData.recurring_count),
     [formData.recurring_count]
   )
-
-  useEffect(() => {
-    if (formData.departure_date) {
-      const { options } = generateRecurringOptions({
-        startAt: formData.departure_date,
-      })
-      setRecurrings(options)
-    }
-  }, [formData.departure_date])
 
   useEffect(() => {
     if (repeatEnd === "never") {
@@ -120,7 +98,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     form.setValue("end_condition", repeatEnd)
   }, [repeatEnd])
 
-
+  
 
   return (
     <Card className="space-y-4 p-4" ref={ref}>
@@ -130,7 +108,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             name="recurring"
             label="Recurring"
             type="select"
-            selectOptions={recurrings}
+            selectOptions={props.recurrings}
           />
         </div>
       </div>

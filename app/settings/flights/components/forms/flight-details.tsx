@@ -159,22 +159,26 @@ const FlightDetailsForm = React.forwardRef<
 
   useEffect(() => {}, [form.formState])
 
-  const originTimezoneOffset =
-    allLocations &&
-    formData.origin_id &&
-    allLocations.find((loc) => loc.id === formData.origin_id)?.timezone?.offset
-  const destinationTimezoneOffset =
-    allLocations &&
-    formData.destination_id &&
-    allLocations.find((loc) => loc.id === formData.destination_id)?.timezone
-      ?.offset
+  const originTimezoneOffset = useMemo(() => {
+    return (
+      allLocations &&
+      formData.origin_id &&
+      allLocations.find((loc) => loc.id === formData.origin_id)?.timezone
+        ?.offset
+    )
+  }, [allLocations, formData.origin_id])
 
-  console.log({ originTimezoneOffset, destinationTimezoneOffset })
+  const destinationTimezoneOffset = useMemo(() => {
+    return (
+      allLocations &&
+      formData.destination_id &&
+      allLocations.find((loc) => loc.id === formData.destination_id)?.timezone
+        ?.offset
+    )
+  }, [allLocations, formData.destination_id])
 
-  // console.log("departure", form.watch("departure_date"))
-  // console.log("arrival", form.watch("arrival_date"))
+  // console.log({ originTimezoneOffset, destinationTimezoneOffset })
 
-  // console.log(formData.origin_id)
 
   useEffect(() => {
     if (!formData.departure_date || !formData.arrival_date) return

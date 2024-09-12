@@ -29,6 +29,7 @@ import {
   useRecurringFlight,
   useUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
+import { generateRecurringOptions } from "@/lib/utils/date-utils"
 import { get24HourTime, parseTime } from "@/lib/utils/time-picker-utils"
 import {
   AlertDialog,
@@ -67,6 +68,7 @@ type NewFlightModalProps = PropsWithChildren & {
   open?: boolean
   mode?: "edit" | "create"
   data?: Flight | null
+  selectedFlights?: "one" | "from" | "all" | undefined
 }
 
 const schemas = flightMasterFormSchema
@@ -127,13 +129,32 @@ const optionSelectionFlights = [
   { label: "All flights", value: "all" },
 ]
 
+const recurringOption = [
+  {
+    label: "Does not repeat",
+    value: "no-repeat",
+  },
+  {
+    label: "Daily",
+    value: "daily",
+  },
+]
+
 export default function NewFlightModal(props: NewFlightModalProps) {
-  const { children, onOpenChange, mode = "create", data, resetData } = props
+  const {
+    children,
+    onOpenChange,
+    mode = "create",
+    data,
+    resetData,
+    selectedFlights,
+  } = props
   const [isFullScreen, setFullScreen] = useState(false)
   const [closeWarningOpen, setCloseWarningOpen] = useState(false)
   const [deleteWarningOpen, setDeleteWarningOpen] = useState(false)
   const [currentTab, setCurrentTab] = useState("flight-details")
-  const [recurringSelection, setRecurringSelection] = useState<boolean>(false)
+  const [recurrings, setRecurrings] =
+    useState<Array<{ label: string; value: string }>>(recurringOption)
 
   const update = useUpdateFlight()
   const create = useCreateFlight()
@@ -146,9 +167,11 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     resolver: zodResolver(flightSchema),
     defaultValues: {
       ...initialValues,
-      selectionFlight: "one",
+      selectionFlight: selectedFlights,
     },
   })
+
+  const formData = form.watch()
 
   const reset = () => {
     form.reset(initialValues)
@@ -213,7 +236,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
       label: "Recurring",
       value: "recurring",
       icon: Repeat,
-      content: <RecurringForm />,
+      content: <RecurringForm recurrings={recurrings} />,
       fieldList: ["recurring"],
     },
     // {
@@ -226,8 +249,6 @@ export default function NewFlightModal(props: NewFlightModalProps) {
   ]
 
   const onSubmit = async (data: FlightMasterWithRecurring) => {
-    console.log(data)
-
     let recurring_options: RecurringPayload = {}
     if (data.recurring && data.recurring !== "no-repeat") {
       if (data.recurring === "custom") {
@@ -352,6 +373,12 @@ export default function NewFlightModal(props: NewFlightModalProps) {
     }
 
     if (recurringFlight) {
+
+      const { options } = generateRecurringOptions({
+        startAt: new Date(recurringFlight?.departure_date),
+      })
+      setRecurrings(options)
+
       if (recurringFlight.recurring_type === "weekly") {
         const rule = new RRule({
           freq: RRule.WEEKLY,
@@ -379,14 +406,22 @@ export default function NewFlightModal(props: NewFlightModalProps) {
 
         form.setValue("days", getDays(recurringFlight))
       }
-
-      // activate popup
-      setRecurringSelection(true)
     }
 
     if (mode === "create") form.reset(initialValues)
-    if (data?.recurring_flight_id) form.setValue("selection_flight", "one")
-  }, [data, mode, recurringFlight])
+    //if (data?.recurring_flight_id) form.setValue("selection_flight", "one")
+
+    if (selectedFlights) form.setValue("selection_flight", selectedFlights)
+  }, [data, mode, recurringFlight, selectedFlights])
+
+  useEffect(() => {
+    if (formData?.departure_date) {
+      const { options } = generateRecurringOptions({
+        startAt: new Date(formData?.departure_date),
+      })
+      setRecurrings(options)
+    }
+  }, [formData.departure_date])
 
   const renderSelectionsFlight = () => {
     return (
@@ -578,47 +613,6 @@ export default function NewFlightModal(props: NewFlightModalProps) {
           </form>
         </Form>
       </DialogContent>
-      <AlertDialog
-        open={recurringSelection}
-        onOpenChange={setRecurringSelection}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Edit Recurring Flight</AlertDialogTitle>
-          </AlertDialogHeader>
-          <RadioGroup
-            value={form.watch("selection_flight")}
-            onValueChange={(val) => {
-              form.setValue("selection_flight", val)
-            }}
-            className="space-y-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="one" id="one" />
-              <Label htmlFor="one">This Flight</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="from" id="from" />
-              <Label htmlFor="from">This and following Flights</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="all" id="all" />
-              <Label htmlFor="all">All Flight</Label>
-            </div>
-          </RadioGroup>
-          <AlertDialogFooter>
-            {/* <AlertDialogCancel>Cancel</AlertDialogCancel> */}
-            <AlertDialogAction
-              variant={"button-primary"}
-              onClick={() => {
-                setRecurringSelection(false)
-              }}
-            >
-              Ok
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
       <AlertDialog open={closeWarningOpen} onOpenChange={setCloseWarningOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
