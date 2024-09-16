@@ -1,13 +1,13 @@
 "use client"
 
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Button } from "@components/ui/button"
 import { PointerSensor } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { PopoverTrigger } from "@radix-ui/react-popover"
 import { ArrowDownIcon, ArrowUpIcon, EyeIcon, EyeOffIcon } from "lucide-react"
 
-import { Column } from "@/types/table/columns"
+import { Column, ColumnResponse } from "@/types/table/columns"
 import { useColumns } from "@/lib/hooks/columns"
 import {
   Command,
@@ -35,46 +35,119 @@ interface DataTableViewOptionsProps {
 }
 
 export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
-  const { tableKey, columns, onRefetchData } = useDataTableContext()
+  const { tableKey, columns, setColumns, onRefetchData } = useDataTableContext()
 
   const { useUpdateSingleColumn, useGetColumns, useResetColumns } = useColumns()
 
   const { refetch: refetchColumns, isFetching } = useGetColumns(tableKey)
 
   const { mutateAsync: updateColumn } = useUpdateSingleColumn()
-
   const { mutateAsync: resetColumns } = useResetColumns(tableKey)
 
+  const [localColumns, setLocalColumns] = useState<ColumnResponse>(columns)
+
+  useEffect(() => {
+    setLocalColumns(columns)
+  }, [columns])
+
   const onResetColumns = () => {
-    !isFetching &&
-      resetColumns({ tableName: tableKey }, { onSuccess: () => onRefetch() })
+    if (!isFetching) {
+      resetColumns(
+        { tableName: tableKey },
+        { onSuccess: () => refetchColumns() }
+      )
+    }
   }
 
-  const onRefetch = () => {
-    onRefetchData()
-    refetchColumns()
+  const onHideColumn = async (col: Column) => {
+    const updatedColumns = {
+      ...columns,
+      visible_columns: columns.visible_columns.filter((c) => c.id !== col.id),
+      non_visible_columns: [...columns.non_visible_columns, col],
+    }
+
+    setLocalColumns(updatedColumns)
+
+    try {
+      await updateColumn(
+        { ...col, visible: false },
+        {
+          onSuccess: async () => {
+            await onRefetchData()
+            setColumns(updatedColumns)
+          },
+        }
+      )
+    } catch (error) {
+      columns && setColumns(columns)
+    }
   }
 
-  const onHideColumn = (col: Column) => {
-    updateColumn({ ...col, visible: false }, { onSuccess: () => onRefetch() })
+  const onShowColumn = async (col: Column) => {
+    const updatedColumns = {
+      ...columns,
+      non_visible_columns: columns.non_visible_columns.filter(
+        (c) => c.id !== col.id
+      ),
+      visible_columns: [...columns.visible_columns, col],
+    }
+
+    setLocalColumns(updatedColumns)
+
+    try {
+      await updateColumn(
+        { ...col, visible: true },
+        {
+          onSuccess: async () => {
+            await onRefetchData()
+            setColumns(updatedColumns)
+          },
+        }
+      )
+    } catch (error) {
+      columns && setColumns(columns)
+    }
   }
 
-  const onShowColumn = (col: Column) => {
-    updateColumn({ ...col, visible: true }, { onSuccess: () => onRefetch() })
-  }
-
-  const onHideAllColumn = () => {}
-
-  const onShowAllColumn = () => {}
-
-  const handleMoveHeader = (col: Column, action: "up" | "down") => {
+  const handleMoveHeader = async (col: Column, action: "up" | "down") => {
     const newSortOrder =
       action === "up" ? col.sort_order - 1 : col.sort_order + 1
-    console.log({ name: col.column_name, newSortOrder })
-    updateColumn(
-      { ...col, sort_order: newSortOrder },
-      { onSuccess: () => onRefetch() }
+
+    const updatedVisibleColumns = columns.visible_columns.filter(
+      (c) => c.id !== col.id
     )
+
+    const newIndex = newSortOrder - 1 // Adjust for zero-based index
+    updatedVisibleColumns.splice(newIndex, 0, {
+      ...col,
+      sort_order: newSortOrder,
+    })
+
+    const reorderedColumns = updatedVisibleColumns.map((c, index) => ({
+      ...c,
+      sort_order: index + 1, // Ensure sort_order starts from 1 and is sequential
+    }))
+
+    const updatedColumns = {
+      ...columns,
+      visible_columns: reorderedColumns,
+    }
+
+    setLocalColumns(updatedColumns)
+
+    try {
+      await updateColumn(
+        { ...col, sort_order: newSortOrder },
+        {
+          onSuccess: async () => {
+            await onRefetchData()
+            setColumns(updatedColumns)
+          },
+        }
+      )
+    } catch (error) {
+      columns && setColumns(columns)
+    }
   }
 
   return (
@@ -87,7 +160,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
             <CommandEmpty>No column found.</CommandEmpty>
             <SortableContext
               id={"active"}
-              items={columns?.visible_columns ?? []}
+              items={localColumns.visible_columns}
               strategy={verticalListSortingStrategy}
             >
               <CommandGroup>
@@ -95,7 +168,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                   <span className="text-xs font-medium text-muted-foreground">
                     Active Columns
                   </span>
-                  {props.showHideAll && (
+                  {/* {props.showHideAll && (
                     <Button
                       onClick={onHideAllColumn}
                       variant={"link"}
@@ -103,9 +176,9 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                     >
                       Hide All
                     </Button>
-                  )}
+                  )} */}
                 </div>
-                {columns?.visible_columns.map((column, index) => (
+                {localColumns.visible_columns.map((column, index) => (
                   <CommandItem
                     key={column.id}
                     value={column.column_name}
@@ -173,7 +246,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
             </SortableContext>
             <SortableContext
               id={"hidden"}
-              items={columns?.non_visible_columns ?? []}
+              items={localColumns.non_visible_columns}
               strategy={verticalListSortingStrategy}
             >
               <CommandGroup>
@@ -181,7 +254,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                   <span className="text-xs font-medium text-muted-foreground">
                     Hidden Columns
                   </span>
-                  {props.showShowAll && (
+                  {/* {props.showShowAll && (
                     <Button
                       onClick={onShowAllColumn}
                       variant={"link"}
@@ -189,9 +262,9 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                     >
                       Show All
                     </Button>
-                  )}
+                  )} */}
                 </div>
-                {columns?.non_visible_columns.map((column) => (
+                {localColumns.non_visible_columns.map((column) => (
                   <CommandItem
                     key={column.id}
                     value={column.column_name}
@@ -230,7 +303,6 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
     </Popover>
   )
 }
-
 export class ExtendedPointerSensor extends PointerSensor {
   static activators = [
     {

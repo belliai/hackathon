@@ -9,9 +9,11 @@ export type UseTableStateProps = {
   initialFilters?: FilterData[]
 }
 
+const defaultSort: SortParams = { sort_by: "created_at", sort_dir: "desc" }
+
 export const useTableState = ({
   initialPagination = { page: 1, page_size: 20 }, // default values
-  initialSort,
+  initialSort = defaultSort,
   initialSearch,
   initialFilters = [],
 }: UseTableStateProps) => {
@@ -28,7 +30,7 @@ export const useTableState = ({
     setSort((prevSort) => {
       // If currently sorting by this column in descending order, reset to undefined
       if (prevSort?.sort_by === columnName && prevSort.sort_dir === "desc") {
-        return undefined
+        return initialSort
       }
 
       // If currently sorting by this column, toggle between ascending and descending

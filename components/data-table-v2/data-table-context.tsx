@@ -1,4 +1,12 @@
-import { createContext, PropsWithChildren, useContext } from "react"
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 
 import { ColumnResponse, Table as TableKeys } from "@/types/table/columns"
 import { TableStateHandlers } from "@/lib/hooks/tables/table-state"
@@ -6,10 +14,15 @@ import { TableStateHandlers } from "@/lib/hooks/tables/table-state"
 type DataTableContextType = {
   tableKey: TableKeys
   columns?: ColumnResponse
-  onRefetchData: () => void
+  onRefetchData: () => Promise<any>
 } & TableStateHandlers
 
-const DataTableContext = createContext<DataTableContextType>({
+const DataTableContext = createContext<
+  DataTableContextType & {
+    setColumns: Dispatch<SetStateAction<ColumnResponse>>
+    columns: ColumnResponse
+  }
+>({
   tableKey: "dashboard_flights",
   columns: {
     visible_columns: [],
@@ -17,8 +30,9 @@ const DataTableContext = createContext<DataTableContextType>({
   },
   filters: [],
   sort: undefined,
+  setColumns: () => {},
   onFiltersChange: () => {},
-  onRefetchData: () => {},
+  onRefetchData: () => new Promise(() => {}),
   onPageChange: () => {},
   onPageSizeChange: () => {},
   onSearchChange: () => {},
@@ -28,10 +42,20 @@ const DataTableContext = createContext<DataTableContextType>({
 export function DataTableContextProvider(
   props: DataTableContextType & PropsWithChildren
 ) {
+  const [columns, setColumns] = useState<ColumnResponse>(
+    props.columns ?? { visible_columns: [], non_visible_columns: [] }
+  )
+
+  useEffect(() => {
+    props.columns && setColumns(props.columns)
+  }, [props.columns])
+
   return (
     <DataTableContext.Provider
       value={{
         ...props,
+        columns,
+        setColumns,
       }}
     >
       {props.children}

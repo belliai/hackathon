@@ -37,7 +37,7 @@ export function useColumns() {
         await (
           await (await belli).patch(route, column)
         ).data,
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: [route] }),
+      // onSuccess: () => queryClient.invalidateQueries({ queryKey: [route] }),
     })
   }
 

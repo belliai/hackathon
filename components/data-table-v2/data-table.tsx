@@ -19,7 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table"
-import { DataTableContextProvider } from "./data-table-context"
+import {
+  DataTableContextProvider,
+  useDataTableContext,
+} from "./data-table-context"
 import { DataTablePagination } from "./data-table-pagination"
 import {
   DataTableToolbar,
@@ -30,7 +33,7 @@ export type DataTableProps<T> = {
   tableKey: TableKeys
   data?: APIPaginatedResponse<TableItem<T>>
   isLoading?: boolean
-  onRefetchData: () => void
+  onRefetchData: () => Promise<any>
   onRowClick?: (row: T) => void
   onCellClick?: (row: T, column: Column) => void
   customCellRenderers?: {
@@ -48,15 +51,7 @@ export type DataTableProps<T> = {
 } & TableStateHandlers
 
 export function DataTable<T>(props: DataTableProps<T>) {
-  const {
-    data,
-    tableKey,
-    sort,
-    customCellRenderers,
-    onRowClick,
-    onCellClick,
-    onRefetchData,
-  } = props
+  const { data, tableKey } = props
   const { useGetColumns } = useColumns()
 
   const hoverRef = useRef(null)
@@ -65,6 +60,102 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const { data: columns } = useGetColumns(tableKey)
 
   const rowData = data?.data
+
+  return (
+    <DataTableContextProvider
+      columns={columns}
+      tableKey={tableKey}
+      onRefetchData={props.onRefetchData}
+      sort={props.sort}
+      filters={props.filters}
+      onFiltersChange={props.onFiltersChange}
+      onSearchChange={props.onSearchChange}
+      onPageChange={props.onPageChange}
+      onPageSizeChange={props.onPageSizeChange}
+      onSortToggle={props.onSortToggle}
+    >
+      <div className="group flex flex-col gap-4" ref={hoverRef}>
+        {!props.hideToolbar && (
+          <DataTableToolbar
+            isHover={isHover}
+            isLoading={props.isLoading}
+            extraLeftComponents={props.extraLeftComponents}
+            extraRightComponents={props.extraRightComponents}
+            extraButtons={props.extraToolbarButtons}
+            buttonVariant={props.toolbarButtonVariant}
+          />
+        )}
+        <div className="relative">
+          <Table className="overflow-x-auto">
+            <DataTableHeader />
+            <DataTableBody
+              data={rowData}
+              customCellRenderers={props.customCellRenderers}
+              onCellClick={props.onCellClick}
+              onRowClick={props.onRowClick}
+            />
+          </Table>
+        </div>
+        <DataTablePagination
+          isHover={isHover}
+          currentPage={data?.current_page ?? 1}
+          pageSize={data?.page_size ?? 1}
+          totalPage={data?.total_pages ?? 1}
+          onPageChange={props.onPageChange}
+          onPageSizeChange={props.onPageSizeChange}
+          onExport={props.onExport}
+        />
+      </div>
+    </DataTableContextProvider>
+  )
+}
+
+function DataTableHeader() {
+  const { columns, sort, onSortToggle } = useDataTableContext()
+  const visibleColumns = columns.visible_columns
+
+  return (
+    <TableHeader>
+      <TableRow>
+        {visibleColumns.map((col) => (
+          <TableHead
+            key={col.id}
+            className="cursor-pointer"
+            onClick={() => {
+              onSortToggle(col.real_column_name)
+            }}
+          >
+            <div className="inline-flex w-full items-center justify-between gap-2">
+              {col.column_name}
+              {sort?.sort_by === col.real_column_name && (
+                <>
+                  {sort.sort_dir === "asc" ? (
+                    <ChevronUpIcon className="size-3 text-muted-foreground" />
+                  ) : (
+                    <ChevronDownIcon className="size-3 text-muted-foreground" />
+                  )}
+                </>
+              )}
+            </div>
+          </TableHead>
+        ))}
+      </TableRow>
+    </TableHeader>
+  )
+}
+
+function DataTableBody<T>(props: {
+  data?: TableItem<T>[]
+  onRowClick?: (row: T) => void
+  onCellClick?: (row: T, column: Column) => void
+  customCellRenderers?: {
+    key: string
+    renderer: (data: T, value: string) => ReactNode
+  }[]
+}) {
+  const { data, customCellRenderers, onCellClick, onRowClick } = props
+
+  const { columns } = useDataTableContext()
 
   const visibleColumns = columns?.visible_columns ?? []
 
@@ -89,101 +180,36 @@ export function DataTable<T>(props: DataTableProps<T>) {
   }, [visibleColumns])
 
   return (
-    <DataTableContextProvider
-      columns={columns}
-      tableKey={tableKey}
-      onRefetchData={onRefetchData}
-      sort={props.sort}
-      filters={props.filters}
-      onFiltersChange={props.onFiltersChange}
-      onSearchChange={props.onSearchChange}
-      onPageChange={props.onPageChange}
-      onPageSizeChange={props.onPageSizeChange}
-      onSortToggle={props.onSortToggle}
-    >
-      <div className="group flex flex-col gap-4" ref={hoverRef}>
-        {!props.hideToolbar && (
-          <DataTableToolbar
-            isHover={isHover}
-            isLoading={props.isLoading}
-            extraLeftComponents={props.extraLeftComponents}
-            extraRightComponents={props.extraRightComponents}
-            extraButtons={props.extraToolbarButtons}
-            buttonVariant={props.toolbarButtonVariant}
-          />
-        )}
-        <div className="relative">
-          <Table className="overflow-x-auto">
-            <TableHeader>
-              <TableRow>
-                {visibleColumns.map((col) => (
-                  <TableHead
-                    key={col.id}
-                    className="cursor-pointer"
-                    onClick={() => {
-                      props.onSortToggle(col.real_column_name)
-                    }}
-                  >
-                    <div className="inline-flex w-full items-center justify-between gap-2">
-                      {col.column_name}
-                      {sort?.sort_by === col.real_column_name && (
-                        <>
-                          {sort.sort_dir === "asc" ? (
-                            <ChevronUpIcon className="size-3 text-muted-foreground" />
-                          ) : (
-                            <ChevronDownIcon className="size-3 text-muted-foreground" />
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rowData?.map((row, index) => {
-                return (
-                  <TableRow
-                    key={index}
-                    onClick={() => onRowClick && onRowClick(row.object)}
-                    className={cn(onRowClick && "cursor-pointer")}
-                  >
-                    {row.columns.map((col) => {
-                      const customRenderer = customRendererMap?.[col.key]
-                      return (
-                        <TableCell
-                          onClick={
-                            onCellClick
-                              ? () =>
-                                  onCellClick(row.object, columnsMap[col.key])
-                              : undefined
-                          }
-                          className="whitespace-nowrap"
-                          key={col.key}
-                          style={{ minWidth: 120 }}
-                        >
-                          {customRenderer
-                            ? customRenderer(row.object, col.value)
-                            : col.value}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </div>
-        <DataTablePagination
-          isHover={isHover}
-          currentPage={data?.current_page ?? 1}
-          pageSize={data?.page_size ?? 1}
-          totalPage={data?.total_pages ?? 1}
-          onPageChange={props.onPageChange}
-          onPageSizeChange={props.onPageSizeChange}
-          onExport={props.onExport}
-        />
-      </div>
-    </DataTableContextProvider>
+    <TableBody>
+      {data?.map((row, index) => {
+        return (
+          <TableRow
+            key={index}
+            onClick={() => onRowClick && onRowClick(row.object)}
+            className={cn(onRowClick && "cursor-pointer")}
+          >
+            {row.columns.map((col) => {
+              const customRenderer = customRendererMap?.[col.key]
+              return (
+                <TableCell
+                  onClick={
+                    onCellClick
+                      ? () => onCellClick(row.object, columnsMap[col.key])
+                      : undefined
+                  }
+                  className="whitespace-nowrap"
+                  key={col.key}
+                  style={{ minWidth: 120 }}
+                >
+                  {customRenderer
+                    ? customRenderer(row.object, col.value)
+                    : col.value}
+                </TableCell>
+              )
+            })}
+          </TableRow>
+        )
+      })}
+    </TableBody>
   )
 }
