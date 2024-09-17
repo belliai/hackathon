@@ -294,7 +294,7 @@ function FormDropdownContent<T extends FieldValues>(props: {
       >
         <Card
           className={cn(
-            "flex flex-row items-center justify-start gap-4 rounded-md bg-zinc-900/50 p-4 px-3 py-1.5 shadow-md",
+            "flex flex-row items-center justify-start gap-4 rounded-md dark:bg-zinc-900/50 p-4 px-3 py-1.5 shadow-md",
             props.className
           )}
         >

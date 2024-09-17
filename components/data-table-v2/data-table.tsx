@@ -115,7 +115,7 @@ function DataTableHeader() {
   const visibleColumns = columns.visible_columns
 
   return (
-    <TableHeader>
+    <TableHeader className="bg-zinc-100 dark:bg-transparent">
       <TableRow>
         {visibleColumns.map((col) => (
           <TableHead
@@ -197,7 +197,7 @@ function DataTableBody<T>(props: {
                       ? () => onCellClick(row.object, columnsMap[col.key])
                       : undefined
                   }
-                  className="whitespace-nowrap"
+                  className="whitespace-nowrap text-black dark:text-muted-foreground"
                   key={col.key}
                   style={{ minWidth: 120 }}
                 >

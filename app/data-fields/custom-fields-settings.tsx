@@ -239,7 +239,7 @@ export default function CustomFieldsSettings({
           return (
             <AccordionItem
               value={fieldGroup.id}
-              className="rounded-sm border bg-zinc-900/50"
+              className="rounded-sm border dark:bg-zinc-900/50"
               key={fieldGroup.id}
             >
               <Form {...fieldGroupForm}>

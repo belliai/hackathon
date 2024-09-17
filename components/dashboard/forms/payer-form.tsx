@@ -57,9 +57,9 @@ const PayerForm = React.forwardRef<HTMLDivElement, any>(
           name="total"
           render={({ field }) => (
             <FormItem className="">
-              <FormLabel info="Total">Total Amount</FormLabel>
+              <FormLabel info="Total" className="font-semibold">Total Amount</FormLabel>
               <FormControl>
-                <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
+                <Input {...field} className="dark:border-2 dark:border-foreground/30 h-[40px]" />
               </FormControl>
               <FormMessage />
             </FormItem>

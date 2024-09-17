@@ -4,6 +4,7 @@ import { useState } from "react"
 import * as changeCase from "change-case"
 import { Loader } from "lucide-react"
 import moment from "moment"
+import { useTheme } from "next-themes"
 import { useForm } from "react-hook-form"
 import { useReadLocalStorage } from "usehooks-ts"
 
@@ -14,6 +15,7 @@ import {
   useFlightStatuses,
   usePartialUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
+import { cn } from "@/lib/utils"
 import { useGetOrganizationSettings } from "@/lib/hooks/settings/organization"
 import { useTableState } from "@/lib/hooks/tables/table-state"
 import { Input } from "@/components/ui/input"
@@ -301,6 +303,8 @@ function ActualInformation({
   displayOption: DisplayOption
   unit?: string
 }) {
+  const { resolvedTheme } = useTheme()
+
   switch (displayOption) {
     case "numbers":
       return (
@@ -346,12 +350,23 @@ function ActualInformation({
           ? 0.1 // Set minimum alpha to 0.1
           : backgroundAlphaDecimal
 
+      const threshold = 0.5
+      const isMoreThanThreshold = backgroundAlphaDecimal > threshold
+      const lightModeTextColor = `rgba(251, 87, 39, ${backgroundAlpha + 0.8})`
+
       return (
         <div className="flex w-fit shrink-0 items-center gap-2">
           <span
-            className="w-14 whitespace-nowrap rounded-sm bg-button-primary px-1 text-center text-sm text-white"
+            className={cn(
+              "w-14 whitespace-nowrap rounded-sm border bg-button-primary px-1 text-center text-sm text-zinc-500 dark:border-0 dark:text-white"
+            )}
             style={{
               backgroundColor: `rgba(251, 87, 39, ${backgroundAlpha})`,
+              borderColor: lightModeTextColor,
+              color:
+                isMoreThanThreshold || resolvedTheme === "dark"
+                  ? "#FFFF"
+                  : lightModeTextColor,
             }}
           >
             {percentage2}%
