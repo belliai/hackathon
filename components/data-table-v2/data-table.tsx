@@ -29,20 +29,21 @@ import {
   DataTableToolbarProps,
 } from "./toolbar/data-table-toolbar"
 
+// Update the Column type to include the sticky property
+type ColumnWithSticky = Column & { sticky?: boolean };
+
 export type DataTableProps<T> = {
   tableKey: TableKeys
   data?: APIPaginatedResponse<TableItem<T>>
   isLoading?: boolean
   onRefetchData: () => Promise<any>
   onRowClick?: (row: T) => void
-  onCellClick?: (row: T, column: Column) => void
+  onCellClick?: (row: T, column: ColumnWithSticky) => void
   customCellRenderers?: {
     key: string
     renderer: (data: T, value: string) => ReactNode
   }[]
-  //props for pagination
   onExport?: () => void
-  // props for toolbar
   hideToolbar?: boolean
   extraLeftComponents?: React.ReactNode
   extraRightComponents?: React.ReactNode
@@ -57,13 +58,35 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const hoverRef = useRef(null)
   const isHover = useHover(hoverRef)
 
-  const { data: columns } = useGetColumns(tableKey)
+  const { data: columnsData } = useGetColumns(tableKey)
+
+  // Add sticky property to columns and rearrange them
+  const columns = useMemo(() => {
+    if (!columnsData) return null;
+
+    const columnsWithSticky = columnsData.visible_columns.map((col, index) => ({
+      ...col,
+      sticky: tableKey === 'dashboard_flights' && index === Math.floor(Math.random() * (7 - 1 + 1)) + 1 // Randomize number between 1 to 7
+    }));
+    console.log(columnsWithSticky.filter(col => col.sticky))
+    // Separate sticky and non-sticky columns
+    const stickyColumns = columnsWithSticky.filter(col => col.sticky);
+    const nonStickyColumns = columnsWithSticky.filter(col => !col.sticky);
+
+    // Combine sticky columns (now on the left) with non-sticky columns
+    const rearrangedColumns = [...stickyColumns, ...nonStickyColumns];
+
+    return {
+      ...columnsData,
+      visible_columns: rearrangedColumns
+    };
+  }, [columnsData, tableKey]);
 
   const rowData = data?.data
 
   return (
     <DataTableContextProvider
-      columns={columns}
+      columns={columns ?? undefined}
       tableKey={tableKey}
       onRefetchData={props.onRefetchData}
       sort={props.sort}
@@ -85,8 +108,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
             buttonVariant={props.toolbarButtonVariant}
           />
         )}
-        <div className="relative">
-          <Table className="overflow-x-auto">
+        <div className="relative overflow-x-auto">
+          <Table>
             <DataTableHeader />
             <DataTableBody
               data={rowData}
@@ -112,15 +135,22 @@ export function DataTable<T>(props: DataTableProps<T>) {
 
 function DataTableHeader() {
   const { columns, sort, onSortToggle } = useDataTableContext()
-  const visibleColumns = columns.visible_columns
+  const visibleColumns = columns.visible_columns as ColumnWithSticky[]
 
   return (
     <TableHeader>
       <TableRow>
-        {visibleColumns.map((col) => (
+        {visibleColumns.map((col, idx) => (
           <TableHead
             key={col.id}
-            className="cursor-pointer"
+            className={cn(
+              "cursor-pointer",
+              col.sticky && "sticky z-10 bg-background"
+            )}
+            style={{ 
+              left: col.sticky ? `${idx * 120}px` : undefined,
+              zIndex: col.sticky ? 20 : undefined 
+            }}
             onClick={() => {
               onSortToggle(col.real_column_name)
             }}
@@ -147,7 +177,7 @@ function DataTableHeader() {
 function DataTableBody<T>(props: {
   data?: TableItem<T>[]
   onRowClick?: (row: T) => void
-  onCellClick?: (row: T, column: Column) => void
+  onCellClick?: (row: T, column: ColumnWithSticky) => void
   customCellRenderers?: {
     key: string
     renderer: (data: T, value: string) => ReactNode
@@ -157,7 +187,7 @@ function DataTableBody<T>(props: {
 
   const { columns } = useDataTableContext()
 
-  const visibleColumns = columns?.visible_columns ?? []
+  const visibleColumns = columns?.visible_columns as ColumnWithSticky[] ?? []
 
   const customRendererMap = useMemo(() => {
     return customCellRenderers?.reduce(
@@ -175,7 +205,7 @@ function DataTableBody<T>(props: {
         acc[col.real_column_name] = col
         return acc
       },
-      {} as Record<string, Column>
+      {} as Record<string, ColumnWithSticky>
     )
   }, [visibleColumns])
 
@@ -188,22 +218,30 @@ function DataTableBody<T>(props: {
             onClick={() => onRowClick && onRowClick(row.object)}
             className={cn(onRowClick && "cursor-pointer")}
           >
-            {row.columns.map((col) => {
-              const customRenderer = customRendererMap?.[col.key]
+            {visibleColumns.map((col, idx) => {
+              const cellData = row.columns.find(c => c.key === col.real_column_name)
+              const customRenderer = customRendererMap?.[col.real_column_name]
               return (
                 <TableCell
                   onClick={
                     onCellClick
-                      ? () => onCellClick(row.object, columnsMap[col.key])
+                      ? () => onCellClick(row.object, col)
                       : undefined
                   }
-                  className="whitespace-nowrap"
-                  key={col.key}
-                  style={{ minWidth: 120 }}
+                  className={cn(
+                    "whitespace-nowrap",
+                    col.sticky && "sticky z-10 bg-background"
+                  )}
+                  style={{ 
+                    minWidth: 120,
+                    left: col.sticky ? `${idx * 120}px` : undefined,
+                    zIndex: col.sticky ? 20 : undefined
+                  }}
+                  key={col.id}
                 >
                   {customRenderer
-                    ? customRenderer(row.object, col.value)
-                    : col.value}
+                    ? customRenderer(row.object, cellData?.value ?? '')
+                    : cellData?.value}
                 </TableCell>
               )
             })}

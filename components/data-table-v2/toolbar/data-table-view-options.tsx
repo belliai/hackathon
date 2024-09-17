@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button"
 import { PointerSensor } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { PopoverTrigger } from "@radix-ui/react-popover"
-import { ArrowDownIcon, ArrowUpIcon, EyeIcon, EyeOffIcon } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, EyeIcon, EyeOffIcon, PanelLeftClose } from "lucide-react"
 
 import { Column, ColumnResponse } from "@/types/table/columns"
 import { useColumns } from "@/lib/hooks/columns"
@@ -230,16 +230,52 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
 
                       {column.column_name}
                     </div>
-                    <button
-                      data-no-dnd="true"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        onHideColumn(column)
-                      }}
-                    >
-                      <EyeIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
-                    </button>
+                    <div className="flex gap-1">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            data-no-dnd="true"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              onHideColumn(column)
+                            }}
+                          >
+                            <PanelLeftClose className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          className="border bg-card text-foreground"
+                          side="bottom"
+                          align="end"
+                        >
+                          Freeze Column
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            data-no-dnd="true"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              onHideColumn(column)
+                            }}
+                          >
+                            <EyeIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          className="border bg-card text-foreground"
+                          side="bottom"
+                          align="end"
+                        >
+                          Hide Column
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -274,16 +310,27 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                       <div className="size-4" />
                       {column.column_name}
                     </div>
-                    <button
-                      data-no-dnd="true"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        onShowColumn(column)
-                      }}
-                    >
-                      <EyeOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
-                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          data-no-dnd="true"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            onShowColumn(column)
+                          }}
+                        >
+                          <EyeOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="border bg-card text-foreground"
+                        side="bottom"
+                        align="end"
+                      >
+                        Show Column
+                      </TooltipContent>
+                    </Tooltip>
                   </CommandItem>
                 ))}
                 <div className="px-2 py-1">

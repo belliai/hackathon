@@ -13,6 +13,7 @@ export type Column = {
   real_column_name: string
   sort_order: number
   visible: boolean
+  sticky?: boolean
 }
 
 export type ColumnResponse = {
