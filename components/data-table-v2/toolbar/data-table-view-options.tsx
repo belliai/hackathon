@@ -54,7 +54,10 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
     if (!isFetching) {
       resetColumns(
         { tableName: tableKey },
-        { onSuccess: () => refetchColumns() }
+        {
+          onSuccess: async () =>
+            await Promise.all([refetchColumns(), onRefetchData()]),
+        }
       )
     }
   }
@@ -63,7 +66,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
     const updatedColumns = {
       ...columns,
       visible_columns: columns.visible_columns.filter((c) => c.id !== col.id),
-      non_visible_columns: [...columns.non_visible_columns, col],
+      non_visible_columns: [col, ...columns.non_visible_columns],
     }
 
     setLocalColumns(updatedColumns)
@@ -89,7 +92,9 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
       non_visible_columns: columns.non_visible_columns.filter(
         (c) => c.id !== col.id
       ),
-      visible_columns: [...columns.visible_columns, col],
+      visible_columns: [...columns.visible_columns, col].sort(
+        (a, b) => a.sort_order - b.sort_order
+      ),
     }
 
     setLocalColumns(updatedColumns)
@@ -271,7 +276,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                     className="flex flex-row items-center justify-between"
                   >
                     <div className="flex flex-row items-center gap-2">
-                      <div className="size-4" />
+                      <div className="size-3" />
                       {column.column_name}
                     </div>
                     <button
