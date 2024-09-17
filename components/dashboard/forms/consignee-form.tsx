@@ -7,6 +7,7 @@ import { Combobox } from "@/components/form/combobox"
 import { PhoneInput } from "@/components/ui/phone-input"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useFormContext } from "react-hook-form"
+import PhoneInputV2 from "@/components/ui/phone-input-v2"
 
 const emailOptions = [
   { label: "john.doe@example.com", value: "john.doe@example.com" },
@@ -62,7 +63,7 @@ const ConsigneeForm = React.forwardRef<HTMLDivElement, any>(
               <FormItem className="">
                 <FormLabel info="Total" className="font-semibold">Phone Number</FormLabel>
                 <FormControl>
-                  <PhoneInput {...field} className="rounded-lg dark:border-2 dark:border-foreground/30 h-[40px]" international />
+                  <PhoneInputV2 {...field} className="rounded-lg dark:border-2 dark:border-foreground/30 h-[40px]" international />
                 </FormControl>
                 <FormMessage />
               </FormItem>

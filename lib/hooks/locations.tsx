@@ -1,6 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
+import { Location } from "@/types/flight-master/flight-master"
 import { useBelliApi } from "@/lib/utils/network"
 
 const route = "locations"
@@ -86,5 +92,41 @@ export const useRemoveLocation = () => {
     onError: (e) => {
       console.log(e)
     },
+  })
+}
+
+export const fetchLocationList = async (
+  belliApi: AxiosInstance,
+  params: PaginationParams
+) => {
+  const _route = route + "/list"
+  const { data } = await belliApi.get<APIPaginatedResponse<Location>>(
+    `/${_route}`,
+    { params }
+  )
+  return data
+}
+
+export const useLocationList = (params: PaginationParams) => {
+  const _route = route + "/list"
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, params],
+    queryFn: async () => await fetchLocationList(await belliApi, params),
+    placeholderData: keepPreviousData,
+  })
+}
+
+export const useLocationSearch = ({ searchTerm }: { searchTerm: string }) => {
+  const _route = route + "/search"
+
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, searchTerm],
+    queryFn: async () => {
+      if (!searchTerm) return
+      return (await belliApi).get<Location[]>(`${_route}/${searchTerm}`)
+    },
+    placeholderData: keepPreviousData,
   })
 }

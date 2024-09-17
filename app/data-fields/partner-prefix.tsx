@@ -1,81 +1,71 @@
-import {
-  useAddPartnerPrefix,
-  usePartnerPrefixes,
-  useRemovePartnerPrefix,
-  useUpdatePartnerPrefix,
-} from "@/lib/hooks/partner-prefix"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { EyeIcon } from "lucide-react"
 
-import CrudTable from "./components/crud-table"
+import { fetchPartnerPrefixList } from "@/lib/hooks/partner-prefix"
+import { useBelliApi } from "@/lib/utils/network"
 
-const PartnerPrefix = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const { isLoading, isPending, error, data } = usePartnerPrefixes()
-  const update = useUpdatePartnerPrefix()
-  const add = useAddPartnerPrefix()
-  const remove = useRemovePartnerPrefix()
+import CrudTiledView from "./components/crud-tiled-view"
 
-  if (error) return "An error has occurred: " + error.message
+const PartnerPrefix = () => {
+  const belliApi = useBelliApi()
 
-  const partnerPrefixesOptions = data?.map((prefix: any) => ({
-    value: prefix.ID,
-    label: prefix.name,
-  }))
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ["partner-prefixes/list"],
+    queryFn: async ({ pageParam }) => {
+      console.log({ pageParam })
+
+      return fetchPartnerPrefixList(await belliApi, {
+        page: pageParam,
+        page_size: 50,
+      })
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.current_page + 1
+      if (nextPage > lastPage.total_pages) return undefined
+      return nextPage
+    },
+  })
 
   return (
-    <CrudTable
-      isLoading={isPending}
-      title="Airline AWB Prefix"
-      columns={[
-        { accessorKey: "option", header: 'Name' },
-        { accessorKey: "visibility", header: 'Visibility' },
-        { accessorKey: "is_default", header: 'Default' }
-      ]}
-      form={[
-        { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "Airline AWB Prefix" },
-        {
-          name: "visibility",
-          type: "select",
-          label: "Visibility",
-          selectOptions: [
-            { label: "Visible", value: "Visible" },
-            { label: "Hidden", value: "Hidden" },
-          ],
-        },
-        {
-          name: "is_default",
-          type: "select",
-          label: "Default",
-          selectOptions: [
-            { label: "Yes", value: "Yes" },
-            { label: "No", value: "No" },
-          ],
-        },
-      ]}
-      data={data?.map((item: any) => ({
-        option: item.name,
-        id: item.ID,
-        visibility: 'Visible',
-        is_default: 'No',
-      }))}
-      onSave={(data) => {
-        // configure logic for add or edit, for edit the id will be zero
-        const { id, option } = data
-        if (id) {
-          update.mutate({ id, name: option })
-        } else {
-          add.mutate({ name: option })
-        }
-      }}
-      onDelete={(data) => {
-        // configure logic for delete
-        if (data.id) {
-          remove.mutate({ id: data.id })
-        }
-      }}
-      searchOptions={partnerPrefixesOptions}
-      canSearch
-      tabComponent={tabComponent}
+    <CrudTiledView
+      height={500}
+      title="Partner Prefix"
+      rowRenderer={(item) => (
+        <div className="inline-flex w-full grid-cols-3 items-center justify-between">
+          <span className="tabular-nums">{item.name}</span>
+          <EyeIcon className="size-4 text-muted-foreground" />
+        </div>
+      )}
+      identifier="id"
+      disableCrud={true}
+      onEndReached={() => !isFetchingNextPage && fetchNextPage()}
+      data={data?.pages.flatMap((page) => page.data) ?? []}
     />
+    // <DataTable
+    //   columns={[
+    //     { accessorKey: "name", header: "Name" },
+    //     {
+    //       accessorKey: "visibility",
+    //       header: "Visibility",
+    //       accessorFn: () => "Visible",
+    //     },
+    //     {
+    //       accessorKey: "is_default",
+    //       header: "Default",
+    //       accessorFn: () => "No",
+    //     },
+    //   ]}
+    //   tableState={({ pagination }) => {
+    //     setPaginationState({
+    //       page: pagination ? pagination.pageIndex + 1 : 1,
+    //       page_size: pagination?.pageSize ?? 20,
+    //     })
+    //   }}
+    //   data={partnerPrefixes?.data ?? []}
+    //   manualPagination
+    //   pageCount={partnerPrefixes?.total_pages}
+    // />
   )
 }
 export default PartnerPrefix

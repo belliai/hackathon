@@ -1,7 +1,7 @@
 "use client"
 
 import { info } from "console"
-import { Ref, useEffect, useState } from "react"
+import { Ref, useCallback, useEffect, useState } from "react"
 import { Button, ButtonProps } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Cross2Icon } from "@radix-ui/react-icons"
@@ -22,12 +22,14 @@ import { cn } from "@/lib/utils"
 
 import { Separator } from "../ui/separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import { DataTableFilterInline } from "./data-table-filter-inline"
+import { DataTableFilterOptions } from "./data-table-filter-options"
 import {
   ColumnsByVisibility,
   DataTableViewOptions,
 } from "./data-table-view-options"
-import { DataTableFilterInline } from "./data-table-filter-inline"
 import { DataTableViewOptionsV2 } from "./data-table-view-options-v2"
+import { FilterData } from "./types"
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -64,6 +66,12 @@ export function DataTableToolbar<TData>({
   const [isLockedView, setIsLockedView] = useState(false)
   const [isGlobalFiltered, setIsGlobalFiltered] = useState(false)
   const [isCustomVisibility, setIsCustomVisibility] = useState(false)
+
+  const [rules, setRules] = useState<FilterData[]>([])
+  const filterRules = useCallback((filters: FilterData[]) => {
+    console.log(filters)
+    setRules(filters)
+  }, [])
 
   const getPageFilters = () => {
     if (typeof localStorage === "undefined") return []
@@ -147,25 +155,27 @@ export function DataTableToolbar<TData>({
             )}
           >
             <Tooltip delayDuration={100}>
-              {/* <DataTableFilterOptions
+              <DataTableFilterOptions
                 onOpenChange={setFilterOpen}
                 table={table}
                 isLocked={isLockedView}
                 lockedPageFilters={lockedPageFilters}
-              > */}
+                filterRules={filterRules}
+                rules={rules}
+              >
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={()=>setFilterOpen(!filterOpen)}
+                    onClick={() => setFilterOpen(!filterOpen)}
                     size={"icon"}
                     variant={"outline"}
                     className={"h-8 w-8"}
                   >
                     <ListFilterIcon
-                      className={`h-4 w-4 ${isFilterActive ? "text-button-primary" : ""}`}
+                      className={`h-4 w-4 ${rules.length > 0 ? "text-button-primary" : ""}`}
                     />
                   </Button>
                 </TooltipTrigger>
-              {/* </DataTableFilterOptions> */}
+              </DataTableFilterOptions>
               <TooltipContent
                 side="top"
                 className="border bg-background text-foreground"
@@ -266,16 +276,19 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="w-full px-2">
         {/* <Separator className="my-2" /> */}
-        {filterOpen &&  <div>
-          <DataTableFilterInline 
-            onOpenChange={setFilterOpen}
-            table={table}
-            isLocked={isLockedView}
-            lockedPageFilters={lockedPageFilters} 
-          />
-         </div>
-         }
-      </div> 
+        {rules.length > 0 && (
+          <div>
+            <DataTableFilterInline
+              onOpenChange={setFilterOpen}
+              table={table}
+              isLocked={isLockedView}
+              lockedPageFilters={lockedPageFilters}
+              rules={rules}
+              onRulesChange={setRules}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

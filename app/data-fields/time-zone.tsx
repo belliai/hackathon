@@ -1,90 +1,34 @@
-import { useCallback, useMemo, useState } from "react"
-import { PaginationState } from "@tanstack/react-table"
+import { useState } from "react"
 
-import {
-  useAddTimeZone,
-  useRemoveTimeZone,
-  useTimeZones,
-  useUpdateTimeZone,
-} from "@/lib/hooks/time-zones"
+import { useTimeZones } from "@/lib/hooks/time-zones"
+import { DataTable } from "@/components/data-table/data-table"
 
-import CrudTable from "./components/crud-table"
-
-const TimeZone = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
+const TimeZone = () => {
+  const [paginationState, setPaginationState] = useState({
+    page: 1,
+    page_size: 20,
   })
 
-  const paginationDetails = useMemo(
-    () => ({
-      page: pagination.pageIndex === 0 ? 1 : pagination.pageIndex + 1,
-      page_size: pagination.pageSize,
-    }),
-    [pagination]
-  )
-
-  const tableState = useCallback(async ({ pagination }: any) => {
-    setPagination(pagination)
-  }, [])
-
-  const { isLoading, isPending, error, data } = useTimeZones({
-    ...paginationDetails,
-  })
-  const update = useUpdateTimeZone()
-  const add = useAddTimeZone()
-  const remove = useRemoveTimeZone()
+  const { error, data } = useTimeZones(paginationState)
 
   if (error) return "An error has occurred: " + error.message
 
-  const tableProps = {
-    pageCount:  data?.total_pages,
-    manualPagination: true,
-    tableState,
-    hidePagination: false
-  }
-
   return (
-    <CrudTable
-      {...tableProps}
-      isLoading={isLoading || isPending}
-      title="Time Zone"
+    <DataTable
       columns={[
-        { accessorKey: "option", header: "Name" },
+        { accessorKey: "name", header: "Name" },
         { accessorKey: "abbreviation", header: "Abbreviation" },
         { accessorKey: "offset", header: "Offset" },
       ]}
-      form={[
-        { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "Time Zone" },
-        { name: "abbreviation", type: "text", label: "Abbreviation" },
-        { name: "offset", type: "text", label: "Abbreviation" },
-      ]}
-      data={
-        data &&
-        data.data?.map((item: any) => ({
-          option: item.name,
-          id: item.ID,
-          abbreviation: item.abbreviation,
-          offset: item.offset,
-        }))
-      }
-      onSave={(data) => {
-        // configure logic for add or edit, for edit the id will be zero
-        const { id, option } = data
-        if (id) {
-          update.mutate({ id, name: option })
-        } else {
-          add.mutate({ name: option })
-        }
+      tableState={({ pagination }) => {
+        setPaginationState({
+          page: pagination ? pagination.pageIndex + 1 : 1,
+          page_size: pagination?.pageSize ?? 20,
+        })
       }}
-      onDelete={(data) => {
-        // configure logic for delete
-        if (data.id) {
-          remove.mutate({ id: data.id })
-        }
-      }}
-      tabComponent={tabComponent}
+      data={data?.data ?? []}
+      manualPagination
+      pageCount={data?.total_pages}
     />
   )
 }

@@ -1,12 +1,16 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 
+import { Location } from "@/types/flight-master/flight-master"
 import { useBookingTypes } from "@/lib/hooks/booking-types"
+import { useCommodityCodes } from "@/lib/hooks/commodity-codes"
+import { useLocations, useLocationSearch } from "@/lib/hooks/locations"
 import { useOrders } from "@/lib/hooks/orders"
 import { usePartnerCodes } from "@/lib/hooks/partner-codes"
 import { usePartnerPrefixes } from "@/lib/hooks/partner-prefix"
+import { ObjectSet } from "@/lib/utils/array-utils"
 import { Card } from "@/components/ui/card"
 import {
   FormControl,
@@ -16,9 +20,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Combobox } from "@/components/form/combobox"
-import { useCommodityCodes } from "@/lib/hooks/commodity-codes"
-import { useLocations } from "@/lib/hooks/locations"
+import { Combobox, ComboboxOption } from "@/components/form/combobox"
+import AsyncSearchComboBox from "@/components/form/combobox-async"
 
 const generateAWBNumbers = (start: number, length: number) => {
   return Array.from({ length }, (_, i) => {
@@ -30,7 +33,14 @@ const generateAWBNumbers = (start: number, length: number) => {
   })
 }
 
-const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
+interface BookingDetailsFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  initialLocations?: Location[]
+}
+
+const BookingDetailsForm = React.forwardRef<
+  HTMLDivElement,
+  BookingDetailsFormProps
+>(({ initialLocations }, ref) => {
   const form = useFormContext()
   const awb = generateAWBNumbers(7752000270, 20)
   const formValues = form.watch()
@@ -41,8 +51,53 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const { data: commodityCodes } = useCommodityCodes()
   const { data: locations } = useLocations()
   const { data: ordersData } = useOrders({
-    pagination: { pageIndex: 0, pageSize: 20 },
+    page: 1,
+    page_size: 99,
   })
+
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const [allLocations, setAllLocations] = useState<Location[]>(
+    initialLocations ?? []
+  )
+
+  const { data: locationsSearch } = useLocationSearch({ searchTerm })
+
+  useEffect(() => {
+    if (!locationsSearch?.data) return
+
+    const objectSet = new ObjectSet<Location>("ID")
+    setAllLocations((prev) => {
+      objectSet.addAll([...prev, ...locationsSearch.data])
+      return objectSet.getItems()
+    })
+  }, [locationsSearch])
+
+  const formattedLocation: ComboboxOption[] = useMemo(() => {
+    return (
+      allLocations.map((location) => {
+        const timezone = location.timezone
+        const cityName = timezone ? timezone.name.split(" - ").pop() : ""
+
+        const label = timezone ? (
+          <p>
+            {location.airport_code}{" "}
+            <span className="text-xs text-zinc-500">
+              (GMT {timezone.offset}, {cityName})
+            </span>
+          </p>
+        ) : (
+          location.airport_code
+        )
+
+        return {
+          component: label,
+          label: location.name,
+          value: location.ID,
+        }
+      }) || []
+    )
+  }, [allLocations])
 
   const partnerPrefixesOptions = partnerPrefixes?.map((prefix: any) => ({
     value: prefix.ID,
@@ -65,7 +120,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const commodityCodeOptions = commodityCodes?.map((code: any) => ({
     value: code.ID,
     label: `${code.name}: ${code.description}`,
-  }));
+  }))
 
   const selectedBookingType = bookingTypeOptions.find(
     (bookingType) => bookingType.value === formValues.booking_type_id
@@ -79,6 +134,7 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   const awbList =
     selectedBookingType?.label.toLowerCase() === "hawb"
       ? ordersData?.data
+          .flatMap((item) => item.object)
           .filter(
             (order: any) => order.booking_type?.name.toLowerCase() === "mawb"
           )
@@ -102,9 +158,17 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
   useEffect(() => {}, [form.formState])
 
   return (
-    <Card className="flex flex-col gap-3 p-4 animate-fade-left" ref={ref}>
+    <Card className="flex animate-fade-left flex-col gap-3 p-4" ref={ref}>
       <div className="grid grid-cols-3 gap-3">
-        {!(bookingTypeOptions.length === 2 && (bookingTypeOptions.some(option => option.label.toLowerCase() === "hawb") || bookingTypeOptions.some(option => option.label.toLowerCase() === "mawb"))) && (
+        {!(
+          bookingTypeOptions.length === 2 &&
+          (bookingTypeOptions.some(
+            (option) => option.label.toLowerCase() === "hawb"
+          ) ||
+            bookingTypeOptions.some(
+              (option) => option.label.toLowerCase() === "mawb"
+            ))
+        ) && (
           <Combobox
             name="booking_type_id"
             options={bookingTypeOptions}
@@ -164,19 +228,23 @@ const BookingDetailsForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           additionalColumn={["description"]}
           tooltipId="description"
         />
-        <Combobox
+        <AsyncSearchComboBox
           name="origin_id"
-          options={locationsOptions}
+          options={formattedLocation}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="Search origin by airport code"
           label="Origin"
           info="Select the origin location"
-          editLink="/data-fields/airway-bills?tab=location"
         />
-        <Combobox
+        <AsyncSearchComboBox
           name="destination_id"
-          options={locationsOptions}
+          options={formattedLocation}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="Search origin by airport code"
           label="Destination"
-          info="Select the Destination location"
-          editLink="/data-fields/airway-bills?tab=location"
+          info="Select the origin location"
         />
       </div>
     </Card>

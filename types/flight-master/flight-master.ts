@@ -14,16 +14,20 @@ interface UOMType extends IDNameType {
   symbol: string
 }
 
-interface Timezone {
+export interface Timezone {
   id: string
   abbreviation: string
   name: string
   offset: string
 }
 
-interface Location {
+export interface Location {
   id: string
+  ID: string
   name: string
+  airport_code: string
+  city: string
+  country: string
   timezone: Timezone
 }
 
@@ -55,6 +59,15 @@ export interface Flight {
   recurring_every?: number
   end_after_occurrences?: number
   end_date?: string
+  specification: Specification
+  status: FlightStatus
+}
+
+export type UpdateFlightPayload = Partial<CreateFlightMasterPayload>
+
+export interface FlightStatus {
+  id: string
+  status: string
 }
 
 export interface CreateFlightMasterPayload {
@@ -70,7 +83,7 @@ export interface CreateFlightMasterPayload {
   flight_duration_minute: number
   tail_id?: string
   recurring?: string
-
+  status_id?: string
 }
 
 export interface RecurringPayload {
@@ -89,9 +102,8 @@ export interface RecurringPayload {
   days?: string[]
 }
 
-export type FlightMasterWithRecurring = CreateFlightMasterPayload & RecurringPayload;
-
-
+export type FlightMasterWithRecurring = CreateFlightMasterPayload &
+  RecurringPayload
 
 export interface CreateRecurringFlightMasterPayload {
   aircraft_id: string
@@ -105,4 +117,30 @@ export interface CreateRecurringFlightMasterPayload {
   arrival_m: number
   departure_h: number
   departure_m: number
+}
+
+export interface Specification {
+  gl_code: string
+  mtow: number
+  max_zero_fuel_weight: number
+  passenger_capacity: number
+  uld_position: number
+  landing_weight: number
+  cargo_capacity: number
+  max_bulk_capacity_weight: number
+  max_bulk_capacity_volume: number
+  max_volume: number
+  restricted_weight_piece: number
+  max_dimension_length: number
+  max_dimension_breadth: number
+  max_dimension_height: number
+  aft_h: number
+  aft_w: number
+  fwd_h: number
+  fwd_w: number
+  bulk_h: number
+  bulk_w: number
+  fwt: number
+  fwd: number
+  bulk: number
 }

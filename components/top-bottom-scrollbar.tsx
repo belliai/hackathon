@@ -18,20 +18,20 @@ export default function TopBottomScrollBars({ children }: PropsWithChildren) {
     <div className="w-full">
       <div
         ref={wrapRef1}
-        className="custom-scrollbar h-[20px] w-full overflow-hidden overflow-y-hidden border-0 group-hover:overflow-x-scroll "
+        className="custom-scrollbar h-1.5 w-full overflow-hidden overflow-y-hidden border-0 group-hover:overflow-x-scroll"
         onScroll={handleScroll}
       >
         <div
           id="div1"
-          className="h-[20px]"
+          className="h-1.5"
           style={{ width: wrapRef2.current?.scrollWidth }}
         ></div>
       </div>
 
       <div
         ref={wrapRef2}
-        // pb is added when scrollbar is hidden to prevent content from shifting 
-        className="custom-scrollbar w-full overflow-hidden overflow-y-hidden border-0 pb-2 group-hover:pb-0 group-hover:overflow-x-scroll"
+        // pb is added when scrollbar is hidden to prevent content from shifting
+        className="custom-scrollbar w-full overflow-hidden overflow-y-hidden border-0 pb-1.5 group-hover:overflow-x-scroll group-hover:pb-0"
         onScroll={handleScroll}
       >
         {children}

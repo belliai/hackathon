@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 import momentTZ from "moment-timezone"
 
@@ -6,14 +11,28 @@ import { useBelliApi } from "@/lib/utils/network"
 
 const route = "timezones"
 
-
 type FilterTimezone = {
   page: number
   page_size: number
 }
 
-export const fetchTimeZones = async (belliApi: AxiosInstance, params? : FilterTimezone) => {
-  const { data } = await belliApi.get(`/${route}`, { params })
+type TimezoneInfo = {
+  ID: string
+  created_at: string
+  updated_at: string
+  name: string
+  offset: string
+  abbreviation: string
+}
+
+export const fetchTimeZones = async (
+  belliApi: AxiosInstance,
+  params?: FilterTimezone
+) => {
+  const { data } = await belliApi.get<APIPaginatedResponse<TimezoneInfo>>(
+    `/${route}`,
+    { params }
+  )
   return data
 }
 
@@ -48,12 +67,12 @@ export const removeTimeZone = async (
   return resp
 }
 
-
 export const useTimeZones = (params?: FilterTimezone) => {
   const belliApi = useBelliApi()
   return useQuery({
     queryKey: [route, params],
     queryFn: async () => await fetchTimeZones(await belliApi, params),
+    placeholderData: keepPreviousData,
   })
 }
 

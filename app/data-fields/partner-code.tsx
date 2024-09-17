@@ -1,82 +1,51 @@
-import {
-  useAddPartnerCode,
-  usePartnerCodes,
-  useRemovePartnerCode,
-  useUpdatePartnerCode,
-} from "@/lib/hooks/partner-codes"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { EyeIcon } from "lucide-react"
 
-import CrudTable from "./components/crud-table"
+import { fetchPartnerCodeList } from "@/lib/hooks/partner-codes"
+import { useBelliApi } from "@/lib/utils/network"
 
-const PartnerCode = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
-  const { isLoading, isPending, error, data } = usePartnerCodes()
-  const update = useUpdatePartnerCode()
-  const add = useAddPartnerCode()
-  const remove = useRemovePartnerCode()
+import CrudTiledView from "./components/crud-tiled-view"
 
-  if (error) return "An error has occurred: " + error.message
+const PartnerCode = () => {
+  const belliApi = useBelliApi()
 
-  const partnerCodeOptions = data?.map((prefix: any) => ({
-    value: prefix.ID,
-    label: prefix.name,
-  }))
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ["partner-prefixes/list"],
+    queryFn: async ({ pageParam }) => {
+      console.log({ pageParam })
+
+      return fetchPartnerCodeList(await belliApi, {
+        page: pageParam,
+        page_size: 50,
+      })
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.current_page + 1
+      if (nextPage > lastPage.total_pages) return undefined
+      return nextPage
+    },
+  })
 
   return (
-    <CrudTable
-      isLoading={isPending}
-      title="IATA Airline Code"
-      columns={[
-        { accessorKey: "option", header: 'Name' },
-        { accessorKey: 'description', header: 'Description'},
-        { accessorKey: "visibility", header: 'Visibility' },
-        { accessorKey: "is_default", header: 'Default' }
-      ]}
-      form={[
-        { name: "id", type: "hidden" },
-        { name: "option", type: "text", label: "IATA Airline Code" },
-        {
-          name: "visibility",
-          type: "select",
-          label: "Visibility",
-          selectOptions: [
-            { label: "Visible", value: "Visible" },
-            { label: "Hidden", value: "Hidden" },
-          ],
-        },
-        {
-          name: "is_default",
-          type: "select",
-          label: "Default",
-          selectOptions: [
-            { label: "Yes", value: "Yes" },
-            { label: "No", value: "No" },
-          ],
-        },
-      ]}
-      data={data?.map((item: any) => ({
-        ...item,
-        option: item.name,
-        id: item.ID,
-        visibility: 'Visible',
-        is_default: 'No',
-      }))}
-      onSave={(data) => {
-        // configure logic for add or edit, for edit the id will be zero
-        const { id, option } = data
-        if (id) {
-          update.mutate({ id, name: option })
-        } else {
-          add.mutate({ name: option })
-        }
-      }}
-      onDelete={(data) => {
-        // configure logic for delete
-        if (data.id) {
-          remove.mutate({ id: data.id })
-        }
-      }}
-      canSearch
-      searchOptions={partnerCodeOptions}
-      tabComponent={tabComponent}
+    <CrudTiledView
+      height={500}
+      title="Partner Code"
+      rowRenderer={(item) => (
+        <div className="inline-flex w-full items-center justify-between">
+          <div className="inline-flex items-center gap-4">
+            <span className="w-10 tabular-nums">{item.name}</span>
+            <span className="font-normal text-muted-foreground">
+              {item.description}
+            </span>
+          </div>
+          <EyeIcon className="size-4 text-muted-foreground" />
+        </div>
+      )}
+      identifier="id"
+      disableCrud={true}
+      onEndReached={() => !isFetchingNextPage && fetchNextPage()}
+      data={data?.pages.flatMap((page) => page.data) ?? []}
     />
   )
 }

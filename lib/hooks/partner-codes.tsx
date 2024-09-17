@@ -1,7 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
 import { useBelliApi } from "@/lib/utils/network"
+
 import { getTooltipContents } from "../contentful"
 
 const route = "partner-codes"
@@ -39,23 +45,26 @@ export const removePartnerCode = async (
 
 export const usePartnerCodes = () => {
   const belliApi = useBelliApi()
-  
+
   const getData = useQuery({
     queryKey: [route],
     queryFn: async () => await fetchPartnerCodes(await belliApi),
   })
 
-  const tooltips = getTooltipContents();
-  
-  const additionalData = getData?.data?.map((item: { name: string }) => {
-    const partnerCodeDesc = tooltips.find((list) => list.id === `airline-code-${item.name.toLowerCase()}`);
-    return {
-      ...item,
-      description: partnerCodeDesc?.content || '',
-    };
-  }) || [];
+  const tooltips = getTooltipContents()
 
-  return { ...getData, data: [ ...additionalData ]};
+  const additionalData =
+    getData?.data?.map((item: { name: string }) => {
+      const partnerCodeDesc = tooltips.find(
+        (list) => list.id === `airline-code-${item.name.toLowerCase()}`
+      )
+      return {
+        ...item,
+        description: partnerCodeDesc?.content || "",
+      }
+    }) || []
+
+  return { ...getData, data: [...additionalData] }
 }
 
 export const useUpdatePartnerCode = () => {
@@ -97,5 +106,33 @@ export const useRemovePartnerCode = () => {
     onError: (e) => {
       console.log(e)
     },
+  })
+}
+
+type PartnerCode = {
+  id: string
+  name: string
+  description: string
+}
+
+export const fetchPartnerCodeList = async (
+  belliApi: AxiosInstance,
+  params: PaginationParams
+) => {
+  const _route = route + "/list"
+  const { data } = await belliApi.get<APIPaginatedResponse<PartnerCode>>(
+    `/${_route}`,
+    { params }
+  )
+  return data
+}
+
+export const usePartnerCodeList = (params: PaginationParams) => {
+  const _route = route + "/list"
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, params],
+    queryFn: async () => await fetchPartnerCodeList(await belliApi, params),
+    placeholderData: keepPreviousData,
   })
 }

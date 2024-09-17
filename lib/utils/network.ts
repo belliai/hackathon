@@ -27,7 +27,7 @@ export const createBelliApi = async (
     (response) => response,
     async (error) => {
       const originalRequest = error.config
-      if (error.response.status === 401 && !originalRequest._retry) {
+      if (!originalRequest._retry) {
         originalRequest._retry = true
         const newToken = await getToken()
         if (newToken) {

@@ -1,20 +1,21 @@
 import {
-  FileBox,
   FileBoxIcon,
   Globe,
   MapIcon,
+  PackagePlusIcon,
   PlaneTakeoffIcon,
   ReceiptTextIcon,
-  Truck
+  Truck,
 } from "lucide-react"
 
 import BookingType from "../booking-type"
 import CommodityCode from "../commodity-code"
 import { DataFieldsTab } from "../components/datafields-page-template"
 import Location from "../location"
+import SpecialHandlingCodes from "../special-handling-codes"
 import Status from "../status"
-import TransportMethod from "../transport-method"
 import TimeZone from "../time-zone"
+import TransportMethod from "../transport-method"
 
 export const shipmentsTabs: DataFieldsTab[] = [
   {
@@ -52,5 +53,11 @@ export const shipmentsTabs: DataFieldsTab[] = [
     component: <TimeZone />,
     icon: Globe,
     tooltipId: "aircraft-settings-time-zone",
+  },
+  {
+    name: "Special Handling Codes",
+    component: <SpecialHandlingCodes />,
+    icon: PackagePlusIcon,
+    tooltipId: "aircraft-settings-special-handling-codes",
   },
 ]

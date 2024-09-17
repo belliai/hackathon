@@ -5,9 +5,7 @@ import { FlightSchema } from "@/schemas/flight-master/flight"
 import { useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
-import { generateRecurringOptions } from "@/lib/utils/date-utils"
 import { Card } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   FormControl,
   FormField,
@@ -18,17 +16,6 @@ import {
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import InputSwitch from "@/components/form/InputSwitch"
-
-const recurringOption = [
-  {
-    label: "Does not repeat",
-    value: "no-repeat",
-  },
-  {
-    label: "Daily",
-    value: "daily",
-  },
-]
 
 const getPeriods = (val: number) => {
   const addition = val > 1 ? "s" : ""
@@ -91,26 +78,17 @@ const WeeklyCheckbox: React.FC<WeeklyCheckboxProps> = ({
   )
 }
 
-const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
+const RecurringForm = React.forwardRef<HTMLDivElement, any>((props, ref) => {
   const form = useFormContext()
   const formData = form.watch()
-  const [recurrings, setRecurrings] =
-    useState<Array<{ label: string; value: string }>>(recurringOption)
-  const [repeatEnd, setRepeatEnd] = useState<string>(formData.end_condition || "never")
+  const [repeatEnd, setRepeatEnd] = useState<string>(
+    formData.end_condition || "never"
+  )
 
   const optionsPeriod = useMemo(
     () => getPeriods(formData.recurring_count),
     [formData.recurring_count]
   )
-
-  useEffect(() => {
-    if (formData.departure_date) {
-      const { options } = generateRecurringOptions({
-        startAt: formData.departure_date,
-      })
-      setRecurrings(options)
-    }
-  }, [formData.departure_date])
 
   useEffect(() => {
     if (repeatEnd === "never") {
@@ -120,8 +98,6 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
     form.setValue("end_condition", repeatEnd)
   }, [repeatEnd])
 
-
-
   return (
     <Card className="space-y-4 p-4" ref={ref}>
       <div className="grid grid-cols-4 gap-4">
@@ -130,7 +106,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
             name="recurring"
             label="Recurring"
             type="select"
-            selectOptions={recurrings}
+            selectOptions={props.recurrings}
           />
         </div>
       </div>
@@ -155,7 +131,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
           </div>
           {formData.recurring_period === "weekly" && (
             <div className="grid grid-cols-1 gap-4">
-              <Label>Repeat on</Label>
+              <Label className="text-xs font-semibold text-muted-foreground">Repeat on</Label>
               <div className="flex">
                 {daysOfWeek.map((day: string, index) => (
                   <FormField
@@ -193,63 +169,64 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((_, ref) => {
               </p>
             </div>
           )}
-
-          <div className="grid grid-cols-1 gap-4">
-            <Label>Ends</Label>
-            <RadioGroup
-              name="end_condition"
-              defaultValue={repeatEnd}
-              onValueChange={(val) => {
-                setRepeatEnd(val)
-              }}
-              className="space-y-2"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="never" id="r1" />
-                <Label htmlFor="r1">Never</Label>
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                <div className="space-x-2">
-                  <RadioGroupItem value="on_date" id="r2" />
-                  <Label htmlFor="r2">On</Label>
-                </div>
-                <div>
-                  <InputSwitch
-                    label=""
-                    name="end_date"
-                    type="date"
-                    required={repeatEnd == "on_date"}
-                    disabled={repeatEnd !== "on_date"}
-                    disabledMatcher={() => false}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                <div className="space-x-2">
-                  <RadioGroupItem value="after_occurrences" id="r3" />
-                  <Label htmlFor="r3">After</Label>
-                </div>
-                <div className="col-span-1 flex items-center space-x-2">
-                  <InputSwitch
-                    label=""
-                    name="end_after_occurrences"
-                    type="stepper-number"
-                    disabled={repeatEnd !== "after_occurrences"}
-                    max={100}
-                    min={1}
-                    step={1}
-                  />
-                  <Label
-                    className={cn(repeatEnd !== "after_occurrences" ? "text-zinc-500" : "")}
-                  >
-                    Occurence{formData.end_after_occurrences > 1 && "s"}
-                  </Label>
-                </div>
-              </div>
-            </RadioGroup>
-          </div>
         </div>
       )}
+      {(formData.recurring !== "no-repeat" && formData.recurring !=="") && <div className="grid grid-cols-1 gap-4">
+        <Label className="text-xs font-semibold text-muted-foreground">Ends</Label>
+        <RadioGroup
+          name="end_condition"
+          defaultValue={repeatEnd}
+          onValueChange={(val) => {
+            setRepeatEnd(val)
+          }}
+          className="space-y-2"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="never" id="r1" />
+            <Label htmlFor="r1">Never</Label>
+          </div>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="space-x-2">
+              <RadioGroupItem value="on_date" id="r2" />
+              <Label htmlFor="r2">On</Label>
+            </div>
+            <div>
+              <InputSwitch
+                label=""
+                name="end_date"
+                type="date"
+                required={repeatEnd == "on_date"}
+                disabled={repeatEnd !== "on_date"}
+                disabledMatcher={() => false}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="space-x-2">
+              <RadioGroupItem value="after_occurrences" id="r3" />
+              <Label htmlFor="r3">After</Label>
+            </div>
+            <div className="col-span-1 flex items-center space-x-2">
+              <InputSwitch
+                label=""
+                name="end_after_occurrences"
+                type="stepper-number"
+                disabled={repeatEnd !== "after_occurrences"}
+                max={100}
+                min={1}
+                step={1}
+              />
+              <Label
+                className={cn(
+                  repeatEnd !== "after_occurrences" ? "text-zinc-500" : ""
+                )}
+              >
+                Occurence{formData.end_after_occurrences > 1 && "s"}
+              </Label>
+            </div>
+          </div>
+        </RadioGroup>
+      </div>}
     </Card>
   )
 })

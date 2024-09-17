@@ -1,11 +1,12 @@
 "use client"
 
-import { Box, Waypoints } from "lucide-react"
+import { Box, FileSpreadsheetIcon, Waypoints } from "lucide-react"
 
 import DataFieldsPageTemplate, {
   DataFieldsTab,
 } from "@/app/data-fields/components/datafields-page-template"
 
+import GoogleAPI from "./components/google-api"
 import DataIntegrations from "./components/integrations"
 import DataSyncWithCMS from "./components/sync-with-cms"
 
@@ -22,6 +23,12 @@ export default function DataPage() {
       component: <DataSyncWithCMS />,
       icon: Box,
       tooltipId: "sync-with-cms",
+    },
+    {
+      name: "Google API" as any,
+      component: <GoogleAPI />,
+      icon: FileSpreadsheetIcon,
+      tooltipId: "google-api",
     },
   ]
 

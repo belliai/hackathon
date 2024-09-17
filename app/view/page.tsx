@@ -32,10 +32,10 @@ import { toast } from "@/components/ui/use-toast"
 import CargoCapacityAreaChart from "@/components/charts/cargo-capacity-area-chart"
 import { DataTable } from "@/components/data-table/data-table"
 import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
+import DataViews from "@/components/data-table/data-views"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
-import { useListViewColumns } from "@/app/settings/flights/components/column"
-import DataViews from "@/components/data-table/data-views"
+import { listViewColumns } from "@/app/settings/flights/components/column"
 
 interface FlightsActualInformation {
   detail: string
@@ -50,7 +50,7 @@ type FlightWithActualInformation = Flight & {
 }
 
 const SETTING_OPTIONS = {
-  width: 'w-[234px]',
+  width: "w-[234px]",
   data: [
     {
       label: "Aircraft Types",
@@ -92,7 +92,7 @@ const SETTING_OPTIONS = {
         },
       ],
     },
-  ]
+  ],
 }
 
 export default function FlightsDashboardPage() {
@@ -141,9 +141,9 @@ export default function FlightsDashboardPage() {
 
   useEffect(() => {
     if (flightsData.length) {
-      const adjustedFlightsData = flightsData.map((flight) => {
+      const adjustedFlightsData = flightsData.map(({ object }) => {
         return {
-          ...flight,
+          ...object,
           actual_cargo_capacity: "",
         }
       })
@@ -172,7 +172,7 @@ export default function FlightsDashboardPage() {
       }))
   )
 
-  const columns = useListViewColumns({
+  const columns = listViewColumns({
     aircraftOptions: aircraftTailNumbers || [],
     onChangeTailNumber: async (data) => {
       if (!data) return
@@ -312,12 +312,14 @@ export default function FlightsDashboardPage() {
           id: columnData.id,
           visible: true,
           sort_order: index + 1,
+          real_column_name: columnData.real_column_name,
         }
       })
       .filter(Boolean) as {
       id: string
       visible: boolean
       sort_order: number
+      real_column_name: string
     }[]
 
     await mutateAsync(
@@ -388,6 +390,7 @@ export default function FlightsDashboardPage() {
       id: string
       sort_order: number
       visible: boolean
+      real_column_name: string
     }[]
 
     await mutateAsync(
@@ -432,7 +435,7 @@ export default function FlightsDashboardPage() {
           setSelectedFlight(null)
         }}
       >
-        <div className="flex w-full flex-col gap-8 max-w-full">
+        <div className="flex w-full max-w-full flex-col gap-8">
           <DataTable
             columns={selectedFlightColumn}
             data={actualInformationForm.getValues().infos ?? []}

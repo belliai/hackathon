@@ -55,7 +55,7 @@ export const flightSchema = z
       .string()
       .min(1, { message: "Selection flight is required" })
       .optional(),
-    recurring_every: z
+    recurring_every: z.coerce
       .number()
       .min(1, { message: "Recurring count is required" })
       .optional(),
@@ -68,9 +68,10 @@ export const flightSchema = z
       .date()
       .refine((date) => date instanceof Date && !isNaN(date.getTime()), {
         message: "Date is required and must be a valid date",
-      }).optional(),
+      })
+      .optional(),
     end_condition: z.string().optional(),
-    end_after_occurrences: z.number().optional(),
+    end_after_occurrences: z.coerce.number().optional(),
   })
   .refine(
     (data) =>
@@ -84,7 +85,8 @@ export const flightSchema = z
   .refine(
     (data) =>
       data.end_condition !== "after_occurrences" ||
-      (data.end_condition === "after_occurrences" && data.end_after_occurrences),
+      (data.end_condition === "after_occurrences" &&
+        data.end_after_occurrences),
     {
       message: "recurring occurence is required",
       path: ["end_after_occurences"],

@@ -16,7 +16,7 @@ const Location = () => {
 
   const { data: timeZones, isLoading: isLoadingTimeZones } = useTimeZones()
 
-  const timeZoneOptions = timeZones?.map((timeZone: any) => ({
+  const timeZoneOptions = timeZones?.data.map((timeZone: any) => ({
     value: String(timeZone.ID),
     label: timeZone.TZ,
   }))

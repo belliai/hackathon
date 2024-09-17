@@ -5,7 +5,7 @@ import {
   useUpdatePartnerType,
 } from "@/lib/hooks/partner-types"
 
-import CrudTable from "./components/crud-table"
+import CrudTiledView from "./components/crud-tiled-view"
 
 const PartnerType = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   const { isLoading, isPending, error, data } = usePartnerTypes()
@@ -16,10 +16,12 @@ const PartnerType = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
   if (error) return "An error has occurred: " + error.message
 
   return (
-    <CrudTable
+    <CrudTiledView
       isLoading={isPending}
       title="Partner Type"
-      columns={[{ accessorKey: "option", header: 'Name' }]}
+      identifier="id"
+      className="inline-flex w-full items-center justify-start"
+      rowRenderer={(item) => item.option}
       form={[
         { name: "id", type: "hidden" },
         { name: "option", type: "text", label: "Partner Type" },

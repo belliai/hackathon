@@ -1,4 +1,7 @@
+"use client"
+
 import * as React from "react"
+import { useSearchParams } from "next/navigation"
 
 import { getTooltipContents } from "@/lib/contentful"
 import { cn } from "@/lib/utils"
@@ -81,7 +84,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "h-10 whitespace-nowrap px-2 text-left align-middle font-medium text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className
     )}
     {...props}
@@ -96,7 +99,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "p-2 py-1.5 align-middle text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className
     )}
     {...props}
@@ -124,8 +127,11 @@ const TableHeaderWithTooltip = ({
 }: TableHeaderWithTooltipProps) => {
   const tooltips = getTooltipContents()
   const content = tooltips.find((list) => list.id === tooltipId)
+  const searchParams = useSearchParams()
 
-  const tooltipContent = content?.content
+  const showId = searchParams.get("contentful-debug")
+
+  const tooltipContent = !!showId ? tooltipId : content?.content
 
   return (
     <div className="inline-flex items-center gap-2">

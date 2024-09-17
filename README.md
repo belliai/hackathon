@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Getting Started
 
-## Getting Started comment
-
-First, run the development server:
+1. First, install the dependencies (we use pnpm):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+```
+
+Notes : if you happen to install a new package, make sure to also commit the new `pnpm-lock.yaml` file
+
+2. Pull environment variables from vercel
+
+```bash
+npm i -g vercel
+```
+
+```bash
+vercel link
+```
+
+```bash
+vercel env pull .env.local
+```
+
+3. Run development server
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Code Commits
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Make sure your changes can be built successfully, and use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages
 
-## Learn More
+example :
 
-To learn more about Next.js, take a look at the following resources:
+`feat(flights): add new column to table`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Code Formatter
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Make sure you have the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension installed and enabled on your VS Code (for code style consistency)
 
-## Deploy on Vercel
+## Helpful Extensions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Here the VS Code extensions we recommend for this project
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [Tailwind Intellisense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) (tailwind css classes autocomplete)
+- [Git Lens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) (so you know who to blame for bad code :D)
+- [ES Lint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) (to warn you about any potentially bug causing code)

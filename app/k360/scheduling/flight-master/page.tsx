@@ -154,90 +154,89 @@ export default function Page() {
   }
 
   const handleCreateFlight = async (param: FlightMasterFormValue) => {
-  //   const payload: CreateFlightMasterPayload = {
-  //     aircraft_id: param.aircraftType,
-  //     capacity: parseInt(param.capacity),
-  //     destination_id: param.destination,
-  //     flight_no: param.flightNo,
-  //     flight_type_id: param.flightType,
-  //     sector_id: param.sector,
-  //     source_id: param.source,
-  //     status_id: param.status,
-  //     tail_id: param.tailNo,
-  //     from_date: moment(param.fromDate).format("YYYY-MM-DD"),
-  //     to_date: moment(param.toDate).format("YYYY-MM-DD"),
-  //     uom_id: param.uom,
-  //     arrival_d: parseInt(param.arrivalTime.arrivalDay || "0", 10),
-  //     arrival_h: parseInt(param.arrivalTime.arrivalHour || "0", 10),
-  //     arrival_m: parseInt(param.arrivalTime.arrivalMinute || "0", 10),
-  //     departure_d: parseInt(param.deptTime.deptDay || "0", 10),
-  //     departure_h: parseInt(param.deptTime.deptHour || "0", 10),
-  //     departure_m: parseInt(param.deptTime.deptMinute || "0", 10),
-  //     mon:
-  //       (param.frequencyItems && findDays(param.frequencyItems, "mon")) ||
-  //       false,
-  //     tue:
-  //       (param.frequencyItems && findDays(param.frequencyItems, "tue")) ||
-  //       false,
-  //     wed:
-  //       (param.frequencyItems && findDays(param.frequencyItems, "wed")) ||
-  //       false,
-  //     thu:
-  //       (param.frequencyItems && findDays(param.frequencyItems, "thu")) ||
-  //       false,
-  //     fri:
-  //       (param.frequencyItems && findDays(param.frequencyItems, "fri")) ||
-  //       false,
-  //     sat:
-  //       (param.frequencyItems && findDays(param.frequencyItems, "sat")) ||
-  //       false,
-  //     sun:
-  //       (param.frequencyItems && findDays(param.frequencyItems, "sun")) ||
-  //       false,
-  //   }
-
-  //   if (typeof openModal === "string") {
-  //     await updateFlight(
-  //       { id: openModal, ...payload },
-  //       {
-  //         onError: (error) => {
-  //           console.error(error)
-  //           toast({
-  //             title: "Error!",
-  //             description: "An error occurred while updating flight",
-  //           })
-  //         },
-  //         onSuccess: (data) => {
-  //           setOpenModal(false)
-  //           sectionedHookForm.reset(formDefaultValues)
-  //           console.log("res data", data)
-  //           toast({
-  //             title: "Success!",
-  //             description: "Flight updated successfully",
-  //           })
-  //         },
-  //       }
-  //     )
-  //   } else {
-  //     await createFlight(payload, {
-  //       onError: (error) => {
-  //         console.error(error)
-  //         toast({
-  //           title: "Error!",
-  //           description: "An error occurred while creating flight",
-  //         })
-  //       },
-  //       onSuccess: (data) => {
-  //         setOpenModal(false)
-  //         sectionedHookForm.reset(formDefaultValues)
-  //         console.log("res data", data)
-  //         toast({
-  //           title: "Success!",
-  //           description: "Flight created successfully",
-  //         })
-  //       },
-  //     })
-  //   }
+    //   const payload: CreateFlightMasterPayload = {
+    //     aircraft_id: param.aircraftType,
+    //     capacity: parseInt(param.capacity),
+    //     destination_id: param.destination,
+    //     flight_no: param.flightNo,
+    //     flight_type_id: param.flightType,
+    //     sector_id: param.sector,
+    //     source_id: param.source,
+    //     status_id: param.status,
+    //     tail_id: param.tailNo,
+    //     from_date: moment(param.fromDate).format("YYYY-MM-DD"),
+    //     to_date: moment(param.toDate).format("YYYY-MM-DD"),
+    //     uom_id: param.uom,
+    //     arrival_d: parseInt(param.arrivalTime.arrivalDay || "0", 10),
+    //     arrival_h: parseInt(param.arrivalTime.arrivalHour || "0", 10),
+    //     arrival_m: parseInt(param.arrivalTime.arrivalMinute || "0", 10),
+    //     departure_d: parseInt(param.deptTime.deptDay || "0", 10),
+    //     departure_h: parseInt(param.deptTime.deptHour || "0", 10),
+    //     departure_m: parseInt(param.deptTime.deptMinute || "0", 10),
+    //     mon:
+    //       (param.frequencyItems && findDays(param.frequencyItems, "mon")) ||
+    //       false,
+    //     tue:
+    //       (param.frequencyItems && findDays(param.frequencyItems, "tue")) ||
+    //       false,
+    //     wed:
+    //       (param.frequencyItems && findDays(param.frequencyItems, "wed")) ||
+    //       false,
+    //     thu:
+    //       (param.frequencyItems && findDays(param.frequencyItems, "thu")) ||
+    //       false,
+    //     fri:
+    //       (param.frequencyItems && findDays(param.frequencyItems, "fri")) ||
+    //       false,
+    //     sat:
+    //       (param.frequencyItems && findDays(param.frequencyItems, "sat")) ||
+    //       false,
+    //     sun:
+    //       (param.frequencyItems && findDays(param.frequencyItems, "sun")) ||
+    //       false,
+    //   }
+    //   if (typeof openModal === "string") {
+    //     await updateFlight(
+    //       { id: openModal, ...payload },
+    //       {
+    //         onError: (error) => {
+    //           console.error(error)
+    //           toast({
+    //             title: "Error!",
+    //             description: "An error occurred while updating flight",
+    //           })
+    //         },
+    //         onSuccess: (data) => {
+    //           setOpenModal(false)
+    //           sectionedHookForm.reset(formDefaultValues)
+    //           console.log("res data", data)
+    //           toast({
+    //             title: "Success!",
+    //             description: "Flight updated successfully",
+    //           })
+    //         },
+    //       }
+    //     )
+    //   } else {
+    //     await createFlight(payload, {
+    //       onError: (error) => {
+    //         console.error(error)
+    //         toast({
+    //           title: "Error!",
+    //           description: "An error occurred while creating flight",
+    //         })
+    //       },
+    //       onSuccess: (data) => {
+    //         setOpenModal(false)
+    //         sectionedHookForm.reset(formDefaultValues)
+    //         console.log("res data", data)
+    //         toast({
+    //           title: "Success!",
+    //           description: "Flight created successfully",
+    //         })
+    //       },
+    //     })
+    //   }
   }
 
   const reformatDays = (data: Flight) => {
@@ -287,33 +286,33 @@ export default function Page() {
   }
 
   const handleDeleteFlight = async (data: Flight) => {
-  //   if (data) {
-  //     await deleteFlight(
-  //       { id: data.ID },
-  //       {
-  //         onError: (error) => {
-  //           console.error(error)
-  //           toast({
-  //             title: "Error!",
-  //             description: "An error occurred while deleting flight",
-  //           })
-  //         },
-  //         onSuccess: (data) => {
-  //           setDeleteConfirm(null)
-  //           console.log("res data", data)
-  //           toast({
-  //             title: "Success!",
-  //             description: "Flight deleted successfully",
-  //           })
-  //         },
-  //       }
-  //     )
-  //   } else {
-  //     toast({
-  //       title: "Error!",
-  //       description: "Cannot find Flight",
-  //     })
-  //   }
+    //   if (data) {
+    //     await deleteFlight(
+    //       { id: data.ID },
+    //       {
+    //         onError: (error) => {
+    //           console.error(error)
+    //           toast({
+    //             title: "Error!",
+    //             description: "An error occurred while deleting flight",
+    //           })
+    //         },
+    //         onSuccess: (data) => {
+    //           setDeleteConfirm(null)
+    //           console.log("res data", data)
+    //           toast({
+    //             title: "Success!",
+    //             description: "Flight deleted successfully",
+    //           })
+    //         },
+    //       }
+    //     )
+    //   } else {
+    //     toast({
+    //       title: "Error!",
+    //       description: "Cannot find Flight",
+    //     })
+    //   }
   }
 
   const onShowDelete = (data: Flight) => {
@@ -326,7 +325,9 @@ export default function Page() {
         <PageHeader title="Flight Master" />
         <DataTable
           columns={columns(openDetailFlight, onShowDelete)}
-          data={flightData ? flightData.data : []}
+          data={
+            flightData ? flightData.data.flatMap((item) => item.object) : []
+          }
           onRowClick={openDetailFlight}
           extraToolbarButtons={[
             {
@@ -412,7 +413,8 @@ export default function Page() {
               Are you sure want to delete Flight?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This will delete {deleteConfirm && `${deleteConfirm?.flight_number}`}
+              This will delete{" "}
+              {deleteConfirm && `${deleteConfirm?.flight_number}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

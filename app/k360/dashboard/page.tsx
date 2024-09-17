@@ -6,6 +6,7 @@ import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { PaginationState } from "@tanstack/react-table"
 import { Loader } from "lucide-react"
 
+import { Order } from "@/types/orders"
 import { getData } from "@/lib/data"
 import { useOrders, useRemoveOrder } from "@/lib/hooks/orders"
 import {
@@ -19,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
-import { columns, Order } from "@/components/dashboard/columns"
+import { columns } from "@/components/dashboard/columns"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
 import LiveCursorHoc from "@/components/liveblocks/live-cursor-hoc"
 import createActionColumn from "@/app/k360/organize/masters/components/columnItem"
@@ -39,7 +40,10 @@ export default function Dashboard() {
     isPending,
     error,
     data: ordersData,
-  } = useOrders({ pagination })
+  } = useOrders({
+    page: pagination.pageIndex + 1,
+    page_size: pagination.pageSize,
+  })
   const remove = useRemoveOrder()
 
   const openModal = (data: Order) => {
@@ -100,8 +104,10 @@ export default function Dashboard() {
         }}
         columns={columnWithActions}
         onRowClick={openModal}
-        data={isLoading ? [] : ordersData.data}
-        pageCount={isLoading ? 1 : ordersData.total_pages}
+        data={
+          isLoading ? [] : ordersData?.data.flatMap((item) => item.object) ?? []
+        }
+        pageCount={isLoading ? 1 : ordersData?.total_pages}
         manualPagination={true}
         tableState={tableState}
         className="border-none [&_td]:px-3 [&_td]:py-1 [&_td]:text-muted-foreground [&_th]:px-3 [&_th]:py-2 [&_th]:text-foreground"

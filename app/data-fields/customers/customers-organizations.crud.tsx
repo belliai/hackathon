@@ -1,4 +1,6 @@
-import CrudTable from "../components/crud-table"
+import { Building2Icon, UserIcon } from "lucide-react"
+
+import CrudTiledView from "../components/crud-tiled-view"
 
 type Organization = {
   id: string
@@ -40,15 +42,29 @@ const MOCK_ORGANIZATION_DATA: Organization[] = [
   },
 ]
 
-const CustomersOrganizationsCrud = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
+const CustomersOrganizationsCrud = ({
+  tabComponent,
+}: {
+  tabComponent?: React.ReactNode
+}) => {
   return (
-    <CrudTable
+    <CrudTiledView
+      identifier="id"
       title="Partner Type"
-      columns={[
-        { accessorKey: "name", header: "Name" },
-        { accessorKey: "country", header: "Country" },
-        { accessorKey: "primaryContact", header: "Primary Contact" },
-      ]}
+      className="grid w-full grid-cols-3 gap-4"
+      rowRenderer={(item) => (
+        <>
+          <div className="inline-flex items-center justify-start gap-2">
+            <Building2Icon className="size-4 text-muted-foreground" />
+            <span>{item.name}</span>
+          </div>
+          <span className="text-muted-foreground">{item.country}</span>
+          <div className="inline-flex items-center justify-start gap-2">
+            <UserIcon className="size-4 text-muted-foreground" />
+            <span>{item.primaryContact}</span>
+          </div>
+        </>
+      )}
       form={[
         { name: "id", type: "hidden" },
         { name: "name", type: "text", label: "Name" },

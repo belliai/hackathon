@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { AxiosInstance } from "axios"
 
 import { useBelliApi } from "@/lib/utils/network"
@@ -83,5 +88,32 @@ export const useRemovePartnerPrefix = () => {
     onError: (e) => {
       console.log(e)
     },
+  })
+}
+
+type PartnerPrefix = {
+  id: string
+  name: string
+}
+
+export const fetchPartnerPrefixList = async (
+  belliApi: AxiosInstance,
+  params: PaginationParams
+) => {
+  const _route = route + "/list"
+  const { data } = await belliApi.get<APIPaginatedResponse<PartnerPrefix>>(
+    `/${_route}`,
+    { params }
+  )
+  return data
+}
+
+export const usePartnerPrefixList = (params: PaginationParams) => {
+  const _route = route + "/list"
+  const belliApi = useBelliApi()
+  return useQuery({
+    queryKey: [_route, params],
+    queryFn: async () => await fetchPartnerPrefixList(await belliApi, params),
+    placeholderData: keepPreviousData,
   })
 }
