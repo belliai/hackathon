@@ -178,7 +178,7 @@ function DataFieldsItemContent<T extends FieldValues>({
                       >
                         <span
                           className={cn("truncate text-muted-foreground", {
-                            "text-white": index === 0,
+                            "text-primary-text": index === 0,
                           })}
                         >
                           {value}

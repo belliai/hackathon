@@ -165,7 +165,7 @@ export function DataTableFilterOptions<TData>({
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
       <PopoverContent
         align="end"
-        className="flex w-[600px] flex-col gap-2 border-zinc-700 bg-zinc-900 p-4"
+        className="adrk:dark:border-zinc-700 flex w-[600px] flex-col gap-2 p-4 dark:bg-zinc-900"
       >
         {localFilters.map((filter, index) => {
           const isEmptyOrNotEmpty =
@@ -357,7 +357,7 @@ export function DataTableFilterOptions<TData>({
                           <div className="relative flex items-center justify-between text-xs">
                             <Input
                               value={filter.count ?? 1}
-                              className="h-8 w-12 bg-zinc-900 p-2"
+                              className="h-8 w-12 p-2 dark:bg-zinc-900"
                             />
                             <NumberInputStepper
                               min={1}
@@ -414,7 +414,7 @@ export function DataTableFilterOptions<TData>({
 
                     {!isEmptyOrNotEmpty && (
                       <Input
-                        className="border-zinc-700 text-xs"
+                        className="text-xs dark:border-zinc-700"
                         value={filter.value as string}
                         onChange={(e) => {
                           handleChangeFilter(filter.id, e.target.value, "value")
@@ -448,8 +448,8 @@ export function DataTableFilterOptions<TData>({
                         onChange={(selected) => {
                           handleChangeFilter(filter.id, [selected], ["value"])
                         }}
-                        className="w-36 border-zinc-500 bg-zinc-900 p-1"
-                        badgeClassName="bg-transparent hover:bg-transparent border-zinc-700"
+                        className="w-36 p-1 dark:border-zinc-500 dark:bg-zinc-900"
+                        badgeClassName="bg-transparent hover:bg-transparent dark:border-zinc-700"
                         options={dummyUserOptions}
                       />
                     )}
@@ -457,7 +457,7 @@ export function DataTableFilterOptions<TData>({
                 )}
               </div>
               <Button
-                className="w-fit bg-zinc-800 text-white hover:bg-zinc-700"
+                className="w-fit text-white dark:bg-zinc-800 hover:dark:bg-zinc-700"
                 onClick={() => handleRemoveFilter(filter.id)}
               >
                 <Trash className="h-4 w-4" />
@@ -467,7 +467,7 @@ export function DataTableFilterOptions<TData>({
         })}
         <div className="flex justify-between">
           <Button
-            className="w-fit gap-2 bg-zinc-800 text-white hover:bg-zinc-700"
+            className="w-fit gap-2 text-white dark:bg-zinc-800 hover:dark:bg-zinc-700"
             onClick={() => handleAddFilter()}
           >
             <PlusIcon className="h-4 w-4" /> Add Filter
@@ -475,7 +475,7 @@ export function DataTableFilterOptions<TData>({
 
           <Button
             disabled={localFilters.length == 0}
-            className="w-fit gap-2 bg-zinc-800 text-white hover:bg-zinc-700"
+            className="w-fit gap-2 text-white dark:bg-zinc-800 hover:dark:bg-zinc-700"
             onClick={() => {
               // save localFilters to parent component
               onFiltersChange && onFiltersChange(localFilters)

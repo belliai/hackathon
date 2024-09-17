@@ -114,7 +114,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
         )}
         <div className="relative">
           <Table className="overflow-x-auto">
-            <TableHeader>
+            <TableHeader className="bg-zinc-100 dark:bg-transparent">
               <TableRow>
                 {visibleColumns.map((col) => (
                   <TableHead
@@ -158,7 +158,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
                                   onCellClick(row.object, columnsMap[col.key])
                               : undefined
                           }
-                          className="whitespace-nowrap"
+                          className="whitespace-nowrap text-black dark:text-muted-foreground"
                           key={col.key}
                           style={{ minWidth: 120 }}
                         >

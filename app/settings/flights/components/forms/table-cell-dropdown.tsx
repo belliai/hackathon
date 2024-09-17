@@ -39,7 +39,7 @@ export function TableCellDropdown<TData>({
           onChangeValue={(changedValue) =>
             onChangeSelect({ [name]: changedValue })
           }
-          className="h-[20px] border-0 border-zinc-900 bg-transparent hover:bg-transparent"
+          className="h-[20px] border-0 border-zinc-900 bg-transparent font-normal text-black shadow-none hover:bg-transparent dark:border-0 dark:text-muted-foreground"
         />
       </div>
     </Form>

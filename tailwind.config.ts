@@ -59,6 +59,8 @@ const config = {
           primary: "#FB5727",
           secondary: "#009BA5",
         },
+        "primary-text": "hsl(var(--text-primary))",
+        "secondary-text": "hsl(var(--text-secondary))",
       },
       borderRadius: {
         lg: "var(--radius)",

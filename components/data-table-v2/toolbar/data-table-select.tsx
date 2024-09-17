@@ -21,7 +21,7 @@ const DataTableSelect = (props: DataTableSelectProps) => {
   return (
     <Select onValueChange={props.onValueChange} value={String(props.value)}>
       {props.children}
-      <SelectContent className={cn("bg-zinc-900", props.className)}>
+      <SelectContent className={cn("dark:bg-zinc-900", props.className)}>
         <SelectGroup>
           {props.options.map((filter, id) => {
             return (
