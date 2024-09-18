@@ -136,7 +136,7 @@ export default function BreadCrumbSection() {
   const currentPage = currentPaths.find(item => item.href === pathname)
 
   return (
-    <div className="sticky top-0 z-10 flex h-12 w-full flex-row items-center justify-between gap-4 border-b bg-background/90 px-4 backdrop-blur-sm">
+    <div className="sticky top-0 z-10 flex h-12 w-full flex-row items-center justify-between gap-4 border-b bg-background/40 px-4 backdrop-blur-sm">
       <div className="flex flex-row items-center gap-6">
         <Breadcrumb>
           <BreadcrumbList>

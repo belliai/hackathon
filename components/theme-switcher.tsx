@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect } from "react"
-import { Moon, Sun, SunMoon } from "lucide-react"
+import { Eclipse, Moon, Sun, SunMoon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useForm } from "react-hook-form"
+import { useLocalStorage } from "usehooks-ts"
 
 import { cn } from "@/lib/utils"
 
@@ -11,7 +12,8 @@ import InputSwitch from "./form/InputSwitch"
 import { Form } from "./ui/form"
 
 export default function ThemeSwitcher() {
-  const { setTheme, theme } = useTheme()
+  const [customTheme, setCustomTheme] = useLocalStorage("custom_theme", "")
+  const { setTheme, theme, themes } = useTheme()
 
   const form = useForm({
     defaultValues: {
@@ -20,11 +22,17 @@ export default function ThemeSwitcher() {
   })
 
   useEffect(() => {
-    form.setValue("theme-switcher", theme || "")
+    form.setValue("theme-switcher", theme || customTheme || "dark")
   }, [theme])
 
   useEffect(() => {
-    setTheme(form.getValues()["theme-switcher"])
+    if (form.watch("theme-switcher") === "skye") {
+      setTheme("dark")
+      setCustomTheme("skye")
+    } else {
+      setCustomTheme("")
+      setTheme(form.getValues()["theme-switcher"])
+    }
   }, [form.watch("theme-switcher")])
 
   return (
@@ -51,6 +59,16 @@ export default function ThemeSwitcher() {
               <div className="flex items-center gap-2 text-sm">
                 <Moon size={16} />
                 <span>Dark</span>
+              </div>
+            ),
+          },
+          {
+            label: "Dark (Skye)",
+            value: "skye",
+            component: (
+              <div className="flex items-center gap-2 text-sm">
+                <Eclipse size={16} />
+                <span>Dark (Skye)</span>
               </div>
             ),
           },

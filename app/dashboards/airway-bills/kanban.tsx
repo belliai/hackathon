@@ -255,7 +255,7 @@ const Column = ({ title, cards, status, setCards, onRefetch }: ColumnProps) => {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           className={`h-full w-full transition-colors ${
-            active ? "bg-neutral-800/50" : "bg-neutral-800/0"
+            active ? "dark:bg-neutral-800/50" : "dark:bg-neutral-800/0"
           }`}
         >
           {filteredCards.map((c) => {
@@ -300,7 +300,7 @@ const Card = ({
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
-        className="h-25 w-64 cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+        className="h-25 w-64 cursor-grab rounded border border-neutral-700 dark:bg-neutral-800 p-3 active:cursor-grabbing"
         onClick={() => handleCardClick(ID)}
       >
         <p className="text-sm font-medium text-muted-foreground">AWB: {awb}</p>

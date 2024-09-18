@@ -85,11 +85,11 @@ const SortableCard: React.FC<{
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-3">
           <div className="flex flex-col gap-1 text-sm">
-            <text className="inline-flex gap-1 text-xs text-white">
+            <text className="inline-flex gap-1 text-xs">
               <RouteIcon className="size-4 text-muted-foreground" />{" "}
               {`${order.origin?.airport_code}- ${order.destination?.airport_code}`}
             </text>
-            <text className="inline-flex gap-1 text-xs text-white">
+            <text className="inline-flex gap-1 text-xs">
               <WeightIcon className="size-4 text-muted-foreground" />{" "}
               {`${order.gs_weight_kg || "0"}Kg`}
             </text>
@@ -413,11 +413,11 @@ const LoadPlanning = () => {
                     <div className="flex flex-col gap-1 text-sm">
                       <text className="font-bold">Route</text>
                       <div className="flex items-center gap-1">
-                        <span className="w-14 whitespace-nowrap rounded-sm bg-accent px-1 py-0.5 text-center text-sm text-white">
+                        <span className="w-14 whitespace-nowrap rounded-sm bg-accent px-1 py-0.5 text-center text-sm">
                           {flight?.origin?.name}
                         </span>
                         <ArrowRight className="size-4" />
-                        <span className="w-14 whitespace-nowrap rounded-sm bg-accent px-1 py-0.5 text-center text-sm text-white">
+                        <span className="w-14 whitespace-nowrap rounded-sm bg-accent px-1 py-0.5 text-center text-sm">
                           {flight?.destination?.name}
                         </span>
                       </div>
