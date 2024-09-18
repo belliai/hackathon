@@ -56,13 +56,13 @@ const AWBTabsList = () => (
       <SquareKanbanIcon className="mr-2 size-4" />
       Kanban View
     </TabsTrigger>
-    <TabsTrigger
+    {/* <TabsTrigger
       className="h-8 border border-secondary data-[state=active]:border-muted-foreground/40 data-[state=active]:bg-secondary"
       value="load-planning"
     >
       <BoxesIcon className="mr-2 size-4" />
       Load Planning
-    </TabsTrigger>
+    </TabsTrigger> */}
   </TabsList>
 )
 
@@ -188,7 +188,7 @@ export default function Home() {
             <CustomKanban />
           </>
         </TabsContent>
-        <TabsContent value="load-planning" asChild>
+        {/* <TabsContent value="load-planning" asChild>
           <>
             <div className="flex items-center justify-between gap-2">
               {<AWBTabsList />}
@@ -196,7 +196,7 @@ export default function Home() {
             </div>
             <LoadPlanning />
           </>
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
       <NewOrderSideModal
         onOpenChange={onOpenChange}
