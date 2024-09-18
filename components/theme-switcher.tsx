@@ -22,7 +22,10 @@ export default function ThemeSwitcher() {
   })
 
   useEffect(() => {
-    form.setValue("theme-switcher", theme || customTheme || "dark")
+    form.setValue(
+      "theme-switcher",
+      (customTheme ? customTheme : theme) || "dark"
+    )
   }, [theme])
 
   useEffect(() => {
