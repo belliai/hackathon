@@ -17,6 +17,7 @@ import { operationsNavigation } from "@/components/nav/data/operationsNavigation
 import { settingNavigation } from "@/components/nav/data/settingNavigation"
 import { skNavigation } from "@/components/nav/data/skNavigation"
 import OuterRootProviders from "@/components/outer-root-providers"
+import Body from "@/components/body"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -85,10 +86,10 @@ export default function RootLayout({
         )}
       >
         {isProduction && gtmId && <GoogleTagManager gtmId={gtmId} />}
-        <body className="h-full overflow-y-hidden bg-background">
+        <Body>
           <PostHogPageView />
           <InnerRootProviders>{children}</InnerRootProviders>
-        </body>
+        </Body>
       </html>
     </OuterRootProviders>
   )

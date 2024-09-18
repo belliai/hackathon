@@ -29,6 +29,7 @@ const InnerRootProviders = ({ children }: { children: React.ReactNode }) => {
                   <NextThemeProvider
                     attribute="class"
                     defaultTheme="dark"
+                    themes={["dark", "light"]}
                     enableSystem
                     disableTransitionOnChange
                   >

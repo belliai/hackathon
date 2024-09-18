@@ -34,6 +34,8 @@ import useKeyPressNavigation from "./shortcuts/keypress-navigation"
 import { TSidebarItem } from "./SidebarItem"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
+import { useLocalStorage } from "usehooks-ts"
+import { cn } from "@/lib/utils"
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -50,6 +52,7 @@ export default function SideBar({
 }) {
   const searchParams = useSearchParams()
   const settings = searchParams.get("settings")
+  const [customTheme, setCustomTheme] = useLocalStorage("custom_theme", "")
 
   const router = useRouter()
   const [isDialogOpen, setDialogOpen] = useState(false)
@@ -114,7 +117,9 @@ export default function SideBar({
 
   return (
     <Suspense>
-      <div className="no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border">
+      <div className={cn("no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border", {
+        "bg-black-background/40" : customTheme === "skye",
+      })}>
         <div
           className={`flex ${!isExpanded ? "mt-2 flex-col gap-3" : "flex-row"} h-16 shrink-0 items-center justify-between`}
         >
