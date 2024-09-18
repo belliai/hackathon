@@ -35,17 +35,21 @@ const CustomKanban = () => {
 
   const cards = ordersData?.data.flatMap((item) => item.object) ?? []
 
-  const sortedStatuses = allStatus
-    .filter((status: OrderRes["status"]) => columnOrder.includes(status.name))
-    .sort(
-      (a: OrderRes["status"], b: OrderRes["status"]) =>
-        columnOrder.indexOf(a.name) - columnOrder.indexOf(b.name)
-    )
+  const sortedStatuses =
+    allStatus
+      ?.filter((status: OrderRes["status"]) =>
+        columnOrder.includes(status.name)
+      )
+      .sort(
+        (a: OrderRes["status"], b: OrderRes["status"]) =>
+          columnOrder.indexOf(a.name) - columnOrder.indexOf(b.name)
+      ) ?? []
 
   // Add the remaining statuses that are not in the predefined order at the end
-  const remainingStatuses = allStatus.filter(
-    (status: OrderRes["status"]) => !columnOrder.includes(status.name)
-  )
+  const remainingStatuses =
+    allStatus?.filter(
+      (status: OrderRes["status"]) => !columnOrder.includes(status.name)
+    ) ?? []
 
   const uniqueStatuses = [...sortedStatuses, ...remainingStatuses]
 
