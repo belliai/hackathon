@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button"
 import { PointerSensor } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { PopoverTrigger } from "@radix-ui/react-popover"
-import { ArrowDownIcon, ArrowUpIcon, EyeIcon, EyeOffIcon, PanelLeftClose } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, EyeIcon, EyeOffIcon, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 
 import { Column, ColumnResponse } from "@/types/table/columns"
 import { useColumns } from "@/lib/hooks/columns"
@@ -44,7 +44,11 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
   const { mutateAsync: updateColumn } = useUpdateSingleColumn()
   const { mutateAsync: resetColumns } = useResetColumns(tableKey)
 
-  const [localColumns, setLocalColumns] = useState<ColumnResponse>(columns)
+  const [localColumns, setLocalColumns] = useState<ColumnResponse>(columns || {
+    sticky_columns: [],
+    visible_columns: [],
+    non_visible_columns: [],
+  })
 
   useEffect(() => {
     setLocalColumns(columns)
@@ -155,6 +159,40 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
     }
   }
 
+  const onFreezeColumn = async (col: Column, action: string) => {
+    let updatedColumns;
+
+    if (action === 'freeze') {
+      updatedColumns = {
+        ...columns,
+        visible_columns: columns?.visible_columns?.filter((c) => c.id !== col.id),
+        sticky_columns: [...(columns.sticky_columns || []), col],
+      }
+    } else if (action === 'unfreeze') {
+      updatedColumns = {
+        ...columns,
+        sticky_columns: columns?.sticky_columns?.filter((c) => c.id !== col.id),
+        visible_columns: [col, ...columns.visible_columns],
+      }
+    }
+
+    setLocalColumns(updatedColumns || { sticky_columns: [], visible_columns: [], non_visible_columns: [] })
+
+    // try {
+    //   await updateColumn(
+    //     { ...col, visible: false },
+    //     {
+    //       onSuccess: async () => {
+    //         await onRefetchData()
+    setColumns(updatedColumns || { sticky_columns: [], visible_columns: [], non_visible_columns: [] })
+    //       },
+    //     }
+    //   )
+    // } catch (error) {
+    //   columns && setColumns(columns)
+    // }
+  }
+
   return (
     <Popover onOpenChange={props.onOpenChange}>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
@@ -163,6 +201,59 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
           <CommandInput placeholder="Search for a column" />
           <CommandList className="custom-scrollbar">
             <CommandEmpty>No column found.</CommandEmpty>
+            {tableKey === 'dashboard_flights' && Array.isArray(localColumns?.sticky_columns) && localColumns.sticky_columns.length > 0 && (
+              <SortableContext
+                id={"sticky"}
+                items={localColumns?.sticky_columns || []}
+                strategy={verticalListSortingStrategy}
+              >
+                <CommandGroup>
+                  <div className="flex h-fit flex-row items-center justify-between px-2 py-2">
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Sticky Columns
+                    </span>
+                  </div>
+                  {localColumns?.sticky_columns?.map((column, index) => (
+                    <CommandItem
+                      key={column.id}
+                      value={column.column_name}
+                      className={"flex flex-row items-center justify-between"}
+                    >
+                      <div className="flex flex-row items-center gap-2">
+                        {column.column_name}
+                      </div>
+                      <div className="flex gap-1">
+                        {tableKey === 'dashboard_flights' && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                data-no-dnd="true"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  onFreezeColumn(column, 'unfreeze')
+                                }}
+                              >
+                                <PanelLeftOpen className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              className="border bg-card text-foreground"
+                              side="bottom"
+                              align="end"
+                            >
+                              Unfreeze Column
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
+                      
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </SortableContext>
+            )}
+            
             <SortableContext
               id={"active"}
               items={localColumns.visible_columns}
@@ -236,27 +327,29 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                       {column.column_name}
                     </div>
                     <div className="flex gap-1">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            data-no-dnd="true"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                              onHideColumn(column)
-                            }}
+                      {tableKey === 'dashboard_flights' && Array.isArray(localColumns?.sticky_columns) && localColumns?.sticky_columns?.length < 3 &&  (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              data-no-dnd="true"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                onFreezeColumn(column, 'freeze')
+                              }}
+                            >
+                              <PanelLeftClose className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className="border bg-card text-foreground"
+                            side="bottom"
+                            align="end"
                           >
-                            <PanelLeftClose className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent
-                          className="border bg-card text-foreground"
-                          side="bottom"
-                          align="end"
-                        >
-                          Freeze Column
-                        </TooltipContent>
-                      </Tooltip>
+                            Freeze Column
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
 
                       <Tooltip>
                         <TooltipTrigger asChild>

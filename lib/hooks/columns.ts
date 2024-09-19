@@ -24,7 +24,11 @@ export function useColumns() {
       queryFn: async () => {
         const res = await (await belli).get(route + `/${tableName}`)
 
-        return res.data as ColumnResponse
+        const columnsWithSticky = {
+          ...res.data,
+          sticky_columns: [],
+        }
+        return columnsWithSticky as ColumnResponse
       },
     })
 

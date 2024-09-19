@@ -29,16 +29,13 @@ import {
   DataTableToolbarProps,
 } from "./toolbar/data-table-toolbar"
 
-// Update the Column type to include the sticky property
-type ColumnWithSticky = Column & { sticky?: boolean };
-
 export type DataTableProps<T> = {
   tableKey: TableKeys
   data?: APIPaginatedResponse<TableItem<T>>
   isLoading?: boolean
   onRefetchData: () => Promise<any>
   onRowClick?: (row: T) => void
-  onCellClick?: (row: T, column: ColumnWithSticky) => void
+  onCellClick?: (row: T, column: Column) => void
   customCellRenderers?: {
     key: string
     renderer: (data: T, value: string) => ReactNode
@@ -60,33 +57,10 @@ export function DataTable<T>(props: DataTableProps<T>) {
 
   const { data: columnsData } = useGetColumns(tableKey)
 
-  // Add sticky property to columns and rearrange them
-  const columns = useMemo(() => {
-    if (!columnsData) return null;
-
-    const columnsWithSticky = columnsData.visible_columns.map((col, index) => ({
-      ...col,
-      sticky: tableKey === 'dashboard_flights' && (index === 3 || index === 7)
-    }));
-    console.log(columnsWithSticky.filter(col => col.sticky))
-    // Separate sticky and non-sticky columns
-    const stickyColumns = columnsWithSticky.filter(col => col.sticky);
-    const nonStickyColumns = columnsWithSticky.filter(col => !col.sticky);
-
-    // Combine sticky columns (now on the left) with non-sticky columns
-    const rearrangedColumns = [...stickyColumns, ...nonStickyColumns];
-
-    return {
-      ...columnsData,
-      visible_columns: rearrangedColumns
-    };
-  }, [columnsData, tableKey]);
-
   const rowData = data?.data
-
   return (
     <DataTableContextProvider
-      columns={columns ?? undefined}
+      columns={columnsData}
       tableKey={tableKey}
       onRefetchData={props.onRefetchData}
       sort={props.sort}
@@ -135,22 +109,45 @@ export function DataTable<T>(props: DataTableProps<T>) {
 
 function DataTableHeader() {
   const { columns, sort, onSortToggle } = useDataTableContext()
-  const visibleColumns = columns.visible_columns as ColumnWithSticky[]
+  const visibleColumns = columns.visible_columns
+  const stickyColumns = columns.sticky_columns
 
   return (
     <TableHeader className="bg-zinc-100 dark:bg-transparent">
       <TableRow>
-        {visibleColumns.map((col, idx) => (
+        {stickyColumns && stickyColumns.map((col, idx) => (
           <TableHead
             key={col.id}
             className={cn(
               "cursor-pointer",
-              col.sticky && "sticky z-10 bg-background"
+              "sticky z-10 bg-background"
             )}
             style={{ 
-              left: col.sticky ? `${idx * 120}px` : undefined,
-              zIndex: col.sticky ? 20 : undefined 
+              left: `${idx * 120}px`,
+              zIndex: 20
             }}
+            onClick={() => {
+              onSortToggle(col.real_column_name)
+            }}
+          >
+            <div className="inline-flex w-full items-center justify-between gap-2">
+              {col.column_name}
+              {sort?.sort_by === col.real_column_name && (
+                <>
+                  {sort.sort_dir === "asc" ? (
+                    <ChevronUpIcon className="size-3 text-muted-foreground" />
+                  ) : (
+                    <ChevronDownIcon className="size-3 text-muted-foreground" />
+                  )}
+                </>
+              )}
+            </div>
+          </TableHead>
+        ))}
+        {visibleColumns.map((col) => (
+          <TableHead
+            key={col.id}
+            className="cursor-pointer"
             onClick={() => {
               onSortToggle(col.real_column_name)
             }}
@@ -177,7 +174,7 @@ function DataTableHeader() {
 function DataTableBody<T>(props: {
   data?: TableItem<T>[]
   onRowClick?: (row: T) => void
-  onCellClick?: (row: T, column: ColumnWithSticky) => void
+  onCellClick?: (row: T, column: Column) => void
   customCellRenderers?: {
     key: string
     renderer: (data: T, value: string) => ReactNode
@@ -187,7 +184,8 @@ function DataTableBody<T>(props: {
 
   const { columns } = useDataTableContext()
 
-  const visibleColumns = columns?.visible_columns as ColumnWithSticky[] ?? []
+  const visibleColumns = columns?.visible_columns ?? []
+  const stickyColumns = columns?.sticky_columns ?? []
 
   const customRendererMap = useMemo(() => {
     return customCellRenderers?.reduce(
@@ -200,14 +198,15 @@ function DataTableBody<T>(props: {
   }, [customCellRenderers])
 
   const columnsMap = useMemo(() => {
-    return visibleColumns?.reduce(
+    const combinedColumns = [...visibleColumns, ...stickyColumns]
+    return combinedColumns?.reduce(
       (acc, col) => {
         acc[col.real_column_name] = col
         return acc
       },
-      {} as Record<string, ColumnWithSticky>
+      {} as Record<string, Column>
     )
-  }, [visibleColumns])
+  }, [visibleColumns, stickyColumns])
 
   return (
     <TableBody>
@@ -218,26 +217,27 @@ function DataTableBody<T>(props: {
             onClick={() => onRowClick && onRowClick(row.object)}
             className={cn(onRowClick && "cursor-pointer")}
           >
-            {visibleColumns.map((col, idx) => {
+            {[...stickyColumns, ...visibleColumns].map((col, idx) => {
               const cellData = row.columns.find(c => c.key === col.real_column_name)
               const customRenderer = customRendererMap?.[col.real_column_name]
+              const isSticky = stickyColumns.some(stickyCol => stickyCol.real_column_name === col.real_column_name)
               return (
                 <TableCell
                   onClick={
                     onCellClick
-                      ? () => onCellClick(row.object, col)
+                      ? () => onCellClick(row.object, columnsMap[col.real_column_name])
                       : undefined
                   }
                   className={cn(
                     "whitespace-nowrap text-black dark:text-muted-foreground",
-                    col.sticky && "sticky z-10 bg-background"
+                    isSticky && "sticky z-10 bg-background"
                   )}
-                  style={{ 
+                  key={col.real_column_name}
+                  style={{
                     minWidth: 120,
-                    left: col.sticky ? `${idx * 120}px` : undefined,
-                    zIndex: col.sticky ? 20 : undefined
+                    left: isSticky ? `${idx * 120}px` : undefined,
+                    zIndex: isSticky ? 20 : undefined
                   }}
-                  key={col.id}
                 >
                   {customRenderer
                     ? customRenderer(row.object, cellData?.value ?? '')
