@@ -1,6 +1,6 @@
 import { HomeIcon, TvIcon } from "@heroicons/react/24/outline"
 import { CubeIcon, DashboardIcon, ReaderIcon } from "@radix-ui/react-icons"
-import { BarChartBigIcon, CogIcon, Handshake, Waypoints } from "lucide-react"
+import { BarChartBigIcon, CogIcon, ContainerIcon, Handshake, Waypoints } from "lucide-react"
 
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
@@ -47,6 +47,15 @@ export const operationsNavigation: TSidebarItem[] = [
             isCanCreate: false,
           },
         ],
+      },
+      {
+        name: "Load Planning",
+        href: "/dashboards/load-planning",
+        icon: ContainerIcon,
+        current: false,
+        isCanCreate: false,
+        hasSetting: false,
+        shortcut: "L",
       },
       {
         name: "Reports",

@@ -333,7 +333,7 @@ const WeightAndVolumeFormV2 = React.forwardRef<HTMLDivElement, any>(
                     <Input
                       defaultValue={formValues.total_weight}
                       {...field}
-                      className="border-2 border-foreground/30 h-[40px]"
+                      className="dark:border-2 dark:border-foreground/30 h-[40px]"
                       readOnly
                     />
                   </FormControl>
@@ -353,7 +353,7 @@ const WeightAndVolumeFormV2 = React.forwardRef<HTMLDivElement, any>(
                     <Input
                       defaultValue={formValues.total_volume}
                       {...field}
-                      className="border-2 border-foreground/30 h-[40px]"
+                      className="dark:border-2 dark:border-foreground/30 h-[40px]"
                       readOnly
                     />
                   </FormControl>
@@ -373,7 +373,7 @@ const WeightAndVolumeFormV2 = React.forwardRef<HTMLDivElement, any>(
                     <Input
                       defaultValue={formValues.ch_weight_kg}
                       {...field}
-                      className="border-2 border-foreground/30 h-[40px]"
+                      className="dark:border-2 dark:border-foreground/30 h-[40px]"
                       readOnly
                     />
                   </FormControl>

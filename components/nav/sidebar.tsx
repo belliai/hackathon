@@ -22,16 +22,20 @@ import { settingNavigation } from "@/components/nav/data/settingNavigation"
 import { skNavigation } from "@/components/nav/data/skNavigation"
 
 import NewOrderModal from "../dashboard/new-order-modal"
+import ThemeSwitcher from "../theme-switcher"
 import { Button } from "../ui/button"
+import { Separator } from "../ui/separator"
 import { toast } from "../ui/use-toast"
 import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 import { k360Navigation } from "./data/k360Navigation"
 import { underConstructionNavigation } from "./data/underConstructionNavigation"
 import FavoritesMenu from "./favorites/favorites-menu"
+import useKeyPressNavigation from "./shortcuts/keypress-navigation"
 import { TSidebarItem } from "./SidebarItem"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
-import useKeyPressNavigation from "./shortcuts/keypress-navigation"
+import { useLocalStorage } from "usehooks-ts"
+import { cn } from "@/lib/utils"
 
 const SIDEBAR_TYPE = {
   DEFAULT: 1,
@@ -48,6 +52,7 @@ export default function SideBar({
 }) {
   const searchParams = useSearchParams()
   const settings = searchParams.get("settings")
+  const [customTheme, setCustomTheme] = useLocalStorage("custom_theme", "")
 
   const router = useRouter()
   const [isDialogOpen, setDialogOpen] = useState(false)
@@ -102,7 +107,7 @@ export default function SideBar({
     },
   ]
 
-  useKeyPressNavigation(operationsNavigation);
+  useKeyPressNavigation(operationsNavigation)
 
   useEffect(() => {
     if (sidebarType === SIDEBAR_TYPE.BELLI_SETTING) {
@@ -112,7 +117,9 @@ export default function SideBar({
 
   return (
     <Suspense>
-      <div className="no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border">
+      <div className={cn("no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border", {
+        "bg-black-background/40" : customTheme === "skye",
+      })}>
         <div
           className={`flex ${!isExpanded ? "mt-2 flex-col gap-3" : "flex-row"} h-16 shrink-0 items-center justify-between`}
         >
@@ -122,9 +129,10 @@ export default function SideBar({
               isExpanded={isExpanded}
             />
           )}
-          {(sidebarType === SIDEBAR_TYPE.SETTING || sidebarType === SIDEBAR_TYPE.BELLI_SETTING) && (
+          {(sidebarType === SIDEBAR_TYPE.SETTING ||
+            sidebarType === SIDEBAR_TYPE.BELLI_SETTING) && (
             <div
-              className="flex cursor-pointer items-center gap-2 animate-fade-left"
+              className="flex animate-fade-left cursor-pointer items-center gap-2"
               onClick={() => {
                 setNavigationType(SIDEBAR_TYPE.DEFAULT)
                 router.push("/")
@@ -135,7 +143,7 @@ export default function SideBar({
                 aria-hidden="true"
               />
               {isExpanded && (
-                <span className="font-bold text-sm">Settings</span>
+                <span className="text-sm font-bold">Settings</span>
               )}
             </div>
           )}
@@ -176,7 +184,11 @@ export default function SideBar({
               <ul className="flex flex-col gap-1">
                 {sidebarType === SIDEBAR_TYPE.DEFAULT && (
                   <div className="animate-fade-right">
-                    <SidebarMenu items={operationsNavigation} collapsible isExpanded={isExpanded} />
+                    <SidebarMenu
+                      items={operationsNavigation}
+                      collapsible
+                      isExpanded={isExpanded}
+                    />
                   </div>
                 )}
                 {sidebarType === SIDEBAR_TYPE.SETTING && (
@@ -184,15 +196,20 @@ export default function SideBar({
                 )}
                 {sidebarType === SIDEBAR_TYPE.BELLI_SETTING && (
                   <div className="animate-fade-left">
-                    <SidebarMenu items={belliSettingsNavigation[0].children ?? []} collapsible isExpanded={isExpanded} />
+                    <SidebarMenu
+                      items={belliSettingsNavigation[0].children ?? []}
+                      collapsible
+                      isExpanded={isExpanded}
+                    />
                     <SidebarMenu
                       items={customDataFieldsNavigation}
                       collapsible
                       isExpanded={isExpanded}
                     />
                   </div>
-                  
                 )}
+                <Separator className="mt-4" />
+                <ThemeSwitcher />
               </ul>
               {sidebarType === SIDEBAR_TYPE.SETTING && (
                 <>
@@ -212,11 +229,13 @@ export default function SideBar({
               )}
             </ul>
           </ul>
-          {(isBelliAdmin && isExpanded && sidebarType === SIDEBAR_TYPE.BELLI_SETTING) &&  (
-            <ul role="list" className="-mx-2">
-              <SidebarMenu items={adminOnlyItems} collapsible />
-            </ul>
-          )}
+          {isBelliAdmin &&
+            isExpanded &&
+            sidebarType === SIDEBAR_TYPE.BELLI_SETTING && (
+              <ul role="list" className="-mx-2">
+                <SidebarMenu items={adminOnlyItems} collapsible />
+              </ul>
+            )}
         </nav>
       </div>
     </Suspense>

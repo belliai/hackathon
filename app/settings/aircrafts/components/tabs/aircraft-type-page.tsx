@@ -6,21 +6,16 @@ import {
   AircraftFormValues,
 } from "@/schemas/aircraft/aircraft"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  BoxIcon,
-  PlaneIcon,
-  PlusIcon,
-  WeightIcon,
-} from "lucide-react"
+import { BoxIcon, PlaneIcon, PlusIcon, WeightIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
 import { useAircrafts } from "@/lib/hooks/aircrafts/aircrafts"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 
 import { aircraftFormDefaultValues } from "../../constants"
-import { Separator } from "@/components/ui/separator"
 import useGeneralFieldSections from "../../hooks/use-field-sections"
 import AircraftDiagram from "../aircrafts/aircraft-diagram"
 import AircraftTypeFormV2 from "../forms/aircraft-form-v2"
@@ -32,7 +27,11 @@ const getAircraftTypeString = (aircraft: Aircraft) =>
     aircraft.version.version,
   ].join(" ")
 
-export default function AircraftTypePage({ isSetting = false }: { isSetting?: boolean }) {
+export default function AircraftTypePage({
+  isSetting = false,
+}: {
+  isSetting?: boolean
+}) {
   const [currentOpenAircraftModal, setCurrentOpenAircraftModal] = useState<
     string | boolean
   >(false) // When the state is a string, it means the modal is in edit mode
@@ -72,8 +71,12 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
   }
 
   return (
-    <div className={`flex ${isSetting ? 'h-fit gap-4' : 'h-[85dvh] gap-16'} flex-col items-center justify-start `}>
-      <div className={`flex w-full items-center ${isSetting ? 'justify-end' : 'justify-between'}`}>
+    <div
+      className={`flex ${isSetting ? "h-fit gap-4" : "h-[85dvh] gap-16"} flex-col items-center justify-start`}
+    >
+      <div
+        className={`flex w-full items-center ${isSetting ? "justify-end" : "justify-between"}`}
+      >
         <Button
           size={"sm"}
           variant={"button-primary"}
@@ -87,9 +90,9 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
           Create Aircraft
         </Button>
       </div>
-      <div className="grid grid-cols-3 gap-4 overflow-hidden w-full">
+      <div className="grid w-full grid-cols-3 gap-4 overflow-hidden">
         {/* Aircraft List */}
-        <div className="flex flex-col gap-4 overflow-y-auto overflow-x-hidden custom-scrollbar h-[75vh] pr-1">
+        <div className="custom-scrollbar flex h-[75vh] flex-col gap-4 overflow-y-auto overflow-x-hidden pr-1">
           {aircraftsData?.map((aircraft) => {
             const aircraftName = getAircraftTypeString(aircraft)
             return (
@@ -97,17 +100,17 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
                 asChild
                 key={aircraft.id}
                 variant={"secondary"}
-                className={`cursor-pointer text-foreground h-fit ${currentOpenAircraftModal === aircraft.id ? 'border border-button-primary bg-white' : ' bg-green'}`}
+                className={`h-fit cursor-pointer text-foreground ${currentOpenAircraftModal === aircraft.id ? "border border-button-primary bg-white" : "bg-green"}`}
                 onClick={() => handleAircraftRowClick(aircraft)}
               >
-                <Card className="flex flex-col gap-3 border bg-zinc-900/50 px-3 py-4 text-sm items-start">
-                  <div className="flex w-full gap-2 items-center justify-between">
+                <Card className="flex flex-col items-start gap-3 border px-3 py-4 text-sm dark:bg-zinc-900/50">
+                  <div className="flex w-full items-center justify-between gap-2">
                     <h2 className="text-base font-bold">{aircraftName}</h2>
                     <div className="inline-flex items-center gap-2 text-muted-foreground">
                       <PlaneIcon className="size-4" />
                       <span className="tabular-nums text-foreground">
                         {aircraft.aircraft_tail_numbers?.filter(
-                        (item) =>
+                          (item) =>
                             item.status?.name?.toLowerCase() === "active" &&
                             !item.is_deleted
                         ).length ?? 0}
@@ -115,17 +118,17 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
                     </div>
                   </div>
                   <Separator />
-                  <div className="flex justify-between gap-2 w-full">
-                    <div className="flex flex-col gap-1 text-muted-foreground w-1/2">
+                  <div className="flex w-full justify-between gap-2">
+                    <div className="flex w-1/2 flex-col gap-1 text-muted-foreground">
                       <div className="flex gap-1">
                         <BoxIcon className="size-4" />
-                        <div className="text-xs break-words">Max Volume</div>
+                        <div className="break-words text-xs">Max Volume</div>
                       </div>
                       <div className="tabular-nums text-foreground">
                         {aircraft.max_bulk_capacity_volume || "0"}m³
                       </div>
                     </div>
-                    <div className="flex flex-col gap-1 text-muted-foreground w-1/2">
+                    <div className="flex w-1/2 flex-col gap-1 text-muted-foreground">
                       <div className="flex gap-1">
                         <WeightIcon className="size-4" />
                         <div className="text-xs">Max Weight</div>
@@ -142,12 +145,12 @@ export default function AircraftTypePage({ isSetting = false }: { isSetting?: bo
         </div>
 
         {/* Aircraft Layout */}
-        <div className="border bg-zinc-900/50 h-[75vh] pr-1 rounded-md overflow-hidden">
+        <div className="h-[75vh] overflow-hidden rounded-md border pr-1 dark:bg-zinc-900/50">
           <AircraftDiagram ULDTotal={ULDTotal} />
         </div>
 
         {/* Aircraft Form */}
-        <div className="w-full overflow-y-auto border bg-zinc-900/50 custom-scrollbar h-[75vh] p-4 rounded-md">
+        <div className="custom-scrollbar h-[75vh] w-full overflow-y-auto rounded-md border p-4 dark:bg-zinc-900/50">
           <AircraftTypeFormV2
             form={aircraftForm}
             currentOpen={currentOpenAircraftModal}

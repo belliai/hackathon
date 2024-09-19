@@ -25,7 +25,7 @@ export default function SummaryTotal(props: SummaryTotalProps) {
     }
     
     return (
-        <div className="flex flex-col text-sm text-muted-foreground gap-2 mt-3">
+        <div className="flex flex-col text-sm dark:text-muted-foreground gap-2 mt-3">
             <div className="flex gap-3">
                 <div className="font-bold w-1/4">Weight</div>
                 <div className="w-2/4 text-right">{`${weight ? weight : '0'}`}</div>

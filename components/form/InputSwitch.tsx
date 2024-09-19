@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Switch } from "../ui/switch"
+import { Textarea, TextareaProps } from "../ui/textarea"
 import TimeInput from "../ui/time-input"
 import { Combobox, ComboboxProps } from "./combobox"
 import AsyncSearchComboBox, { AsyncSearchComboBoxProps } from "./combobox-async"
@@ -48,8 +49,16 @@ export type SelectOptions = {
 
 export type InputSwitchProps<DataType extends FieldValues> =
   | (BaseInputProps<DataType> & {
-      type: "search" | "text" | "checkbox" | "switch" | "hidden" | "number"
+      type:
+        | "search"
+        | "text"
+        | "text-area"
+        | "checkbox"
+        | "switch"
+        | "hidden"
+        | "number"
     })
+  | (BaseInputProps<DataType> & { type: "text-area" } & TextareaProps)
   | (BaseInputProps<DataType> & {
       type: "stepper-number"
       suffix?: string
@@ -431,6 +440,31 @@ export default function InputSwitch<
                       </span>
                     </div>
                   </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )
+      case "text-area":
+        return (
+          <FormField
+            key={props.name}
+            control={form.control}
+            name={props.name}
+            render={({ field }) => (
+              <FormItem className="flex-grow space-y-1">
+                {!!props.label && (
+                  <FormLabel
+                    info={props.info}
+                    tooltipId={props.tooltipId}
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
+                    {props.label}
+                  </FormLabel>
+                )}
+                <FormControl>
+                  <Textarea {...field} {...(props as TextareaProps)} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

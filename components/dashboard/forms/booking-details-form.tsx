@@ -208,11 +208,11 @@ const BookingDetailsForm = React.forwardRef<
           name="awb"
           render={({ field }) => (
             <FormItem>
-              <FormLabel tooltipId="new-orders-awb-number">AWB#</FormLabel>
+              <FormLabel tooltipId="new-orders-awb-number font-semibold">AWB#</FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  className="h-[40px] border-2 border-foreground/30"
+                  className="h-[40px] dark:border-2 dark:border-foreground/30"
                 />
               </FormControl>
               <FormMessage />

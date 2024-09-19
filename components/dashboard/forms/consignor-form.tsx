@@ -75,9 +75,9 @@ const ConsignorForm = React.forwardRef<HTMLDivElement, any>(
             name="consignor_phone_number"
             render={({ field }) => (
               <FormItem className="">
-                <FormLabel info="Total">Phone Number</FormLabel>
+                <FormLabel info="Total" className="font-semibold" >Phone Number</FormLabel>
                 <FormControl>
-                  <PhoneInputV2 {...field} />
+                  <PhoneInputV2 {...field} className="rounded-lg dark:border-2 dark:border-foreground/30 h-[40px]" international />
                 </FormControl>
                 <FormMessage />
               </FormItem>

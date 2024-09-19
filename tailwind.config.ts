@@ -59,6 +59,8 @@ const config = {
           primary: "#FB5727",
           secondary: "#009BA5",
         },
+        "primary-text": "hsl(var(--text-primary))",
+        "secondary-text": "hsl(var(--text-secondary))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -93,7 +95,10 @@ const config = {
             opacity: "1",
             transform: "translateX(0)"
           }
-        }
+        },
+      },
+      backgroundImage: {
+        "skye": "linear-gradient(60deg, rgba(6,89,89,1) 0%, rgba(3,35,73,1) 100%);"
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

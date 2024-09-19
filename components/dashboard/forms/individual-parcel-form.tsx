@@ -67,14 +67,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
             name="individual_parcel_form.description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel info="hellow world!, this is info">
+                <FormLabel className="font-semibold" info="hellow world!, this is info">
                   Description
                 </FormLabel>
                 <FormControl>
                   <Input
                     defaultValue={formValues.description}
                     {...field}
-                    className="border-2 border-foreground/30 h-[40px]"
+                    className="dark:border-2 dark:border-foreground/30 h-[40px]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -86,14 +86,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
             name="individual_parcel_form.internal_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel info="hellow world!, this is info">
+                <FormLabel className="font-semibold" info="hellow world!, this is info">
                   Internal ID
                 </FormLabel>
                 <FormControl>
                   <Input
                     defaultValue={formValues.internal_id}
                     {...field}
-                    className="border-2 border-foreground/30 h-[40px]"
+                    className="dark:border-2 dark:border-foreground/30 h-[40px]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -105,14 +105,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
             name="individual_parcel_form.external_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel info="hellow world!, this is info">
+                <FormLabel className="font-semibold" info="hellow world!, this is info">
                   External ID
                 </FormLabel>
                 <FormControl>
                   <Input
                     defaultValue={formValues.external_id}
                     {...field}
-                    className="border-2 border-foreground/30 h-[40px]"
+                    className="dark:border-2 dark:border-foreground/30 h-[40px]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -153,14 +153,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.qty"
                 render={({ field }) => (
                     <FormItem>
-                      <FormLabel info="hellow world!, this is info">
+                      <FormLabel className="font-semibold" info="hellow world!, this is info">
                         Qty
                       </FormLabel>
                       <FormControl>
                         <Input
                           defaultValue={formValues.individual_parcel_form.qty}
                           {...field}
-                          className="border-2 border-foreground/30 h-[40px]"
+                          className="dark:border-2 dark:border-foreground/30 h-[40px]"
                         />
                       </FormControl>
                       <FormMessage />
@@ -173,14 +173,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.weight"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel info="hellow world!, this is info">
+                    <FormLabel className="font-semibold" info="hellow world!, this is info">
                       Weight
                     </FormLabel>
                     <FormControl>
                       <Input
                         defaultValue={formValues.individual_parcel_form.weight}
                         {...field}
-                        className="border-2 border-foreground/30 h-[40px]"
+                        className="dark:border-2 dark:border-foreground/30 h-[40px]"
                         type="number"
                       />
                       </FormControl>
@@ -194,14 +194,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.width"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel info="hellow world!, this is info">
+                    <FormLabel className="font-semibold" info="hellow world!, this is info">
                       Width
                     </FormLabel>
                     <FormControl>
                       <Input
                         defaultValue={formValues.individual_parcel_form.width}
                         {...field}
-                        className="border-2 border-foreground/30 h-[40px]"
+                        className="dark:border-2 dark:border-foreground/30 h-[40px]"
                         type="number"
                       />
                       </FormControl>
@@ -215,14 +215,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.length"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel info="hellow world!, this is info">
+                    <FormLabel className="font-semibold" info="hellow world!, this is info">
                       Length
                     </FormLabel>
                     <FormControl>
                       <Input
                         defaultValue={formValues.individual_parcel_form.length}
                         {...field}
-                        className="border-2 border-foreground/30 h-[40px]"
+                        className="dark:border-2 dark:border-foreground/30 h-[40px]"
                         type="number"
                       />
                       </FormControl>
@@ -236,14 +236,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.height"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel info="hellow world!, this is info">
+                    <FormLabel className="font-semibold" info="hellow world!, this is info">
                       Height
                     </FormLabel>
                     <FormControl>
                       <Input
                         defaultValue={formValues.individual_parcel_form.height}
                         {...field}
-                        className="border-2 border-foreground/30 h-[40px]"
+                        className="dark:border-2 dark:border-foreground/30 h-[40px]"
                         type="number"
                       />
                       </FormControl>
@@ -262,14 +262,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.volume"
                 render={({ field }) => (
                     <FormItem>
-                      <FormLabel info="hellow world!, this is info">
+                      <FormLabel className="font-semibold" info="hellow world!, this is info">
                         Volume
                       </FormLabel>
                       <FormControl>
                         <Input
                           defaultValue={formValues.individual_parcel_form.volume}
                           {...field}
-                          className="border-2 border-foreground/30 h-[40px]"
+                          className="dark:border-2 dark:border-foreground/30 h-[40px]"
                           readOnly
                         />
                       </FormControl>
@@ -282,14 +282,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.subtotal"
                 render={({ field }) => (
                     <FormItem>
-                      <FormLabel info="hellow world!, this is info">
+                      <FormLabel className="font-semibold" info="hellow world!, this is info">
                         Subtotal
                       </FormLabel>
                       <FormControl>
                         <Input
                           defaultValue={formValues.individual_parcel_form.subtotal}
                           {...field}
-                          className="border-2 border-foreground/30 h-[40px]"
+                          className="dark:border-2 dark:border-foreground/30 h-[40px]"
                           readOnly
                         />
                       </FormControl>
@@ -302,14 +302,14 @@ const IndividualParcelForm = React.forwardRef<HTMLDivElement, any>(
                 name="individual_parcel_form.skid"
                 render={({ field }) => (
                     <FormItem>
-                      <FormLabel info="hellow world!, this is info">
+                      <FormLabel className="font-semibold" info="hellow world!, this is info">
                         Skid
                       </FormLabel>
                       <FormControl>
                         <Input
                           defaultValue={formValues.individual_parcel_form.skid}
                           {...field}
-                          className="border-2 border-foreground/30 h-[40px]"
+                          className="dark:border-2 dark:border-foreground/30 h-[40px]"
                           readOnly
                         />
                       </FormControl>

@@ -178,9 +178,9 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
               name="payment_form.amount"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel info="Total">Total Amount</FormLabel>
+                  <FormLabel className="font-semibold" info="Total">Total Amount</FormLabel>
                   <FormControl>
-                    <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
+                    <Input {...field} className="dark:border-2 dark:border-foreground/30 h-[40px]" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -191,9 +191,9 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
               name="payment_form.transaction_id"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel info="Total">Transaction ID</FormLabel>
+                  <FormLabel className="font-semibold" info="Total">Transaction ID</FormLabel>
                   <FormControl>
-                    <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
+                    <Input {...field} className="dark:border-2 dark:border-foreground/30 h-[40px]" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -212,9 +212,9 @@ const PaymentFormV2 = React.forwardRef<HTMLDivElement, any>(
               name="payment_form.notes"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel info="Notes">Notes</FormLabel>
+                  <FormLabel className="font-semibold" info="Notes">Notes</FormLabel>
                   <FormControl>
-                    <Input {...field} className="border-2 border-foreground/30 h-[40px]" />
+                    <Input {...field} className="dark:border-2 dark:border-foreground/30 h-[40px]" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

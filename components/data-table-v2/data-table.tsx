@@ -66,7 +66,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
 
     const columnsWithSticky = columnsData.visible_columns.map((col, index) => ({
       ...col,
-      sticky: tableKey === 'dashboard_flights' && index === Math.floor(Math.random() * (7 - 1 + 1)) + 1 // Randomize number between 1 to 7
+      sticky: tableKey === 'dashboard_flights' && (index === 3 || index === 7)
     }));
     console.log(columnsWithSticky.filter(col => col.sticky))
     // Separate sticky and non-sticky columns
@@ -138,7 +138,7 @@ function DataTableHeader() {
   const visibleColumns = columns.visible_columns as ColumnWithSticky[]
 
   return (
-    <TableHeader>
+    <TableHeader className="bg-zinc-100 dark:bg-transparent">
       <TableRow>
         {visibleColumns.map((col, idx) => (
           <TableHead
@@ -229,7 +229,7 @@ function DataTableBody<T>(props: {
                       : undefined
                   }
                   className={cn(
-                    "whitespace-nowrap",
+                    "whitespace-nowrap text-black dark:text-muted-foreground",
                     col.sticky && "sticky z-10 bg-background"
                   )}
                   style={{ 

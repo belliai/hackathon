@@ -110,7 +110,7 @@ function DataFieldsItemContent<T extends FieldValues>({
           <InputSwitch
             {...formWithoutHidden[0]}
             label={undefined}
-            className="bg-zinc-900/50"
+            className="dark:bg-zinc-900/50"
           />
           <div className="flex gap-2">
             <Button
@@ -178,7 +178,7 @@ function DataFieldsItemContent<T extends FieldValues>({
                       >
                         <span
                           className={cn("truncate text-muted-foreground", {
-                            "text-white": index === 0,
+                            "text-primary-text": index === 0,
                           })}
                         >
                           {value}
@@ -246,7 +246,7 @@ function DataFieldsItem({
   return (
     <div
       className={cn(
-        "group flex justify-between rounded-sm border bg-zinc-900/50 px-3 py-1.5",
+        "group flex justify-between rounded-sm border px-3 py-1.5 dark:bg-zinc-900/50",
         className
       )}
     >

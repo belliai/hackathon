@@ -17,6 +17,7 @@ import { useBelliApi } from "@/lib/utils/network"
 
 const route = "flights"
 const routeRecurrings = "flights/recurrings"
+const routeDashboard = "flights/dashboard"
 
 interface FlightParamsProps extends PaginationParams {
   start_date?: string
@@ -38,20 +39,18 @@ export const fetchFlightDashboard = async (
   belliApi: AxiosInstance,
   params: FlightParamsProps
 ) => {
-  const _route = route + "/dashboard"
   return belliApi
-    .get(_route, {
+    .get(routeDashboard, {
       params,
     })
     .then((res) => res.data as APIPaginatedResponse<TableItem<Flight>>)
 }
 
 export const useFlightsDashboard = (params: FlightParamsProps) => {
-  const _route = route + "/dashboard"
   const belliApi = useBelliApi()
 
   return useQuery({
-    queryKey: [_route, params],
+    queryKey: [route, "dashboard", params],
     queryFn: async () => await fetchFlightDashboard(await belliApi, params),
     placeholderData: keepPreviousData,
   })
@@ -82,7 +81,7 @@ export const useRecurringFlightList = (params: FlightParamsProps) => {
   const belliApi = useBelliApi()
 
   return useQuery({
-    queryKey: [routeRecurrings, params],
+    queryKey: [route, "recurring", params],
     queryFn: async () => await fetchRecurringFlightList(await belliApi, params),
     placeholderData: keepPreviousData,
   })
@@ -104,7 +103,9 @@ export const useCreateFlight = () => {
     mutationFn: async (data: FlightMasterWithRecurring) =>
       await createFlight(await belliApi, data),
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [route] })
+      queryClient.invalidateQueries({
+        queryKey: [route],
+      })
     },
   })
 }
@@ -151,7 +152,9 @@ export const useUpdateFlight = () => {
       return await updateFlight(await belliApi, data.id, rest)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [route] })
+      queryClient.invalidateQueries({
+        queryKey: [route],
+      })
     },
   })
 }
@@ -172,7 +175,9 @@ export const usePartialUpdateFlight = () => {
       return await partialUpdate(await belliApi, data.id, rest)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [route] })
+      queryClient.invalidateQueries({
+        queryKey: [route],
+      })
     },
   })
 }
@@ -196,7 +201,9 @@ export const useDeleteFlight = () => {
     mutationFn: async (data: { id: string; delete_mode?: string }) =>
       await deleteFlight(await belliApi, data.id, data.delete_mode),
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [route] })
+      queryClient.invalidateQueries({
+        queryKey: [route],
+      })
     },
   })
 }

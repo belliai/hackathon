@@ -5,8 +5,15 @@ import { useBelliApi } from "@/lib/utils/network"
 
 const route = "statuses"
 
+type Status = {
+  created_at: string
+  ID: string
+  name: string
+  updated_at: string
+}
+
 export const fetchStatuses = async (belliApi: AxiosInstance) => {
-  const { data } = await belliApi.get(`/${route}`)
+  const { data } = await belliApi.get<Status[]>(`/${route}`)
   return data
 }
 

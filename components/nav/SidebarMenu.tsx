@@ -44,7 +44,9 @@ export default function SidebarMenu({
     <Accordion
       type="single"
       collapsible
-      defaultValue={items[0]?.disabled ? items[0]?.name : activeItem?.parent?.name}
+      defaultValue={
+        items[0]?.disabled ? items[0]?.name : activeItem?.parent?.name
+      }
       className="space-y-1"
     >
       {items.map((item) => {

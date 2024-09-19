@@ -405,7 +405,7 @@ export default function NewOrderSideModal({
                   originId={formValues.origin_id || ""}
                 />
               </SheetTitle>
-              <div className="flex flex-row items-center justify-end gap-2 text-muted-foreground">
+              <div className="flex flex-row items-center justify-end gap-2 dark:text-muted-foreground">
                 <SummaryTotal
                   currencyId={formValues.currency_id || ""}
                   total={formValues.total || ""}
@@ -450,7 +450,7 @@ export default function NewOrderSideModal({
                     {TAB_LIST.map((list, index) => (
                       <TabsTrigger
                         key={`list-${list.value}`}
-                        className="w-full justify-start py-1.5 disabled:text-muted-foreground/45 data-[state=active]:bg-accent data-[state=active]:text-white"
+                        className="w-full justify-start py-1.5 disabled:text-muted-foreground/45 data-[state=active]:bg-accent dark:data-[state=active]:text-white"
                         value={list.value}
                         disabled={
                           mode === "create" &&
@@ -463,7 +463,7 @@ export default function NewOrderSideModal({
                     ))}
                     <TabsTrigger
                       key={`list-hawb`}
-                      className="w-full justify-start py-1.5 disabled:text-muted-foreground/45 data-[state=active]:bg-accent data-[state=active]:text-white"
+                      className="w-full justify-start py-1.5 disabled:text-muted-foreground/45 data-[state=active]:bg-accent dark:data-[state=active]:text-white"
                       value={"hawb"}
                       disabled={
                         selectedBookingType?.name.toLowerCase() !== "mawb"
