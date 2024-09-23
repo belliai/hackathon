@@ -43,7 +43,11 @@ export function DataTableContextProvider(
   props: DataTableContextType & PropsWithChildren
 ) {
   const [columns, setColumns] = useState<ColumnResponse>(
-    props.columns ?? { visible_columns: [], non_visible_columns: [], sticky_columns: [] }
+    props.columns ?? {
+      visible_columns: [],
+      non_visible_columns: [],
+      sticky_columns: [],
+    }
   )
 
   useEffect(() => {

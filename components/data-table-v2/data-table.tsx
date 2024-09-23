@@ -115,35 +115,33 @@ function DataTableHeader() {
   return (
     <TableHeader className="bg-zinc-100 dark:bg-transparent">
       <TableRow>
-        {stickyColumns && stickyColumns.map((col, idx) => (
-          <TableHead
-            key={col.id}
-            className={cn(
-              "cursor-pointer",
-              "sticky z-10 bg-background"
-            )}
-            style={{ 
-              left: `${idx * 120}px`,
-              zIndex: 20
-            }}
-            onClick={() => {
-              onSortToggle(col.real_column_name)
-            }}
-          >
-            <div className="inline-flex w-full items-center justify-between gap-2">
-              {col.column_name}
-              {sort?.sort_by === col.real_column_name && (
-                <>
-                  {sort.sort_dir === "asc" ? (
-                    <ChevronUpIcon className="size-3 text-muted-foreground" />
-                  ) : (
-                    <ChevronDownIcon className="size-3 text-muted-foreground" />
-                  )}
-                </>
-              )}
-            </div>
-          </TableHead>
-        ))}
+        {stickyColumns &&
+          stickyColumns.map((col, idx) => (
+            <TableHead
+              key={col.id}
+              className={cn("cursor-pointer", "sticky z-10 bg-background")}
+              style={{
+                left: `${idx * 120}px`,
+                zIndex: 20,
+              }}
+              onClick={() => {
+                onSortToggle(col.real_column_name)
+              }}
+            >
+              <div className="inline-flex w-full items-center justify-between gap-2">
+                {col.column_name}
+                {sort?.sort_by === col.real_column_name && (
+                  <>
+                    {sort.sort_dir === "asc" ? (
+                      <ChevronUpIcon className="size-3 text-muted-foreground" />
+                    ) : (
+                      <ChevronDownIcon className="size-3 text-muted-foreground" />
+                    )}
+                  </>
+                )}
+              </div>
+            </TableHead>
+          ))}
         {visibleColumns.map((col) => (
           <TableHead
             key={col.id}
@@ -218,14 +216,23 @@ function DataTableBody<T>(props: {
             className={cn(onRowClick && "cursor-pointer")}
           >
             {[...stickyColumns, ...visibleColumns].map((col, idx) => {
-              const cellData = row.columns.find(c => c.key === col.real_column_name)
+              const cellData = row.columns.find(
+                (c) => c.key === col.real_column_name
+              )
               const customRenderer = customRendererMap?.[col.real_column_name]
-              const isSticky = stickyColumns.some(stickyCol => stickyCol.real_column_name === col.real_column_name)
+              const isSticky = stickyColumns.some(
+                (stickyCol) =>
+                  stickyCol.real_column_name === col.real_column_name
+              )
               return (
                 <TableCell
                   onClick={
                     onCellClick
-                      ? () => onCellClick(row.object, columnsMap[col.real_column_name])
+                      ? () =>
+                          onCellClick(
+                            row.object,
+                            columnsMap[col.real_column_name]
+                          )
                       : undefined
                   }
                   className={cn(
@@ -236,11 +243,11 @@ function DataTableBody<T>(props: {
                   style={{
                     minWidth: 120,
                     left: isSticky ? `${idx * 120}px` : undefined,
-                    zIndex: isSticky ? 20 : undefined
+                    zIndex: isSticky ? 20 : undefined,
                   }}
                 >
                   {customRenderer
-                    ? customRenderer(row.object, cellData?.value ?? '')
+                    ? customRenderer(row.object, cellData?.value ?? "")
                     : cellData?.value}
                 </TableCell>
               )
