@@ -1,4 +1,5 @@
 import { Aircraft, AircraftTailNumber } from "../aircraft/aircraft"
+import { TailNumber } from "../aircraft/tail-number"
 
 interface IDNameType {
   ID: string
@@ -46,7 +47,7 @@ export interface Flight {
   arrival_minute: number
   flight_duration_hour: number
   flight_duration_minute: number
-  tail: Aircraft
+  tail: TailNumber
   recurring_flight_id?: string
   week_sat?: any
   week_fri?: any

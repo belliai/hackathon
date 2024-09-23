@@ -65,6 +65,8 @@ type AircraftTypeFormProps = {
   currentOpen: string | boolean
   onOpenChange: (open: boolean) => void
   form: UseFormReturn<TailNumberFormValues>
+  disableDelete?: boolean
+  onSaved?: () => void
 }
 
 export default function TailNumberForm(props: AircraftTypeFormProps) {
@@ -168,6 +170,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
               description: "Tail number updated successfully",
             })
             queryClient.invalidateQueries({ queryKey: [aircraftRoute] })
+            props.onSaved && props.onSaved()
           },
         }
       )
@@ -188,6 +191,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
             description: "Tail Number created successfully",
           })
           queryClient.invalidateQueries({ queryKey: [aircraftRoute] })
+          props.onSaved && props.onSaved()
         },
       })
     }
@@ -420,7 +424,7 @@ export default function TailNumberForm(props: AircraftTypeFormProps) {
               >
                 Cancel
               </Button>
-              {typeof currentOpen === "string" && (
+              {typeof currentOpen === "string" && !props.disableDelete && (
                 <AlertDialog>
                   <AlertDialogTrigger>
                     <Button

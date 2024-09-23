@@ -1,7 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import {
+  tailNumberFormSchema,
+  TailNumberFormValues,
+} from "@/schemas/aircraft/tail-numbers"
+import { zodResolver } from "@hookform/resolvers/zod"
 import * as changeCase from "change-case"
+import { format } from "date-fns"
 import { Loader } from "lucide-react"
 import moment from "moment"
 import { useTheme } from "next-themes"
@@ -9,15 +15,18 @@ import { useForm } from "react-hook-form"
 import { useReadLocalStorage } from "usehooks-ts"
 
 import { Aircraft } from "@/types/aircraft/aircraft"
+import { TailNumber } from "@/types/aircraft/tail-number"
 import { Flight, Specification } from "@/types/flight-master/flight-master"
 import {
   useFlightsDashboard,
   useFlightStatuses,
   usePartialUpdateFlight,
 } from "@/lib/hooks/flight-master/flight-master"
-import { cn } from "@/lib/utils"
 import { useGetOrganizationSettings } from "@/lib/hooks/settings/organization"
 import { useTableState } from "@/lib/hooks/tables/table-state"
+import { cn } from "@/lib/utils"
+import { isVallidUuid } from "@/lib/utils/string-utils"
+import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -37,7 +46,10 @@ import CargoCapacityAreaChart from "@/components/charts/cargo-capacity-area-char
 import { DataTable } from "@/components/data-table-v2/data-table"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
+import TailNumberForm from "@/app/settings/aircrafts/components/forms/aircraft-tail-number-form"
+import { tailNumberFormDefaultValues } from "@/app/settings/aircrafts/constants"
 import { TableCellDropdown } from "@/app/settings/flights/components/forms/table-cell-dropdown"
+import NewFlightModal from "@/app/settings/flights/components/new-flight-form"
 
 interface FlightsActualInformation {
   detail: string
@@ -47,6 +59,18 @@ interface FlightsActualInformation {
 
 export default function FlightsDashboardPage() {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null)
+
+  const [selectedFlightSetting, setSelectedFlightSetting] =
+    useState<Flight | null>(null)
+
+  const [currentOpenTailNumberModal, setCurrentOpenTailNumberModal] = useState<
+    string | boolean
+  >(false)
+
+  const tailnumberForm = useForm<TailNumberFormValues>({
+    resolver: zodResolver(tailNumberFormSchema),
+    defaultValues: tailNumberFormDefaultValues,
+  })
 
   const { data: cargoDisplaySettings } = useGetOrganizationSettings({
     sectionKey: "cargo",
@@ -130,7 +154,7 @@ export default function FlightsDashboardPage() {
             detail: changeCase.capitalCase(field.replace("_actual", "")),
             actual:
               flight.specification?.[tailField as keyof Specification] || "",
-            maximum: flight.tail?.[tailField as keyof Aircraft] || "",
+            maximum: flight.tail?.[tailField as keyof TailNumber] || "",
           }
         }
       })
@@ -196,6 +220,16 @@ export default function FlightsDashboardPage() {
   const selectedFlightModalTitle = `${selectedFlight?.flight_number}, ${selectedFlight?.origin.name} - ${selectedFlight?.destination.name}`
   const selectedFlightModalDescription = `${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} to ${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} (${selectedFlight?.tail?.tail_number || ""}, ${selectedFlight?.tail?.aircraft_type?.name || ""})`
 
+  const handleTailNumberRowClick = (tailNumber: TailNumber) => {
+    tailnumberForm.reset({
+      ...tailNumber,
+      body_type_id: isVallidUuid(tailNumber.body_type?.id),
+      status_id: isVallidUuid(tailNumber.status?.id),
+      gl_code_id: isVallidUuid(tailNumber.gl_code?.id),
+    })
+    setCurrentOpenTailNumberModal(tailNumber.id)
+  }
+
   return (
     <div>
       <Modal
@@ -258,7 +292,53 @@ export default function FlightsDashboardPage() {
           onRefetchData={refetch}
           customCellRenderers={[
             {
-              key: "cargo_capacity",
+              key: "departure_date",
+              renderer: (data) => {
+                const date = new Date(data.departure_date)
+                return (
+                  <div className="inline-flex gap-2 tabular-nums">
+                    <span className="font-mono">{format(date, "EEE")}</span>
+                    <span>{format(date, "dd-MM-yyyy")}</span>
+                  </div>
+                )
+              },
+            },
+            {
+              key: "flight_number",
+              renderer: (data, value) => (
+                <Badge
+                  className="pointer-events-auto"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setSelectedFlightSetting(data)
+                  }}
+                  variant={"outline"}
+                >
+                  {value}
+                </Badge>
+              ),
+            },
+            {
+              key: "tail.tail_number",
+              renderer: (data, value) => (
+                <Badge
+                  className="pointer-events-auto inline-flex gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleTailNumberRowClick(data.tail)
+                  }}
+                  variant={"outline"}
+                >
+                  <span>{data.tail.tail_number}</span>
+                  <span className="font-light text-muted-foreground">
+                    {data.tail.manufacturer.name} {data.tail.aircraft_type.name}{" "}
+                    {data.tail.version.version}
+                  </span>
+                </Badge>
+              ),
+            },
+            {
+              key: "specification.cargo_capacity",
               renderer: (data) => (
                 <ActualInformation
                   actual={Number(data.specification?.cargo_capacity)}
@@ -288,6 +368,31 @@ export default function FlightsDashboardPage() {
           {...tableStateProps}
         />
       )}
+      <NewFlightModal
+        data={selectedFlightSetting}
+        onSaved={refetch}
+        open={!!selectedFlightSetting}
+        mode={"edit"}
+        onOpenChange={() => setSelectedFlightSetting(null)}
+        resetData={() => setSelectedFlightSetting(null)}
+        selectedFlights={"one"}
+      />
+      <TailNumberForm
+        disableDelete
+        onSaved={refetch}
+        form={tailnumberForm}
+        currentOpen={currentOpenTailNumberModal}
+        onOpenChange={(open) => {
+          if (open) {
+            setCurrentOpenTailNumberModal(currentOpenTailNumberModal)
+          } else {
+            if (typeof currentOpenTailNumberModal === "string") {
+              tailnumberForm.reset(tailNumberFormDefaultValues)
+            }
+            setCurrentOpenTailNumberModal(false)
+          }
+        }}
+      />
     </div>
   )
 }

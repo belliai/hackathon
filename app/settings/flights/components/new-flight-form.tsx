@@ -63,8 +63,9 @@ import FlightDetailsForm from "./forms/flight-details"
 import RecurringForm from "./forms/recurring"
 
 type NewFlightModalProps = PropsWithChildren & {
-  onOpenChange: (open: boolean) => void
+  onOpenChange?: (open: boolean) => void
   resetData?: (props: any) => void
+  onSaved?: () => void
   open?: boolean
   mode?: "edit" | "create"
   data?: Flight | null
@@ -178,7 +179,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
   const reset = () => {
     form.reset(initialValues)
     resetData && resetData(null)
-    onOpenChange(false)
+    onOpenChange && onOpenChange(false)
     setCurrentTab("flight-details")
   }
 
@@ -272,11 +273,11 @@ export default function NewFlightModal(props: NewFlightModalProps) {
           recurring_options.week_fri = day == "fri"
           recurring_options.week_sat = day == "sat"
         })
-      }else if (data.recurring === "daily"){
+      } else if (data.recurring === "daily") {
         recurring_options = {
           recurring_type: "daily",
         }
-      }else {
+      } else {
         const rule = RRule.fromString(data.recurring)
 
         const freqMap: { [key: number]: "weekly" } = {
@@ -332,6 +333,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
           title: "Success!",
           description: "Your flight has been updated",
         })
+        props.onSaved && props.onSaved()
       }
       reset()
     } catch (error) {
@@ -674,7 +676,7 @@ export default function NewFlightModal(props: NewFlightModalProps) {
                       delete_mode,
                     })
                   setDeleteWarningOpen(false)
-                  onOpenChange(false)
+                  onOpenChange && onOpenChange(false)
                 } catch (e) {
                   console.log(e)
                 }
