@@ -3,8 +3,12 @@
 import { ReactNode, useEffect, useState } from "react"
 import { PopoverTrigger } from "@radix-ui/react-popover"
 import {
+  CalendarClock,
   CalendarIcon,
   ChevronDown,
+  Clock3,
+  FileDigit,
+  FileSymlink,
   PlusIcon,
   Save,
   Text,
@@ -18,12 +22,18 @@ import {
   FilterKey,
   FilterType,
   FilterValue,
+  OperatorTypes,
 } from "@/types/table/filters"
+import { useSaveFilters } from "@/lib/hooks/filters"
+import { useGeneralSearch } from "@/lib/hooks/general"
+import { cn } from "@/lib/utils"
 import {
+  arrayToOptions,
   datefiltersOptions,
   dateFiltersPresetOptions,
   datePeriodOptions,
   dummyUserOptions,
+  mapFiltersToSave,
   mapValueToDate,
   profileFilterOptions,
   textFilterOptions,
@@ -34,11 +44,14 @@ import { Input } from "@/components/ui/input"
 import MultipleSelector from "@/components/ui/multi-selector"
 import { Popover, PopoverContent } from "@/components/ui/popover"
 import { SelectTrigger, SelectValue } from "@/components/ui/select"
+import TimeInput from "@/components/ui/time-input"
+import { OptionWithType } from "@/components/data-table/types"
 import NumberInputStepper from "@/components/form/number-input-stepper"
 
 import { useDataTableContext } from "../data-table-context"
 import { DataTableColumnOption } from "./data-table-column-option"
 import DataTableSelect from "./data-table-select"
+import { toast } from "@/components/ui/use-toast"
 
 interface DataTableViewOptionsProps<TData> {
   children: ReactNode
@@ -52,7 +65,7 @@ const DEFAULT_FILTER_DATA: FilterData = {
   id: 1,
   column: "",
   value: "",
-  type: "text",
+  type: "string",
 }
 
 const conditionOptions = [
@@ -65,26 +78,33 @@ export function DataTableFilterOptions<TData>({
   lockedPageFilters,
   ...props
 }: DataTableViewOptionsProps<TData>) {
+  const { columns, filters, onFiltersChange, tableKey, setLogicalOperator } = useDataTableContext()
+
   const [localFilters, setLocalFilters] = useState<FilterData[]>([
     DEFAULT_FILTER_DATA,
   ])
   const [open, setOpen] = useState(false)
   const [logicaloperator, setLogicaloperator] = useState("AND")
 
-  const { columns, filters, onFiltersChange } = useDataTableContext()
+  const save = useSaveFilters()
+
+  console.log({ columns, filters })
 
   const allColumns = columns
-    ? Object.values(columns).flatMap((item) => item)
+    ? Object.values(columns)
+        .filter((key) => Array.isArray(key))
+        .flatMap((item) => item)
     : []
 
   const columnOptions = allColumns?.map((columnItem) => {
     const label = columnItem.column_name
     const value = columnItem.id
     // making them all text for now until backend API returns a "type" property which we can map out what to render
-    const type: FilterType = "text"
-
+    const type = columnItem.column_type
     return { label, value, type }
   })
+
+  const operators = columns.operator_types as OperatorTypes
 
   const handleAddFilter = () => {
     const maxId =
@@ -154,6 +174,12 @@ export function DataTableFilterOptions<TData>({
     filters && setLocalFilters(filters || [DEFAULT_FILTER_DATA])
   }, [filters])
 
+  // useEffect(() => {
+  //   savedFilters && setLocalFilters(savedFilters || [DEFAULT_FILTER_DATA])
+  // }, [savedFilters])
+
+  console.log(localFilters)
+
   return (
     <Popover
       open={open}
@@ -170,7 +196,7 @@ export function DataTableFilterOptions<TData>({
         {localFilters.map((filter, index) => {
           const isEmptyOrNotEmpty =
             !filter.condition ||
-            ["is-empty", "is-not-empty"].includes(filter.condition)
+            ["Is Empty", "Is Not Empty"].includes(filter.condition)
           return (
             <div key={filter.id} className="flex items-center gap-2">
               <div className="flex flex-grow gap-1">
@@ -183,6 +209,7 @@ export function DataTableFilterOptions<TData>({
                       onValueChange={(val) => {
                         // handleChangeFilter(filter.id, val, "operator")
                         setLogicaloperator(val)
+                        setLogicalOperator(val)
                       }}
                       options={conditionOptions}
                     >
@@ -203,12 +230,12 @@ export function DataTableFilterOptions<TData>({
                   )}
                 </div>
 
-                <div className="min-w-32">
+                <div className="flex min-w-32 items-center">
                   <DataTableColumnOption
                     options={columnOptions}
                     onValueChange={(value) => {
                       const column = allColumns.find((col) => col.id === value)
-                      const columnType = "text"
+                      const columnType = column?.column_type
 
                       const label = columnOptions.find(
                         (item) => value === item.value
@@ -218,7 +245,7 @@ export function DataTableFilterOptions<TData>({
                         handleChangeFilter(
                           filter.id,
                           [columnType, value, label, ""],
-                          ["type", "column", "label", "value"]
+                          ["type", "columnConfigId", "label", "value"]
                         )
                     }}
                   >
@@ -228,24 +255,26 @@ export function DataTableFilterOptions<TData>({
                     >
                       <div className="flex gap-1">
                         {filter.type === "date" && (
-                          <>
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-
-                            {/* {filter.value && formatFilterValue(filter)} */}
-                          </>
+                          <CalendarIcon className="mr-2 h-4 w-4" />
                         )}
-                        {filter.type === "text" && filter.column && (
-                          <>
-                            <Text className="mr-2 h-4 w-4" />
-                            {/* {filter.value && filter.value} */}
-                          </>
+                        {filter.type === "datetime" && (
+                          <CalendarClock className="mr-2 h-4 w-4" />
                         )}
 
-                        {filter.type === "profile" && (
-                          <>
-                            <UserIcon className="mr-2 h-4 w-4" />
-                            {/* {filter.value && filter.value} */}
-                          </>
+                        {filter.type === "string" && filter.column && (
+                          <Text className="mr-2 h-4 w-4" />
+                        )}
+
+                        {filter.type === "uuid" && (
+                          <FileSymlink className="mr-2 h-4 w-4" />
+                        )}
+
+                        {filter.type === "int" && (
+                          <FileDigit className="mr-2 h-4 w-4" />
+                        )}
+
+                        {filter.type === "time" && (
+                          <Clock3 className="mr-2 h-4 w-4" />
                         )}
 
                         {filter.label || "Select Column"}
@@ -272,7 +301,7 @@ export function DataTableFilterOptions<TData>({
                           handleChangeFilter(filter.id, [cond], ["condition"])
                         }
                       }}
-                      options={datefiltersOptions}
+                      options={arrayToOptions(operators.date)}
                     >
                       <SelectTrigger className="flex items-center text-xs">
                         <SelectValue
@@ -285,8 +314,8 @@ export function DataTableFilterOptions<TData>({
                     {![
                       "is-between",
                       "is-relative-to-today",
-                      "is-empty",
-                      "is-not-empty",
+                      "Is Empty",
+                      "Is Not Empty",
                     ].includes(filter.condition as string) && (
                       <DataTableSelect
                         value={filter.preset as string}
@@ -306,6 +335,24 @@ export function DataTableFilterOptions<TData>({
                           />
                         </SelectTrigger>
                       </DataTableSelect>
+                    )}
+
+                    {["custom-date"].includes(filter.preset as string) && (
+                      <DateInput
+                        className="text-xs"
+                        onChange={(value) => {
+                          handleChangeFilter(
+                            filter.id,
+                            [value, "single"],
+                            ["value", "calendarMode"]
+                          )
+                        }}
+                        onBlur={() => {}}
+                        name=""
+                        mode="single"
+                        disabledMatcher={(v) => false}
+                        value={filter.value || new Date()}
+                      />
                     )}
 
                     {["is-between"].includes(filter.condition as string) && (
@@ -395,14 +442,14 @@ export function DataTableFilterOptions<TData>({
                   </div>
                 )}
 
-                {filter.type === "text" && (
+                {filter.type === "string" && (
                   <div className="flex min-w-40 gap-2">
                     <DataTableSelect
                       value={filter.condition as string}
-                      onValueChange={(value) =>
-                        handleChangeFilter(filter.id, [value], ["condition"])
+                      onValueChange={(cond) =>
+                        handleChangeFilter(filter.id, [cond], ["condition"])
                       }
-                      options={textFilterOptions}
+                      options={arrayToOptions(operators?.string || [])}
                     >
                       <SelectTrigger className="flex items-center gap-2 text-xs">
                         <SelectValue
@@ -414,7 +461,8 @@ export function DataTableFilterOptions<TData>({
 
                     {!isEmptyOrNotEmpty && (
                       <Input
-                        className="text-xs dark:border-zinc-700"
+                      
+                        className="flex w-full text-xs dark:border-zinc-700"
                         value={filter.value as string}
                         onChange={(e) => {
                           handleChangeFilter(filter.id, e.target.value, "value")
@@ -424,14 +472,14 @@ export function DataTableFilterOptions<TData>({
                   </div>
                 )}
 
-                {filter.type === "profile" && (
-                  <div className="flex min-w-40 items-center gap-2">
+                {filter.type === "int" && (
+                  <div className="flex min-w-40 gap-2">
                     <DataTableSelect
                       value={filter.condition as string}
                       onValueChange={(cond) =>
                         handleChangeFilter(filter.id, [cond], ["condition"])
                       }
-                      options={profileFilterOptions}
+                      options={arrayToOptions(operators?.int || [])}
                     >
                       <SelectTrigger className="flex items-center gap-2 text-xs">
                         <SelectValue
@@ -441,16 +489,76 @@ export function DataTableFilterOptions<TData>({
                       </SelectTrigger>
                     </DataTableSelect>
 
-                    {["contains", "does-not-contains"].includes(
-                      filter.condition as string
-                    ) && (
-                      <MultipleSelector
-                        onChange={(selected) => {
-                          handleChangeFilter(filter.id, [selected], ["value"])
+                    {!isEmptyOrNotEmpty && (
+                      <Input
+                        
+                        className="text-xs dark:border-zinc-700"
+                        type="number"
+                        value={Number(filter.value)}
+                        onChange={(e) => {
+                          handleChangeFilter(filter.id, e.target.value, "value")
                         }}
-                        className="w-36 p-1 dark:border-zinc-500 dark:bg-zinc-900"
-                        badgeClassName="bg-transparent hover:bg-transparent dark:border-zinc-700"
-                        options={dummyUserOptions}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {filter.type === "time" && (
+                  <div className="flex min-w-40 gap-2">
+                    <DataTableSelect
+                      value={filter.condition as string}
+                      onValueChange={(cond) =>
+                        handleChangeFilter(filter.id, [cond], ["condition"])
+                      }
+                      options={arrayToOptions(operators?.time || [])}
+                    >
+                      <SelectTrigger className="flex items-center gap-2 text-xs">
+                        <SelectValue
+                          className="w-auto border-none text-xs"
+                          placeholder="Select"
+                        />
+                      </SelectTrigger>
+                    </DataTableSelect>
+
+                    {!isEmptyOrNotEmpty && (
+                      <TimeInput
+                        
+                        className="w-48 text-xs"
+                        onChange={(value) => {
+                          handleChangeFilter(filter.id, [value], ["value"])
+                        }}
+                        onBlur={() => {}}
+                        name=""
+                        value={filter.value || new Date()}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {filter.type === "uuid" && (
+                  <div className="min-w-50 flex items-center gap-2">
+                    <DataTableSelect
+                      value={filter.condition as string}
+                      onValueChange={(cond) =>
+                        handleChangeFilter(filter.id, [cond], ["condition"])
+                      }
+                      options={arrayToOptions(operators?.uuid || [])}
+                    >
+                      <SelectTrigger className="flex items-center gap-2 text-xs">
+                        <SelectValue
+                          className="w-auto border-none text-xs"
+                          placeholder="Select"
+                        />
+                      </SelectTrigger>
+                    </DataTableSelect>
+
+                    {!isEmptyOrNotEmpty && (
+                      <MultipleSelectorWrap
+                        className="w-full p-1 dark:border-zinc-500 dark:bg-zinc-900"
+                        handleChangeFilter={(selected: any) => {
+                          handleChangeFilter?.(filter.id, [selected], ["value"])
+                        }}
+                        value={filter.value}
                       />
                     )}
                   </div>
@@ -474,11 +582,31 @@ export function DataTableFilterOptions<TData>({
           </Button>
 
           <Button
-            disabled={localFilters.length == 0}
+            // disabled={localFilters.length == 0}
             className="w-fit gap-2 text-white dark:bg-zinc-800 hover:dark:bg-zinc-700"
-            onClick={() => {
+            onClick={async () => {
               // save localFilters to parent component
               onFiltersChange && onFiltersChange(localFilters)
+              const payload = mapFiltersToSave(
+                localFilters,
+                logicaloperator,
+                tableKey
+              )
+
+              try {
+                await save.mutateAsync(payload)
+                toast({
+                  title: "Success",
+                  description: "Filters saved successfully",
+                })
+              } catch (error) {
+                console.log(error)
+                toast({
+                  title: "Error",
+                  description: "Failed to save filters",
+                })
+              }
+
               setOpen(false)
             }}
           >
@@ -488,5 +616,42 @@ export function DataTableFilterOptions<TData>({
         </div>
       </PopoverContent>
     </Popover>
+  )
+}
+
+export const MultipleSelectorWrap = (props: any) => {
+  const { handleChangeFilter, value, className } = props
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  const { refetch } = useGeneralSearch({
+    searchTerm,
+    basePath: "/locations",
+  })
+
+  const handleSearch = (keyword: string): Promise<any[]> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        setSearchTerm(keyword)
+        const { data: searchResults } = await refetch()
+        const options = (searchResults || []).map((item: any) => ({
+          label: item.airport_code,
+          value: item.id,
+        }))
+        resolve(options || [])
+      } catch (err) {
+        console.error("Error performing search:", err)
+        reject(err)
+      }
+    })
+  }
+
+  return (
+    <MultipleSelector
+      onChange={handleChangeFilter}
+      delay={100}
+      onSearch={handleSearch}
+      className={cn(className)}
+      badgeClassName="bg-transparent hover:bg-transparent dark:border-zinc-700"
+      value={value}
+    />
   )
 }

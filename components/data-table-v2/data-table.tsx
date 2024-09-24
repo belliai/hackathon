@@ -1,15 +1,18 @@
 "use client"
 
-import { ReactNode, useMemo, useRef } from "react"
+import { ReactNode, useEffect, useMemo, useRef } from "react"
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { useHover } from "usehooks-ts"
 
 import { TableItem } from "@/types/api/dashboard-items"
 import { Column, Table as TableKeys } from "@/types/table/columns"
 import { useColumns } from "@/lib/hooks/columns"
+import { useGetFilters } from "@/lib/hooks/filters"
 import { TableStateHandlers } from "@/lib/hooks/tables/table-state"
 import { cn } from "@/lib/utils"
+import { mapSavedToFilters } from "@/lib/utils/table-filter-utils"
 
+import { FilterData } from "../data-table/types"
 import { ButtonProps } from "../ui/button"
 import {
   Table,
@@ -56,6 +59,16 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const isHover = useHover(hoverRef)
 
   const { data: columnsData } = useGetColumns(tableKey)
+  const { data: savedFilters } = useGetFilters(tableKey)
+
+  const mappedFilters = useMemo(
+    () => (columnsData && mapSavedToFilters(savedFilters, columnsData)) || [],
+    [savedFilters, columnsData]
+  )
+
+  useEffect(()=>{
+
+  },savedFilters)
 
   const rowData = data?.data
   return (
@@ -64,7 +77,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
       tableKey={tableKey}
       onRefetchData={props.onRefetchData}
       sort={props.sort}
-      filters={props.filters}
+      logical_operator="AND"
+      filters={mappedFilters}
       onFiltersChange={props.onFiltersChange}
       onSearchChange={props.onSearchChange}
       onPageChange={props.onPageChange}

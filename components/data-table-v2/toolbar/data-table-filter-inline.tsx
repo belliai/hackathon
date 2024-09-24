@@ -4,6 +4,9 @@ import { format } from "date-fns"
 import {
   Calendar as CalendarIcon,
   ChevronDown,
+  Clock3,
+  FileDigit,
+  FileSymlink,
   Text,
   UserIcon,
   XCircle,
@@ -11,6 +14,7 @@ import {
 import { DateRange } from "react-day-picker"
 import { isValidDate } from "rrule/dist/esm/dateutil"
 
+import { OperatorTypes } from "@/types/table/filters"
 import {
   Direction,
   FilterData,
@@ -19,6 +23,7 @@ import {
 } from "@/types/table/filters"
 import { cn } from "@/lib/utils"
 import {
+  arrayToOptions,
   datefiltersOptions,
   dateFiltersPresetOptions,
   datePeriodOptions,
@@ -38,17 +43,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import TimeInput from "@/components/ui/time-input"
 import NumberInputStepper from "@/components/form/number-input-stepper"
 
 import { useDataTableContext } from "../data-table-context"
+import { MultipleSelectorWrap } from "./data-table-filter-options"
 import DataTableSelect from "./data-table-select"
+import { useSaveFilters } from "@/lib/hooks/filters"
 
 interface DataTableFilterOptionsProps {
   onOpenChange: (open: boolean) => void
 }
 
 export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
-  const { filters, onFiltersChange } = useDataTableContext()
+  const { filters, onFiltersChange, tableKey, logical_operator } = useDataTableContext()
+
+  const save = useSaveFilters()
+
 
   useEffect(() => {
     if (filters.length < 1) props.onOpenChange(false)
@@ -67,7 +78,7 @@ export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
                 />
               )}
 
-              {filter.type === "profile" && (
+              {filter.type === "uuid" && (
                 <DataTableFilterProfile
                   filter={filter}
                   onValueChange={console.log}
@@ -75,8 +86,22 @@ export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
                 />
               )}
 
-              {(filter.type === "text" || !filter.type) && (
+              {(filter.type === "string" || !filter.type) && (
                 <DataTableFilterText
+                  filter={filter}
+                  onValueChange={console.log}
+                />
+              )}
+
+              {filter.type === "int" && (
+                <DataTableFilterNumber
+                  filter={filter}
+                  onValueChange={console.log}
+                />
+              )}
+
+              {filter.type === "time" && (
+                <DataTableFilterTime
                   filter={filter}
                   onValueChange={console.log}
                 />
@@ -88,8 +113,9 @@ export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
       {filters.length > 0 && (
         <Button
           variant={"ghost"}
-          onClick={() => {
+          onClick={async () => {
             onFiltersChange([])
+            await save.mutateAsync({ filters:[], table_name:tableKey, logical_operator})
           }}
           className="gap-1 rounded-full text-xs text-zinc-500"
         >
@@ -128,6 +154,9 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
       : (props.filter.value as Date) ?? undefined
   )
 
+  const { columns } = useDataTableContext()
+  const operators = columns.operator_types as OperatorTypes
+
   useEffect(() => {
     if (condition === "is-between") {
       setCalendarMode("range")
@@ -156,7 +185,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
     props.filter.calendarMode && setCalendarMode(props.filter.calendarMode)
   }, [props.filter])
 
-  const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
+  const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -171,16 +200,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
         >
           <CalendarIcon size={14} />
           &nbsp;Date
-          {isEmptyOrNotEmpty && (
-            <span>
-              {" "}
-              :&nbsp;{" "}
-              {
-                datefiltersOptions.find((item) => item.value === condition)
-                  ?.label
-              }{" "}
-            </span>
-          )}
+          {isEmptyOrNotEmpty && <span> :&nbsp; {condition} </span>}
           {isValidDate(date) && !isEmptyOrNotEmpty && (
             <span> :&nbsp;{format(date as Date, "LLL dd, yyyy")}</span>
           )}
@@ -202,12 +222,12 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
         <div className="flex w-full flex-col space-y-2 py-2">
           <div className="flex justify-start space-x-2 px-4">
             <Label className="text-xs text-zinc-400">
-              {props.filter.column}:{" "}
+              {props.filter.label}:{" "}
             </Label>
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
-              options={datefiltersOptions}
+              options={arrayToOptions(operators.date)}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
                 <SelectValue
@@ -379,11 +399,15 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
   const [condition, setCondition] = useState("is")
   const [text, setText] = useState(props.filter.value)
 
-  const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
+  const { columns } = useDataTableContext()
+  const operators = columns.operator_types as OperatorTypes
+
+  const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
 
   useEffect(() => {
-    if (props.filter.value) setText(String(props.filter.value))
-  }, [props.filter.value])
+    props.filter.value && setText(String(props.filter.value))
+    props.filter.condition && setCondition(props.filter.condition)
+  }, [props.filter])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -399,15 +423,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
           <Text size={14} />
           &nbsp;
           {props.filter.label || props.filter.column}
-          {isEmptyOrNotEmpty && (
-            <p>
-              :&nbsp;{" "}
-              {
-                datefiltersOptions.find((item) => item.value === condition)
-                  ?.label
-              }{" "}
-            </p>
-          )}
+          {isEmptyOrNotEmpty && <span> :&nbsp; {condition} </span>}
           {text && <p>:&nbsp;{String(text)}</p>}
         </Button>
       </PopoverTrigger>
@@ -420,7 +436,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
-              options={textFilterOptions}
+              options={arrayToOptions(operators.string)}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
                 <SelectValue
@@ -444,16 +460,154 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
   )
 }
 
+export function DataTableFilterNumber({ ...props }: DataTableFilterProps) {
+  const [open, setOpen] = useState(false)
+  const [condition, setCondition] = useState("is")
+  const [text, setText] = useState(props.filter.value)
+
+  const { columns } = useDataTableContext()
+  const operators = columns?.operator_types as OperatorTypes || []
+
+  const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
+
+  useEffect(() => {
+    props.filter.value && setText(String(props.filter.value))
+    props.filter.condition && setCondition(props.filter.condition)
+  }, [props.filter])
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "h-8 gap-0 rounded-full px-3 text-xs",
+            (text || isEmptyOrNotEmpty || text == 0) &&
+              "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
+          )}
+        >
+          <FileDigit size={14} />
+          &nbsp;
+          {props.filter.label || props.filter.column}
+          {isEmptyOrNotEmpty && <span> :&nbsp; {condition} </span>}
+          {(text || text == 0) && !isEmptyOrNotEmpty && (
+            <p>:&nbsp;{Number(text)}</p>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto max-w-[260px] gap-0 bg-zinc-900 p-0 px-4 py-2">
+        <div className="space-y-1 p-0">
+          <div className="flex justify-start space-x-2">
+            <Label className="text-xs text-zinc-400">
+              {props.filter.label || props.filter.column}:{" "}
+            </Label>
+            <DataTableSelect
+              value={condition}
+              onValueChange={setCondition}
+              options={arrayToOptions(operators.int)}
+            >
+              <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
+                <SelectValue
+                  className="w-auto border-none text-xs"
+                  placeholder="Select"
+                />
+                <ChevronDown size={12} />
+              </SelectTrigger>
+            </DataTableSelect>
+          </div>
+          {!isEmptyOrNotEmpty && (
+            <Input
+              className="h-8 bg-zinc-900"
+              value={Number(text)}
+              onChange={(e) => setText(e.target.value)}
+            />
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
+export function DataTableFilterTime({ ...props }: DataTableFilterProps) {
+  const [open, setOpen] = useState(false)
+  const [condition, setCondition] = useState("is")
+  const [time, setTime] = useState(props.filter.value || new Date())
+
+  const { columns } = useDataTableContext()
+  const operators = columns.operator_types as OperatorTypes
+
+  const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
+
+  useEffect(() => {
+    props.filter.value && setTime(props.filter.value)
+    props.filter.condition && setCondition(props.filter.condition)
+  }, [props.filter])
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "h-8 gap-0 rounded-full px-3 text-xs",
+            (time || isEmptyOrNotEmpty) &&
+              "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
+          )}
+        >
+          <Clock3 size={14} />
+          &nbsp;
+          {props.filter.label || props.filter.column}
+          {isEmptyOrNotEmpty && <span> :&nbsp; {condition} </span>}
+          {time && !isEmptyOrNotEmpty && (
+            <p>:&nbsp;{format(time as Date, "hh.mm a")}</p>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto max-w-[260px] gap-0 bg-zinc-900 p-0 px-4 py-2">
+        <div className="space-y-1 p-0">
+          <div className="flex justify-start space-x-2">
+            <Label className="text-xs text-zinc-400">
+              {props.filter.label || props.filter.column}:{" "}
+            </Label>
+            <DataTableSelect
+              value={condition}
+              onValueChange={setCondition}
+              options={arrayToOptions(operators.time)}
+            >
+              <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
+                <SelectValue
+                  className="w-auto border-none text-xs"
+                  placeholder="Select"
+                />
+                <ChevronDown size={12} />
+              </SelectTrigger>
+            </DataTableSelect>
+          </div>
+          {!isEmptyOrNotEmpty && (
+            <TimeInput
+              className="w-48 text-xs"
+              onChange={(value) => setTime(value)}
+              onBlur={() => {}}
+              name=""
+              value={time || new Date()}
+            />
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
 export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
   const [condition, setCondition] = useState("contains")
-  const [profiles, setProfiles] = useState<OptionWithUrl[]>([])
+  const [uuids, setUuids] = useState<OptionWithUrl[]>([])
 
   const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
 
   useEffect(() => {
     props.filter.condition && setCondition(props.filter.condition)
-    props.filter.value && setProfiles(props.filter.value as OptionWithUrl[])
+    props.filter.value && setUuids(props.filter.value as OptionWithUrl[])
   }, [props.filter])
 
   return (
@@ -463,13 +617,13 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
           variant={"outline"}
           className={cn(
             "h-8 rounded-full px-3 text-xs",
-            (profiles.length > 0 || isEmptyOrNotEmpty) &&
+            (uuids.length > 0 || isEmptyOrNotEmpty) &&
               "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
           )}
         >
-          <UserIcon size={14} />
+          <FileSymlink size={14} />
           &nbsp;
-          {props.filter.column}
+          {props.filter.label}
           {isEmptyOrNotEmpty && (
             <p>
               {" "}
@@ -480,10 +634,10 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
               }{" "}
             </p>
           )}
-          {profiles.length > 0 && !isEmptyOrNotEmpty && (
+          {uuids.length > 0 && !isEmptyOrNotEmpty && (
             <p>
               :&nbsp;
-              {profiles.map((profile, id) => profile.label).join(", ")}
+              {uuids.map((uuid, id) => uuid.label).join(", ")}
             </p>
           )}
         </Button>
@@ -499,7 +653,7 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
         <div className="space-y-1 p-1">
           <div className="flex justify-start space-x-2">
             <Label className="text-xs text-zinc-400">
-              {props.filter.column}:{" "}
+              {props.filter.label}:{" "}
             </Label>
             <DataTableSelect
               value={condition}
@@ -516,13 +670,20 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
             </DataTableSelect>
           </div>
           {["contains", "does-not-contains"].includes(condition) && (
-            <MultipleSelector
-              onChange={(profiles) => {
-                setProfiles(profiles)
+            // <MultipleSelector
+            //   onChange={(profiles) => {
+            //     setProfiles(profiles)
+            //   }}
+            //   className="border-zinc-500 p-1"
+            //   badgeClassName="bg-transparent hover:bg-transparent border-zinc-700"
+            //   options={props.options}
+            // />
+            <MultipleSelectorWrap
+              handleChangeFilter={(selected: any) => {
+                setUuids(selected)
               }}
-              className="border-zinc-500 p-1"
-              badgeClassName="bg-transparent hover:bg-transparent border-zinc-700"
-              options={props.options}
+              className="w-full p-1 dark:border-zinc-500 dark:bg-zinc-900"
+              value={uuids}
             />
           )}
         </div>

@@ -13,7 +13,19 @@ import {
 } from "date-fns"
 import { DateRange } from "react-day-picker"
 
-import { Direction, Option, OptionWithUrl, Period } from "@/types/table/filters"
+import { ColumnResponse } from "@/types/table/columns"
+import {
+  BaseFilter,
+  Direction,
+  Filter,
+  FilterData,
+  FiltersRequest,
+  FiltersResponse,
+  FilterValue,
+  Option,
+  OptionWithUrl,
+  Period,
+} from "@/types/table/filters"
 
 export const dummyUserOptions: OptionWithUrl[] = [
   { label: "User1", value: "user1", url: "#" },
@@ -181,4 +193,66 @@ export function mapRelativeValueToDate(
   }
 
   return today // Fallback to today if no case matches
+}
+
+export const arrayToOptions = (arr: string[]) => {
+  return (arr && arr.map((item) => ({ label: item, value: item }))) || []
+}
+
+export const mapFiltersToSave = (
+  localFilters: FilterData[],
+  logical_operator: string,
+  table_name: string
+) => {
+  const filters: Filter[] = localFilters.map((filter) => {
+    let defaultValue: any = null;
+
+    if (filter.type === "int") {
+      defaultValue = filter.value || "0";
+    } else if (filter.type  === "string") {
+      defaultValue = String(filter.value);
+    }
+    // console.log(filter.type , defaultValue)
+
+    return {
+      column_config_id: filter.columnConfigId,
+      operator: filter.condition,
+      value: defaultValue,
+    }
+  })
+
+  return {
+    filters,
+    logical_operator,
+    table_name,
+  }
+}
+
+export const mapSavedToFilters = (
+  savedFilters: FiltersResponse,
+  columsData: ColumnResponse
+): FilterData[] => {
+  const filters =
+    savedFilters &&
+    savedFilters.filters.map((filter, id) => {
+      const allColumns = columsData
+        ? Object.values(columsData)
+            .filter((key) => Array.isArray(key))
+            .flatMap((item) => item)
+        : []
+      const detailColumn = allColumns.find(
+        (col) => col.id === filter.column_config_id
+      )
+
+      return {
+        id,
+        columnConfigId: filter.column_config_id,
+        condition: filter.operator,
+        value: filter.value,
+        type: detailColumn?.column_type,
+        label: detailColumn?.column_name,
+      }
+    })
+
+  return filters
 }

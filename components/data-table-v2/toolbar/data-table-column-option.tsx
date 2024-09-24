@@ -1,5 +1,13 @@
-import { ReactNode, useState } from "react"
-import { CalendarIcon, Text, UserIcon } from "lucide-react"
+import { ReactNode, useMemo, useState } from "react"
+import {
+  CalendarClock,
+  CalendarIcon,
+  Clock3,
+  FileDigit,
+  FileSymlink,
+  Text,
+  UserIcon,
+} from "lucide-react"
 
 import { OptionWithType } from "@/types/table/filters"
 import {
@@ -27,38 +35,70 @@ export function DataTableColumnOption<TData>({
 }: DataTableColumnOption<TData>) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("")
+
+  // const [searchTerm, setSearchTerm] = useState("")
+
+  // // Filter options based on the search term
+  // const filteredOptions = useMemo(()=> props.options.filter((option) =>
+  //   option.label.toLowerCase().includes(searchTerm.toLowerCase())
+  // ),[searchTerm])
+
+  // console.log(searchTerm,filteredOptions)
+
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search ..." />
+        <Command
+          filter={(value,search)=>{
+            if(value.includes(search)) return 1;
+            return 0
+          }}
+        >
+          <CommandInput placeholder="Search ..." 
+            // value={searchTerm}
+            //  onValueChange={(val) => setSearchTerm(val)} // Update the search term
+          />
           <CommandList>
-            <CommandEmpty>No Column found.</CommandEmpty>
-            <CommandGroup>
-              {props.options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={(currentValue) => {
-                    props.onValueChange(currentValue)
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  {option.type === "date" && (
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                  )}
-                  {option.type === "text" && <Text className="mr-2 h-4 w-4" />}
-
-                  {option.type === "profile" && (
-                    <UserIcon className="mr-2 h-4 w-4" />
-                  )}
-
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            {/* {filteredOptions.length === 0 ? ( */}
+              <CommandEmpty>No Column found.</CommandEmpty>
+            {/* ) : ( */}
+              <CommandGroup>
+                {props.options.map((option: OptionWithType) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.label}
+                    onSelect={(currentValue) => {
+                      const originalValue = props.options.find(option=>option.label===currentValue)?.value
+                      originalValue && props.onValueChange(originalValue)
+                      setValue(currentValue === value ? "" : currentValue)
+                      setOpen(false)
+                    }}
+                  >
+                    {option.type === "date" && (
+                      <CalendarIcon className="mr-1 h-4 w-4" />
+                    )}
+                    {option.type === "datetime" && (
+                      <CalendarClock className="mr-1 h-4 w-4" />
+                    )}
+                    {option.type === "string" && (
+                      <Text className="mr-1 h-4 w-4" />
+                    )}
+                    {option.type === "int" && (
+                      <FileDigit className="mr-2 h-4 w-4" />
+                    )}
+                    {option.type === "time" && (
+                      <Clock3 className="mr-1 h-4 w-4" />
+                    )}
+                    {option.type === "uuid" && (
+                      <FileSymlink className="mr-1 h-4 w-4" />
+                    )}
+                    {option.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            {/* )} */}
           </CommandList>
         </Command>
       </PopoverContent>
