@@ -201,7 +201,7 @@ const MultipleSelector = React.forwardRef<
       badgeClassName,
       selectFirstItem = true,
       creatable = false,
-      triggerSearchOnFocus = false,
+      triggerSearchOnFocus = true,
       commandProps,
       inputProps,
       hideClearAllButton = false,
@@ -293,6 +293,12 @@ const MultipleSelector = React.forwardRef<
         setSelected(value)
       }
     }, [value])
+
+    // useEffect(() => {
+    //   if (inputValue.length>1) {
+    //     setOpen(true)
+    //   }
+    // }, [inputValue])
 
     useEffect(() => {
       /** If `onSearch` is provided, do not trigger options updated. */
@@ -521,6 +527,8 @@ const MultipleSelector = React.forwardRef<
               onValueChange={(value) => {
                 setInputValue(value)
                 inputProps?.onValueChange?.(value)
+                               triggerSearchOnFocus && onSearch?.(debouncedSearchTerm)
+
               }}
               onBlur={(event) => {
                 if (!onScrollbar) {
@@ -528,6 +536,8 @@ const MultipleSelector = React.forwardRef<
                 }
                 inputProps?.onBlur?.(event)
               }}
+
+            
               onFocus={(event) => {
                 setOpen(true)
                 triggerSearchOnFocus && onSearch?.(debouncedSearchTerm)

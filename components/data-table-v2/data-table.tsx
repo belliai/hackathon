@@ -1,15 +1,18 @@
 "use client"
 
-import { ReactNode, useMemo, useRef } from "react"
+import { ReactNode, useEffect, useMemo, useRef } from "react"
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { useHover } from "usehooks-ts"
 
 import { TableItem } from "@/types/api/dashboard-items"
 import { Column, Table as TableKeys } from "@/types/table/columns"
 import { useColumns } from "@/lib/hooks/columns"
+import { useGetFilters } from "@/lib/hooks/filters"
 import { TableStateHandlers } from "@/lib/hooks/tables/table-state"
 import { cn } from "@/lib/utils"
+import { mapSavedToFilters } from "@/lib/utils/table-filter-utils"
 
+import { FilterData } from "../data-table/types"
 import { ButtonProps } from "../ui/button"
 import {
   Table,
@@ -56,6 +59,16 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const isHover = useHover(hoverRef)
 
   const { data: columnsData } = useGetColumns(tableKey)
+  const { data: savedFilters } = useGetFilters(tableKey)
+
+  const mappedFilters = useMemo(
+    () => (columnsData && mapSavedToFilters(savedFilters, columnsData)) || [],
+    [savedFilters, columnsData]
+  )
+
+  useEffect(()=>{
+
+  },savedFilters)
 
   const rowData = data?.data
   return (
@@ -64,7 +77,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
       tableKey={tableKey}
       onRefetchData={props.onRefetchData}
       sort={props.sort}
-      filters={props.filters}
+      logical_operator="AND"
+      filters={mappedFilters}
       onFiltersChange={props.onFiltersChange}
       onSearchChange={props.onSearchChange}
       onPageChange={props.onPageChange}
@@ -115,35 +129,33 @@ function DataTableHeader() {
   return (
     <TableHeader className="bg-zinc-100 dark:bg-transparent">
       <TableRow>
-        {stickyColumns && stickyColumns.map((col, idx) => (
-          <TableHead
-            key={col.id}
-            className={cn(
-              "cursor-pointer",
-              "sticky z-10 bg-background"
-            )}
-            style={{ 
-              left: `${idx * 120}px`,
-              zIndex: 20
-            }}
-            onClick={() => {
-              onSortToggle(col.real_column_name)
-            }}
-          >
-            <div className="inline-flex w-full items-center justify-between gap-2">
-              {col.column_name}
-              {sort?.sort_by === col.real_column_name && (
-                <>
-                  {sort.sort_dir === "asc" ? (
-                    <ChevronUpIcon className="size-3 text-muted-foreground" />
-                  ) : (
-                    <ChevronDownIcon className="size-3 text-muted-foreground" />
-                  )}
-                </>
-              )}
-            </div>
-          </TableHead>
-        ))}
+        {stickyColumns &&
+          stickyColumns.map((col, idx) => (
+            <TableHead
+              key={col.id}
+              className={cn("cursor-pointer", "sticky z-10 bg-background")}
+              style={{
+                left: `${idx * 120}px`,
+                zIndex: 20,
+              }}
+              onClick={() => {
+                onSortToggle(col.real_column_name)
+              }}
+            >
+              <div className="inline-flex w-full items-center justify-between gap-2">
+                {col.column_name}
+                {sort?.sort_by === col.real_column_name && (
+                  <>
+                    {sort.sort_dir === "asc" ? (
+                      <ChevronUpIcon className="size-3 text-muted-foreground" />
+                    ) : (
+                      <ChevronDownIcon className="size-3 text-muted-foreground" />
+                    )}
+                  </>
+                )}
+              </div>
+            </TableHead>
+          ))}
         {visibleColumns.map((col) => (
           <TableHead
             key={col.id}
@@ -218,14 +230,23 @@ function DataTableBody<T>(props: {
             className={cn(onRowClick && "cursor-pointer")}
           >
             {[...stickyColumns, ...visibleColumns].map((col, idx) => {
-              const cellData = row.columns.find(c => c.key === col.real_column_name)
+              const cellData = row.columns.find(
+                (c) => c.key === col.real_column_name
+              )
               const customRenderer = customRendererMap?.[col.real_column_name]
-              const isSticky = stickyColumns.some(stickyCol => stickyCol.real_column_name === col.real_column_name)
+              const isSticky = stickyColumns.some(
+                (stickyCol) =>
+                  stickyCol.real_column_name === col.real_column_name
+              )
               return (
                 <TableCell
                   onClick={
                     onCellClick
-                      ? () => onCellClick(row.object, columnsMap[col.real_column_name])
+                      ? () =>
+                          onCellClick(
+                            row.object,
+                            columnsMap[col.real_column_name]
+                          )
                       : undefined
                   }
                   className={cn(
@@ -236,11 +257,11 @@ function DataTableBody<T>(props: {
                   style={{
                     minWidth: 120,
                     left: isSticky ? `${idx * 120}px` : undefined,
-                    zIndex: isSticky ? 20 : undefined
+                    zIndex: isSticky ? 20 : undefined,
                   }}
                 >
                   {customRenderer
-                    ? customRenderer(row.object, cellData?.value ?? '')
+                    ? customRenderer(row.object, cellData?.value ?? "")
                     : cellData?.value}
                 </TableCell>
               )
