@@ -144,4 +144,10 @@ export interface Specification {
   fwt: number
   fwd: number
   bulk: number
+  volume_capacity: number
+  total_volume_capacity: number
+  weight_capacity: number
+  total_weight_capacity: number
+  base_rate: number
+  output_rate: number
 }

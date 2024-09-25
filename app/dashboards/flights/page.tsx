@@ -312,7 +312,7 @@ export default function FlightsDashboardPage() {
                     e.stopPropagation()
                     setSelectedFlightSetting(data)
                   }}
-                  variant={"outline"}
+                  variant={"chip-primary"}
                 >
                   {value}
                 </Badge>
@@ -327,7 +327,7 @@ export default function FlightsDashboardPage() {
                     e.stopPropagation()
                     handleTailNumberRowClick(data.tail)
                   }}
-                  variant={"outline"}
+                  variant={"chip-primary"}
                 >
                   <span>{data.tail.tail_number}</span>
                   <span className="font-light text-muted-foreground">
@@ -338,13 +338,24 @@ export default function FlightsDashboardPage() {
               ),
             },
             {
-              key: "specification.cargo_capacity",
+              key: "volume_capacity",
               renderer: (data) => (
                 <ActualInformation
-                  actual={Number(data.specification?.cargo_capacity)}
-                  maximum={Number(data?.tail?.cargo_capacity)}
+                  actual={Number(data.specification?.volume_capacity)}
+                  maximum={Number(data?.specification?.total_volume_capacity)}
                   displayOption={displayOption}
                   unit={String(data.tail.volume_unit.symbol || "")}
+                />
+              ),
+            },
+            {
+              key: "weight_capacity",
+              renderer: (data) => (
+                <ActualInformation
+                  actual={Number(data.specification?.weight_capacity)}
+                  maximum={Number(data?.specification?.total_weight_capacity)}
+                  displayOption={displayOption}
+                  unit={String(data.tail.weight_unit.symbol || "")}
                 />
               ),
             },
