@@ -66,10 +66,6 @@ export function DataTable<T>(props: DataTableProps<T>) {
     [savedFilters, columnsData]
   )
 
-  useEffect(()=>{
-
-  },savedFilters)
-
   const rowData = data?.data
   return (
     <DataTableContextProvider

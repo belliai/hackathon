@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { SelectTrigger, SelectValue } from "@radix-ui/react-select"
-import { format } from "date-fns"
+import { format, parse } from "date-fns"
 import {
   Calendar as CalendarIcon,
   ChevronDown,
@@ -14,13 +14,14 @@ import {
 import { DateRange } from "react-day-picker"
 import { isValidDate } from "rrule/dist/esm/dateutil"
 
-import { OperatorTypes } from "@/types/table/filters"
 import {
   Direction,
   FilterData,
+  OperatorTypes,
   OptionWithUrl,
   Period,
 } from "@/types/table/filters"
+import { useSaveFilters } from "@/lib/hooks/filters"
 import { cn } from "@/lib/utils"
 import {
   arrayToOptions,
@@ -49,17 +50,16 @@ import NumberInputStepper from "@/components/form/number-input-stepper"
 import { useDataTableContext } from "../data-table-context"
 import { MultipleSelectorWrap } from "./data-table-filter-options"
 import DataTableSelect from "./data-table-select"
-import { useSaveFilters } from "@/lib/hooks/filters"
 
 interface DataTableFilterOptionsProps {
   onOpenChange: (open: boolean) => void
 }
 
 export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
-  const { filters, onFiltersChange, tableKey, logical_operator } = useDataTableContext()
+  const { filters, onFiltersChange, tableKey, logical_operator, onRefetchData } =
+    useDataTableContext()
 
   const save = useSaveFilters()
-
 
   useEffect(() => {
     if (filters.length < 1) props.onOpenChange(false)
@@ -115,7 +115,12 @@ export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
           variant={"ghost"}
           onClick={async () => {
             onFiltersChange([])
-            await save.mutateAsync({ filters:[], table_name:tableKey, logical_operator})
+            await save.mutateAsync({
+              filters: [],
+              table_name: tableKey,
+              logical_operator,
+            })
+            onRefetchData()
           }}
           className="gap-1 rounded-full text-xs text-zinc-500"
         >
@@ -175,17 +180,29 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
   }, [direction, period, count])
 
   useEffect(() => {
-    if (isValidDate(date)) setMonth(date)
-    if (date && "from" in date && isValidDate(date.from)) setMonth(date?.from)
-  }, [date])
+    if (props.filter.value) {
+      const parsedValue =
+        typeof props.filter.value === "string"
+          ? new Date(`${props.filter.value}T00:00:00`)
+          : props.filter.value
 
-  useEffect(() => {
-    props.filter.value && setDate(props.filter.value as Date | DateRange)
+      setDate(parsedValue as Date | DateRange)
+    }
     props.filter.condition && setCondition(props.filter.condition)
     props.filter.calendarMode && setCalendarMode(props.filter.calendarMode)
   }, [props.filter])
 
   const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
+
+  const isDateRange = (date: Date | DateRange): date is DateRange => {
+    return date && typeof date === "object" && "from" in date && "to" in date
+  }
+
+  useEffect(() => {
+    if (isValidDate(date)) setMonth(date)
+    if (date && isDateRange(date) && "from" in date && isValidDate(date.from))
+      setMonth(date?.from)
+  }, [date])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -205,15 +222,12 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
             <span> :&nbsp;{format(date as Date, "LLL dd, yyyy")}</span>
           )}
           {date &&
-            "from" in date &&
+            isDateRange(date) &&
             isValidDate(date?.from) &&
             !isEmptyOrNotEmpty && (
               <span>
-                {" "}
                 : {format(date.from, "LLL dd, yyyy")} -{" "}
-                {"to" in date &&
-                  isValidDate(date?.to) &&
-                  format(date.to, "LLL dd, yyyy")}{" "}
+                {isValidDate(date?.to) && format(date.to, "LLL dd, yyyy")}
               </span>
             )}
         </Button>
@@ -227,7 +241,7 @@ export function DataTableFilterDate({ ...props }: DataTableFilterProps) {
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
-              options={arrayToOptions(operators.date)}
+              options={arrayToOptions(operators?.date || [])}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
                 <SelectValue
@@ -466,7 +480,7 @@ export function DataTableFilterNumber({ ...props }: DataTableFilterProps) {
   const [text, setText] = useState(props.filter.value)
 
   const { columns } = useDataTableContext()
-  const operators = columns?.operator_types as OperatorTypes || []
+  const operators = (columns?.operator_types as OperatorTypes) || []
 
   const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
 
@@ -539,7 +553,12 @@ export function DataTableFilterTime({ ...props }: DataTableFilterProps) {
   const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
 
   useEffect(() => {
-    props.filter.value && setTime(props.filter.value)
+    const parsedValue =
+    typeof props.filter.value === "string"
+      ? parse(props.filter.value, 'hh:mma', new Date())
+      : props.filter.value
+
+    parsedValue && setTime(parsedValue)
     props.filter.condition && setCondition(props.filter.condition)
   }, [props.filter])
 
@@ -559,7 +578,7 @@ export function DataTableFilterTime({ ...props }: DataTableFilterProps) {
           {props.filter.label || props.filter.column}
           {isEmptyOrNotEmpty && <span> :&nbsp; {condition} </span>}
           {time && !isEmptyOrNotEmpty && (
-            <p>:&nbsp;{format(time as Date, "hh.mm a")}</p>
+            <p>:&nbsp;{isValidDate(time) && format(time as Date, "hh.mm a")}</p>
           )}
         </Button>
       </PopoverTrigger>
@@ -572,7 +591,7 @@ export function DataTableFilterTime({ ...props }: DataTableFilterProps) {
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
-              options={arrayToOptions(operators.time)}
+              options={arrayToOptions(operators?.time || [])}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
                 <SelectValue

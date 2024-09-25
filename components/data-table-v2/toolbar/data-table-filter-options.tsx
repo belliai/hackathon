@@ -1,7 +1,8 @@
 "use client"
 
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useEffect, useRef, useState } from "react"
 import { PopoverTrigger } from "@radix-ui/react-popover"
+import { format } from "date-fns"
 import {
   CalendarClock,
   CalendarIcon,
@@ -45,13 +46,13 @@ import MultipleSelector from "@/components/ui/multi-selector"
 import { Popover, PopoverContent } from "@/components/ui/popover"
 import { SelectTrigger, SelectValue } from "@/components/ui/select"
 import TimeInput from "@/components/ui/time-input"
+import { toast } from "@/components/ui/use-toast"
 import { OptionWithType } from "@/components/data-table/types"
 import NumberInputStepper from "@/components/form/number-input-stepper"
 
 import { useDataTableContext } from "../data-table-context"
 import { DataTableColumnOption } from "./data-table-column-option"
 import DataTableSelect from "./data-table-select"
-import { toast } from "@/components/ui/use-toast"
 
 interface DataTableViewOptionsProps<TData> {
   children: ReactNode
@@ -60,6 +61,8 @@ interface DataTableViewOptionsProps<TData> {
 
   onOpenChange?: (open: boolean) => void
 }
+
+type Focusable = HTMLInputElement | HTMLSelectElement;
 
 const DEFAULT_FILTER_DATA: FilterData = {
   id: 1,
@@ -78,17 +81,39 @@ export function DataTableFilterOptions<TData>({
   lockedPageFilters,
   ...props
 }: DataTableViewOptionsProps<TData>) {
-  const { columns, filters, onFiltersChange, tableKey, setLogicalOperator } = useDataTableContext()
+  const {
+    columns,
+    filters,
+    onFiltersChange,
+    tableKey,
+    setLogicalOperator,
+    onRefetchData,
+  } = useDataTableContext()
 
   const [localFilters, setLocalFilters] = useState<FilterData[]>([
     DEFAULT_FILTER_DATA,
   ])
   const [open, setOpen] = useState(false)
-  const [logicaloperator, setLogicaloperator] = useState("AND")
+  const [localLogicalOperator, setLocalLogicalOperator] = useState("AND")
 
+  const inputRefs = useRef<(Focusable | null)[]>([]);
+
+  useEffect(() => {
+    inputRefs.current = inputRefs.current.slice(0, localFilters.length);
+  }, [localFilters]);
+
+  const focusNextInput = (currentIndex: number) => {
+    requestAnimationFrame(() => {
+      for (let i = currentIndex + 1; i < inputRefs.current.length; i++) {
+        const nextInput = inputRefs.current[i];
+        if (nextInput && !nextInput.disabled) {
+          nextInput.focus();
+          return;
+        }
+      }
+    });
+  };
   const save = useSaveFilters()
-
-  console.log({ columns, filters })
 
   const allColumns = columns
     ? Object.values(columns)
@@ -174,12 +199,6 @@ export function DataTableFilterOptions<TData>({
     filters && setLocalFilters(filters || [DEFAULT_FILTER_DATA])
   }, [filters])
 
-  // useEffect(() => {
-  //   savedFilters && setLocalFilters(savedFilters || [DEFAULT_FILTER_DATA])
-  // }, [savedFilters])
-
-  console.log(localFilters)
-
   return (
     <Popover
       open={open}
@@ -197,6 +216,7 @@ export function DataTableFilterOptions<TData>({
           const isEmptyOrNotEmpty =
             !filter.condition ||
             ["Is Empty", "Is Not Empty"].includes(filter.condition)
+
           return (
             <div key={filter.id} className="flex items-center gap-2">
               <div className="flex flex-grow gap-1">
@@ -205,10 +225,10 @@ export function DataTableFilterOptions<TData>({
 
                   {index === 1 && (
                     <DataTableSelect
-                      value={logicaloperator}
+                      value={localLogicalOperator}
                       onValueChange={(val) => {
                         // handleChangeFilter(filter.id, val, "operator")
-                        setLogicaloperator(val)
+                        setLocalLogicalOperator(val)
                         setLogicalOperator(val)
                       }}
                       options={conditionOptions}
@@ -225,7 +245,7 @@ export function DataTableFilterOptions<TData>({
 
                   {index > 1 && (
                     <p className="text-right text-xs">
-                      {logicaloperator}&nbsp;
+                      {localLogicalOperator}&nbsp;
                     </p>
                   )}
                 </div>
@@ -241,12 +261,28 @@ export function DataTableFilterOptions<TData>({
                         (item) => value === item.value
                       )?.label
 
-                      if (column)
+                      if (column) {
+                        let defaultValue: any = null
+
+                        if (columnType === "int") {
+                          defaultValue = filter.value || "0"
+                        } else if (columnType === "string") {
+                          defaultValue = String(filter.value)
+                        } else if (
+                          columnType === "date" ||
+                          columnType === "time"
+                        ) {
+                          defaultValue = new Date()
+                        }
+
                         handleChangeFilter(
                           filter.id,
-                          [columnType, value, label, ""],
+                          [columnType, value, label, defaultValue],
                           ["type", "columnConfigId", "label", "value"]
                         )
+                        focusNextInput(index);
+
+                      }
                     }}
                   >
                     <Button
@@ -300,6 +336,8 @@ export function DataTableFilterOptions<TData>({
                         } else {
                           handleChangeFilter(filter.id, [cond], ["condition"])
                         }
+                        focusNextInput(index);
+
                       }}
                       options={arrayToOptions(operators.date)}
                     >
@@ -446,9 +484,10 @@ export function DataTableFilterOptions<TData>({
                   <div className="flex min-w-40 gap-2">
                     <DataTableSelect
                       value={filter.condition as string}
-                      onValueChange={(cond) =>
+                      onValueChange={(cond) => {
                         handleChangeFilter(filter.id, [cond], ["condition"])
-                      }
+                        focusNextInput(index)
+                      }}
                       options={arrayToOptions(operators?.string || [])}
                     >
                       <SelectTrigger className="flex items-center gap-2 text-xs">
@@ -461,7 +500,9 @@ export function DataTableFilterOptions<TData>({
 
                     {!isEmptyOrNotEmpty && (
                       <Input
-                      
+                        ref={(el) => {
+                          inputRefs.current[index] = el
+                        }}
                         className="flex w-full text-xs dark:border-zinc-700"
                         value={filter.value as string}
                         onChange={(e) => {
@@ -476,9 +517,10 @@ export function DataTableFilterOptions<TData>({
                   <div className="flex min-w-40 gap-2">
                     <DataTableSelect
                       value={filter.condition as string}
-                      onValueChange={(cond) =>
+                      onValueChange={(cond) => {
                         handleChangeFilter(filter.id, [cond], ["condition"])
-                      }
+                        focusNextInput(index)
+                      }}
                       options={arrayToOptions(operators?.int || [])}
                     >
                       <SelectTrigger className="flex items-center gap-2 text-xs">
@@ -491,7 +533,9 @@ export function DataTableFilterOptions<TData>({
 
                     {!isEmptyOrNotEmpty && (
                       <Input
-                        
+                        ref={(el) => {
+                          inputRefs.current[index] = el
+                        }}
                         className="text-xs dark:border-zinc-700"
                         type="number"
                         value={Number(filter.value)}
@@ -522,14 +566,13 @@ export function DataTableFilterOptions<TData>({
 
                     {!isEmptyOrNotEmpty && (
                       <TimeInput
-                        
                         className="w-48 text-xs"
                         onChange={(value) => {
                           handleChangeFilter(filter.id, [value], ["value"])
                         }}
                         onBlur={() => {}}
                         name=""
-                        value={filter.value || new Date()}
+                        value={filter.value}
                       />
                     )}
                   </div>
@@ -589,12 +632,13 @@ export function DataTableFilterOptions<TData>({
               onFiltersChange && onFiltersChange(localFilters)
               const payload = mapFiltersToSave(
                 localFilters,
-                logicaloperator,
+                localLogicalOperator,
                 tableKey
               )
 
               try {
                 await save.mutateAsync(payload)
+                await onRefetchData()
                 toast({
                   title: "Success",
                   description: "Filters saved successfully",

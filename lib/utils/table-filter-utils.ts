@@ -1,9 +1,16 @@
 import {
   add,
   addDays,
+  differenceInDays,
+  differenceInMonths,
   endOfMonth,
   endOfWeek,
   endOfYear,
+  format,
+  isToday,
+  isTomorrow,
+  isYesterday,
+  parse,
   startOfDay,
   startOfMonth,
   startOfWeek,
@@ -117,6 +124,30 @@ export function mapValueToDate(
   }
 }
 
+export function mapDateToValue(date: Date, customDate?: Date): string | undefined {
+  const today = new Date();
+
+  if (isToday(date)) {
+    return "today";
+  } else if (isTomorrow(date)) {
+    return "tomorrow";
+  } else if (isYesterday(date)) {
+    return "yesterday";
+  } else if (differenceInDays(today, date) === 7) {
+    return "one-week-ago";
+  } else if (differenceInDays(date, today) === 7) {
+    return "one-week-from-now";
+  } else if (differenceInMonths(today, date) === 1 && differenceInDays(today, date) >= 28) {
+    return "one-month-ago";
+  } else if (differenceInMonths(date, today) === 1 && differenceInDays(date, today) >= 28) {
+    return "one-month-from-now";
+  } else if (date.getTime() === customDate?.getTime()) {
+    return "custom-date";
+  } else {
+    return undefined;
+  }
+}
+
 export function mapRelativeValueToDate(
   direction: Direction,
   period: Period,
@@ -205,12 +236,18 @@ export const mapFiltersToSave = (
   table_name: string
 ) => {
   const filters: Filter[] = localFilters.map((filter) => {
-    let defaultValue: any = null;
+    let defaultValue: any = null
 
     if (filter.type === "int") {
-      defaultValue = filter.value || "0";
-    } else if (filter.type  === "string") {
-      defaultValue = String(filter.value);
+      defaultValue = filter.value || "0"
+    } else if (filter.type === "string") {
+      defaultValue = String(filter.value)
+    } else if (filter.type === "date") {
+      defaultValue = format(filter.value as Date, "yyyy-MM-dd")
+    } else if (filter.type === "time") {
+      console.log(filter.value)
+      const val = format(filter.value as Date, "hh:mma")
+      defaultValue = val.toLowerCase() // changne AM/PM to lower case am/pm
     }
     // console.log(filter.type , defaultValue)
 
@@ -244,13 +281,30 @@ export const mapSavedToFilters = (
         (col) => col.id === filter.column_config_id
       )
 
+      const columnType = detailColumn?.column_type
+      let defaultValue: any = null
+      let preset 
+      if (columnType === "int" || columnType === "string") {
+        defaultValue = filter.value
+      } else if (columnType === "date") {
+        defaultValue = new Date(`${filter.value}T00:00:00`)
+        preset = mapDateToValue(defaultValue)
+      } else if (columnType === "time") {
+        const parsedValue =
+          typeof filter.value === "string"
+            ? parse(filter.value, "hh:mma", new Date())
+            : filter.value
+        defaultValue = parsedValue
+      }
+
       return {
         id,
         columnConfigId: filter.column_config_id,
         condition: filter.operator,
-        value: filter.value,
+        value: defaultValue,
         type: detailColumn?.column_type,
         label: detailColumn?.column_name,
+        preset
       }
     })
 
