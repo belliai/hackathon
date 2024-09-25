@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation"
 import { ChevronRight } from "lucide-react"
 
+import { NAV_TYPE } from "@/types/nav/enums"
 import { findActiveItem } from "@/lib/utils/nav-utils"
 
 import {
@@ -18,6 +19,7 @@ interface SidebarMenuProps {
   collapsible?: boolean
   sectionTitle?: string
   isExpanded?: boolean
+  onNavTypeChange: (type: NAV_TYPE) => void
 }
 
 export default function SidebarMenu({
@@ -25,6 +27,7 @@ export default function SidebarMenu({
   collapsible,
   sectionTitle,
   isExpanded,
+  onNavTypeChange,
 }: SidebarMenuProps) {
   const pathname = usePathname()
 
@@ -56,6 +59,7 @@ export default function SidebarMenu({
             item={item}
             isExpanded={isExpanded}
             disabled={item.disabled}
+            onNavTypeChange={onNavTypeChange}
             active={
               (activeItem?.parent?.name ?? activeItem?.item.name) === item.name
             }

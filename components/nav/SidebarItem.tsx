@@ -2,6 +2,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronRight } from "lucide-react"
 
+import { NAV_TYPE } from "@/types/nav/enums"
 import { cn } from "@/lib/utils"
 import {
   Accordion,
@@ -35,6 +36,7 @@ export type TSidebarItem = {
   disabled?: boolean
   hasSetting?: boolean
   shortcut?: string
+  viewToggle?: NAV_TYPE
 }
 
 interface SidebarItemProps {
@@ -42,6 +44,7 @@ interface SidebarItemProps {
   active: boolean
   disabled?: boolean
   isExpanded?: boolean
+  onNavTypeChange?: (type: NAV_TYPE) => void
 }
 
 export default function SidebarItem({
@@ -49,6 +52,7 @@ export default function SidebarItem({
   active,
   disabled = false,
   isExpanded = true,
+  onNavTypeChange,
 }: SidebarItemProps) {
   function getBaseItemClassName(currentActive: boolean) {
     const className = cn(
@@ -89,11 +93,10 @@ export default function SidebarItem({
           </span>
         )}
         {isExpanded && (
-          <div className="flex-grow overflow-hidden text-ellipsis text-nowrap text-left">
+          <div className="inline-flex flex-grow items-center overflow-hidden text-ellipsis text-nowrap text-left">
             {item.name}{" "}
             {item.shortcut && (
-              <span className="ml-2 rounded-md bg-zinc-200 px-2 py-1 text-xs text-zinc-500 dark:bg-zinc-800">
-                {" "}
+              <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-sm border border-border/60 bg-muted/30 text-xs text-muted-foreground/60">
                 {item.shortcut}
               </span>
             )}
@@ -121,6 +124,19 @@ export default function SidebarItem({
             ? renderItem(item)
             : renderWithTooltips(renderItem(item), item.name)}
         </AccordionTrigger>
+      ) : item.viewToggle && onNavTypeChange ? (
+        <button
+          onClick={() => item.viewToggle && onNavTypeChange(item.viewToggle)}
+          className={cn(
+            getBaseItemClassName(!!item.current || active),
+            disabled && "pointer-events-none",
+            "w-full"
+          )}
+        >
+          {isExpanded
+            ? renderItem(item)
+            : renderWithTooltips(renderItem(item), item.name)}
+        </button>
       ) : (
         <Link
           href={item.href}

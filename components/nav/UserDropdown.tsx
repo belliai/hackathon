@@ -45,7 +45,8 @@ interface UserDropdownProps {
 }
 
 export default function UserDropdown({
-  doChangeNavigation = () => {}, isExpanded = true
+  doChangeNavigation = () => {},
+  isExpanded = true,
 }: UserDropdownProps) {
   const router = useRouter()
 
@@ -77,28 +78,10 @@ export default function UserDropdown({
     }
   }, [hasActiveOrg, isLoaded, userMemberships.data])
 
-  // useEffect(() => {
-  //   if (switched) {
-  //     window.location.reload()
-  //   }
-  // }, [switched, isLoaded])
-
-  const handleSetActiveOrg = (orgId: string) => {
-    if (setActive) {
-      setActive({ organization: orgId })
-      // window.location.reload()
-    }
-  }
-
   const ITEMS: UserDropdownItem[] = [
     {
       label: "Profile",
       route: "/settings/profile",
-    },
-    {
-      label: "Settings",
-      route: "",
-      changeNavigation: 3,
     },
     {
       label: "Organization",
@@ -114,7 +97,7 @@ export default function UserDropdown({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex cursor-pointer items-center gap-x-2 animate-fade-right">
+          <div className="flex animate-fade-right cursor-pointer items-center gap-x-2">
             <ClerkLoading>
               <Skeleton className="h-6 w-6 rounded-md" />
               <Skeleton className="h-2 w-12 rounded-md" />
@@ -203,7 +186,8 @@ export default function UserDropdown({
                 <DropdownMenuItem
                   className="min-w-40 cursor-pointer rounded-lg px-3.5 py-2"
                   onClick={() => {
-                    if (item.changeNavigation) doChangeNavigation(item.changeNavigation)
+                    if (item.changeNavigation)
+                      doChangeNavigation(item.changeNavigation)
                     router.push(item.route)
                   }}
                 >

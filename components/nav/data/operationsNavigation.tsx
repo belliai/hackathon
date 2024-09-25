@@ -1,7 +1,15 @@
 import { HomeIcon, TvIcon } from "@heroicons/react/24/outline"
 import { CubeIcon, DashboardIcon, ReaderIcon } from "@radix-ui/react-icons"
-import { BarChartBigIcon, CogIcon, ContainerIcon, Handshake, Waypoints } from "lucide-react"
+import {
+  BarChartBigIcon,
+  CogIcon,
+  ContainerIcon,
+  Handshake,
+  SettingsIcon,
+  Waypoints,
+} from "lucide-react"
 
+import { NAV_TYPE } from "@/types/nav/enums"
 import { TSidebarItem } from "@/components/nav/SidebarItem"
 
 export const operationsNavigation: TSidebarItem[] = [
@@ -65,33 +73,42 @@ export const operationsNavigation: TSidebarItem[] = [
         isCanCreate: false,
         shortcut: "R",
       },
+    ],
+  },
+  {
+    name: "Partners",
+    href: "/dashboards/partners",
+    icon: Handshake,
+    current: false,
+    isCanCreate: false,
+    hasSetting: true,
+    shortcut: "P",
+    disabled: true,
+    children: [
       {
-        name: "Partners",
-        href: "/dashboards/partners",
-        icon: Handshake,
+        name: "Settings",
+        href: "/dashboards/partners/settings",
+        icon: CogIcon,
         current: false,
         isCanCreate: false,
-        hasSetting: true,
-        shortcut: "P",
-        children: [
-          {
-            name: "Settings",
-            href: "/dashboards/partners/settings",
-            icon: CogIcon,
-            current: false,
-            isCanCreate: false,
-          },
-        ],
-      },
-      {
-        name: "Data",
-        href: "/dashboards/data",
-        icon: Waypoints,
-        current: false,
-        isCanCreate: false,
-        shortcut: "D",
       },
     ],
+  },
+  {
+    name: "Data",
+    href: "/dashboards/data",
+    icon: Waypoints,
+    current: false,
+    isCanCreate: false,
+    shortcut: "D",
+  },
+  {
+    name: "Settings",
+    href: "#",
+    viewToggle: NAV_TYPE.BELLI_SETTING,
+    icon: SettingsIcon,
+    current: false,
+    isCanCreate: false,
   },
 ]
 

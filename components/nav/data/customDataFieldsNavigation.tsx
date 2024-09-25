@@ -1,3 +1,4 @@
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline"
 import {
   Boxes,
   Building2,
@@ -8,7 +9,6 @@ import {
 } from "lucide-react"
 
 import { TSidebarItem } from "../SidebarItem"
-import { ClipboardDocumentIcon } from "@heroicons/react/24/outline"
 
 export const customDataFieldsNavigation: TSidebarItem[] = [
   {
@@ -17,16 +17,6 @@ export const customDataFieldsNavigation: TSidebarItem[] = [
     current: false,
     icon: ClipboardDocumentIcon,
     children: [
-      {
-        name: "Aircrafts",
-        href: "/data-fields/aircrafts",
-        icon: Plane,
-      },
-      {
-        name: "Flights",
-        href: "/data-fields/flights",
-        icon: PlaneTakeoff,
-      },
       {
         name: "Airway Bills",
         href: "/data-fields/airway-bills",

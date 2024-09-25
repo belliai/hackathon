@@ -1,15 +1,15 @@
 "use client"
 
 import { Suspense, useEffect, useState } from "react"
-import Link from "next/link"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useOrganization, useOrganizationList } from "@clerk/nextjs"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useOrganizationList } from "@clerk/nextjs"
 import { UserCircleIcon } from "@heroicons/react/24/outline"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
-import { Boxes, ChevronsLeftIcon, PlusSquare } from "lucide-react"
-import { useFeatureFlagVariantKey } from "posthog-js/react"
+import { ChevronsLeftIcon } from "lucide-react"
+import { useLocalStorage } from "usehooks-ts"
 
-import { findActiveItem } from "@/lib/utils/nav-utils"
+import { NAV_TYPE } from "@/types/nav/enums"
+import { cn } from "@/lib/utils"
 import {
   Tooltip,
   TooltipContent,
@@ -21,27 +21,15 @@ import { operationsNavigation } from "@/components/nav/data/operationsNavigation
 import { settingNavigation } from "@/components/nav/data/settingNavigation"
 import { skNavigation } from "@/components/nav/data/skNavigation"
 
-import NewOrderModal from "../dashboard/new-order-modal"
 import ThemeSwitcher from "../theme-switcher"
 import { Button } from "../ui/button"
 import { Separator } from "../ui/separator"
-import { toast } from "../ui/use-toast"
-import { customDataFieldsNavigation } from "./data/customDataFieldsNavigation"
 import { k360Navigation } from "./data/k360Navigation"
 import { underConstructionNavigation } from "./data/underConstructionNavigation"
-import FavoritesMenu from "./favorites/favorites-menu"
 import useKeyPressNavigation from "./shortcuts/keypress-navigation"
 import { TSidebarItem } from "./SidebarItem"
 import SidebarMenu from "./SidebarMenu"
 import UserDropdown from "./UserDropdown"
-import { useLocalStorage } from "usehooks-ts"
-import { cn } from "@/lib/utils"
-
-const SIDEBAR_TYPE = {
-  DEFAULT: 1,
-  SETTING: 2,
-  BELLI_SETTING: 3,
-}
 
 export default function SideBar({
   isExpanded,
@@ -55,8 +43,7 @@ export default function SideBar({
   const [customTheme, setCustomTheme] = useLocalStorage("custom_theme", "")
 
   const router = useRouter()
-  const [isDialogOpen, setDialogOpen] = useState(false)
-  const [sidebarType, setNavigationType] = useState(SIDEBAR_TYPE.DEFAULT)
+  const [sidebarType, setNavigationType] = useState<NAV_TYPE>(NAV_TYPE.DEFAULT)
 
   const { userMemberships } = useOrganizationList({
     userMemberships: {
@@ -64,35 +51,20 @@ export default function SideBar({
     },
   })
 
-  const variant = useFeatureFlagVariantKey("order-button-test-experiment")
-
   const isBelliAdmin = userMemberships.data?.some(
     (data) => data.organization.slug === "admin"
   )
 
   useEffect(() => {
     if (settings === "true") {
-      setNavigationType(SIDEBAR_TYPE.SETTING)
+      setNavigationType(NAV_TYPE.SETTING)
     }
   }, [settings])
 
   const currentNavigation =
-    sidebarType === SIDEBAR_TYPE.SETTING ? settingNavigation : skNavigation
+    sidebarType === NAV_TYPE.SETTING ? settingNavigation : skNavigation
 
   const firstCurrentNavigationItem = currentNavigation[0]
-
-  const pathname = usePathname()
-  const activeItem = findActiveItem(
-    [
-      ...belliSettingsNavigation,
-      ...accountNavigation,
-      ...operationsNavigation,
-      ...settingNavigation,
-      ...skNavigation,
-      ...k360Navigation,
-    ],
-    pathname
-  )
 
   const adminOnlyItems: TSidebarItem[] = [
     {
@@ -110,31 +82,36 @@ export default function SideBar({
   useKeyPressNavigation(operationsNavigation)
 
   useEffect(() => {
-    if (sidebarType === SIDEBAR_TYPE.BELLI_SETTING) {
+    if (sidebarType === NAV_TYPE.BELLI_SETTING) {
       router.push("/dashboards/flights/settings?section=tail-numbers")
     }
   }, [sidebarType])
 
   return (
     <Suspense>
-      <div className={cn("no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border", {
-        "bg-black-background/40" : customTheme === "skye",
-      })}>
+      <div
+        className={cn(
+          "no-scrollbar flex grow flex-col overflow-y-auto bg-black-background px-5 pb-4 ring-1 ring-border",
+          {
+            "bg-black-background/40": customTheme === "skye",
+          }
+        )}
+      >
         <div
           className={`flex ${!isExpanded ? "mt-2 flex-col gap-3" : "flex-row"} h-16 shrink-0 items-center justify-between`}
         >
-          {sidebarType === SIDEBAR_TYPE.DEFAULT && (
+          {sidebarType === NAV_TYPE.DEFAULT && (
             <UserDropdown
               doChangeNavigation={setNavigationType}
               isExpanded={isExpanded}
             />
           )}
-          {(sidebarType === SIDEBAR_TYPE.SETTING ||
-            sidebarType === SIDEBAR_TYPE.BELLI_SETTING) && (
+          {(sidebarType === NAV_TYPE.SETTING ||
+            sidebarType === NAV_TYPE.BELLI_SETTING) && (
             <div
               className="flex animate-fade-left cursor-pointer items-center gap-2"
               onClick={() => {
-                setNavigationType(SIDEBAR_TYPE.DEFAULT)
+                setNavigationType(NAV_TYPE.DEFAULT)
                 router.push("/")
               }}
             >
@@ -170,7 +147,7 @@ export default function SideBar({
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
             <ul role="list" className="-mx-2">
-              {sidebarType === SIDEBAR_TYPE.SETTING && (
+              {sidebarType === NAV_TYPE.SETTING && (
                 <li className="mb-2 flex items-center gap-x-[7px] text-zinc-500">
                   <span className="duration-400 flex items-center justify-center rounded-sm p-0.5 transition-colors">
                     <firstCurrentNavigationItem.icon
@@ -182,36 +159,36 @@ export default function SideBar({
                 </li>
               )}
               <ul className="flex flex-col gap-1">
-                {sidebarType === SIDEBAR_TYPE.DEFAULT && (
+                {sidebarType === NAV_TYPE.DEFAULT && (
                   <div className="animate-fade-right">
                     <SidebarMenu
+                      onNavTypeChange={setNavigationType}
                       items={operationsNavigation}
                       collapsible
                       isExpanded={isExpanded}
                     />
                   </div>
                 )}
-                {sidebarType === SIDEBAR_TYPE.SETTING && (
-                  <SidebarMenu items={settingNavigation[0].children ?? []} />
+                {sidebarType === NAV_TYPE.SETTING && (
+                  <SidebarMenu
+                    items={settingNavigation[0].children ?? []}
+                    onNavTypeChange={setNavigationType}
+                  />
                 )}
-                {sidebarType === SIDEBAR_TYPE.BELLI_SETTING && (
+                {sidebarType === NAV_TYPE.BELLI_SETTING && (
                   <div className="animate-fade-left">
                     <SidebarMenu
+                      onNavTypeChange={setNavigationType}
                       items={belliSettingsNavigation[0].children ?? []}
                       collapsible
                       isExpanded={isExpanded}
                     />
-                    <SidebarMenu
-                      items={customDataFieldsNavigation}
-                      collapsible
-                      isExpanded={isExpanded}
-                    />
+                    <Separator className="mt-4" />
+                    <ThemeSwitcher />
                   </div>
                 )}
-                <Separator className="mt-4" />
-                <ThemeSwitcher />
               </ul>
-              {sidebarType === SIDEBAR_TYPE.SETTING && (
+              {sidebarType === NAV_TYPE.SETTING && (
                 <>
                   <li className="mb-2 mt-5 flex items-center gap-x-[7px] text-zinc-500">
                     <span className="flex items-center justify-center rounded-sm p-0.5 transition-colors duration-200">
@@ -223,7 +200,10 @@ export default function SideBar({
                     My Account
                   </li>
                   <ul className="flex flex-col gap-1">
-                    <SidebarMenu items={accountNavigation} />
+                    <SidebarMenu
+                      items={accountNavigation}
+                      onNavTypeChange={setNavigationType}
+                    />
                   </ul>
                 </>
               )}
@@ -231,9 +211,13 @@ export default function SideBar({
           </ul>
           {isBelliAdmin &&
             isExpanded &&
-            sidebarType === SIDEBAR_TYPE.BELLI_SETTING && (
+            sidebarType === NAV_TYPE.BELLI_SETTING && (
               <ul role="list" className="-mx-2">
-                <SidebarMenu items={adminOnlyItems} collapsible />
+                <SidebarMenu
+                  items={adminOnlyItems}
+                  onNavTypeChange={setNavigationType}
+                  collapsible
+                />
               </ul>
             )}
         </nav>
