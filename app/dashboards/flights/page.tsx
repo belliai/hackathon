@@ -8,7 +8,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as changeCase from "change-case"
 import { format } from "date-fns"
-import { Loader } from "lucide-react"
+import { DownloadIcon, Loader } from "lucide-react"
 import moment from "moment"
 import { useTheme } from "next-themes"
 import { useForm } from "react-hook-form"
@@ -290,6 +290,19 @@ export default function FlightsDashboardPage() {
           data={flights}
           onRowClick={handleRowClick}
           onRefetchData={refetch}
+          extraToolbarButtons={[
+            {
+              label: "Export Manifest",
+              icon: DownloadIcon,
+              onClick: () => {
+                toast({
+                  title: "Exporting Manifest",
+                  description:
+                    "Please wait while your data is being downloaded",
+                })
+              },
+            },
+          ]}
           customCellRenderers={[
             {
               key: "departure_date",

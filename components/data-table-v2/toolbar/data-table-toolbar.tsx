@@ -95,17 +95,6 @@ export function DataTableToolbar({ ...props }: DataTableToolbarProps) {
         className={cn("flex h-9 items-center justify-between", props.className)}
       >
         <div className="flex flex-row items-center gap-3">
-          {props.extraButtons?.map((button, index) => (
-            <Button
-              key={index}
-              size={"sm"}
-              onClick={button.onClick}
-              variant={button.variant ?? props.buttonVariant ?? "outline"}
-            >
-              {button.icon && <button.icon className="mr-2 h-4 w-4" />}
-              {button.label}
-            </Button>
-          ))}
           {props.extraLeftComponents}
         </div>
         <div className="flex gap-2">
@@ -124,6 +113,18 @@ export function DataTableToolbar({ ...props }: DataTableToolbarProps) {
                 <LoaderIcon className="size-4 animate-spin text-muted-foreground opacity-100" />
               </div>
             )}
+            {props.extraButtons?.map((button, index) => (
+              <Button
+                key={index}
+                size={"sm"}
+                className="h-8 min-w-8"
+                onClick={button.onClick}
+                variant={button.variant ?? props.buttonVariant ?? "outline"}
+              >
+                {button.icon && <button.icon className="mr-2 h-4 w-4" />}
+                {button.label}
+              </Button>
+            ))}
             <Tooltip delayDuration={100}>
               <DataTableFilterOptions
                 onOpenChange={setFilterOpen}

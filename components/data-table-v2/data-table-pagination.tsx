@@ -167,13 +167,8 @@ export function DataTablePagination(props: DataTablePaginationProps) {
                 <DownloadIcon className={`h-4 w-4`} />
               </Button>
             </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              className="border bg-background text-foreground"
-              align="end"
-              alignOffset={15}
-            >
-              <p>Download Data</p>
+            <TooltipContent side="top" align="end">
+              <p>Export Data</p>
             </TooltipContent>
           </Tooltip>
         )}
