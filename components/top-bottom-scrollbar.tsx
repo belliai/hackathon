@@ -29,6 +29,7 @@ export default function TopBottomScrollBars({ children }: PropsWithChildren) {
       </div>
 
       <div
+        id="data-table-scroll-container"
         ref={wrapRef2}
         // pb is added when scrollbar is hidden to prevent content from shifting
         className="custom-scrollbar w-full overflow-hidden overflow-y-hidden border-0 pb-1.5 group-hover:overflow-x-scroll group-hover:pb-0"

@@ -12,6 +12,8 @@ import {
   EyeOffIcon,
   PanelLeftClose,
   PanelLeftOpen,
+  PinIcon,
+  PinOffIcon,
 } from "lucide-react"
 
 import { Column, ColumnResponse } from "@/types/table/columns"
@@ -264,7 +266,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                                     onFreezeColumn(column, "unfreeze")
                                   }}
                                 >
-                                  <PanelLeftOpen className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                                  <PinOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
                                 </button>
                               </TooltipTrigger>
                               <TooltipContent
@@ -369,7 +371,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                                   onFreezeColumn(column, "freeze")
                                 }}
                               >
-                                <PanelLeftClose className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                                <PinIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent

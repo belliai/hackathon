@@ -1,7 +1,7 @@
 "use client"
 
-import { ReactNode, useEffect, useMemo, useRef } from "react"
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import { ReactNode, useEffect, useMemo, useRef, useState, useCallback } from "react"
+import { ChevronDownIcon, ChevronUpIcon, PinIcon } from "lucide-react"
 import { useHover } from "usehooks-ts"
 
 import { TableItem } from "@/types/api/dashboard-items"
@@ -51,12 +51,38 @@ export type DataTableProps<T> = {
   toolbarButtonVariant?: ButtonProps["variant"]
 } & TableStateHandlers
 
+function useHorizontalScroll() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = useCallback((event: Event) => {
+    const target = event.target as HTMLDivElement;
+    setIsScrolled(target.scrollLeft > 0);
+  }, []);
+
+  useEffect(() => {
+    const scrollContainer = document.getElementById('data-table-scroll-container');
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+
+      handleScroll({ target: scrollContainer } as unknown as Event);
+      
+      return () => {
+        scrollContainer.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [handleScroll]);
+
+  return isScrolled;
+}
+
 export function DataTable<T>(props: DataTableProps<T>) {
   const { data, tableKey } = props
   const { useGetColumns } = useColumns()
 
   const hoverRef = useRef(null)
   const isHover = useHover(hoverRef)
+
+  const isScrolled = useHorizontalScroll();
 
   const { data: columnsData } = useGetColumns(tableKey)
   const { data: savedFilters } = useGetFilters(tableKey)
@@ -94,12 +120,13 @@ export function DataTable<T>(props: DataTableProps<T>) {
         )}
         <div className="relative overflow-x-auto">
           <Table>
-            <DataTableHeader />
+            <DataTableHeader isScrolled={isScrolled} />
             <DataTableBody
               data={rowData}
               customCellRenderers={props.customCellRenderers}
               onCellClick={props.onCellClick}
               onRowClick={props.onRowClick}
+              isScrolled={isScrolled}
             />
           </Table>
         </div>
@@ -117,7 +144,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
   )
 }
 
-function DataTableHeader() {
+function DataTableHeader({ isScrolled }: { isScrolled: boolean }) {
   const { columns, sort, onSortToggle } = useDataTableContext()
   const visibleColumns = columns.visible_columns
   const stickyColumns = columns.sticky_columns
@@ -129,7 +156,11 @@ function DataTableHeader() {
           stickyColumns.map((col, idx) => (
             <TableHead
               key={col.id}
-              className={cn("cursor-pointer", "sticky z-10 bg-background")}
+              className={cn(
+                "cursor-pointer",
+                "sticky z-10 bg-background",
+                (isScrolled && (idx + 1) === stickyColumns.length) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
+              )}
               style={{
                 left: `${idx * 120}px`,
                 zIndex: 20,
@@ -139,7 +170,11 @@ function DataTableHeader() {
               }}
             >
               <div className="inline-flex w-full items-center justify-between gap-2">
-                {col.column_name}
+                <span className="flex gap-1 items-center">
+                  {col.column_name}
+                  <PinIcon className="size-3" />
+                </span>
+                
                 {sort?.sort_by === col.real_column_name && (
                   <>
                     {sort.sort_dir === "asc" ? (
@@ -186,9 +221,10 @@ function DataTableBody<T>(props: {
   customCellRenderers?: {
     key: string
     renderer: (data: T, value: string) => ReactNode
-  }[]
+  }[],
+  isScrolled: boolean
 }) {
-  const { data, customCellRenderers, onCellClick, onRowClick } = props
+  const { data, customCellRenderers, onCellClick, onRowClick, isScrolled } = props
 
   const { columns } = useDataTableContext()
 
@@ -247,7 +283,8 @@ function DataTableBody<T>(props: {
                   }
                   className={cn(
                     "whitespace-nowrap text-black dark:text-muted-foreground",
-                    isSticky && "sticky z-10 bg-background"
+                    isSticky && "sticky z-10 bg-background",
+                    (isSticky && isScrolled && (idx + 1) === stickyColumns.length) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
                   )}
                   key={col.real_column_name}
                   style={{
