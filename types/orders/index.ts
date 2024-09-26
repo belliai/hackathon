@@ -1,3 +1,5 @@
+import { SpecialHandlingCode } from "@/lib/hooks/special-handling-codes"
+
 import { Location } from "../flight-master/flight-master"
 
 export type Order = {
@@ -168,4 +170,5 @@ export type Order = {
   total: string
   updated_at: string
   volume_kg: string
+  special_handling_codes: SpecialHandlingCode[]
 }

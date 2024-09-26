@@ -27,7 +27,10 @@ export const orderSchema = z.object({
   bill_to_id: z.string().optional(),
   bill_to_old_name: z.string().optional().nullable(),
   bill_to_name: z.string().optional().nullable(),
-  booking_type_id: z.string().min(1, { message: "Please select Booking Type" }).optional(),
+  booking_type_id: z
+    .string()
+    .min(1, { message: "Please select Booking Type" })
+    .optional(),
   ch_weight_kg: z.string().or(z.number()).optional(),
   commodity_code_id: z.string().optional(),
   consignee_id: z.string().optional(),
@@ -42,21 +45,25 @@ export const orderSchema = z.object({
   origin_id: z.string().optional(),
   partner_code_id: z.string().optional(),
   partner_prefix_id: z.string().optional(),
+  special_handling_codes: z.array(z.string()).optional(),
   shipper_details: z
     .array(
-      z.object({
-        ID: z.string().optional(),
-        transport_method_id: z.string().optional(),
-        origin_id: z.string().optional(),
-        destination_id: z.string().optional(),
-        partner_type_id: z.string().optional(),
-        partner_code_id: z.string().optional(),
-        date: z.union([z.date(), z.string()]).optional(),
-        flight_code: z.string().optional(),
-        allotment_code: z.string().optional(),
-        status_id: z.string().optional(),
-      }).optional()
-    ).optional(),
+      z
+        .object({
+          ID: z.string().optional(),
+          transport_method_id: z.string().optional(),
+          origin_id: z.string().optional(),
+          destination_id: z.string().optional(),
+          partner_type_id: z.string().optional(),
+          partner_code_id: z.string().optional(),
+          date: z.union([z.date(), z.string()]).optional(),
+          flight_code: z.string().optional(),
+          allotment_code: z.string().optional(),
+          status_id: z.string().optional(),
+        })
+        .optional()
+    )
+    .optional(),
   // shipper_details: z.any(),
   payment_mode_id: z.string().optional(),
   rate: z.string().optional(),
@@ -131,7 +138,7 @@ export const orderSchema = z.object({
       awb: z.string().optional(),
       consignor_id: z.string().optional(),
       consignee_id: z.string().optional(),
-    }),
+    })
   ),
   total_weight: z.string().or(z.number()).optional(),
   total_volume: z.string().or(z.number()).optional(),
@@ -144,18 +151,22 @@ export const orderSchema = z.object({
     send_payment_receipt: z.string().optional(),
     payment_type: z.string().optional(),
   }),
-  payment_table: z.array(
-    z.object({
-      id: z.string().optional(),
-      payment_method_id: z.string().optional(),
-      payment_method: z.string().optional(),
-      employee_id: z.string().optional(),
-      employee: z.string().optional(),
-      amount: z.string().optional(),
-      transaction_id: z.string().optional(),
-      payment_type: z.string().optional(),
-    }).optional(),
-  ).optional(),
+  payment_table: z
+    .array(
+      z
+        .object({
+          id: z.string().optional(),
+          payment_method_id: z.string().optional(),
+          payment_method: z.string().optional(),
+          employee_id: z.string().optional(),
+          employee: z.string().optional(),
+          amount: z.string().optional(),
+          transaction_id: z.string().optional(),
+          payment_type: z.string().optional(),
+        })
+        .optional()
+    )
+    .optional(),
   total_paid: z.number().or(z.string()).optional(),
 })
 

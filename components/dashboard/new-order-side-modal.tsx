@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Package2Icon,
+  PackagePlusIcon,
   PlaneLandingIcon,
   PlaneTakeoffIcon,
   SaveIcon,
@@ -56,6 +57,7 @@ import { toast } from "@/components/ui/use-toast"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 import { Combobox } from "@/components/form/combobox"
 
+import { MultiSelect } from "../ui/multi-select"
 import ActivityLog from "./activity-log"
 import BookingDetailsForm from "./forms/booking-details-form"
 import ConsigneeForm from "./forms/consignee-form"
@@ -64,6 +66,7 @@ import UploadFile from "./forms/file-upload"
 import HAWBTable from "./forms/hawb-table"
 import PayerForm from "./forms/payer-form"
 import PaymentFormV2 from "./forms/payment-form-v2"
+import SpecialHandlingCodesForm from "./forms/special-handling-code-form"
 import WeightAndVolumeFormV2 from "./forms/weight-and-volume-form-v2"
 import HeaderSection from "./header-section"
 import SummaryTotal from "./summary-total"
@@ -106,9 +109,13 @@ export default function NewOrderSideModal({
       hawb_table: [],
       payment_table: [],
       weight_and_volume_table: [],
+      special_handling_codes:
+        selectedBooking?.special_handling_codes.map((item) => item.id) ?? [],
     }),
     [selectedBooking]
   )
+
+  console.log({ defaultValues })
 
   const form = useForm<Order>({
     // TODO : implement later
@@ -221,6 +228,14 @@ export default function NewOrderSideModal({
       content: <WeightAndVolumeFormV2 />,
       fieldList: ["origin_id", "shipper_id"],
       columnList: ["origin_name", "shipper_name"],
+    },
+    {
+      label: "Special Handling Codes",
+      value: "special-handling-codes",
+      icon: PackagePlusIcon,
+      content: <SpecialHandlingCodesForm />,
+      fieldList: ["special_handling_codes"],
+      columnList: ["special_handling_codes"],
     },
     {
       label: "Payment History",

@@ -375,6 +375,21 @@ export default function FlightsDashboardPage() {
                 />
               ),
             },
+            {
+              key: "special_handling_codes",
+              renderer: (data) => (
+                <div className="inline-flex items-center gap-1">
+                  {data.special_handling_codes.map((item) => (
+                    <Tooltip key={item.id}>
+                      <TooltipTrigger>
+                        <Badge variant={"chip-primary"}>{item.code}</Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>{item.label}</TooltipContent>
+                    </Tooltip>
+                  ))}
+                </div>
+              ),
+            },
           ]}
           {...tableStateProps}
         />

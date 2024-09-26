@@ -30,8 +30,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 import { columns } from "@/components/dashboard/columns"
 import NewOrderSideModal from "@/components/dashboard/new-order-side-modal"
@@ -176,6 +182,23 @@ export default function Home() {
             extraRightComponents={generateButton}
             onRefetchData={refetch}
             tableKey="dashboard_airway_bills"
+            customCellRenderers={[
+              {
+                key: "special_handling_codes",
+                renderer: (data) => (
+                  <div className="inline-flex items-center gap-1">
+                    {data.special_handling_codes.map((item) => (
+                      <Tooltip key={item.id}>
+                        <TooltipTrigger>
+                          <Badge variant={"chip-primary"}>{item.code}</Badge>
+                        </TooltipTrigger>
+                        <TooltipContent>{item.label}</TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </div>
+                ),
+              },
+            ]}
             {...tableStateProps}
           />
         </TabsContent>

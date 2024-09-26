@@ -50,6 +50,7 @@ type CrudTiledViewProps<T extends FieldValues> = {
   identifier: keyof T
   className?: HTMLDivElement["className"]
   rowRenderer: (item: T) => ReactNode
+  dataTransformer?: (data: T) => T
   onEndReached?: () => void
   height?: number
 } & (
@@ -440,7 +441,11 @@ export default function CrudTiledView<T extends FieldValues>(
               onSave={props.onSave}
               onDelete={handleDelete}
               open={typeof openForm !== "boolean"}
-              data={openForm as DefaultValues<T>}
+              data={
+                props.dataTransformer
+                  ? (props.dataTransformer(openForm as T) as DefaultValues<T>)
+                  : (openForm as DefaultValues<T>)
+              }
               setOpen={(open) => setOpenForm(open ? openForm : false)}
               validationSchema={validationSchema}
             />

@@ -52,7 +52,7 @@ export const mapJsonToSchema = (data: any) => {
     destination_id: extractId(data.destination),
     freight_forwarder_id: extractId(data.freight_forwarder) || "",
     gs_weight_kg: data.gs_weight_kg || "",
-    is_physical: 'yes',
+    is_physical: "yes",
     mode: data.mode || "",
     organization_id: extractId(data.organization) || "",
     origin_id: extractId(data.origin),
@@ -85,8 +85,9 @@ export const mapSchemaToJson = (data: any) => {
       transport_method_id: detail.transport_method_id,
       origin_id: detail.origin_id,
       destination_id: detail.destination_id,
-      partner_type_id: detail.partner_type_id || '',
-      partner_code_id: detail.partner_code_id || '2ca5b6d8-5041-490f-96cc-a29de59ab3bf',
+      partner_type_id: detail.partner_type_id || "",
+      partner_code_id:
+        detail.partner_code_id || "2ca5b6d8-5041-490f-96cc-a29de59ab3bf",
       date:
         (detail.date &&
           extractFormatDate(new Date(detail.date), "yyyy-MM-dd")) ||
@@ -95,7 +96,7 @@ export const mapSchemaToJson = (data: any) => {
       allotment_code: detail.allotment_code || "ALLOTMENT001",
       status_id: detail.status_id || null,
     }))
-  
+
   const amountDue = parseFloat(data.total) - parseFloat(data.total_paid)
 
   const mappedData = {
@@ -104,19 +105,21 @@ export const mapSchemaToJson = (data: any) => {
     awb: data.awb || "",
     bill_to_id: data.bill_to_id || null,
     booking_type_id: data.booking_type_id || null,
-    ch_weight_kg: data?.ch_weight_kg !== undefined && data.ch_weight_kg !== null
-      ? data.ch_weight_kg.toString()
-      : "0",
+    ch_weight_kg:
+      data?.ch_weight_kg !== undefined && data.ch_weight_kg !== null
+        ? data.ch_weight_kg.toString()
+        : "0",
     commodity_code_id: data.commodity_code_id || null,
     consignee_id: data.consignee_id || null,
     customer_id: data.consignee_id || null,
     currency_id: data.currency_id || null,
     destination_id: data.destination_id,
     freight_forwarder_id: data.freight_forwarder_id || null,
-    gs_weight_kg: data?.total_weight !== undefined && data.total_weight !== null
-      ? data.total_weight.toString()
-      : "0",
-    is_physical: data.is_physical === 'yes',
+    gs_weight_kg:
+      data?.total_weight !== undefined && data.total_weight !== null
+        ? data.total_weight.toString()
+        : "0",
+    is_physical: data.is_physical === "yes",
     mode: "Card",
     organization_id: data.organization_id || null,
     origin_id: data.origin_id || null,
@@ -129,11 +132,13 @@ export const mapSchemaToJson = (data: any) => {
     s_rate: data.s_rate || "",
     shipper_id: data.shipper_id || null,
     spot_id: data.spot_id || null,
-    status_id: data.status_id || '185b62d7-5d5b-4051-ba3c-b7c61bfe653d',
+    status_id: data.status_id || "185b62d7-5d5b-4051-ba3c-b7c61bfe653d",
     total: data.total || "",
-    volume_kg: data?.total_volume !== undefined && data.total_volume !== null
-      ? data.total_volume.toString()
-      : "0",
+    special_handling_codes: data.special_handling_codes,
+    volume_kg:
+      data?.total_volume !== undefined && data.total_volume !== null
+        ? data.total_volume.toString()
+        : "0",
   }
 
   return mappedData

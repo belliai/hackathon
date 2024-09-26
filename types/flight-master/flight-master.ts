@@ -1,3 +1,5 @@
+import { SpecialHandlingCode } from "@/lib/hooks/special-handling-codes"
+
 import { Aircraft, AircraftTailNumber } from "../aircraft/aircraft"
 import { TailNumber } from "../aircraft/tail-number"
 
@@ -62,6 +64,7 @@ export interface Flight {
   end_date?: string
   specification: Specification
   status: FlightStatus
+  special_handling_codes: SpecialHandlingCode[]
 }
 
 export type UpdateFlightPayload = Partial<CreateFlightMasterPayload>

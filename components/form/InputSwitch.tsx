@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "../ui/form"
 import { Input, InputProps } from "../ui/input"
+import { MultiSelect } from "../ui/multi-select"
 import {
   Select,
   SelectContent,
@@ -75,7 +76,7 @@ export type InputSwitchProps<DataType extends FieldValues> =
       type: "time"
     })
   | (BaseInputProps<DataType> & {
-      type: "select"
+      type: "select" | "multi-select"
       names?: Path<DataType>[]
       selectOptions?: SelectOptions
     })
@@ -213,6 +214,44 @@ export default function InputSwitch<
                 <FormMessage />
               </FormItem>
             )}
+          />
+        )
+      case "multi-select":
+        return (
+          <FormField
+            key={props.name}
+            control={form.control}
+            name={props.name}
+            render={({ field }) => {
+              console.log(field.value)
+
+              return (
+                <FormItem className="flex-grow space-y-1">
+                  {!!props.label && (
+                    <FormLabel
+                      info={props.info}
+                      tooltipId={props.tooltipId}
+                      className="text-xs font-semibold text-muted-foreground"
+                    >
+                      {props.label}
+                    </FormLabel>
+                  )}
+
+                  <FormControl>
+                    <MultiSelect
+                      className={props.className}
+                      placeholder={props.placeholder}
+                      options={props.selectOptions ?? []}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )
+            }}
           />
         )
       case "date":

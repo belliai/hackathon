@@ -1,84 +1,99 @@
+import {
+  useCreateSpecialHandlingCode,
+  useDeleteSpecialHandlingCode,
+  useSpecialHandlingCodes,
+  useUpdateSpecialHandlingCode,
+} from "@/lib/hooks/special-handling-codes"
+import { toast } from "@/components/ui/use-toast"
+
 import CrudTable from "./components/crud-table"
-
-interface SpecialHandlingCode {
-  id: number
-  label: string
-  code: string
-  additional: string
-}
-
-const specialHandlingCodesData: SpecialHandlingCode[] = [
-  { id: 1, label: "dangerous goods", code: "DG", additional: "$1.00" },
-  { id: 2, label: "cold-chain", code: "CC", additional: "$2.00" },
-  { id: 3, label: "valuable goods", code: "VAL", additional: "$3.00" },
-  { id: 4, label: "fuel surcharge", code: "FSC", additional: "$0.50" },
-  { id: 5, label: "security charge", code: "SC", additional: "$0.25" },
-  { id: 6, label: "landing & parking", code: "LP", additional: "$0.75" },
-  { id: 7, label: "perishables", code: "PER", additional: "$0.50" },
-  {
-    id: 8,
-    label: "odc charges - odd dimensions (MDC deck shipment)",
-    code: "ODC",
-    additional: "$1.00",
-  },
-  { id: 9, label: "postal mail", code: "PSM", additional: "$0.10" },
-  { id: 10, label: "interline shipment", code: "INT", additional: "$0.00" },
-  { id: 11, label: "human remains", code: "HUM", additional: "$1.00" },
-  { id: 12, label: "live animals", code: "AVI", additional: "$2.00" },
-  { id: 13, label: "fragile cargo", code: "FRG", additional: "$1.00" },
-  { id: 14, label: "diplomatic mail", code: "DIP", additional: "$2.00" },
-  { id: 15, label: "courier service", code: "COU", additional: "$1.00" },
-  { id: 16, label: "radioactive materials", code: "RAM", additional: "$0.50" },
-  { id: 17, label: "arms and ammunition", code: "QRT", additional: "$0.25" },
-  { id: 18, label: "dry ice", code: "ICE", additional: "$0.75" },
-  {
-    id: 19,
-    label: "wheelchairs (battery-powered)",
-    code: "WCB",
-    additional: "$0.50",
-  },
-  { id: 20, label: "ship's spares", code: "SPX", additional: "$1.00" },
-  { id: 21, label: "oversized cargo", code: "BIG", additional: "$0.10" },
-]
+import CrudTiledView from "./components/crud-tiled-view"
 
 const SpecialHandlingCodes = ({
   tabComponent,
 }: {
   tabComponent?: React.ReactNode
 }) => {
+  const { data: specialHandlingCodes } = useSpecialHandlingCodes({
+    page: 1,
+    page_size: 999,
+  })
+
+  const { mutateAsync: update } = useUpdateSpecialHandlingCode()
+  const { mutateAsync: create } = useCreateSpecialHandlingCode()
+  const { mutateAsync: remove } = useDeleteSpecialHandlingCode()
+
   return (
-    <CrudTable
-      columns={[
-        {
-          accessorKey: "label",
-          header: "Label",
-          size: 250,
-        },
-        {
-          accessorKey: "code",
-          header: "Code",
-        },
-        {
-          accessorKey: "additional",
-          header: "Additional Fee",
-        },
-      ]}
+    <CrudTiledView
+      identifier="id"
+      rowRenderer={(data) => (
+        <div className="inline-flex w-full items-center justify-between">
+          <div className="inline-flex items-center gap-4">
+            <span className="w-8 font-mono">{data.code}</span>
+            <span className="text-muted-foreground">{data.label}</span>
+          </div>
+          <span className="tabular-nums">{data.formatted_fee}</span>
+        </div>
+      )}
       title="Payment Mode"
       form={[
         { name: "id", type: "hidden" },
         { name: "label", type: "text", label: "Label" },
         { name: "code", type: "text", label: "Code" },
-        { name: "additional", type: "number", label: "Additional Fee" },
+        { name: "fee", type: "number", label: "Additional Fee" },
       ]}
-      data={specialHandlingCodesData}
+      data={specialHandlingCodes?.data ?? []}
+      dataTransformer={(data) => ({
+        ...data,
+        fee: Number(convertToDollarPrice(data.fee)),
+      })}
       onSave={(data) => {
-        // configure logic for add or edit, for edit the id will be zero
+        data.fee = convertToThreeDigitNumber(String(data.fee))
+        if (data.id) {
+          update(data, {
+            onSuccess: () =>
+              toast({
+                title: "Success!",
+                description: "Handling code updated",
+              }),
+          })
+        } else {
+          create(data, {
+            onSuccess: () =>
+              toast({
+                title: "Success!",
+                description: "Handling code created",
+              }),
+          })
+        }
       }}
       onDelete={(data) => {
-        // configure logic for delete
+        remove(data.id, {
+          onSuccess: () =>
+            toast({
+              title: "Success!",
+              description: "Handling code deleted",
+            }),
+        })
       }}
       tabComponent={tabComponent}
     />
   )
 }
 export default SpecialHandlingCodes
+
+function convertToThreeDigitNumber(price: string): number {
+  // Convert the price string to a number and multiply by 100 (to shift to two decimal places)
+  const numericValue = Math.round(parseFloat(price) * 100)
+
+  // Return the numeric value
+  return numericValue
+}
+
+function convertToDollarPrice(value: number): string {
+  // Divide the number by 100 to convert it back to a dollar amount
+  const price = value / 100
+
+  // Return the result as a string, keeping up to two decimal places
+  return price.toFixed(2)
+}
