@@ -146,7 +146,8 @@ export default function AircraftTypePage({
 
         {/* Aircraft Layout */}
         <div className="h-[75vh] overflow-hidden rounded-md border pr-1 dark:bg-zinc-900/50">
-          <AircraftDiagram ULDTotal={ULDTotal} />
+          <h3 className="font-bold p-4">ULD Configuration</h3>
+          <AircraftDiagram ULDTotal={14} />
         </div>
 
         {/* Aircraft Form */}

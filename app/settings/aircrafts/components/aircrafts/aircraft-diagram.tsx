@@ -192,10 +192,10 @@ const VerticalModel = ({ zoom, data }: { zoom: number; data: CargoData[] }) => (
         {data.map((uld, index) => (
           <div
             key={index}
-            className={`flex aspect-video flex-col items-center justify-center rounded-md bg-button-primary text-white`}
+            className={`flex aspect-square flex-col items-center justify-center rounded-md bg-button-primary text-white`}
           >
             <div className="text-sm font-bold">{uld.id}</div>
-            <div className="text-xs font-bold">{uld.percentage}%</div>
+            {/* <div className="text-xs font-bold">{uld.percentage}%</div> */}
           </div>
         ))}
       </div>
