@@ -231,8 +231,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
           <CommandInput placeholder="Search for a column" />
           <CommandList className="custom-scrollbar">
             <CommandEmpty>No column found.</CommandEmpty>
-            {tableKey === "dashboard_flights" &&
-              Array.isArray(localColumns?.sticky_columns) &&
+            {Array.isArray(localColumns?.sticky_columns) &&
               localColumns.sticky_columns.length > 0 && (
                 <SortableContext
                   id={"sticky"}
@@ -283,7 +282,8 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                     ))}
                   </CommandGroup>
                 </SortableContext>
-              )}
+              )
+            }
 
             <SortableContext
               id={"active"}
@@ -358,8 +358,7 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                       {column.column_name}
                     </div>
                     <div className="flex gap-1">
-                      {tableKey === "dashboard_flights" &&
-                        Array.isArray(localColumns?.sticky_columns) &&
+                      {Array.isArray(localColumns?.sticky_columns) &&
                         localColumns?.sticky_columns?.length < 3 && (
                           <Tooltip>
                             <TooltipTrigger asChild>
