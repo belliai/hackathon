@@ -96,10 +96,10 @@ export default function TailNumbersForm({
           },
           {
             key: "aircraft_manufacturer.name",
-            renderer: (data, value) => (
+            renderer: (data) => (
               <p>
-                {value}{" "}
-                {(data.manufacturer.is_deleted || !value) && (
+                {data.manufacturer.name}{" "}
+                {data.manufacturer.is_deleted && (
                   <span className="text-destructive">(deleted)</span>
                 )}
               </p>
@@ -107,10 +107,10 @@ export default function TailNumbersForm({
           },
           {
             key: "aircraft_type.name",
-            renderer: (data, value) => (
+            renderer: (data) => (
               <p>
-                {value}{" "}
-                {(data.aircraft_type.is_deleted || !value) && (
+                {data.aircraft_type.name}{" "}
+                {data.aircraft_type.is_deleted && (
                   <span className="text-destructive">(deleted)</span>
                 )}
               </p>
@@ -118,10 +118,10 @@ export default function TailNumbersForm({
           },
           {
             key: "aircraft_version.version",
-            renderer: (data, value) => (
+            renderer: (data) => (
               <p>
-                {value}{" "}
-                {(data.version.is_deleted || !value) && (
+                {data.version.version}{" "}
+                {data.version.is_deleted && (
                   <span className="text-destructive">(deleted)</span>
                 )}
               </p>
