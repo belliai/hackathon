@@ -1,0 +1,36 @@
+.rbc-calendar * {
+  @apply !border-border !border-t-border;
+}
+
+.rbc-event,
+.rbc-day-slot .rbc-background-event {
+  @apply bg-muted-foreground/20 transition-all hover:bg-muted-foreground/40;
+}
+
+.rbc-today {
+  @apply bg-transparent;
+}
+
+.rbc-event-label {
+  @apply text-xs font-light text-muted-foreground;
+}
+
+.rbc-btn-group button {
+  @apply !text-muted-foreground transition-all hover:bg-muted hover:!text-foreground;
+}
+
+button.rbc-active {
+  @apply !bg-muted !text-foreground;
+}
+
+.rbc-toolbar button:focus {
+  @apply !bg-muted !text-foreground;
+}
+
+.rbc-event-content {
+  @apply !text-foreground;
+}
+
+.rbc-label {
+  @apply text-sm tabular-nums text-muted-foreground;
+}

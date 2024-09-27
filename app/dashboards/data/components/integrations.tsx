@@ -17,6 +17,8 @@ export default function DataIntegrations() {
     query: { isLoading },
   } = useParagonGlobal()
 
+  console.log({ integrate: paragon?.getIntegrationMetadata() })
+
   return (
     <>
       <h1 className="text-xl font-semibold">Integrations</h1>

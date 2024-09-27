@@ -10,6 +10,7 @@ import * as changeCase from "change-case"
 
 import { cn } from "@/lib/utils"
 import { findActiveItem } from "@/lib/utils/nav-utils"
+import Body from "@/components/body"
 import InnerRootProviders from "@/components/inner-root-providers"
 import { accountNavigation } from "@/components/nav/data/accountNavigation"
 import { k360Navigation } from "@/components/nav/data/k360Navigation"
@@ -17,7 +18,6 @@ import { operationsNavigation } from "@/components/nav/data/operationsNavigation
 import { settingNavigation } from "@/components/nav/data/settingNavigation"
 import { skNavigation } from "@/components/nav/data/skNavigation"
 import OuterRootProviders from "@/components/outer-root-providers"
-import Body from "@/components/body"
 
 const inter = Inter({
   subsets: ["latin"],
