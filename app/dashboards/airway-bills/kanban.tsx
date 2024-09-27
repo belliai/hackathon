@@ -17,6 +17,7 @@ import { useStatuses } from "@/lib/hooks/statuses"
 import { mapSchemaToJson } from "@/lib/mapper/order"
 import { useBookingContext } from "@/components/dashboard/BookingContext"
 import NewOrderModal from "@/components/dashboard/new-order-modal"
+import {RouteIcon, CalendarIcon, WeightIcon} from "lucide-react"
 
 const columnOrder = [
   "Complete",
@@ -247,34 +248,35 @@ const Column = ({ title, cards, status, setCards, onRefetch }: ColumnProps) => {
         mode={modalType}
       />
 
-      <div className="min w-64 shrink-0">
-        <div className="mb-3 flex w-full items-center justify-between">
-          <h3 className={`font-medium text-white`}>{title}</h3>
-          <span className="rounded text-sm text-neutral-400">
+    <div className="min w-64 shrink-0">
+      <div className="mb-3 flex w-full items-center justify-between">
+        <h3 className={`font-medium text-white`}>{title}</h3>
+        <span className="rounded text-sm text-custom-orange">
             {filteredCards.length}
-          </span>
-        </div>
-        <div
-          onDrop={handleDragEnd}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          className={`h-full w-full transition-colors ${
-            active ? "dark:bg-neutral-800/50" : "dark:bg-neutral-800/0"
-          }`}
-        >
-          {filteredCards.map((c) => {
-            return (
-              <Card
-                key={c.ID}
-                {...c}
-                handleDragStart={handleDragStart}
-                handleCardClick={handleCardClick}
-              />
-            )
-          })}
-          <DropIndicator beforeId={null} status={status} />
-        </div>
+        </span>
       </div>
+    <div
+      onDrop={handleDragEnd}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      className={`h-full w-full transition-colors ${
+        active ? "dark:bg-neutral-800/50" : "dark:bg-neutral-800/0"
+      }`}
+    >
+      {filteredCards.map((c) => {
+        return (
+          <Card
+            key={c.ID}
+            {...c}
+            handleDragStart={handleDragStart}
+            handleCardClick={handleCardClick}
+          />
+        )
+      })}
+      <DropIndicator beforeId={null} status={status} />
+    </div>
+</div>
+
     </>
   )
 }
@@ -304,23 +306,37 @@ const Card = ({
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
-        className="h-25 w-64 cursor-grab rounded border border-neutral-700 dark:bg-neutral-800 p-3 active:cursor-grabbing"
+        className="h-25 w-64 cursor-grab rounded border border-neutral-700 dark:bg-neutral-800 p-3 active:cursor-grabbing relative"
         onClick={() => handleCardClick(ID)}
+        whileHover={{ scale: 1.05, backgroundColor: "#374151" }}
       >
-        <p className="text-sm font-medium text-muted-foreground">AWB: {awb}</p>
-        <p className="text-sm font-medium text-muted-foreground">
-          Dest: {destination?.name} → Origin: {origin?.name}
-        </p>
-        <p className="text-sm font-normal text-muted-foreground/50">
-          {formatDate(updated_at)}
-        </p>
-        <p className="text-sm font-medium text-muted-foreground/50">
-          {shipper?.name}
-        </p>
+        <div className="flex justify-between items-start">
+          <div>
+            <p className="flex items-center text-sm font-bold text-gray-200">AWB: {awb}</p>
+            <p className="text-xs font-bold text-gray-500">
+              {shipper?.name}
+            </p>
+            <div className="flex items-center text-sm font-medium text-gray-400">
+              <RouteIcon size={16} className="mr-2" />
+              Dest: {destination?.name} → Origin: {origin?.name}
+            </div>
+            <div className="flex items-center text-sm font-medium text-gray-400">
+              <CalendarIcon size={16} className="mr-2" />
+              {formatDate(updated_at)}
+            </div>
+          </div>
+          <div className="flex items-center bg-custom-orange text-white p-1 rounded text-sm">
+            <WeightIcon size={13} className="mr-2" />
+            300kg
+          </div>
+        </div>
       </motion.div>
+
     </>
   )
 }
+
+
 
 function formatDate(isoString: string | number | Date | undefined) {
   const date = new Date(isoString || "")
@@ -352,7 +368,7 @@ const DropIndicator = ({ beforeId, status }: DropIndicatorProps) => {
     <div
       data-before={beforeId || "-1"}
       data-column={status.name}
-      className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
+      className="my-0.5 h-0.5 w-full bg-custom-orange opacity-0"
     />
   )
 }

@@ -27,6 +27,7 @@ const config = {
         "black-background": "hsl(var(--black-background))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        "custom-orange": "#FB5727",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
