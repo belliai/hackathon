@@ -248,7 +248,7 @@ const Column = ({ title, cards, status, setCards, onRefetch }: ColumnProps) => {
         mode={modalType}
       />
 
-    <div className="min w-64 shrink-0">
+    <div className="min w-64 shrink-0 pr-2 border-r border-grey-300">
       <div className="mb-3 flex w-full items-center justify-between">
         <h3 className={`font-medium text-white`}>{title}</h3>
         <span className="rounded text-sm text-custom-orange">
@@ -306,7 +306,7 @@ const Card = ({
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { awb, ID, status })}
         transition={{ duration: 0.1 }} // Adjust the duration as needed
-        className="h-25 w-64 cursor-grab rounded border border-neutral-700 dark:bg-neutral-800 p-3 active:cursor-grabbing relative"
+        className="h-25 w-64 pr-2 ml-[-6.5px] cursor-grab rounded border border-neutral-700 dark:bg-neutral-800 p-3 active:cursor-grabbing relative"
         onClick={() => handleCardClick(ID)}
         whileHover={{ scale: 1.05, backgroundColor: "#374151" }}
       >
