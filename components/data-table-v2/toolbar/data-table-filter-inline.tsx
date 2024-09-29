@@ -56,8 +56,13 @@ interface DataTableFilterOptionsProps {
 }
 
 export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
-  const { filters, onFiltersChange, tableKey, logical_operator, onRefetchData } =
-    useDataTableContext()
+  const {
+    filters,
+    onFiltersChange,
+    tableKey,
+    logical_operator,
+    onRefetchData,
+  } = useDataTableContext()
 
   const save = useSaveFilters()
 
@@ -414,7 +419,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
   const [text, setText] = useState(props.filter.value)
 
   const { columns } = useDataTableContext()
-  const operators = columns.operator_types as OperatorTypes
+  const operators = columns.operator_types
 
   const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
 
@@ -450,7 +455,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
-              options={arrayToOptions(operators.string)}
+              options={arrayToOptions(operators?.string ?? [])}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
                 <SelectValue
@@ -554,9 +559,9 @@ export function DataTableFilterTime({ ...props }: DataTableFilterProps) {
 
   useEffect(() => {
     const parsedValue =
-    typeof props.filter.value === "string"
-      ? parse(props.filter.value, 'hh:mma', new Date())
-      : props.filter.value
+      typeof props.filter.value === "string"
+        ? parse(props.filter.value, "hh:mma", new Date())
+        : props.filter.value
 
     parsedValue && setTime(parsedValue)
     props.filter.condition && setCondition(props.filter.condition)
