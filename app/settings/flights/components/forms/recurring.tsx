@@ -171,7 +171,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((props, ref) => {
           )}
         </div>
       )}
-      {(formData.recurring !== "no-repeat" && formData.recurring !=="") && <div className="grid grid-cols-1 gap-4">
+      { <div className="grid grid-cols-1 gap-4">
         <Label className="text-xs font-semibold text-muted-foreground">Ends</Label>
         <RadioGroup
           name="end_condition"
@@ -211,6 +211,7 @@ const RecurringForm = React.forwardRef<HTMLDivElement, any>((props, ref) => {
                 label=""
                 name="end_after_occurrences"
                 type="stepper-number"
+                required={repeatEnd === "after_occurrences"}
                 disabled={repeatEnd !== "after_occurrences"}
                 max={100}
                 min={1}

@@ -92,7 +92,7 @@ export interface CreateFlightMasterPayload {
 
 export interface RecurringPayload {
   end_date?: string | Date
-  recurring_type?: "daily" | "weekly" | "custom"
+  recurring_type?: "daily" | "weekly" | "custom" | "no_repeat"
   recurring_every?: number
   end_condition?: string
   end_after_occurrences?: number

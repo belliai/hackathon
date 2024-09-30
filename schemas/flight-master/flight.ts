@@ -89,7 +89,7 @@ export const flightSchema = z
         data.end_after_occurrences),
     {
       message: "recurring occurence is required",
-      path: ["end_after_occurences"],
+      path: ["end_after_occurrences"],
     }
   )
 

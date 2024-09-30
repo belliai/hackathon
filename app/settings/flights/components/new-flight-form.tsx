@@ -254,29 +254,30 @@ export default function NewFlightModal(props: NewFlightModalProps) {
   ]
 
   const onSubmit = async (data: FlightMasterWithRecurring) => {
-    let recurring_options: RecurringPayload = {}
+    let recurring_options: RecurringPayload = {
+      recurring_type: "no_repeat",
+    }
     if (data.recurring && data.recurring !== "no-repeat") {
+      if (data.end_date)
+        recurring_options.end_date = format(data.end_date, "yyyy-MM-dd")
+
+      recurring_options.end_after_occurrences = data.end_after_occurrences
+      recurring_options.end_condition = data.end_condition
+
       if (data.recurring === "custom") {
         recurring_options.recurring_type = "custom"
-        recurring_options.end_after_occurrences = data.end_after_occurrences
-        recurring_options.end_condition = data.end_condition
-        if (data.end_date)
-          recurring_options.end_date = format(data.end_date, "yyyy-MM-dd")
+
         recurring_options.recurring_every = data.recurring_every
 
-        data.days?.forEach((day) => {
-          recurring_options.week_sun = day == "sun"
-          recurring_options.week_mon = day == "mon"
-          recurring_options.week_tue = day == "tue"
-          recurring_options.week_wed = day == "wed"
-          recurring_options.week_thu = day == "thu"
-          recurring_options.week_fri = day == "fri"
-          recurring_options.week_sat = day == "sat"
-        })
+        recurring_options.week_sun = data.days?.includes("sun")
+        recurring_options.week_mon = data.days?.includes("mon")
+        recurring_options.week_tue = data.days?.includes("tue")
+        recurring_options.week_wed = data.days?.includes("wed")
+        recurring_options.week_thu = data.days?.includes("thu")
+        recurring_options.week_fri = data.days?.includes("fri")
+        recurring_options.week_sat = data.days?.includes("sat")
       } else if (data.recurring === "daily") {
-        recurring_options = {
-          recurring_type: "daily",
-        }
+        recurring_options.recurring_type = "daily"
       } else {
         const rule = RRule.fromString(data.recurring)
 
@@ -287,13 +288,12 @@ export default function NewFlightModal(props: NewFlightModalProps) {
         const freq = rule.origOptions.freq
 
         if (freq !== undefined) {
-          recurring_options = {
-            recurring_type: freqMap[freq],
-          }
+          recurring_options.recurring_type = freqMap[freq]
         }
       }
     }
-    //console.log(recurring_options)
+
+    // console.log(data, recurring_options)
     // return
 
     const payload: CreateFlightMasterPayload = {
