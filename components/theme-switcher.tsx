@@ -65,16 +65,16 @@ export default function ThemeSwitcher() {
               </div>
             ),
           },
-          {
-            label: "Dark (Skye)",
-            value: "skye",
-            component: (
-              <div className="flex items-center gap-2 text-sm">
-                <Eclipse size={16} />
-                <span>Dark (Skye)</span>
-              </div>
-            ),
-          },
+          // {
+          //   label: "Dark (Skye)",
+          //   value: "skye",
+          //   component: (
+          //     <div className="flex items-center gap-2 text-sm">
+          //       <Eclipse size={16} />
+          //       <span>Dark (Skye)</span>
+          //     </div>
+          //   ),
+          // },
           {
             label: "System",
             value: "system",
