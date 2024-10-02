@@ -127,7 +127,7 @@ export function DataTableToolbar<TData>({
   return (
     <div className="">
       <div
-        className={cn("flex h-9 items-center justify-between", props.className)}
+        className={cn("flex h-9 items-center justify-between border-b", props.className)}
       >
         <div className="flex flex-row items-center gap-3">
           {props.extraButtons?.map((button, index) => (

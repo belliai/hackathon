@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from "react"
-import { TabsTrigger } from "@radix-ui/react-tabs"
+//import { TabsTrigger } from "@radix-ui/react-tabs"
 import { ColumnDef } from "@tanstack/react-table"
 import { Delete, DeleteIcon, Edit, PlusIcon, Trash } from "lucide-react"
 
@@ -25,7 +25,7 @@ import {
   ContextMenuTrigger,
 } from "../ui/context-menu"
 import { Input } from "../ui/input"
-import { Tabs, TabsContent, TabsList } from "../ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 import { DataTable, DataTableProps } from "./data-table"
 
 type View = {
@@ -283,9 +283,9 @@ const DataViews = <TData, TValue>({
               data={data}
               showToolbarOnlyOnHover={true}
               extraLeftComponents={
-                <TabsList className="gap-2 bg-transparent p-0">
+                <TabsList className="bg-transparent p-0">
                   {views.map((view) => (
-                    <TabsTrigger value={view.name} key={view.id}>
+                    <TabsTrigger  value={view.name} key={view.id}>
                       <ContextMenuWrapper
                         view={view}
                         onChangeView={handleChangeView}
@@ -293,11 +293,11 @@ const DataViews = <TData, TValue>({
                       >
                         <Button
                           className={cn(
-                            "h-8 gap-0 rounded-md p-2 text-xs",
+                            "h-8 gap-0 mt-1  p-2 text-xs border-b rounded-none",
                             currentView?.id === view.id &&
-                              "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
+                              "border-[#fb5727] bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
                           )}
-                          variant={"outline"}
+                          variant={"tab"}
                           onClick={() => setCurrentView(view)}
                         >
                           {view.name}
@@ -308,7 +308,7 @@ const DataViews = <TData, TValue>({
                   <Button
                     onClick={handleAddView}
                     size={"icon"}
-                    className="h-8 w-8 px-2"
+                    className="ml-4 h-5 w-5 px-1 rounded-full border border-dashed hover:border-[#fb5727]  hover:text-button-primary"
                     variant="outline"
                   >
                     <PlusIcon className="h-4 w-4" />

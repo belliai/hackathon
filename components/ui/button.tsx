@@ -25,6 +25,7 @@ const buttonVariants = cva(
           "bg-button-primary  text-white hover:bg-button-primary/80",
         "button-secondary":
           "bg-button-secondary  text-white hover:bg-button-secondary/80",
+        tab: "text-primary",
       },
       size: {
         default: "h-9 px-4 py-2",
