@@ -29,11 +29,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/use-toast"
-import CargoCapacityAreaChart from "@/components/charts/cargo-capacity-area-chart"
 import { DataTable } from "@/components/data-table/data-table"
 import { ColumnsByVisibility } from "@/components/data-table/data-table-view-options"
 import DataViews from "@/components/data-table/data-views"
 import Modal from "@/components/modal/modal"
+import CargoCapacityAreaChart from "@/app/dashboards/flights/components/cargo-capacity-area-chart"
 import { DisplayOption } from "@/app/data-fields/display"
 import { listViewColumns } from "@/app/settings/flights/components/column"
 

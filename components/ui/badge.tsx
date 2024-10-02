@@ -19,6 +19,8 @@ const badgeVariants = cva(
         outline: "text-foreground bg-muted/30 hover:bg-muted-foreground/30",
         "chip-primary":
           "rounded-full border-button-primary/30 bg-button-primary/5 hover:bg-button-primary/20 text-button-primary ",
+        "chip-secondary":
+          "rounded-full border-muted-foreground/40 bg-muted/20 hover:bg-muted/40 text-muted-foreground ",
       },
     },
     defaultVariants: {

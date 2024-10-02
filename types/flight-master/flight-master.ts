@@ -65,6 +65,7 @@ export interface Flight {
   specification: Specification
   status: FlightStatus
   special_handling_codes: SpecialHandlingCode[]
+  updated_at: string
 }
 
 export type UpdateFlightPayload = Partial<CreateFlightMasterPayload>

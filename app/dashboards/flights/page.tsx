@@ -42,7 +42,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/use-toast"
-import CargoCapacityAreaChart from "@/components/charts/cargo-capacity-area-chart"
 import { DataTable } from "@/components/data-table-v2/data-table"
 import Modal from "@/components/modal/modal"
 import { DisplayOption } from "@/app/data-fields/display"
@@ -51,11 +50,7 @@ import { tailNumberFormDefaultValues } from "@/app/settings/aircrafts/constants"
 import { TableCellDropdown } from "@/app/settings/flights/components/forms/table-cell-dropdown"
 import NewFlightModal from "@/app/settings/flights/components/new-flight-form"
 
-interface FlightsActualInformation {
-  detail: string
-  actual?: string
-  maximum: string
-}
+import FlightDetailDialog from "./components/flight-detail-dialog"
 
 export default function FlightsDashboardPage() {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null)
@@ -105,20 +100,6 @@ export default function FlightsDashboardPage() {
     start_date: moment().format("YYYY-MM-DD"),
   })
 
-  const actualInformationForm = useForm<{ infos: FlightsActualInformation[] }>({
-    defaultValues: {
-      infos: [{ detail: "", actual: "", maximum: "" }],
-    },
-  })
-
-  function getVisibleCargoFields(visibilityConfig: any) {
-    const visibleFields = Object.keys(visibilityConfig).filter(
-      (key) => visibilityConfig[key]
-    )
-
-    return visibleFields
-  }
-
   async function handleChangeStatus(data: { statusId: string; id: string }) {
     await partialUpdateFlight(
       {
@@ -144,81 +125,9 @@ export default function FlightsDashboardPage() {
     )
   }
 
-  function generateActualValues(visibleFields: string[], flight: Flight) {
-    const visible = visibleFields
-      .map((field) => {
-        if (field.endsWith("_actual")) {
-          const tailField = field.replace("_actual", "")
-
-          return {
-            detail: changeCase.capitalCase(field.replace("_actual", "")),
-            actual:
-              flight.specification?.[tailField as keyof Specification] || "",
-            maximum: flight.tail?.[tailField as keyof TailNumber] || "",
-          }
-        }
-      })
-      .filter((field) => field && field.actual !== "visible")
-
-    return visible as FlightsActualInformation[]
-  }
-
   function handleRowClick(flight: Flight) {
-    const visibleActualInformationFields = generateActualValues(
-      getVisibleCargoFields(cargoDisplaySettings),
-      flight
-    )
-
-    actualInformationForm.reset({
-      infos: visibleActualInformationFields,
-    })
-
     setSelectedFlight(flight)
   }
-
-  async function handleSaveActualInformation(data: FlightsActualInformation[]) {
-    if (!selectedFlight) {
-      toast({
-        title: "Error",
-        description: "No flight selected",
-      })
-
-      return
-    }
-
-    const updatedActualInformation = data.reduce((acc, info) => {
-      return {
-        ...acc,
-        [`${changeCase.snakeCase(info.detail)}`]: info.actual
-          ? Number(info.actual)
-          : 0,
-      }
-    }, {})
-
-    await partialUpdateFlight(
-      {
-        ...updatedActualInformation,
-        id: selectedFlight?.id,
-      },
-      {
-        onError: () => {
-          toast({
-            title: "Error",
-            description: "Failed to update actual information",
-          })
-        },
-        onSuccess: () => {
-          toast({
-            title: "Success",
-            description: "Actual information updated successfully",
-          })
-        },
-      }
-    )
-  }
-
-  const selectedFlightModalTitle = `${selectedFlight?.flight_number}, ${selectedFlight?.origin.name} - ${selectedFlight?.destination.name}`
-  const selectedFlightModalDescription = `${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} to ${moment(selectedFlight?.departure_date).format("ddd, YYYY-MM-DD")} (${selectedFlight?.tail?.tail_number || ""}, ${selectedFlight?.tail?.aircraft_type?.name || ""})`
 
   const handleTailNumberRowClick = (tailNumber: TailNumber) => {
     tailnumberForm.reset({
@@ -232,10 +141,8 @@ export default function FlightsDashboardPage() {
 
   return (
     <div>
-      <Modal
-        title={selectedFlightModalTitle}
-        description={selectedFlightModalDescription}
-        open={!!selectedFlight}
+      <FlightDetailDialog
+        flight={selectedFlight}
         onOpenChange={(open) => {
           if (!open) {
             setSelectedFlight(null)
@@ -243,43 +150,7 @@ export default function FlightsDashboardPage() {
             setSelectedFlight(selectedFlight)
           }
         }}
-        onSave={() => {
-          handleSaveActualInformation(actualInformationForm.getValues().infos)
-          setSelectedFlight(null)
-        }}
-      >
-        <div className="flex w-full max-w-full flex-col gap-8">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Details</TableHead>
-                <TableHead>Actual</TableHead>
-                <TableHead>Maximum</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {actualInformationForm.getValues().infos.map((info, index) => (
-                <TableRow key={index}>
-                  <TableCell>{info.detail}</TableCell>
-                  <TableCell className="w-28">
-                    <Input
-                      {...actualInformationForm.register(
-                        `infos.${index}.actual`
-                      )}
-                      type="number"
-                      className="h-9 w-full py-0.5"
-                    />
-                  </TableCell>
-                  <TableCell className="w-28">{info.maximum}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-
-          <h2 className="font-semibold">Historical Load Capacity</h2>
-          <CargoCapacityAreaChart />
-        </div>
-      </Modal>
+      />
       {isLoading ? (
         <div className="flex w-full justify-center py-20">
           <Loader className="h-6 w-6 animate-spin text-zinc-600" />
@@ -333,7 +204,7 @@ export default function FlightsDashboardPage() {
             },
             {
               key: "tail.tail_number",
-              renderer: (data, value) => (
+              renderer: (data) => (
                 <Badge
                   className="pointer-events-auto inline-flex gap-2"
                   onClick={(e) => {
