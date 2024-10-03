@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { SelectTrigger, SelectValue } from "@radix-ui/react-select"
 import { format, parse } from "date-fns"
 import {
@@ -22,6 +22,7 @@ import {
   Period,
 } from "@/types/table/filters"
 import { useSaveFilters } from "@/lib/hooks/filters"
+import { useGeneralSearch } from "@/lib/hooks/general"
 import { cn } from "@/lib/utils"
 import {
   arrayToOptions,
@@ -84,7 +85,7 @@ export function DataTableFilterInline(props: DataTableFilterOptionsProps) {
               )}
 
               {filter.type === "uuid" && (
-                <DataTableFilterProfile
+                <DataTableFilterUUID
                   filter={filter}
                   onValueChange={console.log}
                   options={dummyUserOptions}
@@ -622,16 +623,25 @@ export function DataTableFilterTime({ ...props }: DataTableFilterProps) {
   )
 }
 
-export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
+export function DataTableFilterUUID({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
   const [condition, setCondition] = useState("contains")
   const [uuids, setUuids] = useState<OptionWithUrl[]>([])
+  const [value, setValue] = useState<string>()
 
-  const isEmptyOrNotEmpty = ["is-empty", "is-not-empty"].includes(condition)
+  const isEmptyOrNotEmpty = ["Is Empty", "Is Not Empty"].includes(condition)
+  const { columns } = useDataTableContext()
+  const operators = (columns?.operator_types as OperatorTypes) || []
+
+  const { data: list } = useGeneralSearch({
+    basePath: String(props.filter.searchPath),
+    searchTerm: String(value)
+  })
+  const item = list?.find((item) => item.id === value)
 
   useEffect(() => {
     props.filter.condition && setCondition(props.filter.condition)
-    props.filter.value && setUuids(props.filter.value as OptionWithUrl[])
+    props.filter.value && setValue(props.filter.value as string)
   }, [props.filter])
 
   return (
@@ -641,27 +651,18 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
           variant={"outline"}
           className={cn(
             "h-8 rounded-full px-3 text-xs",
-            (uuids.length > 0 || isEmptyOrNotEmpty) &&
+            (value || isEmptyOrNotEmpty) &&
               "border-[#fb5727] border-opacity-15 bg-[#fb5727] bg-opacity-5 text-button-primary hover:bg-[#fb5727] hover:bg-opacity-20 hover:text-button-primary"
           )}
         >
           <FileSymlink size={14} />
           &nbsp;
-          {props.filter.label}
-          {isEmptyOrNotEmpty && (
-            <p>
-              {" "}
-              :&nbsp;{" "}
-              {
-                datefiltersOptions.find((item) => item.value === condition)
-                  ?.label
-              }{" "}
-            </p>
-          )}
-          {uuids.length > 0 && !isEmptyOrNotEmpty && (
+          {props.filter.label || props.filter.column}
+          {isEmptyOrNotEmpty && <span> :&nbsp; {condition} </span>}
+          {value && !isEmptyOrNotEmpty && (
             <p>
               :&nbsp;
-              {uuids.map((uuid, id) => uuid.label).join(", ")}
+              {item?.name}
             </p>
           )}
         </Button>
@@ -682,7 +683,7 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
             <DataTableSelect
               value={condition}
               onValueChange={setCondition}
-              options={profileFilterOptions}
+              options={arrayToOptions(operators?.uuid || [])}
             >
               <SelectTrigger className="flex items-center gap-2 text-xs text-zinc-400">
                 <SelectValue
@@ -693,23 +694,6 @@ export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
               </SelectTrigger>
             </DataTableSelect>
           </div>
-          {["contains", "does-not-contains"].includes(condition) && (
-            // <MultipleSelector
-            //   onChange={(profiles) => {
-            //     setProfiles(profiles)
-            //   }}
-            //   className="border-zinc-500 p-1"
-            //   badgeClassName="bg-transparent hover:bg-transparent border-zinc-700"
-            //   options={props.options}
-            // />
-            <MultipleSelectorWrap
-              handleChangeFilter={(selected: any) => {
-                setUuids(selected)
-              }}
-              className="w-full p-1 dark:border-zinc-500 dark:bg-zinc-900"
-              value={uuids}
-            />
-          )}
         </div>
       </PopoverContent>
     </Popover>

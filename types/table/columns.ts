@@ -17,6 +17,7 @@ export type Column = {
   real_column_name: string
   sort_order: number
   visible: boolean
+  search_path?: string
 }
 
 

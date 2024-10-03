@@ -189,9 +189,11 @@ export default function FlightsDashboardPage() {
             },
             {
               key: "flight_number",
-              renderer: (data, value) => (
+              renderer: (data, value, isLocked) => (
                 <Badge
-                  className="pointer-events-auto"
+                  className={
+                    isLocked ? "pointer-events-none" : "pointer-events-auto"
+                  }
                   onClick={(e) => {
                     e.stopPropagation()
                     setSelectedFlightSetting(data)
@@ -204,9 +206,9 @@ export default function FlightsDashboardPage() {
             },
             {
               key: "tail.tail_number",
-              renderer: (data) => (
+              renderer: (data, value, isLocked) => (
                 <Badge
-                  className="pointer-events-auto inline-flex gap-2"
+                  className={ isLocked ? "pointer-events-none" : "pointer-events-auto inline-flex gap-2"}
                   onClick={(e) => {
                     e.stopPropagation()
                     handleTailNumberRowClick(data.tail)

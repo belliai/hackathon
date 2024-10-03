@@ -8,8 +8,10 @@ import {
   EyeIcon,
   ListFilterIcon,
   LoaderIcon,
+  LockIcon,
   LucideIcon,
   SearchIcon,
+  UnlockIcon,
 } from "lucide-react"
 import { useDebounceValue } from "usehooks-ts"
 
@@ -53,7 +55,6 @@ export function DataTableToolbar({ ...props }: DataTableToolbarProps) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [search, setSearch] = useState<string>()
   const [debouncedSearch, setDebouncedSearch] = useDebounceValue(search, 500)
-  const [isLockedView, setIsLockedView] = useState(false)
   const [isGlobalFiltered, setIsGlobalFiltered] = useState(false)
   const [isCustomVisibility, setIsCustomVisibility] = useState(false)
 
@@ -69,7 +70,7 @@ export function DataTableToolbar({ ...props }: DataTableToolbarProps) {
     }
   }
 
-  const { filters, onSearchChange } = useDataTableContext()
+  const { filters, onSearchChange, isLocked, setIsLocked } = useDataTableContext()
 
   const lockedPageFilters = getPageFilters()
 
@@ -86,7 +87,7 @@ export function DataTableToolbar({ ...props }: DataTableToolbarProps) {
   }, [debouncedSearch])
 
   useEffect(() => {
-    setIsLockedView(lockedPageFilters.isLocked)
+    setIsLocked(lockedPageFilters.isLocked)
   }, [lockedPageFilters.isLocked])
 
   return (
@@ -126,9 +127,31 @@ export function DataTableToolbar({ ...props }: DataTableToolbarProps) {
               </Button>
             ))}
             <Tooltip delayDuration={100}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => setIsLocked(!isLocked)}
+                  size={"icon"}
+                  variant={"outline"}
+                  className={"h-8 w-8"}
+                >
+                  {isLocked ? (
+                    <LockIcon className={`h-4 w-4 text-button-primary`} />
+                  ) : (
+                    <UnlockIcon className={`h-4 w-4`} />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                className="border bg-background text-foreground"
+              >
+                <p>Lock</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip delayDuration={100}>
               <DataTableFilterOptions
                 onOpenChange={setFilterOpen}
-                isLocked={isLockedView}
+                isLocked={isLocked}
                 lockedPageFilters={lockedPageFilters}
               >
                 <TooltipTrigger asChild>

@@ -38,6 +38,7 @@ export interface FilterData {
   searchTerm?: string
   calendarMode?: "single" | "range"
   operator?: "OR" | "AND"
+  searchPath?: string
 }
 
 export type FilterKey = keyof FilterData

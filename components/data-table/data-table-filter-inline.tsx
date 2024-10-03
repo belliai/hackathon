@@ -178,7 +178,7 @@ export function DataTableFilterInline<TData>({
               )}
 
               {filter.type === "profile" && (
-                <DataTableFilterProfile
+                <DataTableFilterUUID
                   filter={filter}
                   onValueChange={console.log}
                   options={dummyUserOptions}
@@ -605,7 +605,7 @@ export function DataTableFilterText({ ...props }: DataTableFilterProps) {
   )
 }
 
-export function DataTableFilterProfile({ ...props }: DataTableFilterProps) {
+export function DataTableFilterUUID({ ...props }: DataTableFilterProps) {
   const [open, setOpen] = useState(false)
   const [condition, setCondition] = useState("contains")
   const [profiles, setProfiles] = useState<OptionWithUrl[]>([])

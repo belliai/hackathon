@@ -1,6 +1,13 @@
 "use client"
 
-import { ReactNode, useEffect, useMemo, useRef, useState, useCallback } from "react"
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { ChevronDownIcon, ChevronUpIcon, PinIcon } from "lucide-react"
 import { useHover } from "usehooks-ts"
 
@@ -41,7 +48,7 @@ export type DataTableProps<T> = {
   onCellClick?: (row: T, column: Column) => void
   customCellRenderers?: {
     key: string
-    renderer: (data: T, value: string) => ReactNode
+    renderer: (data: T, value: string, isLocked?: boolean) => ReactNode
   }[]
   onExport?: () => void
   hideToolbar?: boolean
@@ -52,27 +59,31 @@ export type DataTableProps<T> = {
 } & TableStateHandlers
 
 function useHorizontalScroll() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false)
 
   const handleScroll = useCallback((event: Event) => {
-    const target = event.target as HTMLDivElement;
-    setIsScrolled(target.scrollLeft > 0);
-  }, []);
+    const target = event.target as HTMLDivElement
+    setIsScrolled(target.scrollLeft > 0)
+  }, [])
 
   useEffect(() => {
-    const scrollContainer = document.getElementById('data-table-scroll-container');
+    const scrollContainer = document.getElementById(
+      "data-table-scroll-container"
+    )
     if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+      scrollContainer.addEventListener("scroll", handleScroll, {
+        passive: true,
+      })
 
-      handleScroll({ target: scrollContainer } as unknown as Event);
-      
+      handleScroll({ target: scrollContainer } as unknown as Event)
+
       return () => {
-        scrollContainer.removeEventListener('scroll', handleScroll);
-      };
+        scrollContainer.removeEventListener("scroll", handleScroll)
+      }
     }
-  }, [handleScroll]);
+  }, [handleScroll])
 
-  return isScrolled;
+  return isScrolled
 }
 
 export function DataTable<T>(props: DataTableProps<T>) {
@@ -81,8 +92,9 @@ export function DataTable<T>(props: DataTableProps<T>) {
 
   const hoverRef = useRef(null)
   const isHover = useHover(hoverRef)
+  const [isLocked, setIsLocked] = useState<boolean>(false)
 
-  const isScrolled = useHorizontalScroll();
+  const isScrolled = useHorizontalScroll()
 
   const { data: columnsData } = useGetColumns(tableKey)
   const { data: savedFilters } = useGetFilters(tableKey)
@@ -106,6 +118,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
       onPageChange={props.onPageChange}
       onPageSizeChange={props.onPageSizeChange}
       onSortToggle={props.onSortToggle}
+      isLocked={isLocked}
+      setIsLocked={setIsLocked}
     >
       <div className="group flex flex-col gap-4" ref={hoverRef}>
         {!props.hideToolbar && (
@@ -124,8 +138,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
             <DataTableBody
               data={rowData}
               customCellRenderers={props.customCellRenderers}
-              onCellClick={props.onCellClick}
-              onRowClick={props.onRowClick}
+              onCellClick={isLocked ? undefined : props.onCellClick}
+              onRowClick={isLocked ? undefined : props.onRowClick}
               isScrolled={isScrolled}
             />
           </Table>
@@ -159,7 +173,9 @@ function DataTableHeader({ isScrolled }: { isScrolled: boolean }) {
               className={cn(
                 "cursor-pointer",
                 "sticky z-10 bg-background",
-                (isScrolled && (idx + 1) === stickyColumns.length) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
+                isScrolled &&
+                  idx + 1 === stickyColumns.length &&
+                  "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
               )}
               style={{
                 left: `${idx * 120}px`,
@@ -170,11 +186,11 @@ function DataTableHeader({ isScrolled }: { isScrolled: boolean }) {
               }}
             >
               <div className="inline-flex w-full items-center justify-between gap-2">
-                <span className="flex gap-1 items-center">
+                <span className="flex items-center gap-1">
                   {col.column_name}
                   <PinIcon className="size-3" />
                 </span>
-                
+
                 {sort?.sort_by === col.real_column_name && (
                   <>
                     {sort.sort_dir === "asc" ? (
@@ -220,26 +236,50 @@ function DataTableBody<T>(props: {
   onCellClick?: (row: T, column: Column) => void
   customCellRenderers?: {
     key: string
-    renderer: (data: T, value: string) => ReactNode
-  }[],
+    renderer: (data: T, value: string, isLocked?: boolean) => ReactNode
+  }[]
   isScrolled: boolean
 }) {
-  const { data, customCellRenderers, onCellClick, onRowClick, isScrolled } = props
+  const { data, customCellRenderers, onCellClick, onRowClick, isScrolled } =
+    props
 
-  const { columns } = useDataTableContext()
+  const { columns, isLocked } = useDataTableContext()
 
   const visibleColumns = columns?.visible_columns ?? []
   const stickyColumns = columns?.sticky_columns ?? []
 
+  // const customRendererMap = useMemo(() => {
+  //   return customCellRenderers?.reduce(
+  //     (acc, { key, renderer }) => {
+  //       acc[key] = renderer
+  //       return acc
+  //     },
+  //     {} as Record<string, (data: T, value: string, isLocked?: boolean) => ReactNode>
+  //   )
+  // }, [customCellRenderers])
+
   const customRendererMap = useMemo(() => {
     return customCellRenderers?.reduce(
       (acc, { key, renderer }) => {
-        acc[key] = renderer
+        acc[key] = (data: T, value: string, isLocked?: boolean) => {
+          if (isLocked) {
+            return (
+              <div className="pointer-events-none">
+                {/* Render without the onClick event */}
+                {renderer(data, value, isLocked)}
+              </div>
+            )
+          }
+          return renderer(data, value)
+        }
         return acc
       },
-      {} as Record<string, (data: T, value: string) => ReactNode>
+      {} as Record<
+        string,
+        (data: T, value: string, isLocked?: boolean) => ReactNode
+      >
     )
-  }, [customCellRenderers])
+  }, [customCellRenderers, isLocked])
 
   const columnsMap = useMemo(() => {
     const combinedColumns = [...visibleColumns, ...stickyColumns]
@@ -284,7 +324,10 @@ function DataTableBody<T>(props: {
                   className={cn(
                     "whitespace-nowrap text-black dark:text-muted-foreground",
                     isSticky && "sticky z-10 bg-background",
-                    (isSticky && isScrolled && (idx + 1) === stickyColumns.length) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
+                    isSticky &&
+                      isScrolled &&
+                      idx + 1 === stickyColumns.length &&
+                      "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
                   )}
                   key={col.real_column_name}
                   style={{
@@ -294,7 +337,11 @@ function DataTableBody<T>(props: {
                   }}
                 >
                   {customRenderer
-                    ? customRenderer(row.object, cellData?.value ?? "")
+                    ? customRenderer(
+                        row.object,
+                        cellData?.value ?? "",
+                        isLocked
+                      )
                     : cellData?.value}
                 </TableCell>
               )
