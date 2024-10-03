@@ -1,6 +1,13 @@
 "use client"
 
-import { ReactNode, useEffect, useRef, useState } from "react"
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { PopoverTrigger } from "@radix-ui/react-popover"
 import { format } from "date-fns"
 import {
@@ -17,6 +24,7 @@ import {
   UserIcon,
 } from "lucide-react"
 import { DateRange } from "react-day-picker"
+import { useForm } from "react-hook-form"
 
 import {
   FilterData,
@@ -41,13 +49,16 @@ import {
 } from "@/lib/utils/table-filter-utils"
 import { Button } from "@/components/ui/button"
 import DateInput from "@/components/ui/date-input"
+import { Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import MultipleSelector from "@/components/ui/multi-selector"
+import MultipleSelector, { useDebounce } from "@/components/ui/multi-selector"
 import { Popover, PopoverContent } from "@/components/ui/popover"
 import { SelectTrigger, SelectValue } from "@/components/ui/select"
 import TimeInput from "@/components/ui/time-input"
 import { toast } from "@/components/ui/use-toast"
 import { OptionWithType } from "@/components/data-table/types"
+import AsyncSearchComboBox from "@/components/form/combobox-async"
+import InputSwitch from "@/components/form/InputSwitch"
 import NumberInputStepper from "@/components/form/number-input-stepper"
 
 import { useDataTableContext } from "../data-table-context"
@@ -62,7 +73,7 @@ interface DataTableViewOptionsProps<TData> {
   onOpenChange?: (open: boolean) => void
 }
 
-type Focusable = HTMLInputElement | HTMLSelectElement;
+type Focusable = HTMLInputElement | HTMLSelectElement
 
 const DEFAULT_FILTER_DATA: FilterData = {
   id: 1,
@@ -96,23 +107,23 @@ export function DataTableFilterOptions<TData>({
   const [open, setOpen] = useState(false)
   const [localLogicalOperator, setLocalLogicalOperator] = useState("AND")
 
-  const inputRefs = useRef<(Focusable | null)[]>([]);
+  const inputRefs = useRef<(Focusable | null)[]>([])
 
   useEffect(() => {
-    inputRefs.current = inputRefs.current.slice(0, localFilters.length);
-  }, [localFilters]);
+    inputRefs.current = inputRefs.current.slice(0, localFilters.length)
+  }, [localFilters])
 
   const focusNextInput = (currentIndex: number) => {
     requestAnimationFrame(() => {
       for (let i = currentIndex + 1; i < inputRefs.current.length; i++) {
-        const nextInput = inputRefs.current[i];
+        const nextInput = inputRefs.current[i]
         if (nextInput && !nextInput.disabled) {
-          nextInput.focus();
-          return;
+          nextInput.focus()
+          return
         }
       }
-    });
-  };
+    })
+  }
   const save = useSaveFilters()
 
   const allColumns = columns
@@ -256,6 +267,7 @@ export function DataTableFilterOptions<TData>({
                     onValueChange={(value) => {
                       const column = allColumns.find((col) => col.id === value)
                       const columnType = column?.column_type
+                      const searchPath = column?.search_path
 
                       const label = columnOptions.find(
                         (item) => value === item.value
@@ -273,15 +285,21 @@ export function DataTableFilterOptions<TData>({
                           columnType === "time"
                         ) {
                           defaultValue = new Date()
+                        } else if (columnType === "uuid") {
                         }
 
                         handleChangeFilter(
                           filter.id,
-                          [columnType, value, label, defaultValue],
-                          ["type", "columnConfigId", "label", "value"]
+                          [columnType, value, label, defaultValue, searchPath],
+                          [
+                            "type",
+                            "columnConfigId",
+                            "label",
+                            "value",
+                            "searchPath",
+                          ]
                         )
-                        focusNextInput(index);
-
+                        focusNextInput(index)
                       }
                     }}
                   >
@@ -336,8 +354,7 @@ export function DataTableFilterOptions<TData>({
                         } else {
                           handleChangeFilter(filter.id, [cond], ["condition"])
                         }
-                        focusNextInput(index);
-
+                        focusNextInput(index)
                       }}
                       options={arrayToOptions(operators.date)}
                     >
@@ -596,12 +613,14 @@ export function DataTableFilterOptions<TData>({
                     </DataTableSelect>
 
                     {!isEmptyOrNotEmpty && (
-                      <MultipleSelectorWrap
-                        className="w-full p-1 dark:border-zinc-500 dark:bg-zinc-900"
-                        handleChangeFilter={(selected: any) => {
-                          handleChangeFilter?.(filter.id, [selected], ["value"])
-                        }}
+                      <ComboboxSearch
+                        searchPath={filter.searchPath}
                         value={filter.value}
+                        onChangeValue={(val: string) => {
+                          console.log({ val })
+                          handleChangeFilter?.(filter.id, [val], ["value"])
+                        }}
+                        className="dark:border-1 h-9 w-full rounded-sm px-4 text-xs hover:bg-transparent dark:border-foreground/10"
                       />
                     )}
                   </div>
@@ -663,6 +682,82 @@ export function DataTableFilterOptions<TData>({
   )
 }
 
+export const ComboboxSearch = (props: any) => {
+  const { onChangeValue, value, className, searchPath } = props
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  const [options, setOptions] = useState<any[]>([])
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300)
+
+  const { refetch } = useGeneralSearch({
+    searchTerm: debouncedSearchTerm, // Use the debounced search term in the query
+    basePath: searchPath,
+  })
+
+  const { data: list } = useGeneralSearch({searchTerm:value, basePath: searchPath})
+
+  const item = list?.find((item) => item.id === value)
+
+  useEffect(() => {
+    if (value && item) {
+      setOptions([
+        {
+          label: item?.name,
+          value: item?.id,
+        },
+      ])
+    }
+  }, [value])
+
+  const form = useForm({
+    defaultValues: {
+      uuid: value,
+    },
+  })
+
+  const handleSearch = useCallback(
+    async (keyword: string): Promise<any[]> => {
+      try {
+        setSearchTerm(keyword) // Update searchTerm on input change
+        const { data: searchResults } = await refetch()
+
+        // Ensure searchResults is an array and properly maps to the expected format
+        const newOptions = (searchResults || []).map((item: any) => ({
+          label: item.name,
+          value: item.id,
+        }))
+
+        setOptions(newOptions) // Set options in state
+        return newOptions
+      } catch (err) {
+        console.error("Error performing search:", err)
+        return []
+      }
+    },
+    [refetch]
+  )
+
+  // Trigger search whenever the debounced search term changes
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      handleSearch(debouncedSearchTerm)
+    }
+  }, [debouncedSearchTerm, handleSearch])
+
+  return (
+    <Form {...form}>
+      <AsyncSearchComboBox
+        searchTerm={searchTerm}
+        onSearchChange={(search) => setSearchTerm(search)} // No need to debounce here
+        name="uuid"
+        onChangeValue={onChangeValue}
+        options={options}
+        className={className}
+      />
+    </Form>
+  )
+}
+
 export const MultipleSelectorWrap = (props: any) => {
   const { handleChangeFilter, value, className } = props
   const [searchTerm, setSearchTerm] = useState<string>("")
@@ -671,7 +766,7 @@ export const MultipleSelectorWrap = (props: any) => {
     basePath: "/locations",
   })
 
-  const handleSearch = (keyword: string): Promise<any[]> => {
+  const handleSearch = async (keyword: string): Promise<any[]> => {
     return new Promise(async (resolve, reject) => {
       try {
         setSearchTerm(keyword)

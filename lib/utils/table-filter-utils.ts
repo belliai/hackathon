@@ -240,12 +240,13 @@ export const mapFiltersToSave = (
 
     if (filter.type === "int") {
       defaultValue = filter.value || "0"
-    } else if (filter.type === "string") {
+    } else if (filter.type ==="string" ) {
+      defaultValue = String(filter.value)
+    }  else if (filter.type ==="uuid" ) {
       defaultValue = String(filter.value)
     } else if (filter.type === "date") {
       defaultValue = format(filter.value as Date, "yyyy-MM-dd")
     } else if (filter.type === "time") {
-      console.log(filter.value)
       const val = format(filter.value as Date, "hh:mma")
       defaultValue = val.toLowerCase() // changne AM/PM to lower case am/pm
     }
@@ -281,9 +282,10 @@ export const mapSavedToFilters = (
         (col) => col.id === filter.column_config_id
       )
 
+
       const columnType = detailColumn?.column_type
       let defaultValue: any = null
-      let preset 
+      let preset, searchPath 
       if (columnType === "int" || columnType === "string") {
         defaultValue = filter.value
       } else if (columnType === "date") {
@@ -295,6 +297,9 @@ export const mapSavedToFilters = (
             ? parse(filter.value, "hh:mma", new Date())
             : filter.value
         defaultValue = parsedValue
+      } else if (columnType === "uuid"){
+        searchPath =  detailColumn?.search_path
+        defaultValue = filter.value
       }
 
       return {
@@ -304,7 +309,8 @@ export const mapSavedToFilters = (
         value: defaultValue,
         type: detailColumn?.column_type,
         label: detailColumn?.column_name,
-        preset
+        preset,
+        searchPath
       }
     })
 

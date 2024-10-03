@@ -16,6 +16,8 @@ type DataTableContextType = {
   tableKey: TableKeys
   columns?: ColumnResponse
   logical_operator: LogicalOperator
+  isLocked: boolean
+  setIsLocked: Dispatch<SetStateAction<boolean>>
   onRefetchData: () => Promise<any>
 } & TableStateHandlers
 
@@ -24,7 +26,6 @@ const DataTableContext = createContext<
     setColumns: Dispatch<SetStateAction<ColumnResponse>>
     setLogicalOperator: Dispatch<SetStateAction<LogicalOperator>>
     columns: ColumnResponse
-    logical_operator: LogicalOperator
   }
 >({
   tableKey: "dashboard_flights",
@@ -35,6 +36,8 @@ const DataTableContext = createContext<
   filters: [],
   logical_operator: "AND",
   sort: undefined,
+  isLocked: false,
+  setIsLocked: ()=>{},
   setColumns: () => {},
   setLogicalOperator: () => {},
   onFiltersChange: () => {},
@@ -69,7 +72,9 @@ export function DataTableContextProvider(
         columns,
         setColumns,
         logical_operator:logicalOperator,
-        setLogicalOperator
+        setLogicalOperator,
+        isLocked: props.isLocked,
+        setIsLocked : props.setIsLocked
       }}
     >
       {props.children}
