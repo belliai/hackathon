@@ -45,7 +45,7 @@ export default function CargoCapacityAreaChart() {
           color: "#FB5727",
         },
       }}
-      className="min-h-[200px]"
+      className="max-h-[400px] min-h-[200px]"
     >
       <AreaChart
         accessibilityLayer

@@ -39,6 +39,8 @@ export default function LoadCapacityTab(props: LoadCapacityTabProps) {
     sectionKey: "cargo",
   })
 
+  console.log({ cargoDisplaySettings })
+
   const { mutateAsync: partialUpdateFlight } = usePartialUpdateFlight()
 
   const actualInformationForm = useForm<{ infos: FlightsActualInformation[] }>({

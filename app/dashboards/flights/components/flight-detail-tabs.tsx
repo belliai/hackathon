@@ -15,7 +15,7 @@ export default function FlightDetailTabs(props: FlightDetailTabsProps) {
   const { flight } = props
   return (
     <Tabs
-      className="mt-3 flex flex-1 flex-col space-y-2"
+      className="flex flex-1 flex-col space-y-2"
       defaultValue="booking-list"
     >
       <TabsList className="justify-start gap-2 bg-transparent p-0">
@@ -43,13 +43,13 @@ export default function FlightDetailTabs(props: FlightDetailTabsProps) {
         </TabsTrigger>
       </TabsList>
       <TabsContent
-        className="flex-1 flex-col justify-between data-[state=active]:flex"
+        className="flex-1 flex-col justify-between gap-4 data-[state=active]:flex"
         value="booking-list"
       >
         <BookingListTab flight={flight} onOpenChange={props.onOpenChange} />
       </TabsContent>
       <TabsContent
-        className="flex-1 flex-col justify-between data-[state=active]:flex"
+        className="flex-1 flex-col justify-between gap-4 data-[state=active]:flex"
         value="load-capacity"
       >
         <LoadCapacityTab flight={flight} onOpenChange={props.onOpenChange} />

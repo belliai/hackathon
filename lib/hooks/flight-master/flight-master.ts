@@ -24,6 +24,10 @@ interface FlightParamsProps extends PaginationParams {
   end_date?: string
 }
 
+export const fetchFlight = async (belliApi: AxiosInstance, id: string) => {
+  return belliApi.get<Flight>(`${route}/${id}`).then((res) => res.data)
+}
+
 export const fetchFlightList = async (
   belliApi: AxiosInstance,
   params: FlightParamsProps
@@ -52,6 +56,16 @@ export const useFlightsDashboard = (params: FlightParamsProps) => {
   return useQuery({
     queryKey: [route, "dashboard", params],
     queryFn: async () => await fetchFlightDashboard(await belliApi, params),
+    placeholderData: keepPreviousData,
+  })
+}
+
+export const useFlight = (id: string) => {
+  const belliApi = useBelliApi()
+
+  return useQuery({
+    queryKey: [route, id],
+    queryFn: async () => await fetchFlight(await belliApi, id),
     placeholderData: keepPreviousData,
   })
 }

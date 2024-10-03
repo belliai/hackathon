@@ -12,12 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DialogTitle } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader } from "@/components/ui/sheet"
 
 import FlightDetailTabs from "./flight-detail-tabs"
 
@@ -31,9 +26,9 @@ export default function FlightDetailDialog(props: FlightDetailDialogProps) {
 
   return (
     <Sheet open={!!flight} onOpenChange={props.onOpenChange}>
-      <SheetContent className="flex !min-w-[1000px] flex-row gap-0 py-0">
-        <div className="flex !min-w-[600px] flex-col border-r py-6 pr-6">
-          <SheetHeader className="space-y-3">
+      <SheetContent hideCloseButton className="flex !min-w-[600px] flex-row">
+        <div className="flex w-full flex-col">
+          <SheetHeader className="mb-3 space-y-3">
             <div className="inline-flex items-center justify-between">
               <div className="inline-flex items-center gap-3">
                 <DialogTitle>{flight?.flight_number}</DialogTitle>
@@ -46,7 +41,9 @@ export default function FlightDetailDialog(props: FlightDetailDialogProps) {
                   <span>{flight?.destination.airport_code}</span>
                 </Badge>
               </div>
-              <Link href={`/dashboards/flights/${flight?.id}`}>
+              <Link
+                href={`/dashboards/flights/${flight?.id}?section=${flight?.flight_number}`}
+              >
                 <Button className="mt-0.5" variant={"ghost"} size={"fit"}>
                   <ExpandIcon className="size-4 text-muted-foreground" />
                 </Button>
@@ -76,13 +73,6 @@ export default function FlightDetailDialog(props: FlightDetailDialogProps) {
             </div>
           </SheetHeader>
           <FlightDetailTabs flight={flight} onOpenChange={props.onOpenChange} />
-        </div>
-        <div className="!min-w-[400px] py-6 pl-6">
-          <SheetHeader>
-            <SheetTitle className="text-muted-foreground">
-              Flight Properties
-            </SheetTitle>
-          </SheetHeader>
         </div>
       </SheetContent>
     </Sheet>
