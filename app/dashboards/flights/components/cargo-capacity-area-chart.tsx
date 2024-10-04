@@ -1,3 +1,6 @@
+"use client"
+
+import { useMemo } from "react"
 import moment from "moment"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
@@ -12,30 +15,34 @@ import {
  * For now it is using dummy data, later it will be replaced with actual data passed from the props
  */
 export default function CargoCapacityAreaChart() {
-  const lastSixMonths = Array.from({ length: 6 }, (_, i) => {
-    const month = moment().subtract(i, "months").format("MMM")
+  const lastSixMonths = useMemo(
+    () =>
+      Array.from({ length: 8 }, (_, i) => {
+        const month = moment().subtract(i, "months").format("MMM")
 
-    /**
-     * 85% for current month
-     * 30% 2 months ago
-     * 10% 5 months ago
-     * Random values for the rest
-     */
+        /**
+         * 85% for current month
+         * 30% 2 months ago
+         * 10% 5 months ago
+         * Random values for the rest
+         */
 
-    const capacity =
-      i === 0
-        ? 85
-        : i === 2
-          ? 30
-          : i === 5
-            ? 10
-            : Math.floor(Math.random() * 100)
+        const capacity =
+          i === 0
+            ? 85
+            : i === 2
+              ? 30
+              : i === 5
+                ? 10
+                : Math.floor(Math.random() * 100)
 
-    return {
-      month,
-      capacity,
-    }
-  }).reverse()
+        return {
+          month,
+          capacity,
+        }
+      }).reverse(),
+    []
+  )
 
   return (
     <ChartContainer
@@ -45,7 +52,7 @@ export default function CargoCapacityAreaChart() {
           color: "#FB5727",
         },
       }}
-      className="max-h-[400px] min-h-[200px]"
+      className="aspect-auto h-[300px] w-full"
     >
       <AreaChart
         accessibilityLayer

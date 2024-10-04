@@ -43,13 +43,13 @@ export default function FlightDetailTabs(props: FlightDetailTabsProps) {
         </TabsTrigger>
       </TabsList>
       <TabsContent
-        className="flex-1 flex-col justify-between gap-4 data-[state=active]:flex"
+        className="flex-1 flex-col justify-between gap-8 gap-x-0 data-[state=active]:flex"
         value="booking-list"
       >
         <BookingListTab flight={flight} onOpenChange={props.onOpenChange} />
       </TabsContent>
       <TabsContent
-        className="flex-1 flex-col justify-between gap-4 data-[state=active]:flex"
+        className="flex-1 flex-col justify-between gap-8 gap-x-0 data-[state=active]:flex"
         value="load-capacity"
       >
         <LoadCapacityTab flight={flight} onOpenChange={props.onOpenChange} />

@@ -47,7 +47,7 @@ export default function BookingListTab(props: LoadCapacityTabProps) {
     defaultValues: { status: flight?.status.id ?? "", remarks: [""] },
   })
 
-  const { selectedBooking, setSelectedBooking } = useBookingContext()
+  const { setSelectedBooking } = useBookingContext()
 
   useEffect(() => {
     flight &&
@@ -117,18 +117,18 @@ export default function BookingListTab(props: LoadCapacityTabProps) {
               <Label className="text-xs font-semibold text-muted-foreground">
                 Capacity
               </Label>
-              <div className="relative h-9 w-full overflow-hidden rounded-md border bg-muted/10">
+              <div className="relative h-9 w-full overflow-hidden rounded-md border border-button-primary/50 bg-button-primary/10">
                 <div
-                  className="h-full bg-muted/50"
+                  className="h-full border-r-2 border-dashed border-button-primary/50 bg-button-primary/20"
                   style={{ width: `${capacityPercentage}%` }}
                 />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-button-primary">
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-primary/80">
                   {capacityPercentage}%
                 </span>
               </div>
             </div>
           </div>
-          <div className="group relative w-full overflow-x-auto">
+          <div className="group">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -176,6 +176,7 @@ export default function BookingListTab(props: LoadCapacityTabProps) {
                     </TableCell>
                     <TableCell>
                       <InputSwitch
+                        onClick={(e) => e.stopPropagation()}
                         name={`remarks.${index}`}
                         type="text"
                         placeholder="input remarks..."
