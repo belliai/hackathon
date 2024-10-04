@@ -275,7 +275,7 @@ export default function NewOrderSideModal({
       label: "Upload File",
       value: "upload-file",
       icon: Upload,
-      content: <UploadFile />,
+      content: <UploadFile bookingId={selectedBooking?.ID} />,
       fieldList: [],
       columnList: [],
     },

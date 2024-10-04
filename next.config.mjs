@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects(){
+  async redirects() {
     return [
       {
-        source: '/',
-        destination: '/dashboards/airway-bills',
+        source: "/",
+        destination: "/dashboards/airway-bills",
         permanent: true,
-      }
+      },
     ]
   },
   images: {
@@ -25,7 +25,12 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.useparagon.com",
         port: "",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "onerecord-belli.s3.amazonaws.com",
+        port: "",
+      },
     ],
     dangerouslyAllowSVG: true,
   },
