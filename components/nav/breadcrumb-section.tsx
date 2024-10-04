@@ -3,7 +3,6 @@
 import React, { useMemo } from "react"
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
-import { useOrganization } from "@clerk/nextjs"
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { CogIcon, Loader, StarIcon } from "lucide-react"
 
@@ -130,8 +129,6 @@ export default function BreadCrumbSection() {
   const { insertPath, isPathFavorited, deletePathByHref, favorites } =
     useFavorites()
 
-  const { organization, isLoaded } = useOrganization()
-
   const isFavorited = useMemo(
     () => isPathFavorited(pathname),
     [pathname, isPathFavorited]
@@ -145,16 +142,6 @@ export default function BreadCrumbSection() {
       <div className="flex flex-row items-center gap-6">
         <Breadcrumb>
           <BreadcrumbList>
-            <>
-              <BreadcrumbItem>
-                {isLoaded ? (
-                  organization?.name
-                ) : (
-                  <Skeleton className="h-5 w-12" />
-                )}
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-            </>
             {currentPaths.map((path, index) => (
               <React.Fragment key={index}>
                 {index !== 0 && <BreadcrumbSeparator />}

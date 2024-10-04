@@ -9,11 +9,11 @@ import QueryProvider from "@/components/query-provider"
 
 const OuterRootProviders = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
-      <PHProvider>
-        <QueryProvider>{children}</QueryProvider>
-      </PHProvider>
-    </ClerkProvider>
+    // <ClerkProvider appearance={{ baseTheme: dark }}>
+    <PHProvider>
+      <QueryProvider>{children}</QueryProvider>
+    </PHProvider>
+    // </ClerkProvider>
   )
 }
 

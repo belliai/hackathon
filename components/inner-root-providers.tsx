@@ -20,31 +20,31 @@ const StiggProvider = dynamic(() => import("@/components/stigg-provider"), {
 const InnerRootProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <SignedIn>
-        <StiggProvider>
-          <TooltipProvider>
-            <BookingProvider>
-              <FavoritesProvider>
-                <RouteRoom>
-                  <NextThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    themes={["dark", "light"]}
-                    enableSystem
-                    disableTransitionOnChange
-                  >
-                    <UIWrapper>{children}</UIWrapper>
-                  </NextThemeProvider>
-                </RouteRoom>
-              </FavoritesProvider>
-              <Toaster />
-            </BookingProvider>
-          </TooltipProvider>
-        </StiggProvider>
-      </SignedIn>
+      {/* <SignedIn> */}
+      <StiggProvider>
+        <TooltipProvider>
+          <BookingProvider>
+            <FavoritesProvider>
+              <RouteRoom>
+                <NextThemeProvider
+                  attribute="class"
+                  defaultTheme="dark"
+                  themes={["dark", "light"]}
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  <UIWrapper>{children}</UIWrapper>
+                </NextThemeProvider>
+              </RouteRoom>
+            </FavoritesProvider>
+            <Toaster />
+          </BookingProvider>
+        </TooltipProvider>
+      </StiggProvider>
+      {/* </SignedIn>
       <SignedOut>
         <RedirectToSignIn />
-      </SignedOut>
+      </SignedOut> */}
     </>
   )
 }

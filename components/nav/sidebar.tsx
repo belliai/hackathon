@@ -45,15 +45,15 @@ export default function SideBar({
   const router = useRouter()
   const [sidebarType, setNavigationType] = useState<NAV_TYPE>(NAV_TYPE.DEFAULT)
 
-  const { userMemberships } = useOrganizationList({
-    userMemberships: {
-      infinite: true,
-    },
-  })
+  // const { userMemberships } = useOrganizationList({
+  //   userMemberships: {
+  //     infinite: true,
+  //   },
+  // })
 
-  const isBelliAdmin = userMemberships.data?.some(
-    (data) => data.organization.slug === "admin"
-  )
+  // const isBelliAdmin = userMemberships.data?.some(
+  //   (data) => data.organization.slug === "admin"
+  // )
 
   useEffect(() => {
     if (settings === "true") {
@@ -209,7 +209,7 @@ export default function SideBar({
               )}
             </ul>
           </ul>
-          {isBelliAdmin &&
+          {/* {isBelliAdmin &&
             isExpanded &&
             sidebarType === NAV_TYPE.BELLI_SETTING && (
               <ul role="list" className="-mx-2">
@@ -219,7 +219,7 @@ export default function SideBar({
                   collapsible
                 />
               </ul>
-            )}
+            )} */}
         </nav>
       </div>
     </Suspense>

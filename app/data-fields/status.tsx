@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { useOrganization } from "@clerk/nextjs"
 import { Plus } from "lucide-react"
 import { FieldValues, useForm } from "react-hook-form"
 import { useLocalStorage } from "usehooks-ts"
@@ -96,9 +95,7 @@ const Status = ({ tabComponent }: { tabComponent?: React.ReactNode }) => {
     []
   )
 
-  const { organization } = useOrganization()
-
-  const orgId = organization?.id
+  const orgId = ""
 
   const [open, setOpen] = useState(false)
   const [selectedEditing, setSelectedEditing] = useState<string | null>(null)

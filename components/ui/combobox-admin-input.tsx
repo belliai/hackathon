@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useAuth } from "@clerk/nextjs"
 import {
   ChevronsUpDown,
   LoaderIcon,
@@ -108,9 +107,6 @@ export default function ComboBoxInput<
       setEdit(null)
     }
   }, [showCreateForm, form])
-
-  const { orgRole } = useAuth()
-  const isAdmin = orgRole?.toLowerCase().includes("admin")
 
   return (
     <>
@@ -220,33 +216,6 @@ export default function ComboBoxInput<
                         }}
                       >
                         {option.label}
-
-                        {isAdmin && (
-                          <div className="flex flex-row items-center gap-1">
-                            <Button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setEdit(option.value)
-                              }}
-                              type="button"
-                              variant="icon"
-                              size="fit"
-                            >
-                              <PencilIcon className="size-3" />
-                            </Button>
-                            <Button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                onDelete(option)
-                              }}
-                              type="button"
-                              variant="icon"
-                              size="fit"
-                            >
-                              <Trash2Icon className="size-3" />
-                            </Button>
-                          </div>
-                        )}
                       </CommandItem>
                     )
                   })}
@@ -270,58 +239,6 @@ export default function ComboBoxInput<
                   </Link>
                 </Button>
               </div>
-            </>
-          )}
-          {isAdmin && onCreate && (
-            <>
-              <Separator />
-              <Button
-                type="button"
-                variant="link"
-                size="sm"
-                className="h-fit w-full justify-start px-3 py-2 leading-none text-button-primary hover:text-button-primary/80 hover:no-underline"
-                onClick={() => setShowCreateForm((prev) => !prev)}
-              >
-                Add New {itemName}
-              </Button>
-              {showCreateForm && (
-                <Form {...form}>
-                  <form action="" className="flex flex-row gap-1 p-1 pt-0">
-                    <Controller
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <Input
-                          className="h-7 px-2.5 text-xs focus-visible:ring-0"
-                          placeholder={`Input ${itemName} name...`}
-                          {...field}
-                          onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault(); // Prevent form submission on Enter key
-                              form.handleSubmit((data) => {
-                                onCreate(data.name)
-                                setShowCreateForm(false)
-                              })
-                              }
-                          }}
-                        />
-                      )}
-                    />
-                    <Button
-                      type="button"
-                      onClick={form.handleSubmit((data) => {
-                        onCreate(data.name)
-                        setShowCreateForm(false)
-                      })}
-                      variant={"button-primary"}
-                      className="h-7 rounded-sm"
-                      size={"sm"}
-                    >
-                      <PlusCircleIcon className="size-4" />
-                    </Button>
-                  </form>
-                </Form>
-              )}
             </>
           )}
         </PopoverContent>

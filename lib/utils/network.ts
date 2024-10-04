@@ -1,4 +1,3 @@
-import { useAuth } from "@clerk/nextjs"
 import axios, { AxiosInstance } from "axios"
 
 type GetToken = () => Promise<string | null>
@@ -56,6 +55,8 @@ export function objectToParams(obj: any) {
 
 // Wrapper to create Belli API instance with Clerk token
 export const useBelliApi = () => {
-  const { getToken } = useAuth()
+  const getToken = async (): Promise<string> => {
+    return "token"
+  }
   return createBelliApi(getToken)
 }
