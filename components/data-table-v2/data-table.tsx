@@ -31,6 +31,29 @@ import {
   DataTableToolbar,
   DataTableToolbarProps,
 } from "./toolbar/data-table-toolbar"
+import { 
+  DndContext, 
+  closestCenter, 
+  KeyboardSensor, 
+  PointerSensor, 
+  useSensor, 
+  useSensors, 
+  DragEndEvent 
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  horizontalListSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+
+interface SortableTableHeadProps {
+  column: Column;
+  sort: SortParams | undefined;
+  onSortToggle: (columnName: string) => void;
+}
 
 export type DataTableProps<T> = {
   tableKey: TableKeys
@@ -92,6 +115,36 @@ export function DataTable<T>(props: DataTableProps<T>) {
     [savedFilters, columnsData]
   )
 
+  const [columnOrder, setColumnOrder] = useState<string[]>([])
+
+  useEffect(() => {
+    if (columnsData) {
+      setColumnOrder(
+        (columnsData.visible_columns || []).map(col => col.real_column_name)
+      )
+    }
+  }, [columnsData])
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (active.id !== over?.id) {
+      setColumnOrder((items) => {
+        const oldIndex = items.indexOf(active.id as string)
+        const newIndex = items.indexOf(over?.id as string)
+
+        return arrayMove(items, oldIndex, newIndex)
+      })
+    }
+  }
+
   const rowData = data?.data
   return (
     <DataTableContextProvider
@@ -119,16 +172,25 @@ export function DataTable<T>(props: DataTableProps<T>) {
           />
         )}
         <div className="relative overflow-x-auto">
-          <Table>
-            <DataTableHeader isScrolled={isScrolled} />
-            <DataTableBody
-              data={rowData}
-              customCellRenderers={props.customCellRenderers}
-              onCellClick={props.onCellClick}
-              onRowClick={props.onRowClick}
-              isScrolled={isScrolled}
-            />
-          </Table>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
+              <Table>
+                <DataTableHeader isScrolled={isScrolled} columnOrder={columnOrder} />
+                <DataTableBody
+                  data={rowData}
+                  customCellRenderers={props.customCellRenderers}
+                  onCellClick={props.onCellClick}
+                  onRowClick={props.onRowClick}
+                  isScrolled={isScrolled}
+                  columnOrder={columnOrder}
+                />
+              </Table>
+            </SortableContext>
+          </DndContext>
         </div>
         <DataTablePagination
           isHover={isHover}
@@ -144,60 +206,87 @@ export function DataTable<T>(props: DataTableProps<T>) {
   )
 }
 
-function DataTableHeader({ isScrolled }: { isScrolled: boolean }) {
+function SortableTableHead({ column, sort, onSortToggle }: SortableTableHeadProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: column.real_column_name })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <TableHead
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={style}
+      className={cn(
+        "cursor-move",
+        "z-10 bg-background"
+      )}
+      onClick={() => {
+        onSortToggle(column.real_column_name)
+      }}
+    >
+      <div className="inline-flex w-full items-center justify-between gap-2">
+        <span className="flex gap-1 items-center">
+          {column.column_name}
+        </span>
+        
+        {sort?.sort_by === column.real_column_name && (
+          <>
+            {sort.sort_dir === "asc" ? (
+              <ChevronUpIcon className="size-3 text-muted-foreground" />
+            ) : (
+              <ChevronDownIcon className="size-3 text-muted-foreground" />
+            )}
+          </>
+        )}
+      </div>
+    </TableHead>
+  )
+}
+
+function DataTableHeader({ isScrolled, columnOrder }: { columnOrder: string[], isScrolled: boolean }) {
   const { columns, sort, onSortToggle } = useDataTableContext()
   const visibleColumns = columns.visible_columns
-  const stickyColumns = columns.sticky_columns
+  const stickyColumns = columns?.sticky_columns || []
+
+  const orderedVisibleColumns = columnOrder.map(colName => 
+    visibleColumns.find(col => col.real_column_name === colName)
+  ).filter(Boolean) as Column[]
 
   return (
     <TableHeader className="bg-zinc-100 dark:bg-transparent">
       <TableRow>
-        {stickyColumns &&
-          stickyColumns.map((col, idx) => (
-            <TableHead
-              key={col.id}
-              className={cn(
-                "cursor-pointer",
-                "sticky z-10 bg-background",
-                (isScrolled && (idx + 1) === stickyColumns.length) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
-              )}
-              style={{
-                left: `${idx * 120}px`,
-                zIndex: 20,
-              }}
-              onClick={() => {
-                onSortToggle(col.real_column_name)
-              }}
-            >
-              <div className="inline-flex w-full items-center justify-between gap-2">
-                <span className="flex gap-1 items-center">
-                  {col.column_name}
-                  <PinIcon className="size-3" />
-                </span>
-                
-                {sort?.sort_by === col.real_column_name && (
-                  <>
-                    {sort.sort_dir === "asc" ? (
-                      <ChevronUpIcon className="size-3 text-muted-foreground" />
-                    ) : (
-                      <ChevronDownIcon className="size-3 text-muted-foreground" />
-                    )}
-                  </>
-                )}
-              </div>
-            </TableHead>
-          ))}
-        {visibleColumns.map((col) => (
+        {stickyColumns.map((column, index) => (
           <TableHead
-            key={col.id}
-            className="cursor-pointer"
+            key={column.id}
+            className={cn(
+              "cursor-pointer",
+              "sticky z-20 bg-background",
+              (isScrolled && index === stickyColumns.length - 1) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
+            )}
+            style={{
+              left: `${index * 120}px`,
+            }}
             onClick={() => {
-              onSortToggle(col.real_column_name)
+              onSortToggle(column.real_column_name)
             }}
           >
             <div className="inline-flex w-full items-center justify-between gap-2">
-              {col.column_name}
-              {sort?.sort_by === col.real_column_name && (
+              <span className="flex gap-1 items-center">
+                {column.column_name}
+                <PinIcon className="size-3" />
+              </span>
+              
+              {sort?.sort_by === column.real_column_name && (
                 <>
                   {sort.sort_dir === "asc" ? (
                     <ChevronUpIcon className="size-3 text-muted-foreground" />
@@ -209,6 +298,16 @@ function DataTableHeader({ isScrolled }: { isScrolled: boolean }) {
             </div>
           </TableHead>
         ))}
+        <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
+          {orderedVisibleColumns.map((column: Column) => (
+            <SortableTableHead
+              key={column.id}
+              column={column}
+              sort={sort}
+              onSortToggle={onSortToggle}
+            />
+          ))}
+        </SortableContext>
       </TableRow>
     </TableHeader>
   )
@@ -222,9 +321,10 @@ function DataTableBody<T>(props: {
     key: string
     renderer: (data: T, value: string) => ReactNode
   }[],
-  isScrolled: boolean
+  isScrolled: boolean,
+  columnOrder: string[]
 }) {
-  const { data, customCellRenderers, onCellClick, onRowClick, isScrolled } = props
+  const { data, customCellRenderers, onCellClick, onRowClick, isScrolled, columnOrder } = props
 
   const { columns } = useDataTableContext()
 
@@ -242,7 +342,7 @@ function DataTableBody<T>(props: {
   }, [customCellRenderers])
 
   const columnsMap = useMemo(() => {
-    const combinedColumns = [...visibleColumns, ...stickyColumns]
+    const combinedColumns = [...visibleColumns]
     return combinedColumns?.reduce(
       (acc, col) => {
         acc[col.real_column_name] = col
@@ -250,7 +350,9 @@ function DataTableBody<T>(props: {
       },
       {} as Record<string, Column>
     )
-  }, [visibleColumns, stickyColumns])
+  }, [visibleColumns])
+
+  const orderedVisibleColumns = columnOrder.map(colName => columnsMap[colName]).filter(Boolean)
 
   return (
     <TableBody>
@@ -261,17 +363,42 @@ function DataTableBody<T>(props: {
             onClick={() => onRowClick && onRowClick(row.object)}
             className={cn(onRowClick && "cursor-pointer")}
           >
-            {[...stickyColumns, ...visibleColumns].map((col, idx) => {
+            {stickyColumns.map((col, idx) => (
+              <TableCell
+                key={col.real_column_name}
+                onClick={
+                  onCellClick
+                    ? () =>
+                        onCellClick(
+                          row.object,
+                          columnsMap[col.real_column_name]
+                        )
+                    : undefined
+                }
+                className={cn(
+                  "whitespace-nowrap text-black dark:text-muted-foreground",
+                  "sticky z-10 bg-background",
+                  (isScrolled && idx === stickyColumns.length - 1) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
+                )}
+                style={{
+                  minWidth: 120,
+                  left: `${idx * 120}px`,
+                  zIndex: 20,
+                }}
+              >
+                {customRendererMap?.[col.real_column_name]
+                  ? customRendererMap[col.real_column_name](row.object, row.columns.find(c => c.key === col.real_column_name)?.value ?? "")
+                  : row.columns.find(c => c.key === col.real_column_name)?.value}
+              </TableCell>
+            ))}
+            {orderedVisibleColumns.map((col) => {
               const cellData = row.columns.find(
                 (c) => c.key === col.real_column_name
               )
               const customRenderer = customRendererMap?.[col.real_column_name]
-              const isSticky = stickyColumns.some(
-                (stickyCol) =>
-                  stickyCol.real_column_name === col.real_column_name
-              )
               return (
                 <TableCell
+                  key={col.real_column_name}
                   onClick={
                     onCellClick
                       ? () =>
@@ -281,16 +408,9 @@ function DataTableBody<T>(props: {
                           )
                       : undefined
                   }
-                  className={cn(
-                    "whitespace-nowrap text-black dark:text-muted-foreground",
-                    isSticky && "sticky z-10 bg-background",
-                    (isSticky && isScrolled && (idx + 1) === stickyColumns.length) && "after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-300 after:content-[''] dark:after:bg-gray-700"
-                  )}
-                  key={col.real_column_name}
+                  className="whitespace-nowrap text-black dark:text-muted-foreground"
                   style={{
                     minWidth: 120,
-                    left: isSticky ? `${idx * 120}px` : undefined,
-                    zIndex: isSticky ? 20 : undefined,
                   }}
                 >
                   {customRenderer

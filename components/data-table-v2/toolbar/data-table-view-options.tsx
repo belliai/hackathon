@@ -254,29 +254,27 @@ export function DataTableViewOptions({ ...props }: DataTableViewOptionsProps) {
                           {column.column_name}
                         </div>
                         <div className="flex gap-1">
-                          {tableKey === "dashboard_flights" && (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  data-no-dnd="true"
-                                  onClick={(e) => {
-                                    e.preventDefault()
-                                    e.stopPropagation()
-                                    onFreezeColumn(column, "unfreeze")
-                                  }}
-                                >
-                                  <PinOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent
-                                className="border bg-card text-foreground"
-                                side="bottom"
-                                align="end"
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                data-no-dnd="true"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  onFreezeColumn(column, "unfreeze")
+                                }}
                               >
-                                Unfreeze Column
-                              </TooltipContent>
-                            </Tooltip>
-                          )}
+                                <PinOffIcon className="z-50 size-4 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              className="border bg-card text-foreground"
+                              side="bottom"
+                              align="end"
+                            >
+                              Unfreeze Column
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                       </CommandItem>
                     ))}
