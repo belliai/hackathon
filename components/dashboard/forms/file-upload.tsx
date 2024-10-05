@@ -33,6 +33,7 @@ interface FileData {
   type: string
   url?: string
   thumbnail?: string
+  note?: string
 }
 
 interface UploadFileProps {
@@ -58,6 +59,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
           type: file.type,
           url: file.fileURL,
           thumbnail: file.thumbURL,
+          note: file.note || "",
         }))
         setFiles(updatedFiles)
       } catch (error) {
@@ -78,6 +80,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
         name: file.name,
         size: (file.size / 1024).toFixed(2),
         type: file.type,
+        note: "",
       }))
 
       setFiles(updatedFiles)
@@ -97,6 +100,11 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
     {
       accessorKey: "name",
       header: "File Name",
+      cell: ({ row }: any) => (
+        <div style={{ whiteSpace: "normal", wordWrap: "break-word" }}>
+          {row.original.name}
+        </div>
+      ),
     },
     {
       accessorKey: "url",
@@ -111,6 +119,11 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
           />
         </a>
       ),
+    },
+    {
+      accessorKey: "note",
+      header: "Note",
+      cell: ({ row }: any) => <span>{row.original.note}</span>,
     },
   ]
 
