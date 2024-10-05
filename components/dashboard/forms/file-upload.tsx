@@ -87,15 +87,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
     }
   }
 
-  // const handleFileUpdate = (fileItems: FilePondFile[]) => {
-  //   setFiles(fileItems.map(fileItem => fileItem.file))
-  //   setTableFiles(fileItems.map(fileItem => ({
-  //     name: fileItem.file.name,
-  //     size: (fileItem.file.size / 1024).toFixed(2), // Size in KB
-  //     type: fileItem.file.type,
-  //   })));
-  // };
-
   const columns = [
     {
       accessorKey: "name",
