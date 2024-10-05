@@ -6,14 +6,6 @@ import { auth } from "@clerk/nextjs/server"
 import { Button } from "@/components/ui/button"
 
 export default function MembersPage() {
-  const { orgId, orgPermissions, orgSlug } = auth()
-
-  if (!orgId) {
-    // If there is no active orgId
-
-    redirect("/")
-  }
-
   return (
     <div className="flex flex-col gap-8">
       <OrganizationSwitcher
@@ -28,11 +20,7 @@ export default function MembersPage() {
           },
         }}
       />
-      {orgSlug === "admin" && (
-        <Button asChild variant="button-primary" className="w-fit">
-          <Link href="/users">View All Users</Link>
-        </Button>
-      )}
+
       <OrganizationProfile />
     </div>
   )

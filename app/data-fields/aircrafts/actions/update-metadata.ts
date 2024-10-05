@@ -10,7 +10,7 @@ export const updateMetadata = async (input: {
   fields: Record<string, boolean>
 }) => {
   const { groupKey, sectionKey, fields } = input
-  const orgId = auth().orgId
+  const orgId = ""
   if (!orgId) return false
 
   // Retrieve the current metadata
