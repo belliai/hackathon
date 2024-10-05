@@ -125,7 +125,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
           display: flex;
           flex-direction: column;
           padding: 0rem;
-          // background-color: #1f1f1f;
           color: #1f1f1f;
         }
 
@@ -145,7 +144,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
               type="file"
               className="hidden"
               onChange={handleFileChange}
-              multiple // Allow multiple file selection
+              multiple
             />
           </div>
         </Card>
