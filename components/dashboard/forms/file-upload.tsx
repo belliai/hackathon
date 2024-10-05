@@ -80,7 +80,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ bookingId }) => {
         name: file.name,
         size: (file.size / 1024).toFixed(2),
         type: file.type,
-        note: "",
+        note: " ",
       }))
 
       setFiles(updatedFiles)
